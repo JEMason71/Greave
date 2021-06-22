@@ -48,6 +48,8 @@ set(GREAVE_CPPS
   core/guru.cpp
   core/tune.cpp
   core/utility.cpp
+  terminal/terminal-blt.cpp
+  terminal/terminal-curses.cpp
 )
 
 

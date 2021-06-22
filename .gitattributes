@@ -17,4 +17,5 @@ src/3rdparty/**/* linguist-vendored
 src/3rdparty/SQLiteCpp/CMakeLists.txt -linguist-vendored
 src/core/*.cpp linguist-language=C++
 src/core/*.hpp linguist-language=C++
+src/terminal/* linguist-language=C++
 src/uni/* linguist-language=C++

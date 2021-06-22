@@ -8,8 +8,11 @@
 class Util
 {
 public:
-    static void delete_file(const std::string &filename);   // Deletes a specified file.
-    static bool directory_exists(const std::string &dir);   // Check if a directory exists.
-    static bool file_exists(const std::string &file);       // Checks if a file exists.
-    static void make_dir(const std::string &dir);           // Makes a new directory, if it doesn't already exist.
+    static void         delete_file(const std::string &filename);   // Deletes a specified file.
+    static bool         directory_exists(const std::string &dir);   // Check if a directory exists.
+    static bool         file_exists(const std::string &file);       // Checks if a file exists.
+    static bool         find_and_replace(std::string &input, const std::string &to_find, const std::string &to_replace);    // Find and replace one string with another.
+    static uint32_t     htoi(const std::string &hex_str);           // Converts a hex string back to an integer.
+    static void         make_dir(const std::string &dir);           // Makes a new directory, if it doesn't already exist.
+    static std::string  str_tolower(std::string str);               // Converts a string to lower-case.
 };

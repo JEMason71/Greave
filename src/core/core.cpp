@@ -2,6 +2,8 @@
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #include "core/core.hpp"
+#include "terminal/terminal-blt.hpp"
+#include "terminal/terminal-curses.hpp"
 #include "uni/uni-core.hpp"
 #include "uni/uni-tolk.hpp"
 
@@ -11,7 +13,9 @@
 #endif
 
 
-std::shared_ptr<GreaveCore> greave = nullptr;	// The main GreaveCore object.
+std::shared_ptr<GreaveCore> greave = nullptr;   // The main GreaveCore object.
+
+const std::string GreaveCore::GAME_VERSION =    "0.0A0.0";  // The game's version number.
 
 
 // Main program entry point.
@@ -27,7 +31,7 @@ int main(int argc, char* argv[])
 }
 
 // Constructor, doesn't do too much aside from setting default values for member variables. Use init() to set things up.
-GreaveCore::GreaveCore() : m_tune(nullptr) { }
+GreaveCore::GreaveCore() : m_terminal(nullptr), m_tune(nullptr) { }
 
 // Cleans up after we're d one.
 void GreaveCore::cleanup()
@@ -39,6 +43,8 @@ void GreaveCore::cleanup()
     // Clean up Tolk, if we're on Windows.
     if (m_tune->screen_reader_external || m_tune->screen_reader_sapi) Tolk_Unload();
 #endif
+
+    m_terminal = nullptr;   // It's a smart pointer, so this'll run the destructor code.
 }
 
 // Returns a pointer to the Guru Meditation object.
@@ -65,9 +71,22 @@ void GreaveCore::init()
     if (m_tune->screen_reader_external || m_tune->screen_reader_sapi) Tolk_Load();
 #endif
 
+    std::string terminal_choice = Util::str_tolower(m_tune->terminal);
+#ifdef GREAVE_TARGET_WINDOWS
+	if (terminal_choice != "curses") FreeConsole();
+#endif
+
+    // Set up our terminal emulator.
+    if (terminal_choice == "blt") m_terminal = std::make_shared<TerminalBLT>();
+    else if (terminal_choice == "curses") m_terminal = std::make_shared<TerminalCurses>();
+    else m_guru_meditation->halt("Invalid terminal specified in tune.yml");
+
     // Tell the Guru system we're finished setting up.
     guru()->console_ready();
 }
+
+// Returns a pointer  to the terminal emulator object.
+const std::shared_ptr<Terminal> GreaveCore::terminal() const { return m_terminal; }
 
 // Returns a pointer to the Tune object.
 const std::shared_ptr<Tune> GreaveCore::tune() const { return m_tune; }

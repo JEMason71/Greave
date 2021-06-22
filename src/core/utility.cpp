@@ -3,6 +3,8 @@
 
 #include "uni/uni-core.hpp"
 
+#include <algorithm>
+#include <sstream>
 #include <sys/stat.h>
 #include <unistd.h>
 
@@ -26,6 +28,32 @@ bool Util::file_exists(const std::string &file)
     return (stat(file.c_str(), &info) == 0);
 }
 
+// Find and replace one string with another.
+bool Util::find_and_replace(std::string &input, const std::string &to_find, const std::string &to_replace)
+{
+    std::string::size_type pos = 0;
+    const std::string::size_type find_len = to_find.length(), replace_len = to_replace.length();
+    if (find_len == 0) return false;
+    bool found = false;
+    while ((pos = input.find(to_find, pos)) != std::string::npos)
+    {
+        found = true;
+        input.replace(pos, find_len, to_replace);
+        pos += replace_len;
+    }
+    return found;
+}
+
+// Converts a hex string back to an integer.
+uint32_t Util::htoi(const std::string &hex_str)
+{
+    std::stringstream ss;
+    ss << std::hex << hex_str;
+    uint32_t result;
+    ss >> result;
+    return result;
+}
+
 // Makes a new directory, if it doesn't already exist.
 void Util::make_dir(const std::string &dir)
 {
@@ -36,4 +64,11 @@ void Util::make_dir(const std::string &dir)
 #else
     mkdir(dir.c_str(), 0777);
 #endif
+}
+
+// Converts a string to lower-case.
+std::string Util::str_tolower(std::string str)
+{
+    std::transform(str.begin(), str.end(), str.begin(), ::tolower);
+    return str;
 }

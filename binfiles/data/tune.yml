@@ -11,6 +11,25 @@
 # USER SETTINGS: Feel free to tweak these, but I recommend doing so #
 # in userdata/tune.yml rather than editing this file directly.      #
 #####################################################################
+blt_console_size:       80x25               # The number of columns and rows the window should be sized to by default.
+blt_font:               VG5000-Regular_web.ttf  # The TTF font used in the game (must be monospace).
+blt_font_size:          14                  # The size of the main font.
+blt_log_file:           log-blt.txt         # The filename for the BearLibTerminal log file in the userdata folder.
+blt_log_level:          warning             # The minimum level of logging for BearLibTerminal.
+blt_vsync:              true                # Should the game use vsync?
+colour_blue:            80befa              # Hex colour definition for blue.
+colour_cyan:            64f0e6              # Hex colour definition for cyan.
+colour_green:           5bf050              # Hex colour definition for green.
+colour_grey:            bfbfbf              # Hex colour definition for grey.
+colour_magenta:         f064f0              # Hex colour definition for magenta.
+colour_orange:          f0aa28              # Hex colour definition for orange.
+colour_purple:          b446f0              # Hex colour definition for purple.
+colour_red:             f04b4b              # Hex colour definition for red.
+colour_yellow:          f0f064              # Hex colour definition for yellow.
+colour_white:           ffffff              # Hex colour definition for white.
+curses_custom_colours:  true                # Apply custom colour values above to Curses colours.
+monochrome_mode:        false               # Set this to true to only use black/gray for the background and white for the text.
 screen_reader_external: true                # Enable automatic screen-reader support? Screen readers supported: JAWS, NVDA, SuperNova, System Access, Window-Eyes, ZoomText.
 screen_reader_process_square_brackets: true # This setting can improve narration on screen readers for square brackets.
 screen_reader_sapi: false                   # Enable this to default to Microsoft SAPI text-to-speech, without using any external screen-reader software.
+terminal:               blt                 # Set this to blt for BearLibTerminal, or curses for PDCurses/NCurses.

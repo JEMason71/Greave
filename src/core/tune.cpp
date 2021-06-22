@@ -23,14 +23,12 @@ Tune::Tune()
             override = true;
         }
 
-        /*
         auto get_tune = [&yaml_tune, &yaml_override, &override, &guru](const std::string &value) -> double
         {
             if (override && yaml_override[value]) return yaml_override[value].as<double>();
             else if (!yaml_tune[value]) guru->halt("Missing or incorrect value in tune.yml: " + value);
             return yaml_tune[value].as<double>();
         };
-        */
 
         auto get_tune_bool = [&yaml_tune, &yaml_override, &override, &guru](const std::string &value) -> bool
         {
@@ -61,20 +59,37 @@ Tune::Tune()
         };
         */
 
-        /*
         auto get_tune_string = [&yaml_tune, &yaml_override, &override, &guru](const std::string &value) -> std::string
         {
             if (override && yaml_override[value]) return yaml_override[value].as<std::string>();
             else if (!yaml_tune[value]) guru->halt("Missing or incorrect string value in tune.yml: " + value);
             return yaml_tune[value].as<std::string>();
         };
-        */
 
+        blt_console_size = get_tune_string("blt_console_size");
+        blt_font = get_tune_string("blt_font");
+        blt_font_size = get_tune("blt_font_size");
+        blt_log_file = get_tune_string("blt_log_file");
+        blt_log_level = get_tune_string("blt_log_level");
+        blt_vsync = get_tune_bool("blt_vsync");
+        colour_blue = get_tune_string("colour_blue");
+        colour_cyan = get_tune_string("colour_cyan");
+        colour_green = get_tune_string("colour_green");
+        colour_grey = get_tune_string("colour_grey");
+        colour_magenta = get_tune_string("colour_magenta");
+        colour_orange = get_tune_string("colour_orange");
+        colour_purple = get_tune_string("colour_purple");
+        colour_red = get_tune_string("colour_red");
+        colour_yellow = get_tune_string("colour_yellow");
+        colour_white = get_tune_string("colour_white");
+        curses_custom_colours = get_tune_bool("curses_custom_colours");
+        monochrome_mode = get_tune_bool("monochrome_mode");
 #ifdef GREAVE_TOLK
         screen_reader_external = get_tune_bool("screen_reader_external");
         screen_reader_process_square_brackets = get_tune_bool("screen_reader_process_square_brackets");
         screen_reader_sapi = get_tune_bool("screen_reader_sapi");
 #endif
+        terminal = get_tune_string("terminal");
     }
     catch (std::exception &e)
     {
