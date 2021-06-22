@@ -83,6 +83,12 @@ Tune::Tune()
         colour_yellow = get_tune_string("colour_yellow");
         colour_white = get_tune_string("colour_white");
         curses_custom_colours = get_tune_bool("curses_custom_colours");
+        log_max_size = get_tune("log_max_size");
+        log_mouse_scroll_step = get_tune("log_mouse_scroll_step");
+        log_padding_bottom = get_tune("log_padding_bottom");
+        log_padding_left = get_tune("log_padding_left");
+        log_padding_right = get_tune("log_padding_right");
+        log_padding_top = get_tune("log_padding_top");
         monochrome_mode = get_tune_bool("monochrome_mode");
 #ifdef GREAVE_TOLK
         screen_reader_external = get_tune_bool("screen_reader_external");

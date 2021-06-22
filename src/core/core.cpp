@@ -1,21 +1,25 @@
 // core/core.cpp -- Main program entry, initialization and cleanup routines, and the core game loop.
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
+#include "3rdparty/Tolk/Tolk.h"
 #include "core/core.hpp"
 #include "terminal/terminal-blt.hpp"
 #include "terminal/terminal-curses.hpp"
 #include "uni/uni-core.hpp"
-#include "uni/uni-tolk.hpp"
 
 #include <thread>
 #ifdef GREAVE_TARGET_WINDOWS
 #include <windows.h>
 #endif
+#ifdef GREAVE_TOLK
+#include <regex>
+#endif
 
 
 std::shared_ptr<GreaveCore> greave = nullptr;   // The main GreaveCore object.
 
-const std::string GreaveCore::GAME_VERSION =    "0.0A0.0";  // The game's version number.
+const std::string   GreaveCore::GAME_VERSION =    "0.0A0.0";  // The game's version number.
+const unsigned int  GreaveCore::MSG_FLAG_INTERRUPT = 1; // Flags for the message() function.
 
 
 // Main program entry point.
@@ -26,12 +30,13 @@ int main(int argc, char* argv[])
 
     greave = std::make_shared<GreaveCore>();
     greave->init();
+    greave->play();
     greave->cleanup();
     return EXIT_SUCCESS;
 }
 
 // Constructor, doesn't do too much aside from setting default values for member variables. Use init() to set things up.
-GreaveCore::GreaveCore() : m_terminal(nullptr), m_tune(nullptr) { }
+GreaveCore::GreaveCore() : m_message_log(nullptr), m_terminal(nullptr), m_tune(nullptr), m_world(nullptr) { }
 
 // Cleans up after we're d one.
 void GreaveCore::cleanup()
@@ -69,11 +74,16 @@ void GreaveCore::init()
     // Set up Tolk if we're on Windows.
     if (m_tune->screen_reader_sapi) Tolk_TrySAPI(true); // Enable SAPI.
     if (m_tune->screen_reader_external || m_tune->screen_reader_sapi) Tolk_Load();
+    if (Tolk_DetectScreenReader())
+    {
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        Tolk_Silence();
+    }
 #endif
 
     std::string terminal_choice = Util::str_tolower(m_tune->terminal);
 #ifdef GREAVE_TARGET_WINDOWS
-	if (terminal_choice != "curses") FreeConsole();
+    if (terminal_choice != "curses") FreeConsole();
 #endif
 
     // Set up our terminal emulator.
@@ -81,8 +91,46 @@ void GreaveCore::init()
     else if (terminal_choice == "curses") m_terminal = std::make_shared<TerminalCurses>();
     else m_guru_meditation->halt("Invalid terminal specified in tune.yml");
 
+    // Sets up the main message log window.
+    m_message_log = std::make_shared<MessageLog>();
+
     // Tell the Guru system we're finished setting up.
     guru()->console_ready();
+}
+
+// Prints a message in the message log.
+void GreaveCore::message(std::string msg, unsigned int flags)
+{
+    m_message_log->msg(msg);
+
+#ifdef GREAVE_TOLK
+    const bool interrupt = ((flags & GreaveCore::MSG_FLAG_INTERRUPT) == GreaveCore::MSG_FLAG_INTERRUPT);
+    if (m_tune->screen_reader_external || m_tune->screen_reader_sapi)
+    {
+        if (m_tune->screen_reader_process_square_brackets)
+        {
+            Util::find_and_replace(msg, "[", "(");
+            Util::find_and_replace(msg, "]", ").");
+        }
+        std::regex filter("\\{.*?\\}");
+        std::string msg_voice = std::regex_replace(msg, filter, "");
+        if (msg_voice.size() >= 2 && msg_voice[0] == '>') msg_voice = msg_voice.substr(2);
+        const std::wstring msg_wide(msg_voice.begin(), msg_voice.end());
+        Tolk_Output(msg_wide.c_str(), interrupt);
+        if (interrupt) m_message_log->m_latest_messages.clear();
+        m_message_log->m_latest_messages.push_back(msg_voice);
+    }
+#endif
+}
+
+// Returns a pointer to the MessageLog object.
+const std::shared_ptr<MessageLog> GreaveCore::messagelog() const { return m_message_log; }
+
+// Starts the game.
+void GreaveCore::play()
+{
+    m_world = std::make_shared<World>();
+    m_world->main_loop();
 }
 
 // Returns a pointer  to the terminal emulator object.
@@ -90,6 +138,9 @@ const std::shared_ptr<Terminal> GreaveCore::terminal() const { return m_terminal
 
 // Returns a pointer to the Tune object.
 const std::shared_ptr<Tune> GreaveCore::tune() const { return m_tune; }
+
+// Returns a pointer to the World object.
+const std::shared_ptr<World> GreaveCore::world() const { return m_world; }
 
 // Allows external access to the GreaveCore object.
 const std::shared_ptr<GreaveCore> core()

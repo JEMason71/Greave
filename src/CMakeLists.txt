@@ -46,8 +46,10 @@ endif(TARGET_WINDOWS)
 set(GREAVE_CPPS
   core/core.cpp
   core/guru.cpp
+  core/message.cpp
   core/tune.cpp
   core/utility.cpp
+  core/world.cpp
   terminal/terminal-blt.cpp
   terminal/terminal-curses.cpp
 )
