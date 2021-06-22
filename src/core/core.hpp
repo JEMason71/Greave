@@ -4,13 +4,19 @@
 #pragma once
 #include "uni/uni-system.hpp"
 
+class Guru; // defined in core/guru.hpp
+
 
 class GreaveCore
 {
 public:
-            GreaveCore();   // Constructor, doesn't do too much aside from setting default values for member variables. Use init() to set things up.
-    void    cleanup();      // Cleans up after we're done.
-    void    init();         // Sets up the core game classes and data.
+                                GreaveCore();   // Constructor, doesn't do too much aside from setting default values for member variables. Use init() to set things up.
+    void                        cleanup();      // Cleans up after we're done.
+    const std::shared_ptr<Guru> guru() const;   // Returns a pointer to the Guru Meditation object.
+    void                        init();         // Sets up the core game classes and data.
+
+private:
+    std::shared_ptr<Guru>       m_guru_meditation;  // The Guru Meditation error-handling system.
 };
 
 
