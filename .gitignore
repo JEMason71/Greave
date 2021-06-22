@@ -1,0 +1,7 @@
+~$*
+*.exe
+*.lnk
+*.o
+*.tmp
+build/*
+scripts/*
