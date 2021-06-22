@@ -16,7 +16,11 @@ Greave is copyright © 2020-2021 Raine "Gravecat" Simmons and the Greave contrib
 
 [PDCurses](https://github.com/wmcbrine/PDCurses) maintained by William McBrine.
 
+[Roboto Mono Font](https://fonts.google.com/specimen/Roboto+Mono) copyright © 2015 Google Inc.
+
 [Tolk](https://github.com/dkager/tolk) copyright © 2014-2016 Davy Kager.
+
+[VG5000 TTF Font](https://pinspiry.com/vg5000-free-font/) copyright © Justin Bihan.
 
 [yaml-cpp](https://github.com/jbeder/yaml-cpp) copyright © 2008-2015 Jesse Beder.
 

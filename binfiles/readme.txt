@@ -32,8 +32,14 @@ https://github.com/wmcbrine/PDCurses
 PicoPNG copyright © 2005-2010 Lode Vandevenne.
 https://lodev.org/lodepng/
 
+Roboto Mono Font copyright © 2015 Google Inc.
+https://fonts.google.com/specimen/Roboto+Mono
+
 Tolk copyright © 2014-2016 Davy Kager.
 https://github.com/dkager/tolk
+
+VG5000 TTF Font copyright © Justin Bihan.
+https://pinspiry.com/vg5000-free-font/
 
 yaml-cpp copyright © 2008-2015 Jesse Beder.
 https://github.com/jbeder/yaml-cpp
