@@ -13,6 +13,9 @@ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
 IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
 
+PDCurses maintained by William McBrine
+https://github.com/wmcbrine/PDCurses
+
 GCC runtime library DLLs and any embedded GCC library code is copyright (c)
 Free Software Foundation, Inc., distrubuted under the GCC Runtime Library
 Exception, version 3.1 of the GNU General Public License version 3.

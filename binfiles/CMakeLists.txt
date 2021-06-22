@@ -12,6 +12,7 @@ if(TARGET_WINDOWS)
       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/binfiles/win64/libgcc_s_seh-1.dll" "${CMAKE_BINARY_DIR}/bin"
       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/binfiles/win64/libstdc++-6.dll" "${CMAKE_BINARY_DIR}/bin"
       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/binfiles/win64/libwinpthread-1.dll" "${CMAKE_BINARY_DIR}/bin"
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/binfiles/win64/pdcurses.dll" "${CMAKE_BINARY_DIR}/bin"
     )
   else()
     add_custom_target(dll ALL
@@ -19,6 +20,7 @@ if(TARGET_WINDOWS)
       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/binfiles/win32/libgcc_s_dw2-1.dll" "${CMAKE_BINARY_DIR}/bin"
       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/binfiles/win32/libstdc++-6.dll" "${CMAKE_BINARY_DIR}/bin"
       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/binfiles/win32/libwinpthread-1.dll" "${CMAKE_BINARY_DIR}/bin"
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/binfiles/win32/pdcurses.dll" "${CMAKE_BINARY_DIR}/bin"
     )
   endif(TARGET_64)
 endif(TARGET_WINDOWS)

@@ -24,6 +24,7 @@ if(TARGET_WINDOWS)
   #set(TOLK_LIBRARIES Tolk)
   #add_definitions(-DGREAVE_TOLK)
   #set(YAMLCPP_LIBRARIES yaml-cpp.dll)
+  set(CURSES_LIBRARIES pdcurses)
   
   # Application icon
   #enable_language(RC)
@@ -36,6 +37,7 @@ else()
   # Platform-specific libraries.
   #set(OS_LIBRARIES ${X11_LIBRARIES})
   #set(YAMLCPP_LIBRARIES yaml-cpp)
+  set(CURSES_LIBRARIES ncurses)
   set(CMAKE_EXE_LINKER_FLAGS_RELEASE "-s -Wl,-rpath='${ORIGIN}'")
   
 endif(TARGET_WINDOWS)
@@ -53,22 +55,22 @@ add_executable(greave ${GREAVE_CPPS} ${GREAVE_RC})
 # Include directories. 3rdparty is included here, because otherwise yaml-cpp gets unhappy.
 target_include_directories(greave PRIVATE
   "${CMAKE_SOURCE_DIR}/src"
-  #"${CMAKE_SOURCE_DIR}/src/3rdparty"
+  "${CMAKE_SOURCE_DIR}/src/3rdparty"
 )
 
 
 # Platform-specific library directories.
 if(TARGET_WINDOWS)
   if(TARGET_32)
-    #target_link_directories(greave PRIVATE "${CMAKE_SOURCE_DIR}/lib/win32")
+    target_link_directories(greave PRIVATE "${CMAKE_SOURCE_DIR}/lib/win32")
   else()
-    #target_link_directories(greave PRIVATE "${CMAKE_SOURCE_DIR}/lib/win64")
+    target_link_directories(greave PRIVATE "${CMAKE_SOURCE_DIR}/lib/win64")
   endif(TARGET_32)
 else()
   if(TARGET_32)
-    #target_link_directories(greave PRIVATE "${CMAKE_SOURCE_DIR}/lib/lin32")
+    target_link_directories(greave PRIVATE "${CMAKE_SOURCE_DIR}/lib/lin32")
   else()
-    #target_link_directories(greave PRIVATE "${CMAKE_SOURCE_DIR}/lib/lin64")
+    target_link_directories(greave PRIVATE "${CMAKE_SOURCE_DIR}/lib/lin64")
   endif(TARGET_32)
 endif(TARGET_WINDOWS)
 
@@ -77,6 +79,7 @@ endif(TARGET_WINDOWS)
 target_link_libraries(greave
   ${OS_LIBRARIES}
   ${CMAKE_THREAD_LIBS_INIT}
+  ${CURSES_LIBRARIES}
   #${SQLITECPP_LIBRARIES}
   #${TOLK_LIBRARIES}
   #${YAMLCPP_LIBRARIES}
