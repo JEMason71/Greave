@@ -6,11 +6,11 @@ cmake_minimum_required(VERSION 3.13)
 project(greave)
 
 # Automatically default to release builds if a type is not specified. This code borrowed from BearLibTerminal, copyright (c) 2013-2017 Cfyz.
-if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
-	message(STATUS "Build type was not specified, switching to 'Release'.")
-	set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
-	# Set the possible values of build type for cmake-gui
-	set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release")
+if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+  message(STATUS "Build type was not specified, switching to 'Release'.")
+  set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
+  # Set the possible values of build type for cmake-gui
+  set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release")
 endif()
 
 # Platform-specific defaults/overrides
@@ -34,3 +34,4 @@ if(RELEASE_BUILD)
 endif(RELEASE_BUILD)
 
 add_subdirectory(src)
+add_subdirectory(binfiles)
