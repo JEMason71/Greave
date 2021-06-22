@@ -13,11 +13,14 @@ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
 IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
 
+Application icon copyright © 2020 Malcolm Riley.
+https://github.com/malcolmriley/unused-textures
+
 BearLibTerminal copyright © 2013-2017 Cfyz.
 http://foo.wyrd.name/en:bearlibterminal
 
-FreeType copyright © 1996-2002, 2006 David Turner, Robert Wilhelm, and Werner
-Lemberg.
+FreeType copyright © 1996-2002, 2006 David Turner, Robert Wilhelm,
+and Werner Lemberg.
 https://www.freetype.org/
 
 NanoJpeg copyright © 2009 Martin J. Fiedler.

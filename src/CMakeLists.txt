@@ -27,10 +27,10 @@ if(TARGET_WINDOWS)
   set(CURSES_LIBRARIES pdcurses)
   
   # Application icon
-  #enable_language(RC)
-  #set(CMAKE_RC_COMPILER_INIT windres)
-  #set(CMAKE_RC_COMPILE_OBJECT "<CMAKE_RC_COMPILER> <FLAGS> -O coff <DEFINES> -i <SOURCE> -o <OBJECT>")
-  #set(GREAVE_RC core/app-icon.rc)
+  enable_language(RC)
+  set(CMAKE_RC_COMPILER_INIT windres)
+  set(CMAKE_RC_COMPILE_OBJECT "<CMAKE_RC_COMPILER> <FLAGS> -O coff <DEFINES> -i <SOURCE> -o <OBJECT>")
+  set(GREAVE_RC core/app-icon.rc)
   
 else()
   

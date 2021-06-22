@@ -4,6 +4,14 @@
 
 cmake_minimum_required(VERSION 3.0)
 
+
+# This mess here copies all the game's static data (mostly YAML files) into the bin folder where the compiled binary lives.
+add_custom_target(greave_data ALL
+  DEPENDS greave
+  COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_BINARY_DIR}/bin/data"
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/binfiles/data/app-icon.ico" "${CMAKE_BINARY_DIR}/bin/data/"
+)
+
 # Windows needs a whole mess of DLLs.
 if(TARGET_WINDOWS)
   if(TARGET_64)
