@@ -1,0 +1,17 @@
+*.a binary linguist-vendored
+*.c text
+*.cpp text
+*.dll binary linguist-vendored
+*.h text
+*.hpp text
+*.ico binary linguist-vendored
+*.lib binary linguist-vendored
+*.md text
+*.rc text
+*.so binary linguist-vendored
+*.ttf binary linguist-vendored
+*.txt text
+*.yml text linguist-detectable=true linguist-language=YAML
+
+src/3rdparty/**/* linguist-vendored
+src/3rdparty/SQLiteCpp/CMakeLists.txt -linguist-vendored
