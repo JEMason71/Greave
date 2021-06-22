@@ -72,9 +72,6 @@ TerminalCurses::TerminalCurses()
 
 #ifdef GREAVE_TARGET_WINDOWS
     std::string ver_str = GreaveCore::GAME_VERSION;
-#ifndef GREAVE_RELEASE
-    ver_str += "D";
-#endif
     PDC_set_title(("Greave " + ver_str).c_str());
 #endif
 }

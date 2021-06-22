@@ -18,7 +18,7 @@
 
 std::shared_ptr<GreaveCore> greave = nullptr;   // The main GreaveCore object.
 
-const std::string   GreaveCore::GAME_VERSION =    "0.0A0.0";  // The game's version number.
+const std::string   GreaveCore::GAME_VERSION =    "pre-alpha";  // The game's version number.
 const unsigned int  GreaveCore::MSG_FLAG_INTERRUPT = 1; // Flags for the message() function.
 
 

@@ -11,9 +11,6 @@ TerminalBLT::TerminalBLT() : m_cursor_visible(false), m_cursor_x(0), m_cursor_y(
 {
     const std::shared_ptr<Tune> tune = core()->tune();
     std::string ver_str = GreaveCore::GAME_VERSION;
-#ifndef GREAVE_RELEASE
-    ver_str += "D";
-#endif
 
     core()->guru()->log("Setting up BearLibTerminal.");
     Util::delete_file("userdata/" + tune->blt_log_file);

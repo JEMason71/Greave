@@ -29,9 +29,5 @@ else()
   set(TARGET_64 1)
 endif()
 
-if(RELEASE_BUILD)
-  add_definitions(-DGREAVE_RELEASE)
-endif(RELEASE_BUILD)
-
 add_subdirectory(src)
 add_subdirectory(binfiles)
