@@ -1,0 +1,16 @@
+# data/tune.yml -- Various values that can be adjusted to tweak gameplay and other elements.
+# Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+
+# If you create a file called tune.yml in your Greave userdata folder, it will look for these settings there first.
+# That way, you can tweak only the settings you want in your own personal override file, without worrying about
+# newer versions of the game overwriting your settings with the latest data files. You only need to include the
+# values that have changed, so just copy-paste the lines you want to change, not the entire file.
+
+
+#####################################################################
+# USER SETTINGS: Feel free to tweak these, but I recommend doing so #
+# in userdata/tune.yml rather than editing this file directly.      #
+#####################################################################
+screen_reader_external: true                # Enable automatic screen-reader support? Screen readers supported: JAWS, NVDA, SuperNova, System Access, Window-Eyes, ZoomText.
+screen_reader_process_square_brackets: true # This setting can improve narration on screen readers for square brackets.
+screen_reader_sapi: false                   # Enable this to default to Microsoft SAPI text-to-speech, without using any external screen-reader software.

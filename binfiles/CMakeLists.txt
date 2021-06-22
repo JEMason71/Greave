@@ -10,6 +10,7 @@ add_custom_target(greave_data ALL
   DEPENDS greave
   COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_BINARY_DIR}/bin/data"
   COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/binfiles/data/app-icon.ico" "${CMAKE_BINARY_DIR}/bin/data/"
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/binfiles/data/tune.yml" "${CMAKE_BINARY_DIR}/bin/data/"
 )
 
 # Windows needs a whole mess of DLLs.

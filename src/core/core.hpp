@@ -5,6 +5,7 @@
 #include "uni/uni-system.hpp"
 
 class Guru; // defined in core/guru.hpp
+class Tune; // defined in core/tune.hpp
 
 
 class GreaveCore
@@ -14,9 +15,11 @@ public:
     void                        cleanup();      // Cleans up after we're done.
     const std::shared_ptr<Guru> guru() const;   // Returns a pointer to the Guru Meditation object.
     void                        init();         // Sets up the core game classes and data.
+    const std::shared_ptr<Tune> tune() const;   // Returns a pointer to the Tune object.
 
 private:
     std::shared_ptr<Guru>       m_guru_meditation;  // The Guru Meditation error-handling system.
+    std::shared_ptr<Tune>       m_tune;             // The Tune object, containing various tweakable numbers in tune.yml
 };
 
 

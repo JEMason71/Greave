@@ -27,7 +27,7 @@ int main(int argc, char* argv[])
 }
 
 // Constructor, doesn't do too much aside from setting default values for member variables. Use init() to set things up.
-GreaveCore::GreaveCore() { }
+GreaveCore::GreaveCore() : m_tune(nullptr) { }
 
 // Cleans up after we're d one.
 void GreaveCore::cleanup()
@@ -37,8 +37,7 @@ void GreaveCore::cleanup()
 
 #ifdef GREAVE_TOLK
     // Clean up Tolk, if we're on Windows.
-    //if (m_tune->screen_reader_external || m_tune->screen_reader_sapi)
-    Tolk_Unload();
+    if (m_tune->screen_reader_external || m_tune->screen_reader_sapi) Tolk_Unload();
 #endif
 }
 
@@ -57,17 +56,21 @@ void GreaveCore::init()
     // Sets up the error-handling subsystem.
     m_guru_meditation = std::make_shared<Guru>("userdata/log.txt");
 
+    // Set up the tune settings.
+    m_tune = std::make_shared<Tune>();
+
 #ifdef GREAVE_TOLK
     // Set up Tolk if we're on Windows.
-    //if (m_tune->screen_reader_sapi)
-    Tolk_TrySAPI(true); // Enable SAPI.
-    //if (m_tune->screen_reader_external || m_tune->screen_reader_sapi)
-    Tolk_Load();
+    if (m_tune->screen_reader_sapi) Tolk_TrySAPI(true); // Enable SAPI.
+    if (m_tune->screen_reader_external || m_tune->screen_reader_sapi) Tolk_Load();
 #endif
 
     // Tell the Guru system we're finished setting up.
     guru()->console_ready();
 }
+
+// Returns a pointer to the Tune object.
+const std::shared_ptr<Tune> GreaveCore::tune() const { return m_tune; }
 
 // Allows external access to the GreaveCore object.
 const std::shared_ptr<GreaveCore> core()

@@ -19,6 +19,13 @@ bool Util::directory_exists(const std::string &dir)
     return false;
 }
 
+// Checks if a file exists.
+bool Util::file_exists(const std::string &file)
+{
+    struct stat info;
+    return (stat(file.c_str(), &info) == 0);
+}
+
 // Makes a new directory, if it doesn't already exist.
 void Util::make_dir(const std::string &dir)
 {

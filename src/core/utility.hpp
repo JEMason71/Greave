@@ -10,5 +10,6 @@ class Util
 public:
     static void delete_file(const std::string &filename);   // Deletes a specified file.
     static bool directory_exists(const std::string &dir);   // Check if a directory exists.
-    static void make_dir(const std::string &dir);   // Makes a new directory, if it doesn't already exist.
+    static bool file_exists(const std::string &file);       // Checks if a file exists.
+    static void make_dir(const std::string &dir);           // Makes a new directory, if it doesn't already exist.
 };

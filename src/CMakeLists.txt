@@ -46,6 +46,7 @@ endif(TARGET_WINDOWS)
 set(GREAVE_CPPS
   core/core.cpp
   core/guru.cpp
+  core/tune.cpp
   core/utility.cpp
 )
 
