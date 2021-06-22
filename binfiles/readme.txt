@@ -35,6 +35,9 @@ https://lodev.org/lodepng/
 Tolk copyright © 2014-2016 Davy Kager.
 https://github.com/dkager/tolk
 
+yaml-cpp copyright © 2008-2015 Jesse Beder.
+https://github.com/jbeder/yaml-cpp
+
 GCC runtime library DLLs and any embedded GCC library code is copyright (c)
 Free Software Foundation, Inc., distrubuted under the GCC Runtime Library
 Exception, version 3.1 of the GNU General Public License version 3.

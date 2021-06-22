@@ -23,7 +23,7 @@ if(TARGET_WINDOWS)
   set(OS_LIBRARIES mingw32)
   set(TOLK_LIBRARIES Tolk)
   add_definitions(-DGREAVE_TOLK)
-  #set(YAMLCPP_LIBRARIES yaml-cpp.dll)
+  set(YAMLCPP_LIBRARIES yaml-cpp.dll)
   set(CURSES_LIBRARIES pdcurses)
   
   # Application icon
@@ -36,7 +36,7 @@ else()
   
   # Platform-specific libraries.
   set(OS_LIBRARIES ${X11_LIBRARIES})
-  #set(YAMLCPP_LIBRARIES yaml-cpp)
+  set(YAMLCPP_LIBRARIES yaml-cpp)
   set(CURSES_LIBRARIES ncurses)
   set(CMAKE_EXE_LINKER_FLAGS_RELEASE "-s -Wl,-rpath='${ORIGIN}'")
   
@@ -84,7 +84,7 @@ target_link_libraries(greave
   ${CURSES_LIBRARIES}
   #${SQLITECPP_LIBRARIES}
   ${TOLK_LIBRARIES}
-  #${YAMLCPP_LIBRARIES}
+  ${YAMLCPP_LIBRARIES}
   BearLibTerminal
 )
 

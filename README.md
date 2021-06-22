@@ -18,4 +18,6 @@ Greave is copyright © 2020-2021 Raine "Gravecat" Simmons and the Greave contrib
 
 [Tolk](https://github.com/dkager/tolk) copyright © 2014-2016 Davy Kager.
 
+[yaml-cpp](https://github.com/jbeder/yaml-cpp) copyright © 2008-2015 Jesse Beder.
+
 GCC runtime library DLLs and any embedded GCC library code is copyright © Free Software Foundation, Inc., distrubuted under the GCC Runtime Library Exception, version 3.1 of the GNU General Public License version 3.
