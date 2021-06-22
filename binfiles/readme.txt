@@ -13,8 +13,21 @@ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
 IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
 
+BearLibTerminal copyright © 2013-2017 Cfyz.
+http://foo.wyrd.name/en:bearlibterminal
+
+FreeType copyright © 1996-2002, 2006 David Turner, Robert Wilhelm, and Werner
+Lemberg.
+https://www.freetype.org/
+
+NanoJpeg copyright © 2009 Martin J. Fiedler.
+http://h4ck3r.net/2009/12/02/mini-jpeg-decoder/
+
 PDCurses maintained by William McBrine
 https://github.com/wmcbrine/PDCurses
+
+PicoPNG copyright © 2005-2010 Lode Vandevenne.
+https://lodev.org/lodepng/
 
 GCC runtime library DLLs and any embedded GCC library code is copyright (c)
 Free Software Foundation, Inc., distrubuted under the GCC Runtime Library

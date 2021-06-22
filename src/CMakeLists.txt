@@ -35,7 +35,7 @@ if(TARGET_WINDOWS)
 else()
   
   # Platform-specific libraries.
-  #set(OS_LIBRARIES ${X11_LIBRARIES})
+  set(OS_LIBRARIES ${X11_LIBRARIES})
   #set(YAMLCPP_LIBRARIES yaml-cpp)
   set(CURSES_LIBRARIES ncurses)
   set(CMAKE_EXE_LINKER_FLAGS_RELEASE "-s -Wl,-rpath='${ORIGIN}'")
@@ -83,7 +83,7 @@ target_link_libraries(greave
   #${SQLITECPP_LIBRARIES}
   #${TOLK_LIBRARIES}
   #${YAMLCPP_LIBRARIES}
-  #BearLibTerminal
+  BearLibTerminal
 )
 
 
