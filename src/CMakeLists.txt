@@ -44,7 +44,7 @@ endif(TARGET_WINDOWS)
 
 # Source files.
 set(GREAVE_CPPS
-  dummy.cpp
+  core/core.cpp
 )
 
 
