@@ -32,6 +32,9 @@ https://github.com/wmcbrine/PDCurses
 PicoPNG copyright © 2005-2010 Lode Vandevenne.
 https://lodev.org/lodepng/
 
+Tolk copyright © 2014-2016 Davy Kager.
+https://github.com/dkager/tolk
+
 GCC runtime library DLLs and any embedded GCC library code is copyright (c)
 Free Software Foundation, Inc., distrubuted under the GCC Runtime Library
 Exception, version 3.1 of the GNU General Public License version 3.

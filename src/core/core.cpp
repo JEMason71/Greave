@@ -3,7 +3,9 @@
 
 #include "core/core.hpp"
 #include "uni/uni-core.hpp"
+#include "uni/uni-tolk.hpp"
 
+#include <thread>
 #ifdef GREAVE_TARGET_WINDOWS
 #include <windows.h>
 #endif
@@ -30,11 +32,21 @@ GreaveCore::GreaveCore() { }
 // Cleans up after we're d one.
 void GreaveCore::cleanup()
 {
-    // nothing here right now
+#ifdef GREAVE_TOLK
+    // Clean up Tolk, if we're on Windows.
+    //if (m_tune->screen_reader_external || m_tune->screen_reader_sapi)
+    Tolk_Unload();
+#endif
 }
 
 // Sets up the core game classes and data.
 void GreaveCore::init()
 {
-    // nothing here right now
+#ifdef GREAVE_TOLK
+    // Set up Tolk if we're on Windows.
+    //if (m_tune->screen_reader_sapi)
+    Tolk_TrySAPI(true); // Enable SAPI.
+    //if (m_tune->screen_reader_external || m_tune->screen_reader_sapi)
+    Tolk_Load();
+#endif
 }

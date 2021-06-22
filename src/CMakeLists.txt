@@ -21,8 +21,8 @@ if(TARGET_WINDOWS)
   
   # Platform-specific libraries.
   set(OS_LIBRARIES mingw32)
-  #set(TOLK_LIBRARIES Tolk)
-  #add_definitions(-DGREAVE_TOLK)
+  set(TOLK_LIBRARIES Tolk)
+  add_definitions(-DGREAVE_TOLK)
   #set(YAMLCPP_LIBRARIES yaml-cpp.dll)
   set(CURSES_LIBRARIES pdcurses)
   
@@ -81,7 +81,7 @@ target_link_libraries(greave
   ${CMAKE_THREAD_LIBS_INIT}
   ${CURSES_LIBRARIES}
   #${SQLITECPP_LIBRARIES}
-  #${TOLK_LIBRARIES}
+  ${TOLK_LIBRARIES}
   #${YAMLCPP_LIBRARIES}
   BearLibTerminal
 )
