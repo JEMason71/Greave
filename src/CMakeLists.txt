@@ -2,6 +2,8 @@
 # For MinGW/MSYS builds, be sure to specify -G"MinGW Makefiles" when setting up the build folder.
 # Copyright (c) 2020-2021 Raine "Gravecat" Simmons and the Greave contributors. Licensed under the GNU Affero General Public License v3 or any later version.
 
+cmake_minimum_required(VERSION 3.13)
+
 
 # Non-platform-specific stuff.
 set(CMAKE_CXX_STANDARD 14)
@@ -32,7 +34,7 @@ if(TARGET_WINDOWS)
 else()
   
   # Platform-specific libraries.
-  set(OS_LIBRARIES ${X11_LIBRARIES})
+  #set(OS_LIBRARIES ${X11_LIBRARIES})
   #set(YAMLCPP_LIBRARIES yaml-cpp)
   set(CMAKE_EXE_LINKER_FLAGS_RELEASE "-s -Wl,-rpath='${ORIGIN}'")
   
