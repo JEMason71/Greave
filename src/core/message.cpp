@@ -16,6 +16,14 @@
 // Constructor, sets some default values.
 MessageLog::MessageLog() : m_dragging_scrollbar(false), m_dragging_scrollbar_offset(0), m_offset(0) { recalc_window_sizes(); }
 
+#ifdef GREAVE_TOLK
+// Adds a message to the latest messages vector.
+void MessageLog::add_latest_message(const std::string &msg) { m_latest_messages.push_back(msg); }
+
+// Clears the latest messages vector.
+void MessageLog::clear_latest_messages() { m_latest_messages.clear(); }
+#endif
+
 // Clears the message log.
 void MessageLog::clear_messages()
 {
@@ -121,7 +129,7 @@ std::string MessageLog::render_message_log(bool accept_blank_input)
             std::string result = std::regex_replace(m_input_buffer, std::regex("^ +| +$|( ) +"), "$1");
             if (result.size())
             {
-                core()->message("{c}> " + result, GreaveCore::MSG_FLAG_INTERRUPT);
+                core()->message("{c}> " + result, Core::MSG_FLAG_INTERRUPT);
                 const std::string result_lower = StrX::str_tolower(result);
                 if (result_lower == "quit" || result_lower == "exit")
                 {

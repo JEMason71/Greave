@@ -13,6 +13,11 @@ public:
     void        msg(std::string str);   // Adds a message to the log.
     std::string render_message_log(bool accept_blank_input = false);    // Renders the message log, returns user input.
 
+#ifdef GREAVE_TOLK
+    void        add_latest_message(const std::string &msg); // Adds a message to the latest messages vector.
+    void        clear_latest_messages();    // Clears the latest messages vector.
+#endif
+
 private:
     void    clear_messages();               // Clears the message log.
     void    recalc_window_sizes();          // Recalculates the size and coordinates of the windows.
@@ -34,6 +39,4 @@ private:
 #ifdef GREAVE_TOLK
     std::vector<std::string>    m_latest_messages;  // The last messages received after player input; can be repeated if using a screen-reader.
 #endif
-
-    friend class GreaveCore;
 };

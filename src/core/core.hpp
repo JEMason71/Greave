@@ -11,10 +11,10 @@ class Tune;         // defined in core/tune.hpp
 class World;        // defined in core/world.hpp
 
 
-class GreaveCore
+class Core
 {
 public:
-                                        GreaveCore();       // Constructor, doesn't do too much aside from setting default values for member variables. Use init() to set things up.
+                                        Core();             // Constructor, doesn't do too much aside from setting default values for member variables. Use init() to set things up.
     void                                cleanup();          // Cleans up after we're done.
     const std::shared_ptr<Guru>         guru() const;       // Returns a pointer to the Guru Meditation object.
     void                                init();             // Sets up the core game classes and data.
@@ -39,4 +39,4 @@ private:
 };
 
 
-const std::shared_ptr<GreaveCore>   core(); // Allows external access to the main GreaveCore object.
+const std::shared_ptr<Core> core(); // Allows external access to the main Core object.

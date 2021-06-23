@@ -22,10 +22,10 @@
 #endif
 
 
-std::shared_ptr<GreaveCore> greave = nullptr;   // The main GreaveCore object.
+std::shared_ptr<Core> greave = nullptr;   // The main Core object.
 
-const std::string   GreaveCore::GAME_VERSION =    "pre-alpha";  // The game's version number.
-const unsigned int  GreaveCore::MSG_FLAG_INTERRUPT = 1; // Flags for the message() function.
+const std::string   Core::GAME_VERSION =    "pre-alpha";  // The game's version number.
+const unsigned int  Core::MSG_FLAG_INTERRUPT = 1; // Flags for the message() function.
 
 
 // Main program entry point.
@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
     // Check command-line parameters.
     std::vector<std::string> parameters(argv, argv + argc);
 
-    greave = std::make_shared<GreaveCore>();
+    greave = std::make_shared<Core>();
     try
     {
         greave->init();
@@ -50,10 +50,10 @@ int main(int argc, char* argv[])
 }
 
 // Constructor, doesn't do too much aside from setting default values for member variables. Use init() to set things up.
-GreaveCore::GreaveCore() : m_message_log(nullptr), m_terminal(nullptr), m_tune(nullptr), m_world(nullptr) { }
+Core::Core() : m_message_log(nullptr), m_terminal(nullptr), m_tune(nullptr), m_world(nullptr) { }
 
 // Cleans up after we're d one.
-void GreaveCore::cleanup()
+void Core::cleanup()
 {
     // Tell Guru to revert to exit() if an error happens at this point.
     guru()->console_ready(false);
@@ -67,14 +67,14 @@ void GreaveCore::cleanup()
 }
 
 // Returns a pointer to the Guru Meditation object.
-const std::shared_ptr<Guru> GreaveCore::guru() const
+const std::shared_ptr<Guru> Core::guru() const
 {
     if (!m_guru_meditation) exit(EXIT_FAILURE);
     return m_guru_meditation;
 }
 
 // Sets up the core game classes and data.
-void GreaveCore::init()
+void Core::init()
 {
     FileX::make_dir("userdata");
 
@@ -116,7 +116,7 @@ void GreaveCore::init()
 }
 
 // The main game loop.
-void GreaveCore::main_loop()
+void Core::main_loop()
 {
     // bröther may I have some lööps
     while (true)
@@ -126,12 +126,12 @@ void GreaveCore::main_loop()
 }
 
 // Prints a message in the message log.
-void GreaveCore::message(std::string msg, uint32_t flags)
+void Core::message(std::string msg, uint32_t flags)
 {
     m_message_log->msg(msg);
 
 #ifdef GREAVE_TOLK
-    const bool interrupt = ((flags & GreaveCore::MSG_FLAG_INTERRUPT) == GreaveCore::MSG_FLAG_INTERRUPT);
+    const bool interrupt = ((flags & Core::MSG_FLAG_INTERRUPT) == Core::MSG_FLAG_INTERRUPT);
     if (m_tune->screen_reader_external || m_tune->screen_reader_sapi)
     {
         if (m_tune->screen_reader_process_square_brackets)
@@ -144,17 +144,17 @@ void GreaveCore::message(std::string msg, uint32_t flags)
         if (msg_voice.size() >= 2 && msg_voice[0] == '>') msg_voice = msg_voice.substr(2);
         const std::wstring msg_wide(msg_voice.begin(), msg_voice.end());
         Tolk_Output(msg_wide.c_str(), interrupt);
-        if (interrupt) m_message_log->m_latest_messages.clear();
-        m_message_log->m_latest_messages.push_back(msg_voice);
+        if (interrupt) m_message_log->clear_latest_messages();
+        m_message_log->add_latest_message(msg_voice);
     }
 #endif
 }
 
 // Returns a pointer to the MessageLog object.
-const std::shared_ptr<MessageLog> GreaveCore::messagelog() const { return m_message_log; }
+const std::shared_ptr<MessageLog> Core::messagelog() const { return m_message_log; }
 
 // Starts the game.
-void GreaveCore::play()
+void Core::play()
 {
     message("{W}COLOUR TEST:");
     message("{b}BLACK   {B}BOLD");
@@ -171,16 +171,16 @@ void GreaveCore::play()
 }
 
 // Returns a pointer  to the terminal emulator object.
-const std::shared_ptr<Terminal> GreaveCore::terminal() const { return m_terminal; }
+const std::shared_ptr<Terminal> Core::terminal() const { return m_terminal; }
 
 // Returns a pointer to the Tune object.
-const std::shared_ptr<Tune> GreaveCore::tune() const { return m_tune; }
+const std::shared_ptr<Tune> Core::tune() const { return m_tune; }
 
 // Returns a pointer to the World object.
-const std::shared_ptr<World> GreaveCore::world() const { return m_world; }
+const std::shared_ptr<World> Core::world() const { return m_world; }
 
-// Allows external access to the GreaveCore object.
-const std::shared_ptr<GreaveCore> core()
+// Allows external access to the Core object.
+const std::shared_ptr<Core> core()
 {
     if (!greave) exit(EXIT_FAILURE);
     else return greave;
