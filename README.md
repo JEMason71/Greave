@@ -3,7 +3,7 @@
 [![Development status](https://img.shields.io/badge/development%20status-prealpha-red.svg)](https://github.com/Gravecat/Greave)
 [![GitHub last commit](https://img.shields.io/github/last-commit/Gravecat/Greave/main)](https://github.com/Gravecat/Greave/commits/main)
 
-Greave is an open-source, text-based, fantasy-themed role-playing game currently in the very, *very* early stages of development.
+Greave is an open-source, text-based, fantasy-themed role-playing game currently in the very, *very* early stages of development. [See here](https://github.com/Gravecat/Greave/blob/main/build/README.md) for build instructions.
 
 
 # COPYRIGHT & LICENSE
