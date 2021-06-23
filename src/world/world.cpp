@@ -8,13 +8,3 @@
 
 // Constructor, sets default values.
 World::World() { }
-
-// The main game loop.
-void World::main_loop()
-{
-    // bröther may i have some lööps
-    while (true)
-    {
-        const std::string input = core()->messagelog()->render_message_log();
-    }
-}

@@ -115,6 +115,16 @@ void GreaveCore::init()
     Room::load_room_pool();
 }
 
+// The main game loop.
+void GreaveCore::main_loop()
+{
+    // bröther may I have some lööps
+    while (true)
+    {
+        const std::string input = m_message_log->render_message_log();
+    }
+}
+
 // Prints a message in the message log.
 void GreaveCore::message(std::string msg, uint32_t flags)
 {
@@ -157,7 +167,7 @@ void GreaveCore::play()
     message("{w}WHITE   {W}BOLD");
 
     m_world = std::make_shared<World>();
-    m_world->main_loop();
+    main_loop();
 }
 
 // Returns a pointer  to the terminal emulator object.

@@ -29,6 +29,8 @@ public:
     static const uint32_t       MSG_FLAG_INTERRUPT; // Flags for the message() function.
 
 private:
+    void    main_loop();    // The main game loop.
+
     std::shared_ptr<Guru>       m_guru_meditation;  // The Guru Meditation error-handling system.
     std::shared_ptr<MessageLog> m_message_log;      // The MessageLog object, which handles the scrolling message-log input/output window.
     std::shared_ptr<Terminal>   m_terminal;         // The Terminal class, which handles low-level interaction with terminal emulation libraries.

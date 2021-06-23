@@ -9,5 +9,4 @@ class World
 {
 public:
             World();        // Constructor, sets default values.
-    void    main_loop();    // The main game loop.
 };
