@@ -3,9 +3,9 @@
 
 #include "3rdparty/yaml-cpp/yaml.h"
 #include "core/core.hpp"
+#include "core/filex.hpp"
 #include "core/message.hpp"
-#include "utility/filex.hpp"
-#include "utility/strx.hpp"
+#include "core/strx.hpp"
 #include "world/room.hpp"
 
 // Lookup table for converting textual light levels (e.g. "bright") to integer values.

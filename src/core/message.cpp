@@ -6,9 +6,9 @@
 #include "core/core.hpp"
 #include "core/guru.hpp"
 #include "core/message.hpp"
+#include "core/strx.hpp"
+#include "core/terminal.hpp"
 #include "core/tune.hpp"
-#include "terminal/terminal.hpp"
-#include "utility/strx.hpp"
 
 #include <regex>
 

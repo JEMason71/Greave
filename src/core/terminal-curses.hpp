@@ -1,8 +1,8 @@
-// terminal/terminal-curses.hpp -- Terminal interface for PDCurses/NCurses. See terminal.h for a full description of the Terminal class.
+// core/terminal-curses.hpp -- Terminal interface for PDCurses/NCurses. See core/terminal.hpp for a full description of the Terminal class.
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #pragma once
-#include "terminal/terminal.hpp"
+#include "core/terminal.hpp"
 
 
 class TerminalCurses : public Terminal

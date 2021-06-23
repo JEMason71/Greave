@@ -2,10 +2,10 @@
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #include "core/core.hpp"
+#include "core/filex.hpp"
 #include "core/guru.hpp"
 #include "core/message.hpp"
-#include "terminal/terminal.hpp"
-#include "utility/filex.hpp"
+#include "core/terminal.hpp"
 
 #include <csignal>
 #include <ctime>

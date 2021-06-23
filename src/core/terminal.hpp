@@ -1,4 +1,4 @@
-// terminal/terminal.hpp -- Middleware layer between the game proper and the terminal emulator being used (Curses, BLT, etc.)
+// core/terminal.hpp -- Middleware layer between the game proper and the terminal emulator being used (Curses, BLT, etc.)
 // This way, multiple alternative terminal emulators can be plugged in without affecting the rest of the code.
 // The base Terminal class is pure virtual; derived classes should handle code specific to their specific terminal emulator.
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.

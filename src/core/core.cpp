@@ -3,13 +3,13 @@
 
 #include "3rdparty/Tolk/Tolk.h"
 #include "core/core.hpp"
+#include "core/filex.hpp"
 #include "core/guru.hpp"
 #include "core/message.hpp"
+#include "core/strx.hpp"
+#include "core/terminal-blt.hpp"
+#include "core/terminal-curses.hpp"
 #include "core/tune.hpp"
-#include "terminal/terminal-blt.hpp"
-#include "terminal/terminal-curses.hpp"
-#include "utility/filex.hpp"
-#include "utility/strx.hpp"
 #include "world/room.hpp"
 #include "world/world.hpp"
 

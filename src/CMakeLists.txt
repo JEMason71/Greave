@@ -46,14 +46,14 @@ endif(TARGET_WINDOWS)
 # Source files.
 set(GREAVE_CPPS
   core/core.cpp
+  core/filex.cpp
   core/guru.cpp
+  core/mathx.cpp
   core/message.cpp
+  core/strx.cpp
+  core/terminal-blt.cpp
+  core/terminal-curses.cpp
   core/tune.cpp
-  terminal/terminal-blt.cpp
-  terminal/terminal-curses.cpp
-  utility/filex.cpp
-  utility/mathx.cpp
-  utility/strx.cpp
   world/room.cpp
   world/mobile.cpp
   world/npc.cpp

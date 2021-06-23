@@ -1,7 +1,7 @@
-// utility/strx.cpp -- Various utility functions that deal with string manipulation/conversion.
+// core/strx.cpp -- Various utility functions that deal with string manipulation/conversion.
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#include "utility/strx.hpp"
+#include "core/strx.hpp"
 
 #include <algorithm>
 #include <sstream>

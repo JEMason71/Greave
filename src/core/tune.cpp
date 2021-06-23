@@ -3,9 +3,9 @@
 
 #include "3rdparty/yaml-cpp/yaml.h"
 #include "core/core.hpp"
+#include "core/filex.hpp"
 #include "core/guru.hpp"
 #include "core/tune.hpp"
-#include "utility/filex.hpp"
 
 
 // Constructor, loads data from tune.yml

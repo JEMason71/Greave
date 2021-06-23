@@ -1,13 +1,13 @@
-// terminal/terminal-blt.cpp -- Terminal interface for BearLibTerminal. See terminal.h for a full description of the Terminal class.
+// core/terminal-blt.cpp -- Terminal interface for BearLibTerminal. See core/terminal.hpp for a full description of the Terminal class.
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #include "3rdparty/BearLibTerminal/BearLibTerminal.h"
 #include "core/core.hpp"
+#include "core/filex.hpp"
 #include "core/guru.hpp"
+#include "core/strx.hpp"
+#include "core/terminal-blt.hpp"
 #include "core/tune.hpp"
-#include "terminal/terminal-blt.hpp"
-#include "utility/filex.hpp"
-#include "utility/strx.hpp"
 
 
 // Constructor, sets up BearLibTerminal.
