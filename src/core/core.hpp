@@ -18,7 +18,7 @@ public:
     void                                cleanup();          // Cleans up after we're done.
     const std::shared_ptr<Guru>         guru() const;       // Returns a pointer to the Guru Meditation object.
     void                                init();             // Sets up the core game classes and data.
-    void                                message(std::string msg, unsigned int flags = 0);   // Prints a message in the message log.
+    void                                message(std::string msg, uint32_t flags = 0);   // Prints a message in the message log.
     const std::shared_ptr<MessageLog>   messagelog() const; // Returns a pointer to the MessageLog object.
     void                                play();             // Starts the game.
     const std::shared_ptr<Terminal>     terminal() const;   // Returns a pointer  to the terminal emulator object.
@@ -26,7 +26,7 @@ public:
     const std::shared_ptr<World>        world() const;      // Returns a pointer to the World object.
 
     static const std::string    GAME_VERSION;       // The game's version number.
-    static const unsigned int   MSG_FLAG_INTERRUPT; // Flags for the message() function.
+    static const uint32_t       MSG_FLAG_INTERRUPT; // Flags for the message() function.
 
 private:
     std::shared_ptr<Guru>       m_guru_meditation;  // The Guru Meditation error-handling system.

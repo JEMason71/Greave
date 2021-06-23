@@ -115,7 +115,7 @@ void GreaveCore::init()
 }
 
 // Prints a message in the message log.
-void GreaveCore::message(std::string msg, unsigned int flags)
+void GreaveCore::message(std::string msg, uint32_t flags)
 {
     m_message_log->msg(msg);
 
