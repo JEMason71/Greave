@@ -27,6 +27,7 @@ if(TARGET_WINDOWS)
       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/binfiles/win64/nvdaControllerClient64.dll" "${CMAKE_BINARY_DIR}/bin"
       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/binfiles/win64/pdcurses.dll" "${CMAKE_BINARY_DIR}/bin"
       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/binfiles/win64/SAAPI64.dll" "${CMAKE_BINARY_DIR}/bin"
+	  COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/binfiles/win64/sqlite3.dll" "${CMAKE_BINARY_DIR}/bin"
       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/binfiles/win64/Tolk.dll" "${CMAKE_BINARY_DIR}/bin"
       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/binfiles/win64/yaml-cpp.dll" "${CMAKE_BINARY_DIR}/bin"
     )
@@ -41,6 +42,7 @@ if(TARGET_WINDOWS)
       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/binfiles/win32/nvdaControllerClient32.dll" "${CMAKE_BINARY_DIR}/bin"
       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/binfiles/win32/pdcurses.dll" "${CMAKE_BINARY_DIR}/bin"
       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/binfiles/win32/SAAPI32.dll" "${CMAKE_BINARY_DIR}/bin"
+	  COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/binfiles/win32/sqlite3.dll" "${CMAKE_BINARY_DIR}/bin"
       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/binfiles/win32/Tolk.dll" "${CMAKE_BINARY_DIR}/bin"
       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/binfiles/win32/yaml-cpp.dll" "${CMAKE_BINARY_DIR}/bin"
     )

@@ -18,6 +18,10 @@ Greave is copyright © 2020-2021 Raine "Gravecat" Simmons and the Greave contrib
 
 [Roboto Mono Font](https://fonts.google.com/specimen/Roboto+Mono) copyright © 2015 Google Inc.
 
+[SQLite](https://www.sqlite.org/) by SQLite Consortium.
+
+[SQLiteCpp](https://github.com/SRombauts/SQLiteCpp) copyright © 2012-2020 Sebastien Rombauts.
+
 [Tolk](https://github.com/dkager/tolk) copyright © 2014-2016 Davy Kager.
 
 [VG5000 TTF Font](https://pinspiry.com/vg5000-free-font/) copyright © Justin Bihan.

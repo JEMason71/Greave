@@ -13,7 +13,8 @@ set(CMAKE_CXX_FLAGS "-Wall -Wextra -pedantic -pedantic-errors")
 set(CMAKE_CXX_FLAGS_DEBUG "-g -Og")
 set(CMAKE_CXX_FLAGS_RELEASE  "-O2")
 set(CMAKE_EXE_LINKER_FLAGS_RELEASE "-s")
-#set(SQLITECPP_LIBRARIES sqlite_cpp)
+set(SQLITECPP_LIBRARIES sqlite_cpp)
+set(BLT_LIBRARIES BearLibTerminal)
 
 
 # Main platform-specific settings.
@@ -87,10 +88,10 @@ target_link_libraries(greave
   ${OS_LIBRARIES}
   ${CMAKE_THREAD_LIBS_INIT}
   ${CURSES_LIBRARIES}
-  #${SQLITECPP_LIBRARIES}
+  ${SQLITECPP_LIBRARIES}
   ${TOLK_LIBRARIES}
   ${YAMLCPP_LIBRARIES}
-  BearLibTerminal
+  ${BLT_LIBRARIES}
 )
 
 
@@ -102,4 +103,4 @@ add_custom_command(TARGET greave POST_BUILD
 
 
 # SQLiteCpp comes with source files as well as headers, so we'll compile it separately.
-#add_subdirectory(3rdparty/SQLiteCpp)
+add_subdirectory(3rdparty/SQLiteCpp)

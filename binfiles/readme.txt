@@ -35,6 +35,12 @@ https://lodev.org/lodepng/
 Roboto Mono Font copyright © 2015 Google Inc.
 https://fonts.google.com/specimen/Roboto+Mono
 
+SQLite by SQLite Consortium.
+https://www.sqlite.org/
+
+SQLiteCpp copyright © 2012-2020 Sebastien Rombauts.
+https://github.com/SRombauts/SQLiteCpp
+
 Tolk copyright © 2014-2016 Davy Kager.
 https://github.com/dkager/tolk
 
