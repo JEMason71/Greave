@@ -1,7 +1,7 @@
 // core/utility.cpp -- Miscellaneous utility functions which don't really fit into any one specific place.
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#include "uni/uni-core.hpp"
+#include "core/utility.hpp"
 
 #include <algorithm>
 #include <sstream>

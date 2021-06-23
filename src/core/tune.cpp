@@ -2,7 +2,10 @@
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #include "3rdparty/yaml-cpp/yaml.h"
-#include "uni/uni-core.hpp"
+#include "core/core.hpp"
+#include "core/guru.hpp"
+#include "core/tune.hpp"
+#include "core/utility.hpp"
 
 
 // Constructor, loads data from tune.yml

@@ -1,5 +1,5 @@
-// uni/uni-system.hpp -- Univeral header including various system libraries that are used extremely frequently in this project.
-// Copyright (c) 2020 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+// core/greave.hpp -- Universal header which includes very commonly-used system libraries and #defines.
+// Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #pragma once
 
@@ -10,9 +10,10 @@
 #define WIN32_LEAN_AND_MEAN
 #if not(defined _WIN32_WINNT)
 #define _WIN32_WINNT 0x0500
-#endif
-#endif
+#endif  // GREAVE_TARGET_WINDOWS
+#endif  // _WIN32_WINNT
 
+// Very commonly-used system libraries.
 #include <climits>  // for handy definitions like UINT_MAX
 #include <cmath>    // basic math functions
 #include <cstdint>  // for integer typedefs

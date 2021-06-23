@@ -1,8 +1,11 @@
 // core/guru.cpp -- Guru Meditation error-handling and reporting system.
-// Copyright (c) 2020 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+// Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
+#include "core/core.hpp"
+#include "core/guru.hpp"
+#include "core/message.hpp"
+#include "core/utility.hpp"
 #include "terminal/terminal.hpp"
-#include "uni/uni-core.hpp"
 
 #include <csignal>
 #include <ctime>

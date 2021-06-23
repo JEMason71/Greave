@@ -1,9 +1,12 @@
 // terminal/terminal-blt.cpp -- Terminal interface for BearLibTerminal. See terminal.h for a full description of the Terminal class.
-// Copyright (c) 2020 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+// Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #include "3rdparty/BearLibTerminal/BearLibTerminal.h"
+#include "core/core.hpp"
+#include "core/guru.hpp"
+#include "core/tune.hpp"
+#include "core/utility.hpp"
 #include "terminal/terminal-blt.hpp"
-#include "uni/uni-core.hpp"
 
 
 // Constructor, sets up BearLibTerminal.

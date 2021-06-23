@@ -3,9 +3,13 @@
 
 #include "3rdparty/Tolk/Tolk.h"
 #include "core/core.hpp"
+#include "core/guru.hpp"
+#include "core/message.hpp"
+#include "core/tune.hpp"
+#include "core/utility.hpp"
+#include "core/world.hpp"
 #include "terminal/terminal-blt.hpp"
 #include "terminal/terminal-curses.hpp"
-#include "uni/uni-core.hpp"
 
 #include <thread>
 #ifdef GREAVE_TARGET_WINDOWS
