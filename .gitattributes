@@ -1,9 +1,9 @@
 *.a binary linguist-vendored
-*.c text
-*.cpp text
+*.c text linguist-language=C
+*.cpp text linguist-language=C++
 *.dll binary linguist-vendored
 *.h text
-*.hpp text
+*.hpp text linguist-language=C++
 *.ico binary linguist-vendored
 *.lib binary linguist-vendored
 *.md text
@@ -16,7 +16,3 @@
 src/3rdparty/**/* linguist-vendored
 src/3rdparty/readme.txt -linguist-vendored
 src/3rdparty/SQLiteCpp/CMakeLists.txt -linguist-vendored
-src/core/*.cpp linguist-language=C++
-src/core/*.hpp linguist-language=C++
-src/world/*.cpp linguist-language=C++
-src/world/*.hpp linguist-language=C++
