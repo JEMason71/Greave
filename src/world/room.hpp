@@ -45,7 +45,7 @@ public:
     uint32_t    id() const;     // Retrieves the unique hashed ID of this Room.
 	bool        link_tag(unsigned char id, LinkTag the_tag) const;  // Checks if a tag is set on this Room's link.
 	bool        link_tag(Direction dir, LinkTag the_tag) const;     // As above, but with a Direction enum.
-    std::string name(bool short_name = false);  // Returns the Room's full or short name.
+    std::string name(bool short_name = false) const;    // Returns the Room's full or short name.
     void        set_base_light(uint8_t new_light);  // Sets this Room's base light level.
     void        set_desc(const std::string &new_desc);  // Sets this Room's description.
     void        set_link(Direction dir, const std::string &room_id);    // Sets a link to another Room.

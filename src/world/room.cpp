@@ -246,7 +246,7 @@ void Room::load_room_pool()
 }
 
 // Returns the Room's full or short name.
-std::string Room::name(bool short_name) { return (short_name ? m_name_short : m_name); }
+std::string Room::name(bool short_name) const { return (short_name ? m_name_short : m_name); }
 
 // Sets this Room's base light level.
 void Room::set_base_light(uint8_t new_light) { m_light = new_light; }

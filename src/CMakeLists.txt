@@ -55,6 +55,9 @@ set(GREAVE_CPPS
   utility/mathx.cpp
   utility/strx.cpp
   world/room.cpp
+  world/mobile.cpp
+  world/npc.cpp
+  world/player.cpp
   world/world.cpp
 )
 
