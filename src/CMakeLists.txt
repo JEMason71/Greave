@@ -45,6 +45,7 @@ endif(TARGET_WINDOWS)
 
 # Source files.
 set(GREAVE_CPPS
+  actions/look.cpp
   core/core.cpp
   core/filex.cpp
   core/guru.cpp

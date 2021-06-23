@@ -110,9 +110,6 @@ void Core::init()
 
     // Tell the Guru system we're finished setting up.
     guru()->console_ready();
-
-    // Load the areas from YAML data.
-    Room::load_room_pool();
 }
 
 // The main game loop.
