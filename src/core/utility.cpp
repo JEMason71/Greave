@@ -4,6 +4,7 @@
 #include "core/utility.hpp"
 
 #include <algorithm>
+#include <dirent.h>
 #include <sstream>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -11,6 +12,28 @@
 
 // Deletes a specified file. Simple enough, but we'll keep this function around in case there's any platform-specific weirdness that needs to be worked in.
 void Util::delete_file(const std::string &filename) { unlink(filename.c_str()); }
+
+// Converts a direction enum into a string.
+std::string Util::dir_to_name(Direction dir)
+{
+    switch(dir)
+    {
+        case Direction::NORTH: return "north";
+        case Direction::SOUTH: return "south";
+        case Direction::EAST: return "east";
+        case Direction::WEST: return "west";
+        case Direction::NORTHEAST: return "northeast";
+        case Direction::NORTHWEST: return "northwest";
+        case Direction::SOUTHEAST: return "southeast";
+        case Direction::SOUTHWEST: return "southwest";
+        case Direction::UP: return "up";
+        case Direction::DOWN: return "down";
+        case Direction::NONE: return "????";
+        default:
+            throw std::runtime_error("Invalid direction enum: " + std::to_string(static_cast<int>(dir)));
+            return "";
+	}
+}
 
 // Check if a directory exists.
 bool Util::directory_exists(const std::string &dir)
@@ -28,6 +51,38 @@ bool Util::file_exists(const std::string &file)
     return (stat(file.c_str(), &info) == 0);
 }
 
+// Returns a list of files in a given directory.
+std::vector<std::string> Util::files_in_dir(const std::string &directory, bool recursive)
+{
+    DIR *dir;
+    struct dirent *ent;
+    std::vector<std::string> files;
+    if (!(dir = opendir(directory.c_str()))) throw std::runtime_error("Could not open directory: " + directory);
+    while ((ent = readdir(dir)))
+    {
+        std::string filename = std::string(ent->d_name);
+        if (filename == "." || filename == "..") continue;
+        struct stat s;
+        if (stat((directory + "/" + filename).c_str(), &s) == 0)
+        {
+            if (s.st_mode & S_IFDIR)
+            {
+                if (recursive)
+                {
+                    std::vector<std::string> result = files_in_dir(directory + "/" + filename, true);
+                    for (unsigned int i = 0; i < result.size(); i++)
+                        result.at(i) = filename + "/" + result.at(i);
+                    files.reserve(files.size() + result.size());
+                    files.insert(files.end(), result.begin(), result.end());
+                }
+            }
+            else if (s.st_mode & S_IFREG) files.push_back(filename);
+        }
+    }
+    closedir(dir);
+    return files;
+}
+
 // Find and replace one string with another.
 bool Util::find_and_replace(std::string &input, const std::string &to_find, const std::string &to_replace)
 {
@@ -42,6 +97,16 @@ bool Util::find_and_replace(std::string &input, const std::string &to_find, cons
         pos += replace_len;
     }
     return found;
+}
+
+// FNV string hash function.
+unsigned int Util::hash(const std::string &str)
+{
+    size_t result = 2166136261U;
+    std::string::const_iterator end = str.end();
+    for (std::string::const_iterator iter = str.begin(); iter != end; ++iter)
+        result = 127 * result + static_cast<unsigned char>(*iter);
+    return result;
 }
 
 // Converts a hex string back to an integer.

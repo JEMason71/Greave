@@ -50,9 +50,10 @@ set(GREAVE_CPPS
   core/message.cpp
   core/tune.cpp
   core/utility.cpp
-  core/world.cpp
   terminal/terminal-blt.cpp
   terminal/terminal-curses.cpp
+  world/room.cpp
+  world/world.cpp
 )
 
 

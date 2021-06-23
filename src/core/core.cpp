@@ -7,9 +7,10 @@
 #include "core/message.hpp"
 #include "core/tune.hpp"
 #include "core/utility.hpp"
-#include "core/world.hpp"
 #include "terminal/terminal-blt.hpp"
 #include "terminal/terminal-curses.hpp"
+#include "world/room.hpp"
+#include "world/world.hpp"
 
 #include <thread>
 #ifdef GREAVE_TARGET_WINDOWS
@@ -33,9 +34,17 @@ int main(int argc, char* argv[])
     std::vector<std::string> parameters(argv, argv + argc);
 
     greave = std::make_shared<GreaveCore>();
-    greave->init();
-    greave->play();
-    greave->cleanup();
+    try
+    {
+        greave->init();
+        greave->play();
+        greave->cleanup();
+    }
+    catch (std::exception& e)
+    {
+        greave->guru()->halt(e.what());
+        return EXIT_FAILURE;
+    }
     return EXIT_SUCCESS;
 }
 
@@ -100,6 +109,9 @@ void GreaveCore::init()
 
     // Tell the Guru system we're finished setting up.
     guru()->console_ready();
+
+    // Load the areas from YAML data.
+    Room::load_room_pool();
 }
 
 // Prints a message in the message log.
