@@ -5,8 +5,9 @@
 #include "core/core.hpp"
 #include "core/guru.hpp"
 #include "core/tune.hpp"
-#include "core/utility.hpp"
 #include "terminal/terminal-blt.hpp"
+#include "utility/filex.hpp"
+#include "utility/strx.hpp"
 
 
 // Constructor, sets up BearLibTerminal.
@@ -16,7 +17,7 @@ TerminalBLT::TerminalBLT() : m_cursor_visible(false), m_cursor_x(0), m_cursor_y(
     std::string ver_str = GreaveCore::GAME_VERSION;
 
     core()->guru()->log("Setting up BearLibTerminal.");
-    Util::delete_file("userdata/" + tune->blt_log_file);
+    FileX::delete_file("userdata/" + tune->blt_log_file);
     terminal_open();
     terminal_set((
         "window: size = " + tune->blt_console_size + ", title = 'Greave " + ver_str + "', icon = 'data/app-icon.ico', resizeable = true, fullscreen = false, vsync = " +
@@ -161,22 +162,22 @@ void TerminalBLT::print(std::string str, int x, int y, Colour col)
     if (col == Colour::WHITE_BG) set_background(Terminal::Colour::WHITE);
     if (str.find('[') != std::string::npos)
     {
-        Util::find_and_replace(str, "[", "[[");
-        Util::find_and_replace(str, "]", "]]");
+        StrX::find_and_replace(str, "[", "[[");
+        StrX::find_and_replace(str, "]", "]]");
     }
     while (str.find("{") != std::string::npos)
     {
         const bool mono = core()->tune()->monochrome_mode;
-        if (Util::find_and_replace(str, "{r}", mono ? "[color=white]" : "[color=g_red]")) continue;
-        if (Util::find_and_replace(str, "{g}", mono ? "[color=white]" : "[color=g_green]")) continue;
-        if (Util::find_and_replace(str, "{y}", mono ? "[color=white]" : "[color=g_yellow]")) continue;
-        if (Util::find_and_replace(str, "{b}", mono ? "[color=white]" : "[color=g_blue]")) continue;
-        if (Util::find_and_replace(str, "{m}", mono ? "[color=white]" : "[color=g_magenta]")) continue;
-        if (Util::find_and_replace(str, "{c}", mono ? "[color=white]" : "[color=g_cyan]")) continue;
-        if (Util::find_and_replace(str, "{w}", "[color=g_white]")) continue;
-        if (Util::find_and_replace(str, "{o}", mono ? "[color=white]" : "[color=g_orange]")) continue;
-        if (Util::find_and_replace(str, "{p}", mono ? "[color=white]" : "[color=g_purple]")) continue;
-        if (Util::find_and_replace(str, "{e}", mono ? "[color=white]" : "[color=g_grey]")) continue;
+        if (StrX::find_and_replace(str, "{r}", mono ? "[color=white]" : "[color=g_red]")) continue;
+        if (StrX::find_and_replace(str, "{g}", mono ? "[color=white]" : "[color=g_green]")) continue;
+        if (StrX::find_and_replace(str, "{y}", mono ? "[color=white]" : "[color=g_yellow]")) continue;
+        if (StrX::find_and_replace(str, "{b}", mono ? "[color=white]" : "[color=g_blue]")) continue;
+        if (StrX::find_and_replace(str, "{m}", mono ? "[color=white]" : "[color=g_magenta]")) continue;
+        if (StrX::find_and_replace(str, "{c}", mono ? "[color=white]" : "[color=g_cyan]")) continue;
+        if (StrX::find_and_replace(str, "{w}", "[color=g_white]")) continue;
+        if (StrX::find_and_replace(str, "{o}", mono ? "[color=white]" : "[color=g_orange]")) continue;
+        if (StrX::find_and_replace(str, "{p}", mono ? "[color=white]" : "[color=g_purple]")) continue;
+        if (StrX::find_and_replace(str, "{e}", mono ? "[color=white]" : "[color=g_grey]")) continue;
         break;
     }
 

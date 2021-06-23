@@ -7,8 +7,8 @@
 #include "core/guru.hpp"
 #include "core/message.hpp"
 #include "core/tune.hpp"
-#include "core/utility.hpp"
 #include "terminal/terminal.hpp"
+#include "utility/strx.hpp"
 
 #include <regex>
 
@@ -122,12 +122,12 @@ std::string MessageLog::render_message_log(bool accept_blank_input)
             if (result.size())
             {
                 core()->message("{c}> " + result, GreaveCore::MSG_FLAG_INTERRUPT);
-                const std::string result_lower = Util::str_tolower(result);
+                const std::string result_lower = StrX::str_tolower(result);
                 if (result_lower == "quit" || result_lower == "exit")
                 {
                     m_input_buffer = "";
                     core()->message("{r}Are you sure you want to quit? Type {c}yes {r}to confirm.");
-                    result = Util::str_tolower(render_message_log());
+                    result = StrX::str_tolower(render_message_log());
                     if (result == "yes" || result == "quit" || result == "exit")
                     {
                         core()->cleanup();
@@ -222,7 +222,7 @@ void MessageLog::reprocess_output()
             line = line.substr(3);
             same_line = true;
         }
-        std::vector<std::string> split_line = Util::string_explode_colour(line, m_output_window_width);
+        std::vector<std::string> split_line = StrX::string_explode_colour(line, m_output_window_width);
         if (!same_line) m_output_processed.push_back("");
         m_output_processed.insert(m_output_processed.end(), split_line.begin(), split_line.end());
     }

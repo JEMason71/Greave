@@ -6,9 +6,10 @@
 #include "core/guru.hpp"
 #include "core/message.hpp"
 #include "core/tune.hpp"
-#include "core/utility.hpp"
 #include "terminal/terminal-blt.hpp"
 #include "terminal/terminal-curses.hpp"
+#include "utility/filex.hpp"
+#include "utility/strx.hpp"
 #include "world/room.hpp"
 #include "world/world.hpp"
 
@@ -75,7 +76,7 @@ const std::shared_ptr<Guru> GreaveCore::guru() const
 // Sets up the core game classes and data.
 void GreaveCore::init()
 {
-    Util::make_dir("userdata");
+    FileX::make_dir("userdata");
 
     // Sets up the error-handling subsystem.
     m_guru_meditation = std::make_shared<Guru>("userdata/log.txt");
@@ -94,7 +95,7 @@ void GreaveCore::init()
     }
 #endif
 
-    std::string terminal_choice = Util::str_tolower(m_tune->terminal);
+    std::string terminal_choice = StrX::str_tolower(m_tune->terminal);
 #ifdef GREAVE_TARGET_WINDOWS
     if (terminal_choice != "curses") FreeConsole();
 #endif
@@ -125,8 +126,8 @@ void GreaveCore::message(std::string msg, uint32_t flags)
     {
         if (m_tune->screen_reader_process_square_brackets)
         {
-            Util::find_and_replace(msg, "[", "(");
-            Util::find_and_replace(msg, "]", ").");
+            StrX::find_and_replace(msg, "[", "(");
+            StrX::find_and_replace(msg, "]", ").");
         }
         std::regex filter("\\{.*?\\}");
         std::string msg_voice = std::regex_replace(msg, filter, "");

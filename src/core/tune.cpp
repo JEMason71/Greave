@@ -5,7 +5,7 @@
 #include "core/core.hpp"
 #include "core/guru.hpp"
 #include "core/tune.hpp"
-#include "core/utility.hpp"
+#include "utility/filex.hpp"
 
 
 // Constructor, loads data from tune.yml
@@ -19,7 +19,7 @@ Tune::Tune()
         const YAML::Node yaml_tune = YAML::LoadFile("data/tune.yml");
         YAML::Node yaml_override;
         bool override = false;
-        if (Util::file_exists("userdata/tune.yml"))
+        if (FileX::file_exists("userdata/tune.yml"))
         {
             guru->log("User override tune.yml detected, loading user settings...");
             yaml_override = YAML::LoadFile("userdata/tune.yml");

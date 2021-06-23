@@ -4,8 +4,8 @@
 #include "core/core.hpp"
 #include "core/guru.hpp"
 #include "core/message.hpp"
-#include "core/utility.hpp"
 #include "terminal/terminal.hpp"
+#include "utility/filex.hpp"
 
 #include <csignal>
 #include <ctime>
@@ -32,7 +32,7 @@ void guru_intercept_signal(int sig) { core()->guru()->intercept_signal(sig); }
 Guru::Guru(std::string log_filename) : m_cascade_count(0), m_cascade_failure(false), m_cascade_timer(std::time(0)), m_console_ready(false), m_dead_already(false)
 {
     if (!log_filename.size()) log_filename = Guru::FILENAME_LOG;
-    Util::delete_file(log_filename);
+    FileX::delete_file(log_filename);
     m_syslog.open(log_filename.c_str());
     this->log("Guru error-handling system is online. Hooking signals...");
     if (signal(SIGABRT, guru_intercept_signal) == SIG_ERR) halt("Failed to hook abort signal.");

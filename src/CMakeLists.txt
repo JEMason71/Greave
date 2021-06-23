@@ -49,9 +49,11 @@ set(GREAVE_CPPS
   core/guru.cpp
   core/message.cpp
   core/tune.cpp
-  core/utility.cpp
   terminal/terminal-blt.cpp
   terminal/terminal-curses.cpp
+  utility/filex.cpp
+  utility/mathx.cpp
+  utility/strx.cpp
   world/room.cpp
   world/world.cpp
 )

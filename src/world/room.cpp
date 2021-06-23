@@ -4,7 +4,8 @@
 #include "3rdparty/yaml-cpp/yaml.h"
 #include "core/core.hpp"
 #include "core/message.hpp"
-#include "core/utility.hpp"
+#include "utility/filex.hpp"
+#include "utility/strx.hpp"
 #include "world/room.hpp"
 
 // Lookup table for converting textual light levels (e.g. "bright") to integer values.
@@ -28,7 +29,7 @@ std::map<uint32_t, std::shared_ptr<Room>>   Room::s_room_pool;  // All the Rooms
 
 Room::Room(std::string new_id) : m_light(0), m_security(Security::ANARCHY)
 {
-    if (new_id.size()) m_id = Util::hash(new_id);
+    if (new_id.size()) m_id = StrX::hash(new_id);
     else m_id = 0;
 
     for (unsigned int e = 0; e < ROOM_LINKS_MAX; e++)
@@ -62,7 +63,7 @@ uint32_t Room::id() const { return m_id; }
 // Loads the Room YAML data into memory.
 void Room::load_room_pool()
 {
-    const std::vector<std::string> area_files = Util::files_in_dir("data/areas");
+    const std::vector<std::string> area_files = FileX::files_in_dir("data/areas");
     for (auto area_file : area_files)
     {
         const YAML::Node yaml_rooms = YAML::LoadFile("data/areas/" + area_file);
@@ -91,7 +92,7 @@ void Room::load_room_pool()
                 for (unsigned int e = 0; e < ROOM_LINKS_MAX; e++)
                 {
                     const Direction dir = static_cast<Direction>(e);
-                    const std::string dir_str = Util::dir_to_name(dir);
+                    const std::string dir_str = StrX::dir_to_name(dir);
                     if (room_data["exits"][dir_str]) new_room->set_link(dir, room_data["exits"][dir_str].as<std::string>());
                 }
             }
@@ -122,7 +123,7 @@ void Room::load_room_pool()
                 if (!room_data["tags"].IsSequence()) core()->message("{r}Malformed room tags: " + room_id);
                 else for (auto tag : room_data["tags"])
                 {
-                    const std::string tag_str = Util::str_tolower(tag.as<std::string>());
+                    const std::string tag_str = StrX::str_tolower(tag.as<std::string>());
                     bool directional_tag = false;
                     int dt_int = 0, dt_offset = 0;
 
@@ -254,7 +255,7 @@ void Room::set_base_light(uint8_t new_light) { m_light = new_light; }
 void Room::set_desc(const std::string &new_desc) { m_desc = new_desc; }
 
 // Sets a link to another Room.
-void Room::set_link(Direction dir, const std::string &room_id) { set_link(dir, room_id.size() ? Util::hash(room_id) : 0); }
+void Room::set_link(Direction dir, const std::string &room_id) { set_link(dir, room_id.size() ? StrX::hash(room_id) : 0); }
 
 // As above, but with an already-hashed Room ID.
 void Room::set_link(Direction dir, uint32_t room_id)

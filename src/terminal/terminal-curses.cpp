@@ -4,8 +4,8 @@
 #include "core/core.hpp"
 #include "core/guru.hpp"
 #include "core/tune.hpp"
-#include "core/utility.hpp"
 #include "terminal/terminal-curses.hpp"
+#include "utility/strx.hpp"
 
 #ifdef GREAVE_TARGET_WINDOWS
 #include "3rdparty/PDCurses/curses.h"
@@ -134,9 +134,9 @@ void TerminalCurses::cursor(bool visible) { curs_set(visible ? 1 : 0); }
 void TerminalCurses::decode_hex_colour(const std::string &col, short &r, short &g, short &b)
 {
     if (col.size() != 6) return;
-    r = Util::htoi(col.substr(0, 2)) * 3.92f;
-    g = Util::htoi(col.substr(2, 2)) * 3.92f;
-    b = Util::htoi(col.substr(4, 2)) * 3.92f;
+    r = StrX::htoi(col.substr(0, 2)) * 3.92f;
+    g = StrX::htoi(col.substr(2, 2)) * 3.92f;
+    b = StrX::htoi(col.substr(4, 2)) * 3.92f;
 }
 
 // Fills a given area in with the specified colour. Currently nonfunctional on Curses.
@@ -230,7 +230,7 @@ void TerminalCurses::print(std::string str, int x, int y, Colour col)
         const unsigned long ansi_code = colour(col);
         attron(ansi_code);
         const unsigned int first_word_size = first_word.size();
-        Util::find_and_replace(first_word, "%", "%%");
+        StrX::find_and_replace(first_word, "%", "%%");
         mvprintw(y, x, first_word.c_str());
         attroff(ansi_code);
         x += first_word_size;
