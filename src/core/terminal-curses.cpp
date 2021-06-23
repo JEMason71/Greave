@@ -31,7 +31,7 @@ TerminalCurses::TerminalCurses()
     if (!can_change_color()) tune->curses_custom_colours = false;
     if (tune->curses_custom_colours)
     {
-        auto redefine_colour = [](int colour, std::string value) {
+        auto redefine_colour = [this](int colour, std::string value) {
             short r = 255, g = 255, b = 255;
             decode_hex_colour(value, r, g, b);
             init_color(colour, r, g, b);
@@ -99,8 +99,11 @@ TerminalCurses::~TerminalCurses()
     endwin();
 }
 
+// Returns the height of a single cell, in pixels. Not used in Curses.
+int TerminalCurses::cell_height() const { return 0; }
+
 // Returns a colour pair code.
-unsigned long TerminalCurses::colour(Colour col)
+uint32_t TerminalCurses::colour(Colour col) const
 {
     const std::shared_ptr<Tune> tune = core()->tune();
     if (tune->monochrome_mode) switch(col)
@@ -144,7 +147,7 @@ void TerminalCurses::cls() { clear(); }
 void TerminalCurses::cursor(bool visible) { curs_set(visible ? 1 : 0); }
 
 // Decodes a hex-code colour into RGB values.
-void TerminalCurses::decode_hex_colour(const std::string &col, short &r, short &g, short &b)
+void TerminalCurses::decode_hex_colour(const std::string &col, short &r, short &g, short &b) const
 {
     if (col.size() != 6) return;
     r = StrX::htoi(col.substr(0, 2)) * 3.92f;
@@ -155,8 +158,20 @@ void TerminalCurses::decode_hex_colour(const std::string &col, short &r, short &
 // Fills a given area in with the specified colour. Currently nonfunctional on Curses.
 void TerminalCurses::fill(int, int, int, int, Colour) { }
 
+// Not currently supported by the Curses interface.
+int TerminalCurses::get_mouse_x() const { return 0; }
+
+// Not currently supported by the Curses interface.
+int TerminalCurses::get_mouse_x_pixel() const { return 0; }
+
+// Not currently supported by the Curses interface.
+int TerminalCurses::get_mouse_y() const { return 0; }
+
+// Not currently supported by the Curses interface.
+int TerminalCurses::get_mouse_y_pixel() const { return 0; }
+
 // Gets keyboard input from the terminal.
-int TerminalCurses::get_key()
+int TerminalCurses::get_key() const
 {
     int key = getch();
     switch(key)
@@ -179,7 +194,7 @@ int TerminalCurses::get_key()
 }
 
 // Retrieves the size of the terminal (in cells, not pixels).
-void TerminalCurses::get_size(int *w, int *h)
+void TerminalCurses::get_size(int *w, int *h) const
 {
     *w = getmaxx(stdscr);
     *h = getmaxy(stdscr);
@@ -273,7 +288,7 @@ void TerminalCurses::refresh() { ::refresh(); }
 void TerminalCurses::set_background(Colour) { }
 
 // Returns true if the player uses Ctrl-C, Ctrl-D or escape.
-bool TerminalCurses::wants_to_close()
+bool TerminalCurses::wants_to_close() const
 {
     const char ch = getch();
     return (ch == 3 || ch == 4 || ch == 27);

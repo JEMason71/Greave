@@ -48,10 +48,10 @@ TerminalBLT::TerminalBLT() : m_cursor_visible(false), m_cursor_x(0), m_cursor_y(
 TerminalBLT::~TerminalBLT() { terminal_close(); }
 
 // The defined background window colour for BLT.
-std::string TerminalBLT::background_colour() { return "black"; }
+std::string TerminalBLT::background_colour() const { return "black"; }
 
 // Returns the height of a single cell, in pixels.
-int TerminalBLT::cell_height() { return terminal_state(TK_CELL_HEIGHT); }
+int TerminalBLT::cell_height() const { return terminal_state(TK_CELL_HEIGHT); }
 
 void TerminalBLT::cls()
 {
@@ -61,7 +61,7 @@ void TerminalBLT::cls()
 }
 
 // Converts a Terminal::Colour into a BLT colour string.
-std::string TerminalBLT::colour(Colour col)
+std::string TerminalBLT::colour(Colour col) const
 {
     if (core()->tune()->monochrome_mode) switch(col)
     {
@@ -105,7 +105,7 @@ void TerminalBLT::fill(int x, int y, int w, int h, Colour col)
 }
 
 // Gets keyboard input from the terminal.
-int TerminalBLT::get_key()
+int TerminalBLT::get_key() const
 {
     const int key = terminal_read();
 
@@ -138,19 +138,19 @@ int TerminalBLT::get_key()
 }
 
 // Gets the X coordinate for the cell the mouse is pointing at.
-int TerminalBLT::get_mouse_x() { return terminal_state(TK_MOUSE_X); }
+int TerminalBLT::get_mouse_x() const { return terminal_state(TK_MOUSE_X); }
 
 // Gets the X coordinate for the pixel the mouse is pointing at.
-int TerminalBLT::get_mouse_x_pixel() { return terminal_state(TK_MOUSE_PIXEL_X); }
+int TerminalBLT::get_mouse_x_pixel() const { return terminal_state(TK_MOUSE_PIXEL_X); }
 
 // Gets the Y coordinate for the cell the mouse is pointing at.
-int TerminalBLT::get_mouse_y() { return terminal_state(TK_MOUSE_Y); }
+int TerminalBLT::get_mouse_y() const { return terminal_state(TK_MOUSE_Y); }
 
 // Gets the Y coordinate for the pixel the mouse is pointing at.
-int TerminalBLT::get_mouse_y_pixel() { return terminal_state(TK_MOUSE_PIXEL_Y); }
+int TerminalBLT::get_mouse_y_pixel() const { return terminal_state(TK_MOUSE_PIXEL_Y); }
 
 // Retrieves the size of the terminal (in cells, not pixels).
-void TerminalBLT::get_size(int *w, int *h)
+void TerminalBLT::get_size(int *w, int *h) const
 {
     *w = terminal_state(TK_WIDTH);
     *h = terminal_state(TK_HEIGHT);
@@ -217,4 +217,4 @@ void TerminalBLT::refresh()
 void TerminalBLT::set_background(Colour col) { terminal_bkcolor(colour(col).c_str()); }
 
 // Returns true if the terminal window has been closed.
-bool TerminalBLT::wants_to_close() { return (terminal_read() == TK_CLOSE); }
+bool TerminalBLT::wants_to_close() const { return (terminal_read() == TK_CLOSE); }
