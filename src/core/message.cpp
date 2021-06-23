@@ -126,7 +126,7 @@ std::string MessageLog::render_message_log(bool accept_blank_input)
                 if (result_lower == "quit" || result_lower == "exit")
                 {
                     m_input_buffer = "";
-                    core()->message("{r}Are you sure you want to quit? Type {c}yes {r}to confirm.");
+                    core()->message("{R}Are you sure you want to quit? Type {C}yes {R}to confirm.");
                     result = StrX::str_tolower(render_message_log());
                     if (result == "yes" || result == "quit" || result == "exit")
                     {

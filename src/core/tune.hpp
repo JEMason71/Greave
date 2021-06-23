@@ -16,16 +16,22 @@ public:
     std::string     blt_log_file;           // The filename for the BearLibTerminal log file in the userdata folder.
     std::string     blt_log_level;          // The minimum level of logging for BearLibTerminal.
     bool            blt_vsync;              // Should the game use vsync?
-    std::string     colour_blue;            // Hex colour definition for blue.
-    std::string     colour_cyan;            // Hex colour definition for cyan.
-    std::string     colour_green;           // Hex colour definition for green.
+    std::string     colour_black;           // Hex colour definition for black.
+    std::string     colour_blue;            // Hex colour definition for bold blue.
+    std::string     colour_blue_dark;       // Hex colour definition for dark blue.
+    std::string     colour_cyan;            // Hex colour definition for bold cyan.
+    std::string     colour_cyan_dark;       // Hex colour definition for dark cyan.
+    std::string     colour_green;           // Hex colour definition for bold green.
+    std::string     colour_green_dark;      // Hex colour definition for dark green.
     std::string     colour_grey;            // Hex colour definition for grey.
-    std::string     colour_magenta;         // Hex colour definition for magenta.
-    std::string     colour_orange;          // Hex colour definition for orange.
-    std::string     colour_purple;          // Hex colour definition for purple.
-    std::string     colour_red;             // Hex colour definition for red.
-    std::string     colour_yellow;          // Hex colour definition for yellow.
+    std::string     colour_grey_dark;       // Hex colour definition for dark grey.
+    std::string     colour_magenta;         // Hex colour definition for bold magenta.
+    std::string     colour_magenta_dark;    // Hex colour definition for dark magenta.
+    std::string     colour_red;             // Hex colour definition for bold red.
+    std::string     colour_red_dark;        // Hex colour definition for dark red.
     std::string     colour_white;           // Hex colour definition for white.
+    std::string     colour_yellow;          // Hex colour definition for bold yellow.
+    std::string     colour_yellow_dark;     // Hex colour definition for dark yellow.
     bool            curses_custom_colours;  // Apply custom colour values above to Curses colours.
     unsigned int    log_max_size;           // How many lines of text to keep in the message log?
     unsigned int    log_mouse_scroll_step;  // How many lines to scroll the window, when using the mouse-wheel.

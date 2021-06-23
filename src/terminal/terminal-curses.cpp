@@ -37,15 +37,21 @@ TerminalCurses::TerminalCurses()
             init_color(colour, r, g, b);
         };
 
+        redefine_colour(CUSTOM_BLACK, tune->colour_black);
+        redefine_colour(CUSTOM_GREY_DARK, tune->colour_grey_dark);
         redefine_colour(CUSTOM_RED, tune->colour_red);
+        redefine_colour(CUSTOM_RED_DARK, tune->colour_red_dark);
         redefine_colour(CUSTOM_GREEN, tune->colour_green);
+        redefine_colour(CUSTOM_GREEN_DARK, tune->colour_green_dark);
         redefine_colour(CUSTOM_YELLOW, tune->colour_yellow);
+        redefine_colour(CUSTOM_YELLOW_DARK, tune->colour_yellow_dark);
         redefine_colour(CUSTOM_BLUE, tune->colour_blue);
+        redefine_colour(CUSTOM_BLUE_DARK, tune->colour_blue_dark);
         redefine_colour(CUSTOM_MAGENTA, tune->colour_magenta);
+        redefine_colour(CUSTOM_MAGENTA_DARK, tune->colour_magenta_dark);
         redefine_colour(CUSTOM_CYAN, tune->colour_cyan);
+        redefine_colour(CUSTOM_CYAN_DARK, tune->colour_cyan_dark);
         redefine_colour(CUSTOM_WHITE, tune->colour_white);
-        redefine_colour(CUSTOM_ORANGE, tune->colour_orange);
-        redefine_colour(CUSTOM_PURPLE, tune->colour_purple);
         redefine_colour(CUSTOM_GREY, tune->colour_grey);
     }
     init_pair(1, COLOR_BLACK, COLOR_BLACK);
@@ -60,17 +66,23 @@ TerminalCurses::TerminalCurses()
 
     if (tune->curses_custom_colours)
     {
+        init_pair(CUSTOM_BLACK, CUSTOM_BLACK, COLOR_BLACK);
+        init_pair(CUSTOM_GREY_DARK, CUSTOM_GREY_DARK, COLOR_BLACK);
         init_pair(CUSTOM_RED, CUSTOM_RED, COLOR_BLACK);
+        init_pair(CUSTOM_RED_DARK, CUSTOM_RED_DARK, COLOR_BLACK);
         init_pair(CUSTOM_GREEN, CUSTOM_GREEN, COLOR_BLACK);
+        init_pair(CUSTOM_GREEN_DARK, CUSTOM_GREEN_DARK, COLOR_BLACK);
         init_pair(CUSTOM_YELLOW, CUSTOM_YELLOW, COLOR_BLACK);
+        init_pair(CUSTOM_YELLOW_DARK, CUSTOM_YELLOW_DARK, COLOR_BLACK);
         init_pair(CUSTOM_BLUE, CUSTOM_BLUE, COLOR_BLACK);
+        init_pair(CUSTOM_BLUE_DARK, CUSTOM_BLUE_DARK, COLOR_BLACK);
         init_pair(CUSTOM_MAGENTA, CUSTOM_MAGENTA, COLOR_BLACK);
+        init_pair(CUSTOM_MAGENTA_DARK, CUSTOM_MAGENTA_DARK, COLOR_BLACK);
         init_pair(CUSTOM_CYAN, CUSTOM_CYAN, COLOR_BLACK);
+        init_pair(CUSTOM_CYAN_DARK, CUSTOM_CYAN_DARK, COLOR_BLACK);
         init_pair(CUSTOM_WHITE, CUSTOM_WHITE, COLOR_BLACK);
-        init_pair(CUSTOM_ORANGE, CUSTOM_ORANGE, COLOR_BLACK);
-        init_pair(CUSTOM_PURPLE, CUSTOM_PURPLE, COLOR_BLACK);
         init_pair(CUSTOM_GREY, CUSTOM_GREY, COLOR_BLACK);
-        init_pair(CUSTOM_WHITE_BG, COLOR_BLACK, CUSTOM_WHITE);
+        init_pair(CUSTOM_WHITE_BG, CUSTOM_BLACK, CUSTOM_WHITE);
     }
 
 #ifdef GREAVE_TARGET_WINDOWS
@@ -93,9 +105,10 @@ unsigned long TerminalCurses::colour(Colour col)
     const std::shared_ptr<Tune> tune = core()->tune();
     if (tune->monochrome_mode) switch(col)
     {
-        case Colour::BLACK: return COLOR_PAIR(1);
-        case Colour::BLACK_BOLD: return COLOR_PAIR(1) | A_BOLD;
-        case Colour::RED: case Colour::GREEN: case Colour::YELLOW: case Colour::BLUE: case Colour::MAGENTA: case Colour::CYAN: case Colour::WHITE: return (tune->curses_custom_colours ? COLOR_PAIR(CUSTOM_GREY) : COLOR_PAIR(8));
+        case Colour::BLACK: return (tune->curses_custom_colours ? COLOR_PAIR(CUSTOM_BLACK) : COLOR_PAIR(1));
+        case Colour::BLACK_BOLD: return (tune->curses_custom_colours ? COLOR_PAIR(CUSTOM_GREY_DARK) : COLOR_PAIR(1) | A_BOLD);
+        case Colour::RED: case Colour::GREEN: case Colour::YELLOW: case Colour::BLUE: case Colour::MAGENTA: case Colour::CYAN: case Colour::WHITE:
+            return (tune->curses_custom_colours ? COLOR_PAIR(CUSTOM_GREY) : COLOR_PAIR(8));
         case Colour::RED_BOLD: case Colour::GREEN_BOLD: case Colour::YELLOW_BOLD: case Colour::BLUE_BOLD: case Colour::MAGENTA_BOLD: case Colour::CYAN_BOLD: case Colour::WHITE_BOLD:
             return (tune->curses_custom_colours ? COLOR_PAIR(CUSTOM_WHITE) :COLOR_PAIR(8) | A_BOLD);
         case Colour::WHITE_BG: return (tune->curses_custom_colours ? COLOR_PAIR(CUSTOM_WHITE_BG) : COLOR_PAIR(9) | A_BOLD);
@@ -103,19 +116,19 @@ unsigned long TerminalCurses::colour(Colour col)
     }
     else switch(col)
     {
-        case Colour::BLACK: return COLOR_PAIR(1);
-        case Colour::BLACK_BOLD: return COLOR_PAIR(1) | A_BOLD;
-        case Colour::RED: return COLOR_PAIR(2);
+        case Colour::BLACK: return COLOR_PAIR(tune->curses_custom_colours ? CUSTOM_BLACK : 1);
+        case Colour::BLACK_BOLD: return (tune->curses_custom_colours ? COLOR_PAIR(CUSTOM_GREY_DARK) : COLOR_PAIR(1) | A_BOLD);
+        case Colour::RED: return COLOR_PAIR(tune->curses_custom_colours ? CUSTOM_RED_DARK : 2);
         case Colour::RED_BOLD: return (tune->curses_custom_colours ? COLOR_PAIR(CUSTOM_RED) : COLOR_PAIR(2) | A_BOLD);
-        case Colour::GREEN: return COLOR_PAIR(3);
+        case Colour::GREEN: return COLOR_PAIR(tune->curses_custom_colours ? CUSTOM_GREEN_DARK : 3);
         case Colour::GREEN_BOLD: return (tune->curses_custom_colours ? COLOR_PAIR(CUSTOM_GREEN) : COLOR_PAIR(3) | A_BOLD);
-        case Colour::YELLOW: return (tune->curses_custom_colours ? COLOR_PAIR(CUSTOM_ORANGE) : COLOR_PAIR(4));
+        case Colour::YELLOW: return COLOR_PAIR(tune->curses_custom_colours ? CUSTOM_YELLOW_DARK : 4);
         case Colour::YELLOW_BOLD: return (tune->curses_custom_colours ? COLOR_PAIR(CUSTOM_YELLOW) : COLOR_PAIR(4) | A_BOLD);
-        case Colour::BLUE: return COLOR_PAIR(5);
+        case Colour::BLUE: return COLOR_PAIR(tune->curses_custom_colours ? CUSTOM_BLUE_DARK : 5);
         case Colour::BLUE_BOLD: return (tune->curses_custom_colours ? COLOR_PAIR(CUSTOM_BLUE) : COLOR_PAIR(5) | A_BOLD);
-        case Colour::MAGENTA: return (tune->curses_custom_colours ? COLOR_PAIR(CUSTOM_PURPLE) : COLOR_PAIR(6));
+        case Colour::MAGENTA: return COLOR_PAIR(tune->curses_custom_colours ? CUSTOM_MAGENTA_DARK : 6);
         case Colour::MAGENTA_BOLD: return (tune->curses_custom_colours ? COLOR_PAIR(CUSTOM_MAGENTA) : COLOR_PAIR(6) | A_BOLD);
-        case Colour::CYAN: return COLOR_PAIR(7);
+        case Colour::CYAN: return COLOR_PAIR(tune->curses_custom_colours ? CUSTOM_CYAN_DARK : 7);
         case Colour::CYAN_BOLD: return (tune->curses_custom_colours ? COLOR_PAIR(CUSTOM_CYAN) : COLOR_PAIR(7) | A_BOLD);
         case Colour::WHITE: return (tune->curses_custom_colours ? COLOR_PAIR(CUSTOM_GREY) : COLOR_PAIR(8));
         case Colour::WHITE_BOLD: return (tune->curses_custom_colours ? COLOR_PAIR(CUSTOM_WHITE) : COLOR_PAIR(8) | A_BOLD);
@@ -214,16 +227,22 @@ void TerminalCurses::print(std::string str, int x, int y, Colour col)
             first_word = first_word.substr(3);
             switch(tag[1])
             {
-                case 'r': col = Colour::RED_BOLD; break;
-                case 'g': col = Colour::GREEN_BOLD; break;
-                case 'y': col = Colour::YELLOW_BOLD; break;
-                case 'b': col = Colour::BLUE_BOLD; break;
-                case 'm': col = Colour::MAGENTA_BOLD; break;
-                case 'c': col = Colour::CYAN_BOLD; break;
-                case 'w': col = Colour::WHITE_BOLD; break;
-                case 'o': col = Colour::YELLOW; break;
-                case 'p': col = Colour::MAGENTA; break;
-                case 'e': col = Colour::WHITE; break;
+                case 'b': col = Colour::BLACK; break;
+                case 'B': col = Colour::BLACK_BOLD; break;
+                case 'r': col = Colour::RED; break;
+                case 'R': col = Colour::RED_BOLD; break;
+                case 'g': col = Colour::GREEN; break;
+                case 'G': col = Colour::GREEN_BOLD; break;
+                case 'y': col = Colour::YELLOW; break;
+                case 'Y': col = Colour::YELLOW_BOLD; break;
+                case 'u': col = Colour::BLUE; break;
+                case 'U': col = Colour::BLUE_BOLD; break;
+                case 'm': col = Colour::MAGENTA; break;
+                case 'M': col = Colour::MAGENTA_BOLD; break;
+                case 'c': col = Colour::CYAN; break;
+                case 'C': col = Colour::CYAN_BOLD; break;
+                case 'w': col = Colour::WHITE; break;
+                case 'W': col = Colour::WHITE_BOLD; break;
             }
         }
 

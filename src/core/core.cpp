@@ -146,6 +146,16 @@ const std::shared_ptr<MessageLog> GreaveCore::messagelog() const { return m_mess
 // Starts the game.
 void GreaveCore::play()
 {
+    message("{W}COLOUR TEST:");
+    message("{b}BLACK   {B}BOLD");
+    message("{r}RED     {R}BOLD");
+    message("{g}GREEN   {G}BOLD");
+    message("{y}YELLOW  {Y}BOLD");
+    message("{u}BLUE    {U}BOLD");
+    message("{c}CYAN    {C}BOLD");
+    message("{m}MAGENTA {M}BOLD");
+    message("{w}WHITE   {W}BOLD");
+
     m_world = std::make_shared<World>();
     m_world->main_loop();
 }

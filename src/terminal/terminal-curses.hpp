@@ -1,5 +1,5 @@
 // terminal/terminal-curses.hpp -- Terminal interface for PDCurses/NCurses. See terminal.h for a full description of the Terminal class.
-// Copyright (c) 2020 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+// Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #pragma once
 #include "terminal/terminal.hpp"
@@ -31,5 +31,6 @@ private:
     unsigned long   colour(Colour col); // Returns a colour pair code.
     static void     decode_hex_colour(const std::string &col, short &r, short &g, short &b);    // Decodes a hex-code colour into RGB values.
 
-    enum CustomColour { CUSTOM_RED = 100, CUSTOM_GREEN, CUSTOM_YELLOW, CUSTOM_BLUE, CUSTOM_CYAN, CUSTOM_MAGENTA, CUSTOM_WHITE, CUSTOM_ORANGE, CUSTOM_PURPLE, CUSTOM_GREY, CUSTOM_WHITE_BG };
+    enum CustomColour { CUSTOM_BLACK = 100, CUSTOM_GREY_DARK, CUSTOM_RED, CUSTOM_RED_DARK, CUSTOM_GREEN, CUSTOM_GREEN_DARK, CUSTOM_YELLOW, CUSTOM_YELLOW_DARK, CUSTOM_BLUE,
+        CUSTOM_BLUE_DARK, CUSTOM_CYAN, CUSTOM_CYAN_DARK, CUSTOM_MAGENTA, CUSTOM_MAGENTA_DARK, CUSTOM_WHITE, CUSTOM_GREY, CUSTOM_WHITE_BG };
 };
