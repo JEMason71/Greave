@@ -6,29 +6,29 @@
 
 
 enum class LinkTag : uint16_t {
-    // 1-99 -- basic link attributes, pretty core stuff here.
-    Openable = 1,       // Can be opened and closed; a door, hatch, gate, or similar.
-    Lockable = 2,       // Can be locked or unlocked with a key. Must be openable.
-    Permalock = 3,      // As above, but can never be unlocked.
-    Hidden = 4,         // This link is not normally visible.
+    // Tags below 10,000 are considered *dynamic tags*. These tags WILL be saved to save files.
+    Open = 1,           // A door, gate, hatch, etc. that is currently open.
+    Locked = 2,         // A closed door etc. that is currently locked.
 
-    // 100-199 block -- tags regarding a transient status of the exit, such as open doors.
-    Open = 100,         // A door, gate, hatch, etc. that is currently open.
-    Locked = 101,       // A closed door etc. that is currently locked.
-
-    // 200-299 block -- tags regarding permanent attributes of doors and locks.
-    DoorMetal = 200,    // Is the door on this link metal?
-    Window = 201,       // This 'door' is actually a window.
+    // Tags at 10,000 or above are considered *permanent tags*. These tags WILL NOT be saved to save files.
+    Openable = 10000,   // Can be opened and closed; a door, hatch, gate, or similar.
+    Lockable = 10001,   // Can be locked or unlocked with a key. Must be openable.
+    Permalock = 10002,  // A locked door/etc. which can never be unlocked.
+    Hidden = 10003,     // This link is not normally visible.
+    DoorMetal = 10004,  // Is the door on this link metal?
+    Window = 10005,     // This 'door' is actually a window.
 };
 
 enum class RoomTag : uint16_t {
-    // 1-99 block -- basic room attributes, pretty core stuff here.
-    Indoors = 1,            // Is this room indoors?
-    Underground = 2,        // Is this room underground?
-    Private = 3,            // Entering this room is considered trespassing.
-    NoExploreCredit = 4,    // This room does not count towards the number of 'explored' rooms in the player's stats.
-    Explored = 5,           // The player has visited this room before.
-    Maze = 6,               // This Room is part of a maze, and should not have its exit names labeled.
+    // Tags below 10,000 are considered *dynamic tags*. These tags WILL be saved to save files.
+    Explored = 1,           // The player has visited this room before.
+
+    // Tags at 10,000 or above are considered *permanent tags*. These tags WILL NOT be saved to save files.
+    Indoors = 10000,        // Is this room indoors?
+    Underground = 10001,    // Is this room underground?
+    Private = 10002,        // Entering this room is considered trespassing.
+    NoExploreCredit = 10003,    // This room does not count towards the number of 'explored' rooms in the player's stats.
+    Maze = 10004,           // This Room is part of a maze, and should not have its exit names labeled.
 };
 
 enum class Security : uint8_t { ANARCHY, LOSEC, HISEC, SANCTUARY, INACCESSIBLE };
