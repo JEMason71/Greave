@@ -219,8 +219,6 @@ void TerminalCurses::print(std::string str, int x, int y, Colour col)
 
     // Colour codes need to be parsed. Curses doesn't support multiple colour codes in a single printw(), so we're gonna have to get creative.
 
-    if (str[0] != '{') str = "{w}" + str;   // If there isn't a colour tag specified at the start, start it with white.
-
     while (str.size())
     {
         std::string first_word;

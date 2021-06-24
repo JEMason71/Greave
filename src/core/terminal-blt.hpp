@@ -21,8 +21,8 @@ public:
     int         get_mouse_y_pixel() const override;         // Gets the Y coordinate for the pixel the mouse is pointing at.
     void        get_size(int *w, int *h) const override;    // Retrieves the size of the terminal (in cells, not pixels).
     void        move_cursor(int x, int y) override;         // Moves the cursor to the specified position.
-    void        print(std::string str, int x, int y, Colour col = Colour::WHITE_BOLD) override;     // Prints a string at a given coordinate on the screen.
-    void        put(unsigned int letter, int x, int y, Colour col = Colour::WHITE_BOLD) override;   // Prints a character at a given coordinate on the screen.
+    void        print(std::string str, int x, int y, Colour col = Colour::WHITE) override;      // Prints a string at a given coordinate on the screen.
+    void        put(unsigned int letter, int x, int y, Colour col = Colour::WHITE) override;    // Prints a character at a given coordinate on the screen.
     void        refresh() override;                         // Refreshes the screen with changes made.
     void        set_background(Colour col = Colour::BLACK) override;    // Sets the text background colour.
     bool        wants_to_close() const override;            // Returns true if the terminal window has been closed.

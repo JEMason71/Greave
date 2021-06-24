@@ -88,7 +88,7 @@ std::string TerminalBLT::colour(Colour col) const
         case Colour::MAGENTA_BOLD: return "g_magenta";
         case Colour::CYAN: return "darker cyan";
         case Colour::CYAN_BOLD: return "g_cyan";
-        case Colour::WHITE: return "lighter grey";
+        case Colour::WHITE: return "g_grey";
         case Colour::WHITE_BOLD: return "g_white";
         default: return "";
     }
@@ -166,12 +166,22 @@ void TerminalBLT::move_cursor(int x, int y)
 // Prints a string at a given coordinate on the screen.
 void TerminalBLT::print(std::string str, int x, int y, Colour col)
 {
+    if (!str.size()) return;
     if (col == Colour::WHITE_BG) set_background(Terminal::Colour::WHITE);
+    
     if (str.find('[') != std::string::npos)
     {
         StrX::find_and_replace(str, "[", "[[");
         StrX::find_and_replace(str, "]", "]]");
     }
+
+    if (str.find("{") == std::string::npos)
+    {
+        // If no colour codes are present, use the specified colour.
+        const std::string chosen_colour = colour(col);
+        str = "[color=" + chosen_colour + "]" + str;
+    }
+
     while (str.find("{") != std::string::npos)
     {
         const bool mono = core()->tune()->monochrome_mode;

@@ -27,8 +27,8 @@ public:
     virtual int         get_mouse_y_pixel() const = 0;      // Gets the Y coordinate for the pixel the mouse is pointing at.
     virtual void        get_size(int *w, int *h) const = 0; // Retrieves the size of the terminal (in cells, not pixels).
     virtual void        move_cursor(int x, int y) = 0;      // Moves the cursor to the specified position.
-    virtual void        print(std::string str, int x, int y, Colour col = Colour::WHITE_BOLD) = 0;      // Prints a string at a given coordinate on the screen.
-    virtual void        put(unsigned int letter, int x, int y, Colour col = Colour::WHITE_BOLD) = 0;    // Prints a character at a given coordinate on the screen.
+    virtual void        print(std::string str, int x, int y, Colour col = Colour::WHITE) = 0;   // Prints a string at a given coordinate on the screen.
+    virtual void        put(unsigned int letter, int x, int y, Colour col = Colour::WHITE) = 0; // Prints a character at a given coordinate on the screen.
     virtual void        refresh() = 0;                      // Refreshes the screen with changes made.
     virtual void        set_background(Colour col = Colour::BLACK) = 0; // Sets the text background colour.
     virtual bool        wants_to_close() const = 0;         // Returns true if the player has tried to close the terminal window.

@@ -46,9 +46,9 @@ bool StrX::find_and_replace(std::string &input, const std::string &to_find, cons
 }
 
 // FNV string hash function.
-unsigned int StrX::hash(const std::string &str)
+uint32_t StrX::hash(const std::string &str)
 {
-    size_t result = 2166136261U;
+    uint32_t result = 2166136261U;
     std::string::const_iterator end = str.end();
     for (std::string::const_iterator iter = str.begin(); iter != end; ++iter)
         result = 127 * result + static_cast<unsigned char>(*iter);
@@ -108,7 +108,7 @@ std::vector<std::string> StrX::string_explode_colour(const std::string &str, uns
     }
 
     // Check to see if the line is too short to be worth splitting.
-    if (strlen_colour(str) <= line_len)
+    if (strlen_colour(str) <= line_len && str.find("{nl}") != std::string::npos && str.find("{lb}") != std::string::npos)
     {
         output.push_back(str);
         return output;
@@ -126,40 +126,62 @@ std::vector<std::string> StrX::string_explode_colour(const std::string &str, uns
 
     for (auto word : words)
     {
-        unsigned int length = word.length();    // Find the length of the word.
+        if (word == "{nl}") // Check for new-line marker.
+        {
+            if (line_pos > 0)
+            {
+                line_pos = 0;
+                current_line += 2;
+                output.push_back(" ");
+                output.push_back(last_colour);  // Start the line with the last colour tag we saw.
+            }
+        }
+        else if (word == "{lb}")
+        {
+            if (line_pos > 0)
+            {
+                line_pos = 0;
+                current_line += 1;
+                output.push_back(last_colour);  // Start the line with the last colour tag we saw.
+            }
+        }
+        else
+        {
+            unsigned int length = word.length();    // Find the length of the word.
 
-        const int colour_count = word_count(word, "{"); // Count the colour tags.
-        if (colour_count) length -= (colour_count * 3); // Reduce the length if one or more colour tags are found.
-        if (length + line_pos >= line_len)  // Is the word too long for the current line?
-        {
-            line_pos = 0; current_line++;   // CR;LF
-            output.push_back(last_colour);  // Start the line with the last colour tag we saw.
-        }
-        if (colour_count)
-        {
-            // Duplicate the last-used colour tag.
-            const std::string::size_type flo = word.find_last_of("{");
-            if (flo != std::string::npos && word.size() >= flo + 3) last_colour = word.substr(flo, 3);
-        }
-        if (line_pos != 0)  // NOT the start of a new line?
-        {
-            length++;
-            output.at(current_line) += " ";
-        }
+            const int colour_count = word_count(word, "{"); // Count the colour tags.
+            if (colour_count) length -= (colour_count * 3); // Reduce the length if one or more colour tags are found.
+            if (length + line_pos >= line_len)  // Is the word too long for the current line?
+            {
+                line_pos = 0; current_line++;   // CR;LF
+                output.push_back(last_colour);  // Start the line with the last colour tag we saw.
+            }
+            if (colour_count)
+            {
+                // Duplicate the last-used colour tag.
+                const std::string::size_type flo = word.find_last_of("{");
+                if (flo != std::string::npos && word.size() >= flo + 3) last_colour = word.substr(flo, 3);
+            }
+            if (line_pos != 0)  // NOT the start of a new line?
+            {
+                length++;
+                output.at(current_line) += " ";
+            }
 
-        // Is the word STILL too long to fit over a single line?
-        while (length > line_len)
-        {
-            const std::string trunc = word.substr(0, line_len);
-            word = word.substr(line_len);
-            output.at(current_line) += trunc;
-            line_pos = 0;
-            current_line++;
-            output.push_back(last_colour);  // Start the line with the last colour tag we saw.
-            length = word.size();   // Adjusts the length for what we have left over.
+            // Is the word STILL too long to fit over a single line?
+            while (length > line_len)
+            {
+                const std::string trunc = word.substr(0, line_len);
+                word = word.substr(line_len);
+                output.at(current_line) += trunc;
+                line_pos = 0;
+                current_line++;
+                output.push_back(last_colour);  // Start the line with the last colour tag we saw.
+                length = word.size();   // Adjusts the length for what we have left over.
+            }
+            output.at(current_line) += word;
+            line_pos += length;
         }
-        output.at(current_line) += word;
-        line_pos += length;
     }
 
     return output;
