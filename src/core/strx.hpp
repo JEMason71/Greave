@@ -10,9 +10,11 @@ class StrX
 public:
     static const int    CL_FLAG_USE_AND, CL_FLAG_SQL_MODE;  // comma_list() flags
 
+    enum class DirNameType : uint8_t { NORMAL, TO_THE, TO_THE_ALT };
+
     static std::string  comma_list(std::vector<std::string> vec, unsigned int flags = 0);   // Converts a vector to a comma-separated list.
-    static std::string  dir_to_name(Direction dir, bool elaborate = false); // Converts a direction enum into a string.
-    static std::string  dir_to_name(uint8_t dir, bool elaborate = false);   // As above, but with an integer instead of an enum.
+    static std::string  dir_to_name(Direction dir, DirNameType dnt = DirNameType::NORMAL);  // Converts a direction enum into a string.
+    static std::string  dir_to_name(uint8_t dir, DirNameType dnt = DirNameType::NORMAL);    // As above, but with an integer instead of an enum.
     static bool         find_and_replace(std::string &input, const std::string &to_find, const std::string &to_replace);    // Find and replace one string with another.
     static uint32_t     hash(const std::string &str);               // FNV string hash function.
     static uint32_t     htoi(const std::string &hex_str);           // Converts a hex string back to an integer.

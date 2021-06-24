@@ -47,6 +47,7 @@ endif(TARGET_WINDOWS)
 set(GREAVE_CPPS
   actions/doors.cpp
   actions/look.cpp
+  actions/travel.cpp
   core/core.cpp
   core/filex.cpp
   core/guru.cpp

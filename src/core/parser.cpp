@@ -3,6 +3,7 @@
 
 #include "actions/doors.hpp"
 #include "actions/look.hpp"
+#include "actions/travel.hpp"
 #include "core/core.hpp"
 #include "core/parser.hpp"
 #include "core/strx.hpp"
@@ -62,6 +63,30 @@ void Parser::parse(std::string input)
             return;
         }
         ActionDoors::open_or_close(player, dir, open);
+        return;
+    }
+
+    // Movement to nearby Rooms.
+    const Direction dir_cmd = parse_direction(first_word);
+    if (dir_cmd != Direction::NONE)
+    {
+        ActionTravel::travel(player, dir_cmd);
+        return;
+    }
+    else if (first_word == "go" || first_word == "travel" || first_word == "walk" || first_word == "run" || first_word == "move")
+    {
+        if (words.size() < 2)
+        {
+            core()->message("{y}Please specify a {Y}direction {y}to travel.");
+            return;
+        }
+        const Direction dir = parse_direction(words.at(1));
+        if (dir == Direction::NONE)
+        {
+            core()->message("{y}Please specify a {Y}compass direction {y}to travel.");
+            return;
+        }
+        ActionTravel::travel(player, dir);
         return;
     }
 

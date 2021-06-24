@@ -36,8 +36,9 @@ enum class Security : uint8_t { ANARCHY, LOSEC, HISEC, SANCTUARY, INACCESSIBLE }
 class Room
 {
 public:
-    static const uint32_t FALSE_ROOM = 3399618268;  // Hashed value for FALSE_ROOM, which is used to make 'fake' impassible room exits.
-    static const unsigned int ROOM_LINKS_MAX = 10;  // The maximum amount of exit links from one Room to another.
+    static const uint32_t       FALSE_ROOM = 3399618268;    // Hashed value for FALSE_ROOM, which is used to make 'fake' impassible room exits.
+    static const uint8_t        LIGHT_VISIBLE = 3;          // Any light level below this is considered too dark to see.
+    static const unsigned int   ROOM_LINKS_MAX = 10;        // The maximum amount of exit links from one Room to another.
 
                 Room(std::string new_id = "");  // Constructor, sets the Room's ID hash.
 	void        clear_link_tag(uint8_t id, LinkTag the_tag);    // Clears a tag on this Room's link.

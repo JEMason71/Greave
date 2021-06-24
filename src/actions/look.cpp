@@ -16,12 +16,15 @@ void ActionLook::look(std::shared_ptr<Mobile> mob)
     // sense right now, you never know, this code might be used in the future for some sort of "see through the target's eyes" spell or something.
     const std::shared_ptr<Room> room = core()->world()->get_room(mob->location());
 
+    const bool can_see = (room->light() >= Room::LIGHT_VISIBLE);
+    if (can_see) room->set_tag(RoomTag::Explored);
+
     // Room name and description.
     core()->message("{G}" + room->name());
     core()->message("{0}```" + room->desc());
 
     // Obvious exits.
-    if (room->light() < 3) core()->message("{0}{g}It's so {B}dark{g}, you can't see where the exits are!");
+    if (!can_see) core()->message("{0}{u}It's so {B}dark{u}, you can't see where the exits are!");
     else
     {
         std::vector<std::string> exits_vec;

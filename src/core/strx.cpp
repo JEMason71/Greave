@@ -45,15 +45,16 @@ std::string StrX::comma_list(std::vector<std::string> vec, unsigned int flags)
 }
 
 // Converts a direction enum into a string.
-std::string StrX::dir_to_name(Direction dir, bool elaborate)
+std::string StrX::dir_to_name(Direction dir, DirNameType dnt)
 {
     std::string prefix;
-    if (elaborate)
+    if (dnt == DirNameType::TO_THE || dnt == DirNameType::TO_THE_ALT)
     {
-        if (dir == Direction::UP) return "above";
-        else if (dir == Direction::DOWN) return "below";
-        else prefix = "the ";
+        if (dir == Direction::UP) return (dnt == DirNameType::TO_THE ? "above" : "up");
+        else if (dir == Direction::DOWN) return (dnt == DirNameType::TO_THE ? "below" : "down");
+        else prefix = "to the ";
     }
+
     switch(dir)
     {
         case Direction::NORTH: return prefix + "north";
@@ -64,8 +65,8 @@ std::string StrX::dir_to_name(Direction dir, bool elaborate)
         case Direction::NORTHWEST: return prefix + "northwest";
         case Direction::SOUTHEAST: return prefix + "southeast";
         case Direction::SOUTHWEST: return prefix + "southwest";
-        case Direction::UP: return "up";
-        case Direction::DOWN: return "down";
+        case Direction::UP: return prefix + "up";
+        case Direction::DOWN: return prefix + "down";
         case Direction::NONE: return "????";
         default:
             throw std::runtime_error("Invalid direction enum: " + std::to_string(static_cast<int>(dir)));
@@ -74,7 +75,7 @@ std::string StrX::dir_to_name(Direction dir, bool elaborate)
 }
 
 // As above, but with an integer instead of an enum.
-std::string StrX::dir_to_name(uint8_t dir, bool elaborate) { return dir_to_name(static_cast<Direction>(dir), elaborate); }
+std::string StrX::dir_to_name(uint8_t dir, DirNameType dnt) { return dir_to_name(static_cast<Direction>(dir), dnt); }
 
 // Find and replace one string with another.
 bool StrX::find_and_replace(std::string &input, const std::string &to_find, const std::string &to_replace)
