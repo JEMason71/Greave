@@ -130,29 +130,9 @@ std::string MessageLog::render_message_log(bool accept_blank_input)
             if (result.size())
             {
                 core()->message("{c}> " + result, Core::MSG_FLAG_INTERRUPT);
-                const std::string result_lower = StrX::str_tolower(result);
-                if (result_lower == "quit" || result_lower == "exit")
-                {
-                    m_input_buffer = "";
-                    core()->message("{R}Are you sure you want to quit? Type {C}yes {R}to confirm.");
-                    result = StrX::str_tolower(render_message_log());
-                    if (result == "yes" || result == "quit" || result == "exit")
-                    {
-                        core()->cleanup();
-                        exit(EXIT_SUCCESS);
-                    }
-                    else
-                    {
-                        m_last_input = result;
-                        return result;
-                    }
-                }
-                else
-                {
-                    m_input_buffer = "";
-                    m_last_input = result;
-                    return result;
-                }
+                m_input_buffer = "";
+                m_last_input = result;
+                return result;
             }
             else
             {

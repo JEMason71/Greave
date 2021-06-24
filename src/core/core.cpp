@@ -7,6 +7,7 @@
 #include "core/filex.hpp"
 #include "core/guru.hpp"
 #include "core/message.hpp"
+#include "core/parser.hpp"
 #include "core/strx.hpp"
 #include "core/terminal-blt.hpp"
 #include "core/terminal-curses.hpp"
@@ -52,7 +53,7 @@ int main(int argc, char* argv[])
 }
 
 // Constructor, doesn't do too much aside from setting default values for member variables. Use init() to set things up.
-Core::Core() : m_message_log(nullptr), m_terminal(nullptr), m_tune(nullptr), m_world(nullptr) { }
+Core::Core() : m_message_log(nullptr), m_parser(nullptr), m_terminal(nullptr), m_tune(nullptr), m_world(nullptr) { }
 
 // Cleans up after we're d one.
 void Core::cleanup()
@@ -110,8 +111,11 @@ void Core::init()
     // Sets up the main message log window.
     m_message_log = std::make_shared<MessageLog>();
 
-    // Tell the Guru system we're finished setting up.
+    // Tell the Guru system we're finished setting up the terminal and message window.
     guru()->console_ready();
+
+    // Sets up the text parser.
+    m_parser = std::make_shared<Parser>();
 }
 
 // The main game loop.
@@ -125,6 +129,7 @@ void Core::main_loop()
     while (true)
     {
         const std::string input = m_message_log->render_message_log();
+        m_parser->parse(input);
     }
 }
 

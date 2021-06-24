@@ -6,6 +6,7 @@
 
 class Guru;         // defined in core/guru.hpp
 class MessageLog;   // defined in core/message.hpp
+class Parser;       // defined in core/parser.hpp
 class Terminal;     // defined in terminal/terminal.hpp
 class Tune;         // defined in core/tune.hpp
 class World;        // defined in core/world.hpp
@@ -33,6 +34,7 @@ private:
 
     std::shared_ptr<Guru>       m_guru_meditation;  // The Guru Meditation error-handling system.
     std::shared_ptr<MessageLog> m_message_log;      // The MessageLog object, which handles the scrolling message-log input/output window.
+    std::shared_ptr<Parser>     m_parser;           // The Parser object, which processes the player's input.
     std::shared_ptr<Terminal>   m_terminal;         // The Terminal class, which handles low-level interaction with terminal emulation libraries.
     std::shared_ptr<Tune>       m_tune;             // The Tune object, containing various tweakable numbers in tune.yml
     std::shared_ptr<World>      m_world;            // The World object, which manages the current overall state of the game.
