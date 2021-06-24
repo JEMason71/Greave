@@ -20,7 +20,7 @@ Room::Room(std::string new_id) : m_light(0), m_security(Security::ANARCHY)
 }
 
 // Clears a tag on this Room.
-void Room::clear_link_tag(unsigned char id, LinkTag the_tag)
+void Room::clear_link_tag(uint8_t id, LinkTag the_tag)
 {
     if (id >= ROOM_LINKS_MAX) throw std::runtime_error("Invalid direction specified when clearing room link tag.");
 	if (!(m_tags_link[id].count(the_tag) > 0)) return;
@@ -61,7 +61,7 @@ uint32_t Room::link(uint8_t dir) const
 }
 
 // Checks if a tag is set on this Room's link.
-bool Room::link_tag(unsigned char id, LinkTag the_tag) const
+bool Room::link_tag(uint8_t id, LinkTag the_tag) const
 {
     if (id >= ROOM_LINKS_MAX) throw std::runtime_error("Invalid direction specified when checking room link tag.");
     if (the_tag == LinkTag::Lockable || the_tag == LinkTag::Openable || the_tag == LinkTag::Locked || the_tag == LinkTag::Permalock)
@@ -71,6 +71,9 @@ bool Room::link_tag(unsigned char id, LinkTag the_tag) const
     }
     return (m_tags_link[id].count(the_tag) > 0);
 }
+
+// As above, but with a Direction enum.
+bool Room::link_tag(Direction dir, LinkTag the_tag) const { return link_tag(static_cast<uint8_t>(dir), the_tag); }
 
 // Returns the Room's full or short name.
 std::string Room::name(bool short_name) const { return (short_name ? m_name_short : m_name); }
@@ -93,7 +96,7 @@ void Room::set_link(Direction dir, uint32_t room_id)
 }
 
 // Sets a tag on this Room's link.
-void Room::set_link_tag(unsigned char id, LinkTag the_tag)
+void Room::set_link_tag(uint8_t id, LinkTag the_tag)
 {
     if (id >= ROOM_LINKS_MAX) throw std::runtime_error("Invalid direction specified when setting room link tag.");
     if (m_tags_link[id].count(the_tag) > 0) return;

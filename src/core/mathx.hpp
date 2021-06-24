@@ -3,3 +3,11 @@
 
 #pragma once
 #include "core/greave.hpp"
+
+
+class MathX
+{
+public:
+    static Direction    dir_invert(Direction dir);  // Inverts a Direction enum (north becomes south, etc.)
+    static uint8_t      dir_invert(uint8_t dir);    // As above, but using integers.
+};

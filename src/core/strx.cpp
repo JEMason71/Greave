@@ -45,18 +45,25 @@ std::string StrX::comma_list(std::vector<std::string> vec, unsigned int flags)
 }
 
 // Converts a direction enum into a string.
-std::string StrX::dir_to_name(Direction dir)
+std::string StrX::dir_to_name(Direction dir, bool elaborate)
 {
+    std::string prefix;
+    if (elaborate)
+    {
+        if (dir == Direction::UP) return "above";
+        else if (dir == Direction::DOWN) return "below";
+        else prefix = "the ";
+    }
     switch(dir)
     {
-        case Direction::NORTH: return "north";
-        case Direction::SOUTH: return "south";
-        case Direction::EAST: return "east";
-        case Direction::WEST: return "west";
-        case Direction::NORTHEAST: return "northeast";
-        case Direction::NORTHWEST: return "northwest";
-        case Direction::SOUTHEAST: return "southeast";
-        case Direction::SOUTHWEST: return "southwest";
+        case Direction::NORTH: return prefix + "north";
+        case Direction::SOUTH: return prefix + "south";
+        case Direction::EAST: return prefix + "east";
+        case Direction::WEST: return prefix + "west";
+        case Direction::NORTHEAST: return prefix + "northeast";
+        case Direction::NORTHWEST: return prefix + "northwest";
+        case Direction::SOUTHEAST: return prefix + "southeast";
+        case Direction::SOUTHWEST: return prefix + "southwest";
         case Direction::UP: return "up";
         case Direction::DOWN: return "down";
         case Direction::NONE: return "????";
@@ -67,7 +74,7 @@ std::string StrX::dir_to_name(Direction dir)
 }
 
 // As above, but with an integer instead of an enum.
-std::string StrX::dir_to_name(uint8_t dir) { return dir_to_name(static_cast<Direction>(dir)); }
+std::string StrX::dir_to_name(uint8_t dir, bool elaborate) { return dir_to_name(static_cast<Direction>(dir), elaborate); }
 
 // Find and replace one string with another.
 bool StrX::find_and_replace(std::string &input, const std::string &to_find, const std::string &to_replace)

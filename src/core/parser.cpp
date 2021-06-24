@@ -1,6 +1,7 @@
 // core/parser.cpp -- The command parser! Converts player input into commands that the game can understand.
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
+#include "actions/doors.hpp"
 #include "actions/look.hpp"
 #include "core/core.hpp"
 #include "core/parser.hpp"
@@ -45,6 +46,25 @@ void Parser::parse(std::string input)
         return;
     }
 
+    // Atempt to open or close a door or something else openable.
+    if (first_word == "open" || first_word == "close")
+    {
+        if (words.size() < 2)
+        {
+            core()->message("{y}Please specify a {Y}direction {y}to " + first_word + ".");
+            return;
+        }
+        const bool open = (first_word == "open");
+        const Direction dir = parse_direction(words.at(1));
+        if (dir == Direction::NONE)
+        {
+            core()->message("{y}Please specify a {Y}compass direction {y}to " + first_word + ".");
+            return;
+        }
+        ActionDoors::open_or_close(player, dir, open);
+        return;
+    }
+
     // Other words we can basically ignore.
     if (first_word == "yes" || first_word == "no")
     {
@@ -63,6 +83,22 @@ void Parser::parse(std::string input)
     }
 
     core()->message("{y}I'm sorry, I don't understand.");
+}
+
+// Parses a string into a Direction enum.
+Direction Parser::parse_direction(const std::string &dir)
+{
+    if (dir == "north" || dir == "n") return Direction::NORTH;
+    else if (dir == "northeast" || dir == "ne") return Direction::NORTHEAST;
+    else if (dir == "east" || dir == "e") return Direction::EAST;
+    else if (dir == "southeast" || dir == "se") return Direction::SOUTHEAST;
+    else if (dir == "south" || dir == "s") return Direction::SOUTH;
+    else if (dir == "southwest" || dir == "sw") return Direction::SOUTHWEST;
+    else if (dir == "west" || dir == "w") return Direction::WEST;
+    else if (dir == "northwest" || dir == "nw") return Direction::NORTHWEST;
+    else if (dir == "up" || dir == "u") return Direction::UP;
+    else if (dir == "down" || dir == "d") return Direction::DOWN;
+    else return Direction::NONE;
 }
 
 // Parses input when QUIT_CONFIRM state is active; the game is waiting for confirmation that the player wants to quit.

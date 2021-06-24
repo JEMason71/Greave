@@ -8,8 +8,9 @@
 class Parser
 {
 public:
-            Parser();   // Constructor, sets default values.
-    void    parse(std::string input);   // Parses input from the player!
+                Parser();   // Constructor, sets default values.
+    void        parse(std::string input);   // Parses input from the player!
+    Direction   parse_direction(const std::string &dir);    // Parses a string into a Direction enum.
 
 private:
     enum class SpecialState : uint8_t { NONE, QUIT_CONFIRM };
