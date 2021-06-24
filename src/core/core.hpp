@@ -20,12 +20,13 @@ public:
     const std::shared_ptr<Guru>         guru() const;       // Returns a pointer to the Guru Meditation object.
     void                                init();             // Sets up the core game classes and data.
     void                                load(unsigned int save_slot);   // Loads a specified slot's saved game.
+    void                                main_loop();        // The main game loop.
     void                                message(std::string msg, uint32_t flags = 0);   // Prints a message in the message log.
     const std::shared_ptr<MessageLog>   messagelog() const; // Returns a pointer to the MessageLog object.
-    void                                play();             // Starts the game.
     void                                save();             // Saves the game to disk.
     uint32_t                            sql_unique_id();    // Retrieves a new unique SQL ID.
     const std::shared_ptr<Terminal>     terminal() const;   // Returns a pointer  to the terminal emulator object.
+    void                                title();            // The 'title screen' and saved game selection.
     const std::shared_ptr<Tune>         tune() const;       // Returns a pointer to the Tune object.
     const std::shared_ptr<World>        world() const;      // Returns a pointer to the World object.
 
@@ -35,7 +36,7 @@ public:
     static const unsigned int   TAGS_PERMANENT;     // The tag number at which tags are considered permanent.
 
 private:
-    void    main_loop();    // The main game loop.
+    const std::string           save_filename(unsigned int slot, bool old_save = false) const;  // Returns a filename for a saved game file.
 
     std::shared_ptr<Guru>       m_guru_meditation;  // The Guru Meditation error-handling system.
     std::shared_ptr<MessageLog> m_message_log;      // The MessageLog object, which handles the scrolling message-log input/output window.

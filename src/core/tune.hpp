@@ -40,6 +40,7 @@ public:
     int             log_padding_right;      // The amount of black space to the right of the message log window.
     int             log_padding_top;        // The amount of black space above the message log window.
     bool            monochrome_mode;        // Set this to true to only use black/gray for the background and white for the text.
+    unsigned int    save_file_slots;        // The total amount of saved game slots available.
 #ifdef GREAVE_TOLK
     bool            screen_reader_external; // Enable automatic screen-reader support? Screen readers supported: JAWS, NVDA, SuperNova, System Access, Window-Eyes, ZoomText.
     bool            screen_reader_process_square_brackets;  // This setting can improve narration on screen readers for square brackets.

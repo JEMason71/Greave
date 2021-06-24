@@ -97,6 +97,7 @@ Tune::Tune()
     log_padding_right = get_tune("log_padding_right");
     log_padding_top = get_tune("log_padding_top");
     monochrome_mode = get_tune_bool("monochrome_mode");
+    save_file_slots = get_tune("save_file_slots");
 #ifdef GREAVE_TOLK
     screen_reader_external = get_tune_bool("screen_reader_external");
     screen_reader_process_square_brackets = get_tune_bool("screen_reader_process_square_brackets");

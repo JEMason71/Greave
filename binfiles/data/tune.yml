@@ -51,3 +51,4 @@ log_padding_bottom:     3                   # The amount of black space below th
 log_padding_left:       2                   # The amount of black space to the left of the message log window.
 log_padding_right:      2                   # The amount of black space to the right of the message log window.
 log_padding_top:        1                   # The amount of black space above the message log window.
+save_file_slots:        5                   # The total amount of saved game slots available.

@@ -46,7 +46,8 @@ int main(int argc, char* argv[])
     try
     {
         greave->init();
-        greave->play();
+        greave->title();
+        greave->main_loop();
         greave->cleanup();
     }
     catch (std::exception& e)
@@ -127,9 +128,8 @@ void Core::init()
 // Loads a specified slot's saved game.
 void Core::load(unsigned int save_slot)
 {
-    const std::string save_filename = "userdata/save/save-" + std::to_string(save_slot) + ".sqlite";
     m_save_slot = save_slot;
-    std::shared_ptr<SQLite::Database> save_db = std::make_shared<SQLite::Database>(save_filename, SQLite::OPEN_READONLY);
+    std::shared_ptr<SQLite::Database> save_db = std::make_shared<SQLite::Database>(save_filename(save_slot), SQLite::OPEN_READONLY);
 
     SQLite::Statement version_query(*save_db, "PRAGMA user_version");
     if (version_query.executeStep())
@@ -181,31 +181,15 @@ void Core::message(std::string msg, uint32_t flags)
 // Returns a pointer to the MessageLog object.
 const std::shared_ptr<MessageLog> Core::messagelog() const { return m_message_log; }
 
-// Starts the game.
-void Core::play()
-{
-    m_world = std::make_shared<World>();
-
-    if (FileX::file_exists("userdata/save/save-0.sqlite")) load(0);
-    else
-    {
-        m_world->player()->set_location("TEST_ROOM");
-        ActionLook::look(m_world->player());
-    }
-
-    main_loop();
-}
-
 // Saves the game to disk.
 void Core::save()
 {
-    const std::string save_filename_base = "userdata/save/save-" + std::to_string(m_save_slot);
-    const std::string save_filename = save_filename_base + ".sqlite";
-    const std::string save_filename_old = save_filename_base + ".old";
-    if (FileX::file_exists(save_filename_old)) FileX::delete_file(save_filename_old);
-    if (FileX::file_exists(save_filename)) FileX::rename_file(save_filename, save_filename_old);
+    const std::string save_fn = save_filename(m_save_slot);
+    const std::string save_fn_old = save_filename(m_save_slot, true);
+    if (FileX::file_exists(save_fn_old)) FileX::delete_file(save_fn_old);
+    if (FileX::file_exists(save_fn)) FileX::rename_file(save_fn, save_fn_old);
 
-    std::shared_ptr<SQLite::Database> save_db = std::make_shared<SQLite::Database>(save_filename, SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
+    std::shared_ptr<SQLite::Database> save_db = std::make_shared<SQLite::Database>(save_fn, SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
     save_db->exec("PRAGMA user_version = " + std::to_string(SAVE_VERSION));
     m_sql_unique_id = 0;    // We're making a new save file each time, so we can reset the unique ID counter.
 
@@ -216,11 +200,149 @@ void Core::save()
     message("{M}Game saved in slot {Y}" + std::to_string(m_save_slot) + "{M}.");
 }
 
+// Returns a filename for a saved game file.
+const std::string Core::save_filename(unsigned int slot, bool old_save) const { return "userdata/save/save-" + std::to_string(slot) + (old_save ? ".old" : ".sqlite"); }
+
 // Retrieves a new unique SQL ID.
 uint32_t Core::sql_unique_id() { return ++m_sql_unique_id; }
 
 // Returns a pointer  to the terminal emulator object.
 const std::shared_ptr<Terminal> Core::terminal() const { return m_terminal; }
+
+// The 'title screen' and saved game selection.
+void Core::title()
+{
+    message("{U}Welcome to {G}Greave {U}" + GAME_VERSION +
+        ", copyright (c) 2020-2021 Raine \"Gravecat\" Simmons. This game is free and open-source, released under the Gnu AGPL 3.0 license.");
+#ifdef GREAVE_TOLK
+	if (Tolk_DetectScreenReader()) message("{U}If you are using a screen reader, pressing the {C}tab key {U}will repeat the text after your last input.");
+#endif
+
+    std::vector<bool> save_exists;
+    save_exists.resize(m_tune->save_file_slots);
+    bool deleting_file = false;
+    while (!m_save_slot)
+    {
+        if (deleting_file)
+        {
+            message("{R}Please select which saved game to delete:");
+            message("{U}[{C}C{U}] {R}Cancel, do not delete");
+        }
+        else
+        {
+            message("{U}Please select a saved game slot to begin the game:");
+            message("{U}[{C}D{U}] {R}Delete a saved game");
+            message("{0}{U}[{C}Q{U}] {R}Quit game");
+        }
+        for (unsigned int i = 1; i <= m_tune->save_file_slots; i++)
+        {
+            if (FileX::file_exists(save_filename(i)))
+            {
+                message("{0}{U}[{C}" + std::to_string(i) + "{U}] {W}Saved game #" + std::to_string(i));
+                save_exists.at(i - 1) = true;
+            }
+            else
+            {
+                message("{0}{U}[{C}" + std::to_string(i) + "{U}] {B}Empty slot #" + std::to_string(i));
+                save_exists.at(i - 1) = false;
+            }
+        }
+
+        bool inner_loop = true;
+        int patience_counter = 0;
+        while (inner_loop)
+        {
+            std::string input = messagelog()->render_message_log();
+            if (!input.size()) continue;
+            if (input.size() >= 3 && (input[0] == '[' || input[0] == '(')) input = input.substr(1);
+
+            if ((input[0] == 'q' || input[0] == 'Q') && !deleting_file)
+            {
+                core()->cleanup();
+                exit(EXIT_SUCCESS);
+            }
+            else if ((input[0] == 'd' || input[0] == 'D') && !deleting_file)
+            {
+                patience_counter = 0;
+                deleting_file = true;
+                inner_loop = false;
+            }
+            else if ((input[0] == 'c' || input[0] == 'C') && deleting_file)
+            {
+                patience_counter = 0;
+                deleting_file = false;
+                inner_loop = false;
+                message("{U}Okay, no save file will be deleted.");
+            }
+            else
+            {
+                int input_num = input[0] - '0';
+                if (input_num < 1 || input_num > static_cast<int>(m_tune->save_file_slots))
+                {
+                    if (++patience_counter > 5)
+                    {
+                        message("{y}That is not a valid option.");
+                        inner_loop = false;
+                    }
+                    else
+                    {
+                        if (deleting_file) message("{y}That is not a valid option. Please choose {Y}a save slot number{y} or {Y}C{y}.");
+                        else message("{y}That is not a valid option. Please choose {Y}a save slot number{y}, {Y}D{y} or {Y}Q{y}.");
+                    }
+                }
+                else
+                {
+                    if (deleting_file)
+                    {
+                        if (!FileX::file_exists(save_filename(input_num)))
+                        {
+                            message("{y}There isn't a saved game in that slot.");
+                            inner_loop = false;
+                        }
+                        else
+                        {
+                            message("{R}Are you sure you want to delete saved game {W}#" + std::to_string(input_num) + "{R}? This decision cannot be undone! {M}[{R}Y{r}/{R}N{M}]");
+                            bool yes_no_loop = true;
+                            while (yes_no_loop)
+                            {
+                                std::string yes_no = messagelog()->render_message_log();
+                                if (yes_no.size())
+                                {
+                                    if (yes_no[0] == 'y' || yes_no[0] == 'Y')
+                                    {
+                                        inner_loop = yes_no_loop = deleting_file = false;
+                                        FileX::delete_file(save_filename(input_num));
+                                        if (FileX::file_exists(save_filename(input_num, true))) FileX::delete_file(save_filename(input_num, true));
+                                        message("{M}Save file {W}#" + std::to_string(input_num) + " {M}has been deleted!");
+                                    }
+                                    else if (yes_no[0] == 'n' || yes_no[0] == 'N')
+                                    {
+                                        message("{U}Okay, this save file will not be deleted.");
+                                        inner_loop = yes_no_loop = false;
+                                    }
+                                    else message("{R}Please choose either {M}YES {R}or {M}NO{R}.");
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        m_save_slot = input_num;
+                        inner_loop = false;
+                    }
+                }
+            }
+        }
+    }
+
+    m_world = std::make_shared<World>();
+    if (save_exists.at(m_save_slot - 1)) load(m_save_slot);
+    else
+    {
+        m_world->player()->set_location("TEST_ROOM");
+        ActionLook::look(m_world->player());
+    }
+}
 
 // Returns a pointer to the Tune object.
 const std::shared_ptr<Tune> Core::tune() const { return m_tune; }
