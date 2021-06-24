@@ -207,6 +207,11 @@ void TerminalCurses::move_cursor(int x, int y) { move(y, x); }
 void TerminalCurses::print(std::string str, int x, int y, Colour col)
 {
     if (!str.size()) return;
+
+    size_t nbsp_pos;
+    while ((nbsp_pos = str.find("`")) != std::string::npos)
+        str.at(nbsp_pos) = ' ';
+
     if (str.find("{") == std::string::npos)
     {
         // If no colour codes are present, this is fairly easy.

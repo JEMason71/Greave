@@ -16,5 +16,5 @@ void ActionLook::look(std::shared_ptr<Mobile> mob)
     const std::shared_ptr<Room> room = core()->world()->get_room(mob->location());
 
     core()->message("{G}" + room->name());
-    core()->message("{0}" + room->desc());
+    core()->message("{0}```" + room->desc());
 }
