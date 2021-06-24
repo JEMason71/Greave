@@ -35,7 +35,7 @@ void Parser::parse(std::string input)
     // 'quit' and 'exit' commands both exit the game, but require confirmation.
     if (first_word == "quit" || first_word == "exit")
     {
-        core()->message("{R}Are you sure you want to quit? Type {C}yes {R}to confirm.");
+        core()->message("{R}Are you sure you want to quit? {M}Your game will not be saved. {R}Type {C}yes {R}to confirm.");
         m_special_state = SpecialState::QUIT_CONFIRM;
         return;
     }
