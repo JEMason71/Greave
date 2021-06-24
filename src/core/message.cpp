@@ -122,7 +122,7 @@ std::string MessageLog::render_message_log(bool accept_blank_input)
             reprocess_output();
             m_offset = m_output_processed.size() - m_output_window_height;
         }
-        else if (key >= ' ' && key <= '~') m_input_buffer += static_cast<char>(key);
+        else if (key >= ' ' && key <= '~' && key != '{' && key != '}') m_input_buffer += static_cast<char>(key);
         else if (key == Terminal::Key::BACKSPACE && m_input_buffer.size()) m_input_buffer.pop_back();
         else if ((key == Terminal::Key::CR || key == Terminal::Key::LF) && (m_input_buffer.size() || accept_blank_input))
         {
