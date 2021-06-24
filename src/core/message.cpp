@@ -2,6 +2,7 @@
 // Copyright (c) 2019-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 // Originally based on BearLibTerminal sample code, (c) 2014 Cfyz.
 
+#include "3rdparty/SQLiteCpp/SQLiteCpp.h"
 #include "3rdparty/Tolk/Tolk.h"
 #include "core/core.hpp"
 #include "core/guru.hpp"
@@ -11,6 +12,10 @@
 #include "core/tune.hpp"
 
 #include <regex>
+
+
+// SQL table construction strings.
+const std::string MessageLog::SQL_MSGLOG =  "CREATE TABLE 'msglog' ( line INTEGER PRIMARY KEY, text TEXT NOT NULL )";
 
 
 // Constructor, sets some default values.
@@ -33,6 +38,21 @@ void MessageLog::clear_messages()
 #ifdef GREAVE_TOLK
     m_latest_messages.clear();
 #endif
+}
+
+// Loads the message log from disk.
+void MessageLog::load(std::shared_ptr<SQLite::Database> save_db)
+{
+    clear_messages();
+    m_last_input.clear();
+    SQLite::Statement query(*save_db, "SELECT text FROM msglog ORDER BY line ASC");
+    while (query.executeStep())
+        m_output_raw.push_back(query.getColumn("text").getString());
+
+    reprocess_output();
+    m_offset = static_cast<signed int>(m_output_processed.size() - m_output_window_height); // Move the offset back to the bottom of the message log.
+    m_dragging_scrollbar = false;
+    m_dragging_scrollbar_offset = 0;
 }
 
 // Adds a message to the log.
@@ -213,6 +233,18 @@ void MessageLog::reprocess_output()
         std::vector<std::string> split_line = StrX::string_explode_colour(line, m_output_window_width);
         if (!same_line) m_output_processed.push_back("");
         m_output_processed.insert(m_output_processed.end(), split_line.begin(), split_line.end());
+    }
+}
+
+// Saves the message log to disk.
+void MessageLog::save(std::shared_ptr<SQLite::Database> save_db)
+{
+    for (unsigned int i = 0; i < m_output_raw.size(); i++)
+    {
+        SQLite::Statement query(*save_db, "INSERT INTO msglog ( line, text ) VALUES ( ?, ? )");
+        query.bind(1, i);
+        query.bind(2, m_output_raw.at(i));
+        query.exec();
     }
 }
 

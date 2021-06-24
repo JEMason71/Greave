@@ -4,6 +4,8 @@
 #pragma once
 #include "core/greave.hpp"
 
+namespace SQLite { class Database; }    // defined in 3rdparty/SQLiteCpp/Database.h
+
 
 enum class LinkTag : uint16_t {
     // Tags below 10,000 are considered *dynamic tags*. These tags WILL be saved to save files.
@@ -36,9 +38,10 @@ enum class Security : uint8_t { ANARCHY, LOSEC, HISEC, SANCTUARY, INACCESSIBLE }
 class Room
 {
 public:
-    static const uint32_t       FALSE_ROOM = 3399618268;        // Hashed value for FALSE_ROOM, which is used to make 'fake' impassible room exits.
-    static const uint8_t        LIGHT_VISIBLE = 3;              // Any light level below this is considered too dark to see.
+    static const uint32_t       FALSE_ROOM;                     // Hashed value for FALSE_ROOM, which is used to make 'fake' impassible room exits.
+    static const uint8_t        LIGHT_VISIBLE;                  // Any light level below this is considered too dark to see.
     static const unsigned int   ROOM_LINKS_MAX = 10;            // The maximum amount of exit links from one Room to another.
+    static const std::string    SQL_ROOM_POOL;                  // The SQL table construction string for the room pool.
 
                 Room(std::string new_id = "");                  // Constructor, sets the Room's ID hash.
 	void        clear_link_tag(uint8_t id, LinkTag the_tag);    // Clears a tag on this Room's link.
@@ -52,7 +55,9 @@ public:
     uint32_t    link(uint8_t dir) const;                        // As above, but using an integer.
 	bool        link_tag(uint8_t id, LinkTag the_tag) const;    // Checks if a tag is set on this Room's link.
 	bool        link_tag(Direction dir, LinkTag the_tag) const; // As above, but with a Direction enum.
+    void        load(std::shared_ptr<SQLite::Database> save_db);    // Loads the Room and anything it contains.
     std::string name(bool short_name = false) const;            // Returns the Room's full or short name.
+    void        save(std::shared_ptr<SQLite::Database> save_db);    // Saves the Room and anything it contains.
     void        set_base_light(uint8_t new_light);              // Sets this Room's base light level.
     void        set_desc(const std::string &new_desc);          // Sets this Room's description.
     void        set_link(Direction dir, const std::string &room_id);    // Sets a link to another Room.

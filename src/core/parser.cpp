@@ -40,12 +40,11 @@ void Parser::parse(std::string input)
         return;
     }
 
+    // 'save' command, to... save the game.
+    if (first_word == "save") { core()->save(); return; }
+
     // Look around you. Just look around you.
-    if (first_word == "look" || first_word == "l")
-    {
-        ActionLook::look(player);
-        return;
-    }
+    if (first_word == "look" || first_word == "l") { ActionLook::look(player); return; }
 
     // Atempt to open or close a door or something else openable.
     if (first_word == "open" || first_word == "close")

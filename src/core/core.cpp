@@ -1,7 +1,7 @@
 // core/core.cpp -- Main program entry, initialization and cleanup routines, and the core game loop.
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#include "3rdparty/Tolk/Tolk.h"
+#include "3rdparty/SQLiteCpp/SQLiteCpp.h"
 #include "actions/look.hpp" // temp
 #include "core/core.hpp"
 #include "core/filex.hpp"
@@ -17,18 +17,23 @@
 #include "world/world.hpp"
 
 #include <thread>
+
 #ifdef GREAVE_TARGET_WINDOWS
 #include <windows.h>
 #endif
+
 #ifdef GREAVE_TOLK
+#include "3rdparty/Tolk/Tolk.h"
 #include <regex>
 #endif
 
 
 std::shared_ptr<Core> greave = nullptr;   // The main Core object.
 
-const std::string   Core::GAME_VERSION =    "pre-alpha";  // The game's version number.
-const unsigned int  Core::MSG_FLAG_INTERRUPT = 1; // Flags for the message() function.
+const std::string   Core::GAME_VERSION =        "pre-alpha";    // The game's version number.
+const unsigned int  Core::MSG_FLAG_INTERRUPT =  1;              // Flags for the message() function.
+const unsigned int  Core::SAVE_VERSION =        1;              // The version number for saved game files. This should increment when old saves can no longer be loaded.
+const unsigned int  Core::TAGS_PERMANENT =      10000;          // The tag number at which tags are considered permanent.
 
 
 // Main program entry point.
@@ -53,7 +58,7 @@ int main(int argc, char* argv[])
 }
 
 // Constructor, doesn't do too much aside from setting default values for member variables. Use init() to set things up.
-Core::Core() : m_message_log(nullptr), m_parser(nullptr), m_terminal(nullptr), m_tune(nullptr), m_world(nullptr) { }
+Core::Core() : m_message_log(nullptr), m_parser(nullptr), m_save_slot(0), m_sql_unique_id(0), m_terminal(nullptr), m_tune(nullptr), m_world(nullptr) { }
 
 // Cleans up after we're d one.
 void Core::cleanup()
@@ -80,6 +85,7 @@ const std::shared_ptr<Guru> Core::guru() const
 void Core::init()
 {
     FileX::make_dir("userdata");
+    FileX::make_dir("userdata/save");
 
     // Sets up the error-handling subsystem.
     m_guru_meditation = std::make_shared<Guru>("userdata/log.txt");
@@ -118,13 +124,27 @@ void Core::init()
     m_parser = std::make_shared<Parser>();
 }
 
+// Loads a specified slot's saved game.
+void Core::load(unsigned int save_slot)
+{
+    const std::string save_filename = "userdata/save/save-" + std::to_string(save_slot) + ".sqlite";
+    m_save_slot = save_slot;
+    std::shared_ptr<SQLite::Database> save_db = std::make_shared<SQLite::Database>(save_filename, SQLite::OPEN_READONLY);
+
+    SQLite::Statement version_query(*save_db, "PRAGMA user_version");
+    if (version_query.executeStep())
+    {
+        const unsigned int version = version_query.getColumn(0).getInt();
+        if (version != Core::SAVE_VERSION) throw std::runtime_error("Invalid saved game version!");
+    }
+    else throw std::runtime_error("Could not load version information from save file!");
+
+    m_world->load(save_db);
+}
+
 // The main game loop.
 void Core::main_loop()
 {
-    // temp
-    m_world->player()->set_location("TEST_ROOM");
-    ActionLook::look(m_world->player());
-
     // bröther may I have some lööps
     while (true)
     {
@@ -165,8 +185,39 @@ const std::shared_ptr<MessageLog> Core::messagelog() const { return m_message_lo
 void Core::play()
 {
     m_world = std::make_shared<World>();
+
+    if (FileX::file_exists("userdata/save/save-0.sqlite")) load(0);
+    else
+    {
+        m_world->player()->set_location("TEST_ROOM");
+        ActionLook::look(m_world->player());
+    }
+
     main_loop();
 }
+
+// Saves the game to disk.
+void Core::save()
+{
+    const std::string save_filename_base = "userdata/save/save-" + std::to_string(m_save_slot);
+    const std::string save_filename = save_filename_base + ".sqlite";
+    const std::string save_filename_old = save_filename_base + ".old";
+    if (FileX::file_exists(save_filename_old)) FileX::delete_file(save_filename_old);
+    if (FileX::file_exists(save_filename)) FileX::rename_file(save_filename, save_filename_old);
+
+    std::shared_ptr<SQLite::Database> save_db = std::make_shared<SQLite::Database>(save_filename, SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
+    save_db->exec("PRAGMA user_version = " + std::to_string(SAVE_VERSION));
+    m_sql_unique_id = 0;    // We're making a new save file each time, so we can reset the unique ID counter.
+
+    SQLite::Transaction transaction(*save_db);
+    m_world->save(save_db);
+    transaction.commit();
+
+    message("{M}Game saved in slot {Y}" + std::to_string(m_save_slot) + "{M}.");
+}
+
+// Retrieves a new unique SQL ID.
+uint32_t Core::sql_unique_id() { return ++m_sql_unique_id; }
 
 // Returns a pointer  to the terminal emulator object.
 const std::shared_ptr<Terminal> Core::terminal() const { return m_terminal; }

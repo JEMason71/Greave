@@ -113,6 +113,16 @@ uint32_t StrX::htoi(const std::string &hex_str)
     return result;
 }
 
+// Converts an integer into a hex string.
+std::string StrX::itoh(uint32_t num, unsigned int min_len)
+{
+    std::stringstream ss;
+    ss << std::hex << num;
+    std::string hex = ss.str();
+    while (min_len && hex.size() < min_len) hex = "0" + hex;
+    return hex;
+}
+
 // Converts a string to lower-case.
 std::string StrX::str_tolower(std::string str)
 {

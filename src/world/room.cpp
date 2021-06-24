@@ -1,6 +1,7 @@
 // world/room.cpp -- The Room class, which defines a single area in the game world that the player can visit.
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
+#include "3rdparty/SQLiteCpp/SQLiteCpp.h"
 #include "3rdparty/yaml-cpp/yaml.h"
 #include "core/core.hpp"
 #include "core/filex.hpp"
@@ -8,6 +9,13 @@
 #include "core/strx.hpp"
 #include "world/mobile.hpp"
 #include "world/room.hpp"
+
+
+const uint32_t  Room::FALSE_ROOM =      3399618268; // Hashed value for FALSE_ROOM, which is used to make 'fake' impassible room exits.
+const uint8_t   Room::LIGHT_VISIBLE =   3;          // Any light level below this is considered too dark to see.
+
+// The SQL table construction string for the room pool.
+const std::string   Room::SQL_ROOM_POOL =   "CREATE TABLE rooms ( sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, id INTEGER UNIQUE NOT NULL, tags TEXT, link_tags TEXT )";
 
 
 Room::Room(std::string new_id) : m_light(0), m_security(Security::ANARCHY)
@@ -87,6 +95,51 @@ bool Room::link_tag(Direction dir, LinkTag the_tag) const { return link_tag(stat
 
 // Returns the Room's full or short name.
 std::string Room::name(bool short_name) const { return (short_name ? m_name_short : m_name); }
+
+// Saves the Room and anything it contains.
+void Room::save(std::shared_ptr<SQLite::Database> save_db)
+{
+    const std::string tags = StrX::tags_to_string(m_tags);
+    std::string link_tags;
+    for (unsigned int e = 0; e < ROOM_LINKS_MAX; e++)
+    {
+        link_tags += StrX::tags_to_string(m_tags_link[e]);
+        if (e < ROOM_LINKS_MAX - 1) link_tags += ",";
+    }
+
+    if (!tags.size() && link_tags == ",,,,,,,,,") return;
+
+    SQLite::Statement room_query(*save_db, "INSERT INTO rooms (sql_id, id, tags, link_tags) VALUES (?, ?, ?, ?)");
+    room_query.bind(1, core()->sql_unique_id());
+    room_query.bind(2, m_id);
+    if (tags.size()) room_query.bind(3, tags);
+    if (link_tags != ",,,,,,,,,") room_query.bind(4, link_tags);
+    room_query.exec();
+}
+
+// Loads the Room and anything it contains.
+void Room::load(std::shared_ptr<SQLite::Database> save_db)
+{
+    SQLite::Statement query(*save_db, "SELECT * FROM rooms WHERE id = ?");
+    query.bind(1, m_id);
+    if (query.executeStep())
+    {
+        if (!query.getColumn("tags").isNull()) StrX::string_to_tags(query.getColumn("tags").getString(), m_tags);
+        if (!query.getColumn("link_tags").isNull())
+        {
+            const std::string link_tags_str = query.getColumn("link_tags").getString();
+            std::vector<std::string> split_links = StrX::string_explode(link_tags_str, ",");
+            if (split_links.size() != ROOM_LINKS_MAX) throw std::runtime_error("Malformed room link tags data.");
+            for (unsigned int e = 0; e < ROOM_LINKS_MAX; e++)
+            {
+                if (!split_links.at(e).size()) continue;
+                std::vector<std::string> split_tags = StrX::string_explode(split_links.at(e), " ");
+                for (auto tag : split_tags)
+                    m_tags_link[e].insert(static_cast<LinkTag>(StrX::htoi(tag)));
+            }
+        }
+    }
+}
 
 // Sets this Room's base light level.
 void Room::set_base_light(uint8_t new_light) { m_light = new_light; }

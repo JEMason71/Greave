@@ -3,6 +3,7 @@
 
 #include "core/filex.hpp"
 
+#include <cstdio>
 #include <dirent.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -70,3 +71,6 @@ void FileX::make_dir(const std::string &dir)
     mkdir(dir.c_str(), 0777);
 #endif
 }
+
+// Renames a file. Seems simple, but this function exists for when inevitably some platform-specific fuckery arises.
+void FileX::rename_file(const std::string &old_name, const std::string &new_name) { rename(old_name.c_str(), new_name.c_str()); }

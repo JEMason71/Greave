@@ -1,6 +1,7 @@
 // world/world.cpp -- The World class defines the game world as a whole and handles the passage of time, as well as keeping track of the player's current activities.
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
+#include "3rdparty/SQLiteCpp/SQLiteCpp.h"
 #include "3rdparty/yaml-cpp/yaml.h"
 #include "core/core.hpp"
 #include "core/filex.hpp"
@@ -236,3 +237,28 @@ void World::load_room_pool()
 
 // Retrieves a pointer to the Player object.
 const std::shared_ptr<Mobile> World::player() const { return m_player; }
+
+// Saves the World and all things within it.
+void World::save(std::shared_ptr<SQLite::Database> save_db)
+{
+    save_db->exec(Room::SQL_ROOM_POOL);
+    save_db->exec(Player::SQL_PLAYER);
+    save_db->exec(Mobile::SQL_MOBILES);
+    save_db->exec(MessageLog::SQL_MSGLOG);
+
+    for (auto room : m_room_pool)
+        room.second->save(save_db);
+
+    m_player->save(save_db);
+    core()->messagelog()->save(save_db);
+}
+
+// Loads the World and all things within it.
+void World::load(std::shared_ptr<SQLite::Database> save_db)
+{
+    for (auto room : m_room_pool)
+        room.second->load(save_db);
+    
+    m_player->load(save_db, 0);
+    core()->messagelog()->load(save_db);
+}
