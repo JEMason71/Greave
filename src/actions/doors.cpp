@@ -44,7 +44,7 @@ bool ActionDoors::open_or_close(std::shared_ptr<Mobile> mob, Direction dir, bool
         return false;
     }
 
-    const std::string door_name = (room->link_tag(dir, LinkTag::Window) ? "window" : "door");
+    const std::string door_name = room->door_name(dir);
     if (is_player) core()->message("{u}You {U}" + open_close_str + " the " + door_name + " {u}" + StrX::dir_to_name(dir, StrX::DirNameType::TO_THE) + ".");
     // todo: add open/close messages for NPCs, in both source and destination rooms
 

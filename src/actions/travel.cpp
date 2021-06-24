@@ -1,6 +1,7 @@
 // actions/travel.cpp -- Actions allowing the player and NPCs to move around the game world.
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
+#include "actions/doors.hpp"
 #include "actions/look.hpp"
 #include "actions/travel.hpp"
 #include "core/core.hpp"
@@ -26,10 +27,9 @@ bool ActionTravel::travel(std::shared_ptr<Mobile> mob, Direction dir)
 
     if (room->link_tag(dir, LinkTag::Openable) && !room->link_tag(dir, LinkTag::Open))
     {
-        if (is_player) core()->message("{y}Your passage " + StrX::dir_to_name(dir, StrX::DirNameType::TO_THE) + " {Y}is blocked{y}.");
-        // todo: NPC failure messages
-        // todo: auto open unlocked doors
-        return false;
+        if (is_player) core()->message("{m}(first opening the " + room->door_name(dir) + ")");
+        const bool opened = ActionDoors::open_or_close(mob, dir, true);
+        if (!opened) return false;
     }
 
     mob->set_location(room->link(dir));

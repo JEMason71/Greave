@@ -40,6 +40,16 @@ void Room::clear_tag(RoomTag the_tag)
 // Returns the Room's description.
 std::string Room::desc() const { return m_desc; }
 
+// Returns the name of a door in the specified direction.
+std::string Room::door_name(Direction dir) const
+{
+    if (static_cast<uint8_t>(dir) >= ROOM_LINKS_MAX) throw std::runtime_error("Invalid direction specified when checking door name.");
+    if (!link_tag(dir, LinkTag::Openable)) return "";
+    if (link_tag(dir, LinkTag::Window)) return "window";
+    if (link_tag(dir, LinkTag::DoorMetal)) return "metal door";
+    return "door";
+}
+
 // Retrieves the unique hashed ID of this Room.
 uint32_t Room::id() const { return m_id; }
 
