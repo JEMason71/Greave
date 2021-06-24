@@ -13,6 +13,7 @@ public:
                     Mobile();           // Constructor, sets default values.
     uint32_t        location() const;   // Retrieves the location of this Mobile, in the form of a Room ID.
     void            set_location(uint32_t room_id); // Sets the location of this Mobile with a Room ID.
+    void            set_location(const std::string &room_id);   // As above, but with a string Room ID.
     virtual Type    type() = 0;         // Mobile should never be instantiated directly, only NPC or Player.
 
 private:

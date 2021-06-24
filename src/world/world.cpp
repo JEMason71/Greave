@@ -6,6 +6,7 @@
 #include "core/filex.hpp"
 #include "core/message.hpp"
 #include "core/strx.hpp"
+#include "world/player.hpp"
 #include "world/room.hpp"
 #include "world/world.hpp"
 
@@ -27,7 +28,26 @@ const std::map<std::string, Security>   World::SECURITY_MAP = { { "anarchy", Sec
 
 
 // Constructor, loads the room YAML data.
-World::World() { load_room_pool(); }
+World::World()
+{
+    load_room_pool();
+    m_player = std::make_shared<Player>();
+}
+
+// Retrieves a specified Room by ID.
+const std::shared_ptr<Room> World::get_room(uint32_t room_id) const
+{
+    const auto it = m_room_pool.find(room_id);
+    if (it == m_room_pool.end()) throw std::runtime_error("Invalid room ID requested: " + std::to_string(room_id));
+    return it->second;
+}
+
+// As above, but with a Room ID string.
+const std::shared_ptr<Room> World::get_room(const std::string &room_id) const
+{
+    if (!room_id.size()) throw std::runtime_error("Blank room ID requested.");
+    else return get_room(StrX::hash(room_id));
+}
 
 // Loads the Room YAML data into memory.
 void World::load_room_pool()
@@ -45,7 +65,7 @@ void World::load_room_pool()
             const auto new_room(std::make_shared<Room>(room_id));
 
             // Check to make sure there are no hash collisions.
-            if (s_room_pool.find(new_room->id()) != s_room_pool.end()) throw std::runtime_error("Room ID hash conflict: " + room_id);
+            if (m_room_pool.find(new_room->id()) != m_room_pool.end()) throw std::runtime_error("Room ID hash conflict: " + room_id);
 
             // The Room's long and short names.
             if (!room_data["name"] || room_data["name"].size() < 2) core()->message("{r}Missing or invalid room name(s): " + room_id);
@@ -209,7 +229,10 @@ void World::load_room_pool()
             }
 
             // Add the new Room to the room pool.
-            s_room_pool.insert(std::make_pair(new_room->id(), new_room));
+            m_room_pool.insert(std::make_pair(new_room->id(), new_room));
         }
     }
 }
+
+// Retrieves a pointer to the Player object.
+const std::shared_ptr<Mobile> World::player() const { return m_player; }

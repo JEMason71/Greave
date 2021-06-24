@@ -2,6 +2,7 @@
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #include "3rdparty/Tolk/Tolk.h"
+#include "actions/look.hpp" // temp
 #include "core/core.hpp"
 #include "core/filex.hpp"
 #include "core/guru.hpp"
@@ -10,6 +11,7 @@
 #include "core/terminal-blt.hpp"
 #include "core/terminal-curses.hpp"
 #include "core/tune.hpp"
+#include "world/mobile.hpp"
 #include "world/room.hpp"
 #include "world/world.hpp"
 
@@ -115,6 +117,10 @@ void Core::init()
 // The main game loop.
 void Core::main_loop()
 {
+    // temp
+    m_world->player()->set_location("TEST_ROOM");
+    ActionLook::look(m_world->player());
+
     // bröther may I have some lööps
     while (true)
     {
@@ -153,16 +159,6 @@ const std::shared_ptr<MessageLog> Core::messagelog() const { return m_message_lo
 // Starts the game.
 void Core::play()
 {
-    message("{W}COLOUR TEST:");
-    message("{b}BLACK   {B}BOLD");
-    message("{r}RED     {R}BOLD");
-    message("{g}GREEN   {G}BOLD");
-    message("{y}YELLOW  {Y}BOLD");
-    message("{u}BLUE    {U}BOLD");
-    message("{c}CYAN    {C}BOLD");
-    message("{m}MAGENTA {M}BOLD");
-    message("{w}WHITE   {W}BOLD");
-
     m_world = std::make_shared<World>();
     main_loop();
 }

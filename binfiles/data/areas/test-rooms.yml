@@ -2,7 +2,7 @@
 # Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 TEST_ROOM:
-  desc: "This is a dev testing room. The nearby rooms are as follows: {nl} North: private rooms. East: dark room."
+  desc: "This is a dev testing room. The nearby rooms are as follows: {lb} North: private rooms. East: dark room."
   exits:
     east: TEST_ROOM_DARK
     north: TEST_ROOM_PRIVATE_1

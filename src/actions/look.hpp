@@ -10,5 +10,5 @@ class Mobile;   // defined in world/mobile.hpp
 class ActionLook
 {
 public:
-    void    look(std::shared_ptr<Mobile> mob);  // Take a look around at your surroundings.
+    static void look(std::shared_ptr<Mobile> mob);      // Take a look around at your surroundings.
 };
