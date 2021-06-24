@@ -6,6 +6,7 @@
 #include "core/filex.hpp"
 #include "core/message.hpp"
 #include "core/strx.hpp"
+#include "world/mobile.hpp"
 #include "world/room.hpp"
 
 
@@ -42,6 +43,35 @@ std::string Room::desc() const { return m_desc; }
 // Retrieves the unique hashed ID of this Room.
 uint32_t Room::id() const { return m_id; }
 
+// Gets the light level of this Room, adjusted by dynamic lights, and optionally including darkvision etc.
+int Room::light(std::shared_ptr<Mobile>) const
+{
+    // Right now, we'll just use the base light level; dynamic lights come later.
+    return m_light;
+}
+
+// Retrieves a Room link in the specified direction.
+uint32_t Room::link(Direction dir) const { return link(static_cast<uint8_t>(dir)); }
+
+// As above, but using an integer.
+uint32_t Room::link(uint8_t dir) const
+{
+    if (dir >= ROOM_LINKS_MAX) throw std::runtime_error("Invalid direction specified when checking room links.");
+    return m_links[dir];
+}
+
+// Checks if a tag is set on this Room's link.
+bool Room::link_tag(unsigned char id, LinkTag the_tag) const
+{
+    if (id >= ROOM_LINKS_MAX) throw std::runtime_error("Invalid direction specified when checking room link tag.");
+    if (the_tag == LinkTag::Lockable || the_tag == LinkTag::Openable || the_tag == LinkTag::Locked || the_tag == LinkTag::Permalock)
+    {
+        if (m_tags_link[id].count(LinkTag::Permalock) > 0) return true; // If checking for Lockable, Openable or Locked, also check for Permalock.
+        if (m_links[id] == FALSE_ROOM) return true; // Links to FALSE_ROOM are always considered to be permalocked.
+    }
+    return (m_tags_link[id].count(the_tag) > 0);
+}
+
 // Returns the Room's full or short name.
 std::string Room::name(bool short_name) const { return (short_name ? m_name_short : m_name); }
 
@@ -72,18 +102,6 @@ void Room::set_link_tag(unsigned char id, LinkTag the_tag)
 
 // As above, but with a Direction enum.
 void Room::set_link_tag(Direction dir, LinkTag the_tag) { set_link_tag(static_cast<uint8_t>(dir), the_tag); }
-
-// Checks if a tag is set on this Room's link.
-bool Room::link_tag(unsigned char id, LinkTag the_tag) const
-{
-    if (id >= ROOM_LINKS_MAX) throw std::runtime_error("Invalid direction specified when checking room link tag.");
-    if (the_tag == LinkTag::Lockable || the_tag == LinkTag::Openable || the_tag == LinkTag::Locked || the_tag == LinkTag::Permalock)
-    {
-        if (m_tags_link[id].count(LinkTag::Permalock) > 0) return true; // If checking for Lockable, Openable or Locked, also check for Permalock.
-        if (m_links[id] == FALSE_ROOM) return true; // Links to FALSE_ROOM are always considered to be permalocked.
-    }
-    return (m_tags_link[id].count(the_tag) > 0);
-}
 
 // Sets the long and short name of this room.
 void Room::set_name(const std::string &new_name, const std::string &new_short_name)

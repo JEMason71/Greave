@@ -10,6 +10,7 @@ enum class LinkTag : uint16_t {
     Openable = 1,       // Can be opened and closed; a door, hatch, gate, or similar.
     Lockable = 2,       // Can be locked or unlocked with a key. Must be openable.
     Permalock = 3,      // As above, but can never be unlocked.
+    Hidden = 4,         // This link is not normally visible.
 
     // 100-199 block -- tags regarding a transient status of the exit, such as open doors.
     Open = 100,         // A door, gate, hatch, etc. that is currently open.
@@ -26,6 +27,8 @@ enum class RoomTag : uint16_t {
     Underground = 2,        // Is this room underground?
     Private = 3,            // Entering this room is considered trespassing.
     NoExploreCredit = 4,    // This room does not count towards the number of 'explored' rooms in the player's stats.
+    Explored = 5,           // The player has visited this room before.
+    Maze = 6,               // This Room is part of a maze, and should not have its exit names labeled.
 };
 
 enum class Security : uint8_t { ANARCHY, LOSEC, HISEC, SANCTUARY, INACCESSIBLE };
@@ -42,6 +45,9 @@ public:
     void        clear_tag(RoomTag the_tag);     // Clears a tag on this Room.
     std::string desc() const;   // Returns the Room's description.
     uint32_t    id() const;     // Retrieves the unique hashed ID of this Room.
+    int         light(std::shared_ptr<Mobile> mob = nullptr) const; // Gets the light level of this Room, adjusted by dynamic lights, and optionally including darkvision etc.
+    uint32_t    link(Direction dir) const;  // Retrieves a Room link in the specified direction.
+    uint32_t    link(uint8_t dir) const;    // As above, but using an integer.
 	bool        link_tag(unsigned char id, LinkTag the_tag) const;  // Checks if a tag is set on this Room's link.
 	bool        link_tag(Direction dir, LinkTag the_tag) const;     // As above, but with a Direction enum.
     std::string name(bool short_name = false) const;    // Returns the Room's full or short name.

@@ -1,11 +1,48 @@
 // core/strx.cpp -- Various utility functions that deal with string manipulation/conversion.
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
+#include "core/core.hpp"
+#include "core/guru.hpp"
 #include "core/strx.hpp"
 
 #include <algorithm>
 #include <sstream>
 
+
+const int StrX::CL_FLAG_USE_AND = 1, StrX::CL_FLAG_SQL_MODE = 2;    // comma_list() flags
+
+
+std::string StrX::comma_list(std::vector<std::string> vec, unsigned int flags)
+{
+	const bool use_and = ((flags & CL_FLAG_USE_AND) == CL_FLAG_USE_AND);
+	const bool sql_mode = ((flags & CL_FLAG_SQL_MODE) == CL_FLAG_SQL_MODE);
+	if (!vec.size())
+	{
+		core()->guru()->nonfatal("Empty vector provided to comma_list!", Guru::WARN);
+		return "";
+	}
+	if (vec.size() == 1) return vec.at(0);
+	std::string plus = " and ";
+	if (!use_and)
+	{
+		if (sql_mode) plus = ", ";
+		else plus = " or ";
+	}
+	else if (vec.size() == 2) return vec.at(0) + plus + vec.at(1);
+
+	std::string str;
+	for (unsigned int i = 0; i < vec.size(); i++)
+	{
+		str += vec.at(i);
+		if (i < vec.size() - 1)
+		{
+			if (i == vec.size() - 2) str += plus;
+			else str += ", ";
+		}
+	}
+
+	return str;
+}
 
 // Converts a direction enum into a string.
 std::string StrX::dir_to_name(Direction dir)
@@ -28,6 +65,9 @@ std::string StrX::dir_to_name(Direction dir)
             return "";
 	}
 }
+
+// As above, but with an integer instead of an enum.
+std::string StrX::dir_to_name(uint8_t dir) { return dir_to_name(static_cast<Direction>(dir)); }
 
 // Find and replace one string with another.
 bool StrX::find_and_replace(std::string &input, const std::string &to_find, const std::string &to_replace)

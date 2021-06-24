@@ -15,12 +15,12 @@
 const std::map<std::string, uint8_t>    World::LIGHT_LEVEL_MAP = { { "bright", 7 }, { "dim", 5 }, { "wilderness", 5 }, { "dark", 3 }, { "none", 0 } };
 
 // Lookup table for converting LinkTag text names into enums.
-const std::map<std::string, LinkTag>    World::LINK_TAG_MAP = { { "doormetal", LinkTag::DoorMetal }, { "lockable", LinkTag::Lockable }, { "locked", LinkTag::Locked },
-    { "open", LinkTag::Open }, { "openable", LinkTag::Openable }, { "permalock", LinkTag::Permalock }, { "window", LinkTag::Window } };
+const std::map<std::string, LinkTag>    World::LINK_TAG_MAP = { { "doormetal", LinkTag::DoorMetal }, { "hidden", LinkTag::Hidden }, { "lockable", LinkTag::Lockable },
+    { "locked", LinkTag::Locked }, { "open", LinkTag::Open }, { "openable", LinkTag::Openable }, { "permalock", LinkTag::Permalock }, { "window", LinkTag::Window } };
 
 // Lookup table for converting RoomTag text names into enums.
-const std::map<std::string, RoomTag>    World::ROOM_TAG_MAP = { { "indoors", RoomTag::Indoors }, { "noexplorecredit", RoomTag::NoExploreCredit }, { "private", RoomTag::Private },
-    { "underground", RoomTag::Underground } };
+const std::map<std::string, RoomTag>    World::ROOM_TAG_MAP = { { "indoors", RoomTag::Indoors }, { "maze", RoomTag::Maze }, { "noexplorecredit", RoomTag::NoExploreCredit },
+    { "private", RoomTag::Private }, { "underground", RoomTag::Underground } };
 
 // Lookup table for converting textual room security (e.g. "anarchy") to enum values.
 const std::map<std::string, Security>   World::SECURITY_MAP = { { "anarchy", Security::ANARCHY }, { "losec", Security::LOSEC }, { "hisec", Security::HISEC },
