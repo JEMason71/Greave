@@ -20,6 +20,7 @@ public:
     static uint32_t     htoi(const std::string &hex_str);           // Converts a hex string back to an integer.
     static std::string  itoh(unsigned int num, uint32_t min_len);   // Converts an integer into a hex string.
     static std::string  str_tolower(std::string str);               // Converts a string to lower-case.
+    static std::string  str_toupper(std::string str);               // Converts a string to upper-case.
     static std::vector<std::string> string_explode(std::string str, const std::string &separator);          // String split/explode function.
     static std::vector<std::string> string_explode_colour(const std::string &str, unsigned int line_len);   // Similar to string_explode(), but takes colour into account, and wraps to a given line.
     static unsigned int strlen_colour(const std::string &str);      // Returns the length of a string, taking colour tags into account.    

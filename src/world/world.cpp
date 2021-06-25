@@ -5,6 +5,7 @@
 #include "3rdparty/yaml-cpp/yaml.h"
 #include "core/core.hpp"
 #include "core/filex.hpp"
+#include "core/guru.hpp"
 #include "core/message.hpp"
 #include "core/strx.hpp"
 #include "world/player.hpp"
@@ -17,8 +18,7 @@ const std::map<std::string, uint8_t>    World::LIGHT_LEVEL_MAP = { { "bright", 7
 
 // Lookup table for converting LinkTag text names into enums.
 const std::map<std::string, LinkTag>    World::LINK_TAG_MAP = { { "doormetal", LinkTag::DoorMetal }, { "hidden", LinkTag::Hidden }, { "lockable", LinkTag::Lockable },
-    { "locked", LinkTag::Locked }, { "open", LinkTag::Open }, { "openable", LinkTag::Openable }, { "permalock", LinkTag::Permalock }, { "unfinished", LinkTag::Unfinished },
-    { "window", LinkTag::Window } };
+    { "locked", LinkTag::Locked }, { "open", LinkTag::Open }, { "openable", LinkTag::Openable }, { "permalock", LinkTag::Permalock }, { "window", LinkTag::Window } };
 
 // Lookup table for converting RoomTag text names into enums.
 const std::map<std::string, RoomTag>    World::ROOM_TAG_MAP = { { "indoors", RoomTag::Indoors }, { "maze", RoomTag::Maze }, { "noexplorecredit", RoomTag::NoExploreCredit },
@@ -194,7 +194,7 @@ void World::load_room_pool()
                     if (!directional_tag)
                     {
                         const auto tag_it = ROOM_TAG_MAP.find(tag_str);
-                        if (tag_it == ROOM_TAG_MAP.end()) core()->message("{r}Unrecognized room tag (" + tag_str + "): " + room_id);
+                        if (tag_it == ROOM_TAG_MAP.end()) core()->guru()->nonfatal("Unrecognized room tag (" + tag_str + "): " + room_id, Guru::WARN);
                         else
                         {
                             const RoomTag rt = tag_it->second;
@@ -205,7 +205,7 @@ void World::load_room_pool()
                     {
                         const std::string dtag_str = tag_str.substr(dt_offset);
                         const auto dtag_it = LINK_TAG_MAP.find(dtag_str);
-                        if (dtag_it == LINK_TAG_MAP.end()) core()->message("{r}Unrecognized link tag (" + dtag_str + "): " + room_id);
+                        if (dtag_it == LINK_TAG_MAP.end()) core()->guru()->nonfatal("Unrecognized link tag (" + dtag_str + "): " + room_id, Guru::WARN);
                         else
                         {
                             const LinkTag lt = dtag_it->second;
@@ -257,9 +257,10 @@ void World::save(std::shared_ptr<SQLite::Database> save_db)
 // Loads the World and all things within it.
 void World::load(std::shared_ptr<SQLite::Database> save_db)
 {
+    core()->messagelog()->load(save_db);
+
     for (auto room : m_room_pool)
         room.second->load(save_db);
     
     m_player->load(save_db, 0);
-    core()->messagelog()->load(save_db);
 }

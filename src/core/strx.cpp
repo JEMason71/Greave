@@ -130,6 +130,13 @@ std::string StrX::str_tolower(std::string str)
     return str;
 }
 
+// Converts a string to upper-case.
+std::string StrX::str_toupper(std::string str)
+{
+    std::transform(str.begin(), str.end(), str.begin(), ::toupper);
+    return str;
+}
+
 // String split/explode function.
 std::vector<std::string> StrX::string_explode(std::string str, const std::string &separator)
 {

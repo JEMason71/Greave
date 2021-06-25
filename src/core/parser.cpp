@@ -89,6 +89,19 @@ void Parser::parse(std::string input)
         return;
     }
 
+    // Super secret dev/debug commands!
+    if (first_word == "#hash")
+    {
+        if (words.size() < 2)
+        {
+            core()->message("{y}Please specify a {Y}string to hash{y}.");
+            return;
+        }
+        const std::string hash_word = StrX::str_toupper(words.at(1));
+        core()->message("{G}" + hash_word + " {g}hashes to {G}" + std::to_string(StrX::hash(hash_word)) + "{g}.");
+        return;
+    }
+
     // Other words we can basically ignore.
     if (first_word == "yes" || first_word == "no")
     {

@@ -17,15 +17,17 @@ bool ActionTravel::travel(std::shared_ptr<Mobile> mob, Direction dir)
     const uint32_t mob_loc = mob->location();
     const std::shared_ptr<Room> room = core()->world()->get_room(mob_loc);
     const bool is_player = (mob->type() == Mobile::Type::PLAYER);
+    const uint32_t room_link = room->link(dir);
 
-    if (!room->link(dir))
+    if (!room_link)
     {
-        if (is_player)
-        {
-            if (room->link_tag(dir, LinkTag::Unfinished)) core()->message("{y}That part of the game is {Y}curently unfinished{y}. Please come back later.");
-            else core()->message("{y}You cannot travel {Y}" + StrX::dir_to_name(dir, StrX::DirNameType::TO_THE_ALT) + "{y}.");
-        }
+        if (is_player) core()->message("{y}You cannot travel {Y}" + StrX::dir_to_name(dir, StrX::DirNameType::TO_THE_ALT) + "{y}.");
         // todo: NPC failure messages
+        return false;
+    }
+    else if (room_link == Room::UNFINISHED)
+    {
+        core()->message("{y}That part of the game is {Y}curently unfinished{y}. Please come back later.");
         return false;
     }
 
@@ -36,7 +38,7 @@ bool ActionTravel::travel(std::shared_ptr<Mobile> mob, Direction dir)
         if (!opened) return false;
     }
 
-    mob->set_location(room->link(dir));
+    mob->set_location(room_link);
     if (is_player) ActionLook::look(mob);
     return true;
 }
