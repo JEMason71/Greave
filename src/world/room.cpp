@@ -9,6 +9,7 @@
 #include "core/strx.hpp"
 #include "world/mobile.hpp"
 #include "world/room.hpp"
+#include "world/world.hpp"
 
 
 const uint32_t  Room::FALSE_ROOM =      3399618268; // Hashed value for FALSE_ROOM, which is used to make 'fake' impassible room exits.
@@ -47,7 +48,11 @@ void Room::clear_tag(RoomTag the_tag)
 }
 
 // Returns the Room's description.
-std::string Room::desc() const { return m_desc; }
+std::string Room::desc() const
+{
+    if (m_desc.size() > 2 && m_desc[0] == '$') return core()->world()->generic_desc(m_desc.substr(1));
+    else return m_desc;
+}
 
 // Returns the name of a door in the specified direction.
 std::string Room::door_name(Direction dir) const

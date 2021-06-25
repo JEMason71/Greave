@@ -1,0 +1,1053 @@
+# areas/caledonia.yml -- Forge-City Caledonia on the continent of Iria.
+# Copyright (c) 2016-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+# Forge-City Caledonia and some of its outlying regions are originally based on and expanded from the Industrial Sector from SporkMUCK, originally made by @not_coyotic, copyright (c) 2002-2007, used with permission.
+
+ARROW_PARK:
+  desc: The atmosphere is thick and heavy, tall exhaust and flare stacks of nearby refineries looming ominously in the polluted sky. Here, surrounded by the city walls and the debris of dreams, rests a small natural sanctuary. The grass is thick and green underfoot, carpeting this half-block of city property. Tall trees block out a little of the surrounding buildings, leaves rustling softly. Covering almost a quarter of the park is a large pool, edged in natural rock and varying in depth. {lb} ```To the south stand thick pines, hidden behind which is a heavy stone platform - the twin skyguard ballistae rising toward the treetops in dark testament. Gates in the park walls lie north, east and west.
+  exits:
+    east: KINGS_ROAD_1
+    north: BERESTALL_STREET
+    south: UNFINISHED
+    west: CROSSWOOD_ALLEY
+  light: dim
+  name: [ Arrow Park, park ]
+  security: low
+  tags: [ DigOK, NorthDoubleLength, WaterClean, WestDoubleLength, Wide ]
+
+BERESTALL_CHURCH:
+  desc: The northeast corner of the intersection once held a building, but only foundations remain. Erected over the gaping hole is a faded and weathered billboard, reading simply 'He sees...' in black on white. Two other corners hold more mundane buildings, reaching two and three storeys towards the clouds high above, while the eastern building appears to be a general store of sorts, its windows obscured by cobwebs inside. {lb} ```Church Avenue runs north and south, steeples of another holy monument rising into the skyline to the south.
+  exits:
+    east: HAINAS_SUNDRIES
+    north: CHURCH_AVENUE_2
+    south: CHURCH_AVENUE
+    west: BERESTALL_KINGS
+  light: dim
+  name: [ Berestall/Church, Berestall/Church ]
+  security: low
+  tags: [ EastLockable, SouthDoubleLength, VeryWide, WestTripleLength ]
+
+BERESTALL_END:
+  desc: There is the park to the east, a street, a solid wall of buildings, then as one heads westward... nothing. The city, the civilian eye will notice, has been flattened from that wall of buildings to the sea four miles distant. Rising up to the west are the foundations of a post-apocalyptic dystopia. {lb} ```The road ends here, abruptly, the paving stones underfoot melted and torn to shreds. Buildings still rise, up to twelve feet at best, above the broken sidewalks and piles of brick and shingle that litter the ground. The wide dirt track that was once a street continues on to the west.
+  exits:
+    east: BERESTALL_STREET_2
+    north: UNFINISHED
+    west: DESOLATION_ALLEY_EAST
+  light: dim
+  name: [ Berestall's End, Berestall ]
+  security: low
+  tags: [ DigOK, EastDoubleLength, NorthDoorMetal, NorthLockable, VeryWide, WestDoubleLength ]
+
+BERESTALL_KINGS:
+  desc: Two roads collide without a sound, a battered street marker reading 'Berestall Street' and 'King's Road'. The sky is obscured by a tall building to the southeast, looming ominously over this intersection. More residential buildings make up these city walls, with a single corner shop nestled between dilapidated structures, the sign outside proclaiming it to be 'The Hunter's Mark'. {lb} ```At the northeast corner stands another tall building, a worn and creaking sign indicating it to be 'The Red Dragon Inn'.
+  exits:
+    down: UNFINISHED
+    east: BERESTALL_CHURCH
+    northeast: UNFINISHED
+    south: KINGS_ROAD_1
+    southeast: CALEDONIA_FLETCHER
+    west: BERESTALL_STREET
+  light: dim
+  name: [ Berestall/King's, Berestall/King's ]
+  security: low
+  tags: [ DownDoorMetal, DownOpenable, EastTripleLength, NorthDoubleLength, NortheastLockable, NortheastLockWeak, SouthDoubleLength, SoutheastLockable, VeryWide ]
+
+BERESTALL_STREET:
+  desc: "Tall buildings reflect the light along the northern edge of this street. These are primarily residential buildings, though a few shops do exist; some of them are even still in business. Directly across from the entrance to the park two buildings in particular stand out: signs mark them as 'Yetu's Supplies' and 'The Golden Cauldron'. {lb} ```Through a gap in a low wall to the south lies the main central park, trees rising toward the sky, yet still dwarfed by the surrounding buildings, while the street stretches east and west."
+  exits:
+    east: BERESTALL_KINGS
+    north: CALEDONIA_ALCHEMIST
+    northwest: UNFINISHED
+    south: ARROW_PARK
+    west: BERESTALL_STREET_2
+  light: dim
+  name: [ Berestall Street, Berestall ]
+  security: low
+  tags: [ NorthLockable, NorthLockStrong, NorthwestLockable, NorthwestLockStrong, SouthDoubleLength, VeryWide, WestDoubleLength ]
+
+BERESTALL_STREET_2:
+  desc: The shadows of the park's trees lay across the pavement, drawing stripes down a north-south road, apparently labeled 'Crosswood Alley' by a rusted street corner sign. It intersects here with Berestall. The surrounding buildings seem less imposing, as a quarter of the nearest area is the central park and the southwest quadrant is taken up by the Central Underground station. {lb} ```A wide set of stairs leads down into the subway, a weatherbeaten and faded sign proclaiming the name stretched over the stairs.
+  exits:
+    east: BERESTALL_STREET
+    north: UNFINISHED
+    south: CROSSWOOD_ALLEY
+    southwest: CENTRAL_UNDERGROUND_NORTH
+    west: BERESTALL_END
+  light: dim
+  name: [ Berestall Street, Berestall ]
+  security: low
+  tags: [ EastDoubleLength, SouthDoubleLength, SouthwestDecline, VeryWide, WestDoubleLength ]
+
+BLACK_MARKET_WAREHOUSE:
+  desc: "The ceiling rises high overhead, massive horizontal beams and corroding ductwork laid visible. The large high windows have been boarded over just letting narrow beams of light spill across the stone floor. Lighting, however, is not sparse: wall-mounted aether-lanterns bathe the open room in pale ambiance. {lb} ```Tables ring the walls, each staffed by a strange, short and fuzzy creature whose white fur glows with radiance under the aether-light, each dressed in a loose shirt or long coat, selling their assorted wares of adventuring supplies, promising prime weaponry upon show of coin. {lb} ```Boxes and crates lie littered about the walls, cleared away from a door, emblazoned with the symbol of an old pre-war currency, leading into a back room. Finally, nearly hidden behind a line of tall cabinets, a heavy metal door leads out to the east."
+  exits:
+    east: UNFINISHED
+    north: MILLERS_WAY
+    south: MK_CASINO
+  light: bright
+  name: [ Black Market Warehouse, black market ]
+  security: high
+  tags: [ EastDoorMetal, EastLocked, EastLockWeak, Indoors, NorthLockable, NorthLockStrong, ShopBuysContraband, ShopRespawningOwner, SouthLockable, SouthLockStrong, Wide ]
+
+BLUE_LINE:
+  desc: Lit by the flickering, sickly-orange glow of overhead lamps and the occasional passing lights from outside, this train features uncomfortable seats, grimy and graffiti-defaced windows, and a strange smell that you can't quite identify.
+  exits:
+    east: CENTRAL_UNDERGROUND_SOUTH
+  light: dim
+  name: [ Blue Line Train, train ]
+  security: low
+  tags: [ EastAutoClose, EastDoorMetal, EastOpenable, Indoors ]
+
+BROKEN_ALLEY:
+  desc: The walls of the two bordering buildings rise in jagged lines to either side, the melted glass and shattered brick of their construction lying strewn all about the alley amid the trash. The alley runs to a 90-degree turn where it dives down a darker corridor.
+  exits:
+    north: DESOLATION_ALLEY
+    west: DARKENED_ALLEY
+  light: dim
+  name: [ Broken Alley, alley ]
+  security: anarchy
+  tags: [ DigOK, NorthDoubleLength, Wide ]
+
+BRULD_LEATHERWORKER:
+  desc: The strong scent of fresh leather hangs heavy in the air as you enter the leatherworker's store, the brick-walled, wooden-floored building occupied largely by the merchandise on offer. Racks of armour stand on display along with boots, gloves, bags and waterskins. {lb} ```A heavy L-shaped wooden counter frames the room, behind which numerous strange tools and unfinished products line the walls, along with doors leading inward to the north and west. The door back out to the street lies south.
+  exits:
+    north: BRULD_LEATHERWORKER_STOREROOM
+    south: IRON_LANE
+    west: BRULD_LEATHERWORKER_HOUSE
+  light: bright
+  name: [ Bruld & Sons, leatherworker ]
+  security: low
+  tags: [ Indoors, NorthLocked, NorthLockStrong, SouthDoorShop, SouthLockable, WestLocked ]
+
+BRULD_LEATHERWORKER_HOUSE:
+  desc: The private quarters of Bruld & Sons is a simple yet comfortable affair, a few faded yet colourful tapestries hanging on the bare brick walls, small windows letting in light from the street outside. Three beds lie beyond a hanging curtain dividing the room, and a number of shelves and cupboards hold simple personal belongings. {lb} ```The only exit lies east, a wooden door back to the storefront.
+  exits:
+    east: BRULD_LEATHERWORKER
+  light: dim
+  name: [ Leatherworker's Home, private rooms ]
+  security: low
+  tags: [ CanSeeOutside, Indoors, EastLocked, Private, SleepOK ]
+
+BRULD_LEATHERWORKER_STOREROOM:
+  desc: The storeroom in the back of the building smells even more strongly of leather. Various crates and shelves are filled with products in various states of completion, along with large and small pieces of raw leather and strange tools. The only way out is back south, to the storefront.
+  exits:
+    south: BRULD_LEATHERWORKER
+  light: dim
+  name: [ Storeroom, storeroom ]
+  security: low
+  tags: [ Indoors, Private, SouthLocked ]
+
+CALEDONIA_ALCHEMIST:
+  desc: "Strange, acrid scents assault your nostrils as you enter the Golden Cauldron, a low-roofed room with heavy brick walls and a creaky, uneven wooden floor. A heavy wooden counter divides the room, beyond which two wooden doors lead inward, while the only other exit leads back south to the street outside. {lb} ```All manner of odd things line the shelves and stick out of partly-unpacked boxes behind the counter: a plethora of glass bottles containing a number of differently-coloured bubbling fluids, small piles of oddly-coloured salts, scales and claws from beasts unknown, and more."
+  exits:
+    north: CALEDONIA_ALCHEMIST_STOREROOM
+    northeast: CALEDONIA_ALCHEMIST_HOUSE
+    south: BERESTALL_STREET
+  light: bright
+  name: [ The Golden Cauldron, alchemist ]
+  security: low
+  tags: [ Indoors, NortheastLocked, NorthLocked, NorthLockStrong, SouthDoorShop, SouthLockable ]
+
+CALEDONIA_ALCHEMIST_HOUSE:
+  desc: The private rooms of the alchemist's shop are even more chaotic and disorganized than the storefront -- tables cluttered with potion bottles, books and bags of dried herbs, shelves heavy with assorted trinkets and knick-knacks. Colourful tapestries hang from the walls which are not already covered by shelves and cupboards, and a large bed is half-covered by dusty old books and empty bottles. {lb} ```The only exit is southwest, back to the storefront.
+  exits:
+    southwest: CALEDONIA_ALCHEMIST
+  light: dim
+  name: [ Alchemist's Home, private rooms ]
+  security: low
+  tags: [ Indoors, Private, SleepOK, SouthwestLocked ]
+
+CALEDONIA_ALCHEMIST_STOREROOM:
+  desc: If it was possible for the back room to be any more cluttered and disorganized than the main room of the store, it is. Half-opened crates hold contain strange, scaly beast parts padded with hay, shelves are stocked with a number of unlabelled bottles, jars with creepy-looking things floating in thick fluids, and tools you can't even begin to recognize. {lb} ```The only way out is back south.
+  exits:
+    south: CALEDONIA_ALCHEMIST
+  light: dark
+  name: [ Alchemist's Storeroom, storeroom ]
+  security: low
+  tags: [ Indoors, Private, SouthLocked ]
+
+CALEDONIA_APOTHECARY:
+  desc: "The bitter scents of medicinal herbs and purifying salts hang heavy in the air in this small, yet well-stocked apothecary's store. Daylight filters in through the window by the east door, and the rest of the dimly-lit shop is illuminated by a couple of hanging lanterns and some flickering candles. {lb} ```A large wooden counter spans the middle of the room, upon which rest a few books, a mortar and pestle, and some empty bottles. Behind the counter, shelves of potion bottles and jars of powders and salts are arranged in some semblance of order, and smaller doors occupy the north and south walls."
+  exits:
+    north: CALEDONIA_APOTHECARY_HOUSE
+    south: CALEDONIA_APOTHECARY_STOREROOM
+    east: CHURCH_AVENUE
+  light: bright
+  name: [ Asche's Remedies, apothecary ]
+  security: low
+  tags: [ CanSeeOutside, EastDoorShop, EastLockable, Indoors, NorthLocked, SouthLocked, SouthLockStrong ]
+
+CALEDONIA_APOTHECARY_HOUSE:
+  desc: "This small but pleasantly-furnished room is lit from soft daylight through windows in the walls above. A round wooden table sits before a cozy, crackling fireplace set against the west wall, and a number of shelves house simple personal belongings. A large rug has been spread out beneath a comfortable looking bed, the dark red-brown fabric worn and aged. {lb} ```A heavy wooden door leads back out, south to the storefront."
+  exits:
+    south: CALEDONIA_APOTHECARY
+  light: dim
+  name: [ Apothecary's Home, private rooms ]
+  security: low
+  tags: [ CanSeeOutside, HideCampfireScar, Indoors, PermaCampfire, Private, SleepOK, SouthLocked ]
+
+CALEDONIA_APOTHECARY_STOREROOM:
+  desc: The storeroom of the apothecary's shop is an almost incomprehensible mess -- shelves, boxes and barrels stocked with little order or reason, some full of what looks like dried, dead leaves, some filled with salts or other incomprehensible powders, a number of unlabeled bottles with fluids of varying colours. {lb} ```It's a cramped, poorly-organized, dimly-lit room with bizarre scents hanging in the air, and the only exit back through the door to the north.
+  exits:
+    north: CALEDONIA_APOTHECARY
+  light: dim
+  name: [ Apothecary's Storeroom, storeroom ]
+  security: low
+  tags: [ Indoors, Private, NorthLocked ]
+
+CALEDONIA_FLETCHER:
+  desc: The floorboards creak as you make your way into this smallish storefront, disturbed motes of dust glittering in the light. It's not a large room, but what space there is has been put to good use -- bows of various types hang on the back wall, a few on closer display on a simple wooden table, while numerous quivers and barrels hold a plethora of arrows and crossbow bolts. {lb} ```The main door back out to the street lies northwest, while smaller doors lead east and southeast.
+  exits:
+    east: CALEDONIA_FLETCHER_HOUSE
+    northwest: BERESTALL_KINGS
+    southeast: CALEDONIA_FLETCHER_STOREROOM
+  light: bright
+  name: [ The Hunter's Mark, fletcher ]
+  security: low
+  tags: [ EastLocked, Indoors, NorthwestDoorShop, NorthwestLockable, SoutheastLocked, SoutheastLockStrong ]
+
+CALEDONIA_FLETCHER_HOUSE:
+  desc: "A small firepit occupies the central point of this living area, the wooden floor giving way to a stone ring around the gently-glowing coals, a heavy metal pot secured above the firepit by blackened iron bars. The walls are hung with various beast pelts and other simple decorations, and a wooden table with a few chairs and some personal belongings atop occupies the northeast corner of the room. {lb} ```A comfortable-looking wooden bed draped with beast furs is nestled into the southeast corner, and at the west side of the room, a heavy wooden door leads back out."
+  exits:
+    west: CALEDONIA_FLETCHER
+  light: dim
+  name: [ Fletcher's Home, private rooms ]
+  security: low
+  tags: [ HideCampfireScar, Indoors, WestLocked, PermaCampfire, Private, SleepOK ]
+
+CALEDONIA_FLETCHER_STOREROOM:
+  desc: Little more than a large closet at most, the walls of this storeroom are covered in shelves, each of which holds various bundles of arrows and bolts, quivers and bows, some in unfinished condition or varying states of repair. {lb} ```The exit door lies northwest.
+  exits:
+    northwest: CALEDONIA_FLETCHER
+  light: dark
+  name: [ Fletcher's Storeroom, storeroom ]
+  security: low
+  tags: [ Indoors, NorthwestLocked, Private ]
+
+CALEDONIA_MARKET_SE1:
+  desc: "The scent of cooking meat lingers in the air as you venture into the southeastern portion of the open-air market, the stalls here consisting mostly of produce - fruit and vegetables from local farms, fresh and cooked meat, and stalls of fish with their own distinct odour. {lb} ```The canvas-covered stalls stretch out further to the south and east, while the area clears to make room for the fountain square northwest."
+  exits:
+    east: CALEDONIA_MARKET_SE2
+    north: UNFINISHED
+    northwest: FOUNTAIN_SQUARE
+    south: CALEDONIA_MARKET_SE3
+    west: UNFINISHED
+  light: dim
+  name: [ Marketplace, market ]
+  security: low
+  tags: [ NorthDoubleLength, WestDoubleLength ]
+
+CALEDONIA_MARKET_SE2:
+  desc: A variety of merchants occupy this corner of the market square, the canvas-covered stalls offering a plethora of goods, most of which are of little interest to an adventurer. Of particular prominence is one stall well-stocked with fresh cuts of meat, though the origin of this product is unclear. {lb} ```The market stalls huddle close to the west and southwest, opening to allow passage along a path to the north.
+  exits:
+    north: FOUNTAIN_SQUARE_E
+    southwest: CALEDONIA_MARKET_SE3
+    west: CALEDONIA_MARKET_SE1
+  light: dim
+  name: [ Marketplace, market ]
+  security: low
+
+CALEDONIA_MARKET_SE3:
+  desc: The strong smell of fish lingers in the air in the southeastern quarter of the market square, a variety of produce on display beneath canvas-covered market stalls but first and foremost are fish of all shapes and sizes, glistening and fresh. {lb} ```The stalls thin and clear to make room for a road through the market to the west, while the crowded stalls extend further northward.
+  exits:
+    north: CALEDONIA_MARKET_SE1
+    northeast: CALEDONIA_MARKET_SE2
+    west: FOUNTAIN_SQUARE_S
+  light: dim
+  name: [ Marketplace, market ]
+  security: low
+
+CALEDONIA_NEXUS:
+  desc: Thick metal cables snake across the stone floor in this smallish, cramped room, the walls covered in glowing panels, blinking lights and tangled wires, parting just wide enough for a single door leading out, along with a metal hatch on the ground in the corner. {lb} ```Dominating the center of the room, at the union of a dozen yellow and black striped cables, a large metallic sphere atop a column of concentric rings. {lb} ```You feel curiously drawn to touch the sphere, though it's unclear what might happen if you do.
+  exits:
+    down: FALSE_ROOM
+    northeast: CROSSWOOD_ALLEY
+  light: dim
+  name: [ Caledonia Nexus, nexus ]
+  security: low
+  tags: [ DownDoorMetal, DownPermalock, Indoors, Nexus, NortheastDoorMetal, NortheastOpenable ]
+
+CALEDONIA_STEEL_FISTS:
+  desc: The guildhall's foyer is an unimpressive affair. Light filters in through a cracked window facing the corner of Miller's and King's, possibly held together only by the golden letting on the glass. The decrepit floorboards creak in irate protest under your feet, and a few old aether-lanterns keep the place reasonably-lit. {lb} ```A heavy wooden counter divides the room, holding a few dusty old books and yellowing pieces of parchment, behind which bookshelves flank an eastern door. {lb} ```A large noticeboard occupies the public-facing, north side of the wall, upon which are pinned various papers.
+  exits:
+    east: FALSE_ROOM
+    southwest: MILLERS_KINGS
+  light: bright
+  name: [ Steel Fists Guildhouse, guildhouse ]
+  security: high
+  tags: [ CanSeeOutside, EastPermaLock, Indoors, SouthwestLockable ]
+
+CENTRAL_UNDERGROUND_NORTH:
+  desc: The subway entrance is fairly clean, just a few loose scraps of parchment blowing around. Two sets of stone stairs lead down to this level, the chipped steps leading northeast to the intersection of Berestall and Crosswood. The area is pretty dimly lit, whatever light present falling from the stairs, aether-lanterns hanging inactive above. {lb} ```The southern part of this level seems better lit, another set of stairs leading down to it.
+  exits:
+    northeast: BERESTALL_STREET_2
+    south: CENTRAL_UNDERGROUND_SOUTH
+  light: dark
+  name: [ Central Underground North, subway ]
+  security: low
+  tags: [ CanSeeOutside, Indoors, NortheastIncline, Underground ]
+
+CENTRAL_UNDERGROUND_SOUTH:
+  desc: Lights flicker weakly from aether-lanterns overhead, casting illumination on the worn tile that makes up the floors and walls. To the south is the subway proper, a large platform near which is posted a probably-outdated schedule. A wide set of stairs leads up towards the north exit.
+  exits:
+    north: CENTRAL_UNDERGROUND_NORTH
+    west: BLUE_LINE
+  light: dim
+  name: [ Central Underground South, subway ]
+  security: low
+  tags: [ Indoors, Underground, WestAutoClose, WestDoorMetal, WestOpenable ]
+
+CHURCH_AVENUE:
+  desc: The eastern rim of this avenue is dominated by the tall facade of the church, a great stone monument in the style of an era gone long past. A set of stairs, running the width of the church, climbs to a set of tall, wooden structures encased in dark stonework and bordered in black iron. {lb} ```The building rises three storeys plus a central bell tower that rises to four, the pointed peak of the tower standing well above the surrounding mundane structures. The holy cross rises prominently from the tower, silhouetted against the sky and casting its shadow against the walls and windows of the apothecary's shop directly across the road.
+  exits:
+    east: UNFINISHED
+    north: BERESTALL_CHURCH
+    northwest: DIAMOND_IN_THE_ROUGH
+    south: MILLERS_CHURCH
+    west: CALEDONIA_APOTHECARY
+  light: dim
+  name: [ Church Avenue, Church ]
+  security: low
+  tags: [ EastLockable, EastLockWeak, NorthDoubleLength, NorthwestLockable, NorthwestLockStrong, SouthDoubleLength, VeryWide, WestLockable, WestLockStrong ]
+
+CHURCH_AVENUE_2:
+  desc: "You find yourself at something of a crossroads in the city: Church Avenue stretches to the north and south, glimpses of market stalls visible between the run-down buildings to the north, while the visible city elsewhere consists of dilapidated architecture, warehouses, factories, the stench of smoke hanging heavy in the thick air. As if to drive the point home, hastily-erected barriers surround a hole in the street, through which you can glimpse pipes running beneath the paving stones."
+  exits:
+    east: NORTHWATCH_CHECKPOINT
+    north: FOUNTAIN_SQUARE_S
+    south: BERESTALL_CHURCH
+  light: dim
+  name: [ Church Avenue, Church ]
+  security: low
+  tags: [ EastDoubleLength, NorthTripleLength, VeryWide ]
+
+CROSSWOOD_ALLEY:
+  desc: Half in shadow from the park's trees, Crosswood Alley runs at the park's western edge. A low stone wall runs along the eastern side of the street, breaking once in a path that opens into the park. To the other side are a row of tall buildings and various shops, though most are closed.
+  exits:
+    east: ARROW_PARK
+    north: BERESTALL_STREET_2
+    south: MILLERS_CROSSWOOD
+    southwest: CALEDONIA_NEXUS
+  light: dim
+  name: [ Crosswood Alley, Crosswood ]
+  security: low
+  tags: [ EastDoubleLength, NorthDoubleLength, SouthDoubleLength, SouthwestOpenable, SouthwestDoorMetal, SouthwestNoMobRoam, VeryWide ]
+
+DARKENED_ALLEY:
+  desc: A large camouflage mesh has been strung over what remains of the collapsed walls of the alley, casting deep shade over the corridor. It's still wide enough for a cart to pass through, though cluttered with aged, broken machines and the everpresent rubble. {lb} ```The pathway makes one more sharp turn, diving south where it appears there used to be a T instead. The north path doesn't exist any longer; a building seems to have landed on it.
+  exits:
+    east: BROKEN_ALLEY
+    south: UNFINISHED
+  light: dim
+  name: [ Darkened Alley, alley ]
+  security: anarchy
+  tags: [ DigOK, Wide ]
+
+DEAD_END_ALLEY:
+  desc: The paving stones roll like a wave down this narrow alley, squeezed between two large abandoned industrial buildings. Rusted machinery sits against the brick walls, stacks of wooden crates and boxes lie between, old barrels and the stripped down remains of a wooden cart. {lb} ```Toward the back of the alley, where it ends in a brick wall, is a small wooden door leading into a factory.
+  exits:
+    north: MILLERS_WAY_3
+    south: ERROS_JUNKYARD
+  light: dim
+  name: [ Dead-End Alley, alley ]
+  security: low
+  tags: [ NorthDoubleLength, SouthLockable, SouthLockWeak, Wide ]
+
+DESOLATION_ALLEY:
+  desc: "The shattered walls of the surrounding buildings rise about a dozen feet toward the sky, just tall enough to block your sight of the surroundings. This is a three way intersection, it seems, the poles that once held aether-lanterns bent and shattered, lying across the streets. There's a battered sign, hidden under a pile of rubble, that gives the only clue to the road's original name: Cromwell Street. {lb} ```The track leads east and west, with a branch to the north, and a narrower alley darting southwards."
+  exits:
+    north: UNFINISHED
+    east: DESOLATION_ALLEY_EAST
+    south: BROKEN_ALLEY
+    west: DESOLATION_ALLEY_WEST
+  light: dim
+  name: [ Desolation Alley, Desolation ]
+  security: low
+  tags: [ DigOK, SouthDoubleLength, WestDoubleLength, Wide ]
+
+DESOLATION_ALLEY_EAST:
+  desc: You descend a few feet into the packed dirt of the street. It seems some substructures of the former street have collapsed, as stone foundations, once long buried, rise above the surface of powdered stone and twisted steel reinforcements. {lb} ```The intersection is simple, affectionately named Desolation runs east to west, climbing east to less damaged portions of the city. South leads another street, laid bare by the ruination, its bordering buildings collapsed to nothing more than rock and sand.
+  exits:
+    east: BERESTALL_END
+    south: SPRING_LANE
+    west: DESOLATION_ALLEY
+  light: dim
+  name: [ Desolation Alley, Desolation ]
+  security: low
+  tags: [ DigOK, EastDoubleLength, Wide ]
+
+DESOLATION_ALLEY_WEST:
+  desc: And here, one might gain their first view of the crater that marks the once prosperous center of the great Forge-City. It stretches perhaps two miles across, very shallow, but everything within its radius has been pulverized and laid flat. No roads or trails remain, but it may be possible to slowly work one's way through the debris toward the center of the basin, where a large pond has formed. {lb} ```Beyond the circle of utter devastation and a slim line of partially standing warehouses, perhaps three miles away, is the shimmering and sparkling shape of the ocean. {lb} ```Streets run east, toward the more intact regions of the damaged city, and south, to the more populated zones. North and west, the dirt roads break up completely, leaving it a rough track in either direction.
+  exits:
+    east: DESOLATION_ALLEY
+    north: UNFINISHED
+    south: UNFINISHED
+    west: UNFINISHED
+  light: dim
+  name: [ Desolation Alley, Desolation ]
+  security: low
+  tags: [ DigOK, EastDoubleLength, RadiationLight, WestDoubleLength, Wide ]
+
+DIAMOND_IN_THE_ROUGH:
+  desc: This shop is more opulent than most in the city, a fine blue rug stretched out across the wooden floor and beautiful tapestries hanging from the walls. A number of heavy glass and bronze display cases line the walls, showing a fine selection of gemstones and jewelry, twinkling beautifully in the light from wall-mounted aether-lanterns. {lb} ```A finely-polished wooden counter divides the west side of the room, behind which are a number of other display cases, along with a door leading further inward.
+  exits:
+    southeast: CHURCH_AVENUE
+    west: DIAMOND_IN_THE_ROUGH_CORRIDOR
+  light: bright
+  name: [ Diamond in the Rough, jeweler ]
+  security: high
+  tags: [ Indoors, SoutheastDoorShop, SoutheastLockable, SoutheastLockStrong, WestLocked, WestLockStrong ]
+
+DIAMOND_IN_THE_ROUGH_BARRACKS:
+  desc: This modest yet comfortable-looking room is largely occupied by two decently-sized beds, each flanked by smaller bedside cabinets containing personal belongings. {lb} ```The room is otherwise fairly unremarkable and bare, two ornate wooden doors leading outward to the north and west.
+  exits:
+    north: DIAMOND_IN_THE_ROUGH_CORRIDOR
+    west: DIAMOND_IN_THE_ROUGH_VAULT
+  light: dim
+  name: [ Guards' Room, guards' room ]
+  security: high
+  tags: [ Indoors, NorthOpenable, Private, WestLocked, WestLockStrong ]
+
+DIAMOND_IN_THE_ROUGH_BEDROOM:
+  desc: "The shopkeeper's private room is spacious and well-decorated, the carpet covered by a finely-woven indigo rug, while various paintings cover the walls. A skylight window above allows daylight to shine in, gently illuminating the area, though remains far too high to reach - the only viable exit is through the door to the south. {lb} ```A large, comfortable-looking bed sits at one side of the room, while at the other, a table flanked by fancy carved wooden chairs. A number of shelves, cupboards and cabinets around the room contain a variety of personal effects."
+  exits:
+    south: DIAMOND_IN_THE_ROUGH_CORRIDOR
+  light: dim
+  name: [ Jeweler's Home, private rooms ]
+  security: high
+  tags: [ CanSeeOutside, Indoors, Private, SouthLocked ]
+
+DIAMOND_IN_THE_ROUGH_CORRIDOR:
+  desc: You find yourself at a T-junction, each branch of the corridor ending in an ornate wooden door. {lb} ```Brass-mounted aether-lanterns hang on the east wall, bathing the corridor in a soft light, while the west wall is covered by a large painting depicting a pleasant nature scene.
+  exits:
+    east: DIAMOND_IN_THE_ROUGH
+    north: DIAMOND_IN_THE_ROUGH_BEDROOM
+    south: DIAMOND_IN_THE_ROUGH_BARRACKS
+  light: bright
+  name: [ Jeweler's Back Rooms, corridor ]
+  security: high
+  tags: [ EastLocked, EastLockStrong, Indoors, NorthLocked, Private, SouthOpenable ]
+
+DIAMOND_IN_THE_ROUGH_VAULT:
+  desc: The storeroom is fairly small and cramped, largely consisting of boxes and cases containing a number of gemstones and pieces of jewelry in various stages of completion. A heavy workbench against the west wall holds a number of odd tools, likely used to make and repair jewelry and cut rough gemstones. {lb} ```The only exit is back the way you came, to the east.
+  exits:
+    east: DIAMOND_IN_THE_ROUGH_BARRACKS
+  light: dim
+  name: [ Storeroom, storeroom ]
+  security: high
+  tags: [ EastLocked, EastLockStrong, Indoors, Private ]
+
+EAST_ARCO:
+  desc: This corner of the blast area was either much less devastated, or simply rebuilt. So it seems from the scattered line of shops, each seperated by an abandoned building or two. The most reputable seems to be 'Pickle's Place', a freestanding one-storey restaurant, painted in cracked white, its sign (complete with smiling pickle) beckoning customers in. {lb} ```A street leads north, deeper into the ruined zone, while the unofficially named Arco itself continues on west.
+  exits:
+    east: MILLERS_EDGE
+    north: SPRING_LANE
+    south: UNFINISHED
+    west: UNFINISHED
+  light: dim
+  name: [ East Arco Street, Arco ]
+  security: low
+  tags: [ NorthTripleLength, SouthLockable, VeryWide ]
+
+ERROS_JUNKYARD:
+  desc: What was once an abandoned factory, complete with rusting old machinery and discarded wooden crates, has been converted into something of a makeshift flea market. Rickety old tables are covered with all manner of debris, most of it broken and worthless, though a few useful items catch your eye amidst the dross. {lb} ```The factory floor is poorly-lit, thin beams of light shining through cracks in the boarded-up windows, illuminating motes of dust in the air and reflecting brightly off gaudy trinkets. {lb} ```The only obvious exit is a battered old wooden door to the north.
+  exits:
+    north: DEAD_END_ALLEY
+  light: dark
+  name: [ Erro's Junkyard, junkyard ]
+  security: low
+  tags: [ Indoors, NorthDoorShop, NorthLockable, NorthLockWeak, ShopBuysContraband ]
+
+FOUNTAIN_SQUARE:
+  desc: A grey cobblestone path curves around a large fountain here in the market district, the simple yet elegant design carved from smooth beige sandstone. Above the fountain floats a large, tall purple crystal, rotating slowly and glowing with a soft inner light. {lb} ```Paths branch off in the four cardinal directions here, flanked by aether-lanterns mounted on tall iron posts; a long road leads south out of the market square, while the space surrounding the fountain houses a number of open-air stalls.
+  exits:
+    east: FOUNTAIN_SQUARE_E
+    north: UNFINISHED
+    northeast: UNFINISHED
+    northwest: UNFINISHED
+    south: FOUNTAIN_SQUARE_S
+    southeast: CALEDONIA_MARKET_SE1
+    southwest: UNFINISHED
+    west: UNFINISHED
+  light: bright
+  name: [ Fountain Square, fountain ]
+  security: low
+  tags: [ WaterClean, Wide ]
+
+FOUNTAIN_SQUARE_E:
+  desc: "North and south of here are the canvas-covered stalls of a bustling street market rife with colour and exotic smells. {lb} ```To the west, the area opens to a wider plaza with a large fountain in the middle of a cobblestone path. The imposing wall of the Forge-City rises to east, blocking any further progress in that direction."
+  exits:
+    north: UNFINISHED
+    south: CALEDONIA_MARKET_SE2
+    west: FOUNTAIN_SQUARE
+  light: bright
+  name: [ East Fountain Square, market square ]
+  security: low
+  tags: [ VeryWide ]
+
+FOUNTAIN_SQUARE_S:
+  desc: "The wide paved stone road leads north-south here, flanked by colourful, canvas-covered market stalls offering all manner of goods for sale, along with softly-glowing aether-lanterns on tall iron poles. {lb} ```The market square opens around a fountain to the north, while southward the market stalls give way to run-down industrial buildings."
+  exits:
+    east: CALEDONIA_MARKET_SE3
+    north: FOUNTAIN_SQUARE
+    south: CHURCH_AVENUE_2
+    west: UNFINISHED
+  light: bright
+  name: [ South Fountain Square, market square ]
+  security: low
+  tags: [ SouthTripleLength, VeryWide ]
+
+HAINAS_SUNDRIES:
+  desc: "Old floorboards creak under your feet as you enter this quaint little general supplies store, a flickering aether-lantern hanging from the ceiling adding some light to the little that shines in through the cobwebbed windows. An old wooden counter and various shelves are strewn with a number of items - much of it useless to you, old cutlery and utensils, sacks of flour, inkwells and parchment - but a few useful things stand out. {lb} ```Two doors lead out from here - back to the street to the west, and another to the east."
+  exits:
+    east: HAINAS_SUNDRIES_STOREROOM
+    west: BERESTALL_CHURCH
+  light: bright
+  name: [ Haina's Sundries, general store ]
+  security: low
+  tags: [ CanSeeOutside, EastLocked, Indoors, WestDoorShop, WestLockable ]
+
+HAINAS_SUNDRIES_BEDROOM:
+  desc: The slanted wooden beams of the roof are low here, forcing you to stoop to walk through the attic space. Creaking wooden boards are covered in a large, worn yet surprisingly elegant rug, though there is little else of interest beyond a comfortable-looking bed at the far side of the room, a few cupboards, and an open hatch leading downward.
+  exits:
+    down: HAINAS_SUNDRIES_STOREROOM
+  light: dim
+  name: [ Living Quarters, private rooms ]
+  security: low
+  tags: [ Indoors, Private ]
+
+HAINAS_SUNDRIES_STOREROOM:
+  desc: The storeroom is somehow even more cluttered than the storefront; barrels, boxes and dusty sacks lay strewn around and stacked higgledy-piggledy around, a few old wooden shelves straining to hold dusty boxes of supplies. {lb} ```A single door leads back west to the main room, while a heavy wooden ladder is propped against the wall, leading up through an open hatch into an attic area.
+  exits:
+    up: HAINAS_SUNDRIES_BEDROOM
+    west: HAINAS_SUNDRIES
+  light: dim
+  name: [ Storeroom, storeroom ]
+  security: low
+  tags: [ Indoors, Private, WestLocked ]
+
+IRON_KINGS:
+  desc: King's Road ends here, just the stone docks and the dark harbor to the south. Iron Lane runs east and west from here, though - west across a set of rail tracks, east to the main shipyard entrance. The yard is surrounded by a high metal plate and chainlink fence, massive cranes rising to the skies, container ships floating still in the calm waters near them.
+  exits:
+    east: UNFINISHED
+    north: KINGS_RENASCENCE
+    west: IRON_LANE
+  light: dim
+  name: [ Iron/King's, Iron/King's ]
+  security: low
+  tags: [ EastLocked, NorthDoubleLength, VeryWide, WestDoubleLength ]
+
+IRON_LANE:
+  desc: The wide road crosses train tracks to the east while leading deeper into the industrial docks area to the west, the air heavy with lingering smog. A tough chainlink fence blocks passage to the south, rusted and worn, through which you can see cargo ships floating solemnly on the dark water. {lb} ```To the north a leatherworker's sign hangs outside a modest brick building. A few weeds stubbornly grow through cracks in the paving stones around the edges of the road.
+  exits:
+    east: IRON_KINGS
+    north: BRULD_LEATHERWORKER
+    west: IRON_LANE_2
+  light: dim
+  name: [ Iron Lane, Iron ]
+  security: low
+  tags: [ EastDoubleLength, NorthLockable, VeryWide, WestDoubleLength ]
+
+IRON_LANE_2:
+  desc: Iron Lane stretches out to the east and west, most of the northern side blocked by heavy brick industrial structures, though a narrow alley winds its way between two factory buildings. {lb} ```South, past a heavy chainlink fence blocking passage, you can see warehouses, shipping containers, and several large cargo ships floating peacefully in the still waters of the ocean.
+  exits:
+    east: IRON_LANE
+    north: UNFINISHED
+    northwest: UNFINISHED
+    west: IRON_LANE_3
+  light: dim
+  name: [ Iron Lane, Iron ]
+  security: low
+  tags: [ EastDoubleLength, VeryWide, WestTripleLength ]
+
+IRON_LANE_3:
+  desc: The street is long, old, the paving stones cracked and ruined. Tall brick buildings occupy your view to the north, reaching up to the polluted sky like jagged fingers, the largest of which appears to be a high-rise apartment building in a state of disrepair. {lb} ```A heavy chainlink fence blocks passage to the south, through which you can mostly see looming warehouses blocking the view of the docks beyond.
+  exits:
+    east: IRON_LANE_2
+    north: LEWIN_LOBBY
+    west: UNFINISHED
+  light: dim
+  name: [ Iron Lane, Iron ]
+  security: low
+  tags: [ EastTripleLength, NorthDoubleLength, NorthOpenable, VeryWide, WestDoubleLength ]
+
+IRREFUHREND_INDUSTRIAL_COMPLEX:
+  desc: "Well-traveled stone spreads about you in a flat plane, covering the central entryway and yard of the Irrefuhrend Industrial Complex. To three of four directions rise three- to five-storey buildings, looking for the most part abandoned, but lit within; the low hum of machinery and the electric feeling in the air tell you otherwise. Alleys wind between the structures, the road contoured from the passage of innumerable feet. {lb} ```To the north rises the tallest structure, two storeys of building with an immense watchtower rising above. East is a larger structure, a set of exhaust stacks rising high above its flat roof. South is the most traveled building, judging by tracks: some sort of loading zone. West is the gate leading out."
+  exits:
+    east: UNFINISHED
+    north: UNFINISHED
+    south: UNFINISHED
+    up: IRREFUHREND_WATCHTOWER
+    west: KINGS_IRREFUHREND
+  light: dim
+  name: [ Irrefuhrend Industrial Complex, Irrefuhrend ]
+  security: low
+  tags: [ EastDoorMetal, EastLocked, NorthDoorMetal, NorthLocked, SouthDoorMetal, SouthLocked, UpTripleLength, VeryWide ]
+
+IRREFUHREND_WATCHTOWER:
+  desc: "A small platform with waist-high walls provides a place to rest, sixty meters above the yard below. A large warning beacon flashes atop the tower in a slow rhythm. From here most of the district can be seen: the park in the northern distance, ballistae reaching for the clouds, the six-storey building that houses the Red Dragon. {lb} ```Even farther away, the seemingly endless expanse of desert hills rolling north of the city district. To the south rests the shimmering bay, its coastline marking the southern boundaries of both the industrial sector and city center. Below is the yard of the Irrefuhrend complex."
+  exits:
+    down: IRREFUHREND_INDUSTRIAL_COMPLEX
+  light: wilderness
+  name: [ Irrefuhrend Watchtower, watchtower ]
+  security: low
+  tags: [ DownTripleLength, EastSky3, NorthSky3, SouthSky3, WestSky3 ]
+
+JOSEPHS_FABRICS:
+  desc: This small shop room is simple yet meticulously clean, the floorboards beneath your feet covered by a large, colourful rug. {lb} ```Much of the room is taken up with racks of clothes of various colours and styles, while an L-shaped wooden counter in the far corner blocks a door beyond.
+  exits:
+    south: JOSEPHS_FABRICS_STOREROOM
+    southeast: MILLERS_CHURCH
+  light: bright
+  name: [ Joseph's Fabrics, tailor ]
+  security: low
+  tags: [ Indoors, SoutheastDoorShop, SoutheastLockable, SouthLocked ]
+
+JOSEPHS_FABRICS_BEDROOM:
+  desc: Another colourful carpet dominates the floor in the upper room, this one a cheerful shade of green with yellow trim. A large, comfortable-looking bed occupies the west side of the room, while a number of shelves and cupboards house personal belongings and knickknacks. {lb} ```A narrow staircase leads back down to the storeroom below.
+  exits:
+    down: JOSEPHS_FABRICS_STOREROOM
+  light: dim
+  name: [ Tailor's Home, private rooms ]
+  security: low
+  tags: [ Indoors, Private, SleepOK ]
+
+JOSEPHS_FABRICS_STOREROOM:
+  desc: The back room of the store seems mostly dedicated to storage - various spare pieces of clothes are neatly folded in boxes and crates, while large rolls of fabric rest against a heavy workbench. {lb} ```The single door lies back north, while a narrow staircase heads up to a second floor.
+  exits:
+    north: JOSEPHS_FABRICS
+    up: JOSEPHS_FABRICS_BEDROOM
+  light: dim
+  name: [ Storeroom, storeroom ]
+  security: low
+  tags: [ Indoors, NorthLocked, Private ]
+
+KINGS_IRREFUHREND:
+  desc: The chainlink breaks in a wide entrance to the industrial complex, a pair of tall brick towers and a sliding iron gate guarding the yard beyond. The barricade is open, the path inside marked with grimy footfalls. The warning lights of the watchtower glow redly against the sky, the black steel of the tower itself glimmering with reflected light. {lb} ```Across the street lies a long warehouse, parallel and close to the road, a vast set of closed doors directly across from the Irrefuhrend entrance.
+  exits:
+    east: IRREFUHREND_INDUSTRIAL_COMPLEX
+    north: KINGS_ROAD_2
+    west: MK_CASINO_2
+    south: KINGS_RENASCENCE
+  light: dim
+  name: [ King's Road - Irrefuhrend, King's ]
+  security: low
+  tags: [ VeryWide, WestLocked, WestLockStrong ]
+
+KINGS_RENASCENCE:
+  desc: "To the west runs a long, low building, its dark tile roof hanging over windows reflecting the sky. A chainlink fence surrounds the building, while a broad sign hangs over a wide gate: Renascence Rail Station. There's usually a little activity in and around the front lot, and trains seem to arrive and depart at all hours. {lb} ```The industrial plant dominates the eastern skyline, tall stacks and scaffolds looming menacingly. Its yards sit behind a tall fence. King's Road runs to the docks and the sea to the south, or north to the city's core."
+  exits:
+    north: KINGS_IRREFUHREND
+    south: IRON_KINGS
+    west: UNFINISHED
+  light: dim
+  name: [ King's Road - Renascence, King's ]
+  security: low
+  tags: [ SouthDoubleLength, VeryWide, WestOpenable ]
+
+KINGS_ROAD_1:
+  desc: A line of buildings stand before you to the east, rather typical and run in various states of disrepair, as everything seems to show its age in the city. Across the road runs a low wall, opening to the park, the tops of the trees reaching over the wall's peak. {lb} ```Of the nearby buildings, most noteworthy is a decrepit two-storey building that holds a bookstore, judging by the piles of dusty tomes visible through the window. The bookstore sits directly across from the park.
+  exits:
+    east: KINGS_ROAD_BOOKSTORE
+    north: BERESTALL_KINGS
+    south: MILLERS_KINGS
+    west: ARROW_PARK
+  light: dim
+  name: [ King's Road, King's ]
+  security: low
+  tags: [ EastLockable, EastLockWeak, NorthDoubleLength, SouthDoubleLength, VeryWide ]
+
+KINGS_ROAD_2:
+  desc: "King's Road runs further south, the lines of residental and commercial buildings dropping away into the heavy industry zones of their district. A long chainlink fence lies parallel to the road along the east side, the steel tarnished in dark rust, the fence littered here and there with paper and debris blown into it. {lb} ```Beyond the fence lies a heavy industrial complex: buildings of several storeys, tall exhaust stacks rising dozens of meters into the thick air, hot flames throwing coronas into the noxious gasses they emit. A particularly tall watchtower looms overhead, a black silhouette in the sky."
+  exits:
+    north: MILLERS_KINGS
+    south: KINGS_IRREFUHREND
+  light: dim
+  name: [ King's Road, King's ]
+  security: low
+  tags: [ VeryWide ]
+
+KINGS_ROAD_BOOKSTORE:
+  desc: The air hangs with the dust of ages, dimly filtering the light from outside. Beside the window and near the door is an old desk and unoccupied chair, papers stacked on top in mild disarray. Two bookshelves make a wall with a walkway between them, that leads into the depths of the bookstore. There, several tables sit in silence, chairs arranged around them. {lb} ```Books line the walls, hundreds, each on topics arcane and obscure. Behind is a wooden door, always locked, leading still deeper. A strange feeling permeates the shop, something mystic and ancient.
+  exits:
+    east: FALSE_ROOM
+    west: KINGS_ROAD_1
+  light: dark
+  name: [ King's Road Bookstore, bookstore ]
+  security: low
+  tags: [ CanSeeOutside, EastPermalock, Indoors, WestDoorShop, WestLockable, WestLockWeak ]
+
+LEWIN_102:
+  desc: Split into two rooms with a small bathroom off to the side, you enter into a small yet tidy kitchen area, various plates and bowls stacked neatly in a corner. {lb} ```Through the doorway is the sleeping area, mostly occupied by a single bed, with a couple of small cupboards by the far wall.
+  exits:
+    southwest: LEWIN_LOBBY
+  light: dim
+  name: [ Apartment 102, 102 ]
+  security: low
+  tags: [ Indoors, Private, SleepOK, SouthwestLocked, SouthwestLockWeak ]
+
+LEWIN_103:
+  desc: This apartment is a little larger than the others, the main room spacious enough to contain a couple of small couches and a table. {lb} ```Small rooms leading off to the sides lead to a bathroom area, a surprisingly tidy and clean kitchen, and a bedroom with a well-made double bed.
+  exits:
+    west: LEWIN_LOBBY
+  light: dim
+  name: [ Apartment 103, 103 ]
+  security: low
+  tags: [ Indoors, Private, SleepOK, WestLocked, WestLockWeak ]
+
+LEWIN_104:
+  desc: Sparse is the best way to describe this apartment, lit from outside through a small window. The room is largely empty save for a wardrobe built into the wall in the far corner, and a mattress occupying abot half of the entire floor-space. {lb} ```Aside from some scattere debris, little else can be seen here.
+  exits:
+    northwest: LEWIN_LOBBY
+  light: dim
+  name: [ Apartment 104, 104 ]
+  security: low
+  tags: [ Indoors, NorthwestLocked, NorthwestLockWeak, Private, SleepOK ]
+
+LEWIN_105:
+  desc: This tiny apartment room is largely occupied by a large mattress in the far corner, covered in a number of pillows and grubby white sheets. {lb} ```A large, opaque window offers light into the room from outside, and a few boxes are scattered around with various personal possessions stuffed inside.
+  exits:
+    northeast: LEWIN_LOBBY
+  light: dim
+  name: [ Apartment 105, 105 ]
+  security: low
+  tags: [ Indoors, NortheastLocked, NortheastLockWeak, Private, SleepOK ]
+
+LEWIN_106:
+  desc: A strangely geometric arrangement of furniture makes the most of the limited space in this long, narrow apartment. {lb} ```A small couch up against one wall sits near a bed in an enclosed half-wall section, while deeper inside is a cubicle bathroom and a small kitchen area at the far side.
+  exits:
+    southeast: LEWIN_LOBBY
+  light: dim
+  name: [ Apartment 106, 106 ]
+  security: low
+  tags: [ Indoors, Private, SleepOK, SoutheastLocked, SoutheastLockWeak ]
+
+LEWIN_201:
+  desc: "This small apartment is run-down but fairly unremarkable: the floor is covered by a tattered gray carpet, the walls mostly covered by peeling gray-green wallpaper, and the middle of the main room is occupied by a patchy brown rug and some worn furniture. {lb} ```A single window in the north side is covered by broken, dusty blinds, and a small bathroom seems mostly functional. The only way out is back through the door to the south."
+  exits:
+    south: LEWIN_FLOOR_2
+  light: dim
+  name: [ Apartment 201, 201 ]
+  security: low
+  tags: [ Indoors, Private, SleepOK, SouthLocked, SouthLockWeak ]
+
+LEWIN_203:
+  desc: An uneven, bare wooden floor creaks loudly underfoot as you pass through this small, unremarkable apartment. The walls are largely covered in faded floral wallpaper, though one section has been torn away to reveal grimy brickwork beneath. {lb} ```There's some boxes of junk, a small table, a few wooden chairs, an icebox that looks older than this apartment, and a grimy mattress on the floor for a bed. {lb} ```A single door leads back to the stairwell.
+  exits:
+    west: LEWIN_FLOOR_2
+  light: dim
+  name: [ Apartment 203, 203 ]
+  security: low
+  tags: [ Indoors, Private, SleepOK, WestLocked, WestLockWeak ]
+
+LEWIN_204:
+  desc: This tiny, squallid apartment seems barely fit to house feral animals, let alone humans. The bare brick walls are stained and riddled with damp and mold, the wooden floor is filthy and seems half-rotted, and the only fresh air comes from a broken, grimy window in the outer wall. {lb} ```There's no furniture here, just garbage and rags cluttering the edges of the room. A single door leads back out to the stairwell.
+  exits:
+    northwest: LEWIN_FLOOR_2
+  light: dim
+  name: [ Apartment 204, 204 ]
+  security: low
+  tags: [ Indoors, NorthwestLocked, NorthwestLockWeak, Private, SleepOK ]
+
+LEWIN_205:
+  desc: This apartment is small and squallid, but some attempt has been made to make it liveable. Ancient floral wallpaper hangs loosely from the damp-ridden walls, and amidst various discarded tools and junk, some dusty and worn wooden furniture decorates the small space. {lb} ```There's a small, decrepit kitchen area decorated in an unappealing green colour, though the water doesn't seem to be running. {lb} ```The only exit is north, through the single door.
+  exits:
+    north: LEWIN_FLOOR_2
+  light: dim
+  name: [ Apartment 205, 205 ]
+  security: low
+  tags: [ Indoors, NorthLocked, NorthLockWeak, Private, SleepOK ]
+
+LEWIN_206:
+  desc: This small and rather cramped apartment is dusty and messy, most of the space taken up by shelves and bookcases holding dusty old books and other nick-nacks, while an old oven rusts quietly away against the far wall, a heavy metal pipe leading up and into the ceiling. {lb} ```Dim light shines in from a cracked window above a worn desk, and the only other thing of note is the exit door to the northeast.
+  exits:
+    northeast: LEWIN_FLOOR_2
+  light: dim
+  name: [ Apartment 206, 206 ]
+  security: low
+  tags: [ Indoors, NortheastLocked, NortheastLockWeak, Private, SleepOK ]
+
+LEWIN_207:
+  desc: This small apartment is fairly clean and tidy, though cluttered with various bric-a-brac, old newspapers and books, and other items of little note covering each surface of the few tables and desks. A few odd artistic pictures are hanging on the cracked, gray-green walls, and a striped gray couch seems like it's seen better days. {lb} ```The exit lies to the east, back to the stairwell.
+  exits:
+    east: LEWIN_FLOOR_2
+  light: dim
+  name: [ Apartment 207, 207 ]
+  security: low
+  tags: [ EastLocked, EastLockWeak, Indoors, Private, SleepOK ]
+
+LEWIN_208:
+  desc: This apartment room seems bizarrely barren -- the off-yellow plastered walls are bare and worn, the floor is bare wooden planks, marred and scratched, and the only furniture appears to be an old radiator near a cracked window, and a heavy, ancient white oven sitting alone near the middle of the room. {lb} ```A door leads outward to the stairwell.
+  exits:
+    southeast: LEWIN_FLOOR_2
+  light: dim
+  name: [ Apartment 208, 208 ]
+  security: low
+  tags: [ Indoors, Private, SleepOK, SoutheastLocked, SoutheastLockWeak ]
+
+LEWIN_ERRO:
+  desc: This small apartment is divided by a half-wall that spans the width of the main room; on the side closest the door, a mattress lies on the ground next to a door leading to a small bathroom, while the other side of the divide is a small, untidy kitchen, the cupboards and appliances in a rather unappealing shade of dark red.
+  exits:
+    south: LEWIN_LOBBY
+  light: dim
+  name: [ Apartment 101, 101 ]
+  security: low
+  tags: [ Indoors, Private, SleepOK, SouthLocked, SouthLockWeak ]
+
+LEWIN_FLOOR_2:
+  desc: The worn and cracked stone stairwell stretches both up into gloom and down towards a dim light, the handrails rusty and rickety. Various apartment doors ring the outer wall of the stairwell, wood cracked and old beneath the peeling crimson paint. {lb} ```A mass of debris stops you from climbing higher -- a combination of crumbling stonework and what looks to be the twisted, wrecked remains of some ancient machine entirely blocking your way.
+  exits:
+    down: LEWIN_LOBBY
+    east: LEWIN_203
+    north: LEWIN_201
+    northeast: LEWIN_HYATT
+    northwest: LEWIN_208
+    south: LEWIN_205
+    southeast: LEWIN_204
+    southwest: LEWIN_206
+    west: LEWIN_207
+  light: dim
+  name: [ "Lewin High-Rise: Floor 2", stairwell ]
+  security: low
+  tags: [ EastLocked, EastLockWeak, Indoors, NortheastLocked, NortheastLockWeak, NorthLocked, NorthLockWeak, NorthwestLocked, NorthwestLockWeak, SoutheastLocked, SoutheastLockWeak, SouthLocked, SouthLockWeak, SouthwestLocked, SouthwestLockWeak, WestLocked, WestLockWeak ]
+
+LEWIN_HYATT:
+  desc: Patches of mold grow on water-stained blemishes on the bare brick walls in this apartment, the room lit dimly through a small, frosted-glass window in the outer wall. {lb} ```The place is an absolute tip - empty bottles and other debris lie scattered over dusty furniture, what was once a kitchen unit has been long-since broken, more trash occupying the cupboards whose doors hang limply open. A torn, faded picture occupies one of the grim concrete walls. {lb} ```Only one door leads back out to the stairwell.
+  exits:
+    southwest: LEWIN_FLOOR_2
+  light: dim
+  name: [ Apartment 202, 202 ]
+  security: low
+  tags: [ Indoors, Private, SleepOK, SouthwestLocked, SouthwestLockWeak ]
+
+LEWIN_LOBBY:
+  desc: To say this apartment building has seen better days would be the understatement of the century. Short corridors lead to heavy doors hanging mostly intact to the south and west, leading to the streets outside, while a metal maintenance door is perpetually closed, slowly rusting and accumulating layer upon layer of fading graffiti. {lb} ```The chipped and stained stone walls are otherwise bare, a stairwell leading upward into gloom, framed by rickety, rusting metal handrails. Several apartment doors ring the lobby area, the wood cracked and paint peeling.
+  exits:
+    east: LEWIN_103
+    north: LEWIN_ERRO
+    northeast: LEWIN_102
+    northwest: LEWIN_106
+    south: IRON_LANE_3
+    southeast: LEWIN_104
+    southwest: LEWIN_105
+    up: LEWIN_FLOOR_2
+    west: UNFINISHED
+  light: dim
+  name: [ Lewin High-Rise Lobby, high-rise ]
+  security: low
+  tags: [ EastLocked, Indoors, NortheastLocked, NorthLocked, NorthLockWeak, NorthwestLocked, NorthwestLockWeak, SouthDoubleLength, SoutheastLocked, SoutheastLockWeak, SouthOpenable, SouthwestLocked, WestDoubleLength, WestOpenable ]
+
+MILLERS_CHURCH:
+  desc: Church Avenue leads northwards from here. It terminates against a gnarled chainlink fence guarding the south side, a wasteland of rubble tumbling down into a deep pit from a structural collapse long ago, with some old buildings a few blocks behind, a tall watchtower standing proud. {lb} ```Through a wooden gate to the east, a blacksmith's forge and a modest dwelling are visible. At the northwest corner of the street, a small brick building appears to house a tailor's business.
+  exits:
+    east: UNFINISHED
+    north: CHURCH_AVENUE
+    northwest: JOSEPHS_FABRICS
+    west: MILLERS_KINGS
+  light: dim
+  name: [ Miller's/Church, Miller's/Church ]
+  security: low
+  tags: [ NorthDoubleLength, NorthwestLockable, NorthwestLockWeak, VeryWide, WestTripleLength ]
+
+MILLERS_CROSSWOOD:
+  desc: Miller's Way, with its scarred paving stones, runs east to west at the junction. Little is of note, simply buildings lining the roads, small businesses and boarded up shops, with the park and tall pines behind a short wall nearby. {lb} ``Crosswood Alley, narrow and winding, disappears north between two buildings.
+  exits:
+    east: MILLERS_WAY
+    north: CROSSWOOD_ALLEY
+    south: MORENO_ALLEY
+    west: MILLERS_WAY_2
+  light: dim
+  name: [ Miller's/Crosswood, Miller's/Crosswood ]
+  security: low
+  tags: [ NorthDoubleLength, SouthDoubleLength, VeryWide ]
+
+MILLERS_EDGE:
+  desc: The pavement slopes down abruptly, as it seems to melt... Indeed, everything west of this line seems to have been dismantled, the buildings broken down close to their foundations, distant rooftops reaching jaggedly for the pollution-choked skies. Just a few buildings close to this point still rise more than a couple of storeys.
+  exits:
+    east: MILLERS_WAY_3
+    west: EAST_ARCO
+  light: dim
+  name: [ Edge of Miller's, Miller's ]
+  security: low
+  tags: [ VeryWide ]
+
+MILLERS_KINGS:
+  desc: According to the street sign, this is the crossroads of King's Road and Miller's Way. The cracked stone paving of Miller's runs east towards a tall row of buildings, and winds west through the city. Rising northwest are the tall pine trees of the park, and at the northeast corner is the city's Steel Fists guildhouse.
+  exits:
+    north: KINGS_ROAD_1
+    northeast: CALEDONIA_STEEL_FISTS
+    east: MILLERS_CHURCH
+    south: KINGS_ROAD_2
+    west: MILLERS_WAY
+  light: dim
+  name: [ Miller's/Kings, Miller's/King's ]
+  security: low
+  tags: [ EastTripleLength, NorthDoubleLength, NortheastLockable, NortheastLockStrong, VeryWide, WestDoubleLength ]
+
+MILLERS_WAY:
+  desc: A tall building rises a full six-plus storeys high, dominating the skyline to the southern side of the street. A few of the large warehouse windows are cracked, the gray exterior looking to have fallen on harder times. Riveted to one of the large entrance doors is a rusted sign proclaiming the building to be condemned. {lb} ```To the opposite side of the street rise the tall pines of the park, cast in light and shadow in the smoggy air.
+  exits:
+    east: MILLERS_KINGS
+    south: BLACK_MARKET_WAREHOUSE
+    west: MILLERS_CROSSWOOD
+  light: dim
+  name: [ Miller's Way, Miller's ]
+  security: low
+  tags: [ EastDoubleLength, SouthLockable, SouthLockStrong, SouthNoMobRoam, VeryWide ]
+
+MILLERS_WAY_2:
+  desc: The long road continues stretching out far to the east and west, a rusting green street sign helpfully reading, 'Miller's Way'. Tall buildings crowd the sides of the road, cracked and dirty windows betraying a muted glow within, though the doors all seem to be chained and locked shut. {lb} ```A rusted sewer grate is mounted in the ground nearby, gloom beckoning beneath.
+  exits:
+    down: UNFINISHED
+    east: MILLERS_CROSSWOOD
+    west: MILLERS_WAY_3
+  light: dim
+  name: [ Miller's Way, Miller's ]
+  security: low
+  tags: [ DownDoorMetal, DownOpenable, VeryWide ]
+
+MILLERS_WAY_3:
+  desc: The edge of the heavy industry zone, Miller's Way bears tall residential buildings to the north and taller warehouses and factories to the south, a few dormant exhaust stacks bursting above the skyline. The low thrum of aether-engines is barely noticeable, more of a consistent background haze. {lb} ```Directly south lies an alley cluttered with debris, lined with tall brick walls and broken factory glass.
+  exits:
+    east: MILLERS_WAY_2
+    north: UNFINISHED
+    south: DEAD_END_ALLEY
+    west: MILLERS_EDGE
+  light: dim
+  name: [ Miller's Way, Miller's ]
+  security: low
+  tags: [ SouthDoubleLength, VeryWide ]
+
+MK_CASINO:
+  desc: Thick, heavy smoke chokes the air in this back room, the air taking on an almost mystical haze from barely-seen aether-lanterns, buzzing in their death-throes. A dusty old pink and green sign on the wall proclaims this to be "MK's Casino", including a picture of a smiling goblin. {lb} ```Most of the strange machines here are in varying states of disrepair, though a number of slot machines, cheerfully labeled "Soopa Froot", seem in decent condition. {lb} ```A heavy door leads north, while the 'casino' continues east.
+  exits:
+    east: MK_CASINO_2
+    north: BLACK_MARKET_WAREHOUSE
+  light: dim
+  name: [ MK's Casino, casino ]
+  security: low
+  tags: [ GameSlots, Indoors, NorthLockable, NorthLockStrong ]
+
+MK_CASINO_2:
+  desc: The east side of the casino is even more choked with stale smoke than the north, though the colourful aether-light still illuminates the hazy gloom in an otherworldly glow. {lb} ```There's a number of half-functional mechanical games machines around here, most prominent of which are a series of five-card draw video-poker cabinets.
+  exits:
+    east: KINGS_IRREFUHREND
+    west: MK_CASINO
+  light: dim
+  name: [ MK's Casino, casino ]
+  security: low
+  tags: [ GamePoker, Indoors, EastLocked, EastLockStrong ]
+
+MORENO_ALLEY:
+  desc: Moreno Alley, best described as an absence of warehouses. Tall brick buildings sit to either side, the walls nearest Miller's Way littered in faded adverts for restorative tonics and spices from a faraway land. The paving stones are a bit worn, as abandoned steam pipes lie partially uncovered and deep fissures cross the alley. {lb} ```There's a big metal sign leaning lengthwise against one building just beside a heavy door, though whatever was on it before has been obscured by a graffiti image of a minotaur. {lb} ```The alley continues southward into the warehouse district.
+  exits:
+    north: MILLERS_CROSSWOOD
+    south: UNFINISHED
+    west: UNFINISHED
+  light: dim
+  name: [ Moreno Alley, Moreno ]
+  security: low
+  tags: [ NorthDoubleLength, Wide ]
+
+NORTHWATCH:
+  desc: You find yourself in a wide, tall room, the wooden floor beneath well-worn from the passage of many feet. A number of aether-lanterns hang from chains below the heavy wooden rafters, illuminating the area and casting deep shadows on the flat roof above. A large table occupies the middle of the room, largely covered by a map and various tiny coloured flags and other markers, while decorative suits of armour flank dusty bookshelves around the room's edge. {lb} ```Doors lead west, northwest and south - the latter especially large and heavy - while an open corridor winds eastward. A spiral staircase in the corner of the room leads both up and down.
+  exits:
+    down: NORTHWATCH_JAIL
+    east: NORTHWATCH_GATE
+    northwest: NORTHWATCH_YARD
+    south: NORTHWATCH_CHECKPOINT
+    up: UNFINISHED
+    west: NORTHWATCH_BARRACKS
+  light: bright
+  name: [ Northwatch, Northwatch ]
+  security: high
+  tags: [ Indoors, NorthwestLockable, SouthLockable, WestLockable, Wide ]
+
+NORTHWATCH_ARMOURY:
+  desc: Around twenty feet on each side, this wood-floored room is surrounded by heavy stone brick walls, the only exit an imposing-looking wooden door leading back north. {lb} ```Weapons and armour are stored here in abundance, hanging from racks on the walls or stacked on the ground, along with a number of stacked, sealed barrels of uncertain purpose.
+  exits:
+    north: NORTHWATCH_BARRACKS
+  light: dim
+  name: [ Northwatch Armoury, armoury ]
+  security: high
+  tags: [ Indoors, NorthLocked, NorthLockStrong, Private ]
+
+NORTHWATCH_BARRACKS:
+  desc: This wide, wood-floored room is largely dedicated to sleeping quarters - a great number of simple beds are arranged around the room, each flanked by a simple wooden cabinet for storing personal effects. {lb} ```The room is somewhat L-shaped, both the east and south sides ending in a heavy wooden door.
+  exits:
+    east: NORTHWATCH
+    south: NORTHWATCH_ARMOURY
+  light: dim
+  name: [ Northwatch Barracks, barracks ]
+  security: high
+  tags: [ Indoors, EastOpenable, SleepOK, SouthLocked, SouthLockStrong ]
+
+NORTHWATCH_CHECKPOINT:
+  desc: A huge stone archway over the wide road marks the border between the east and west sides of the city. The south side is blocked entirely by a wide, tall brick back wall of a factory building, faded and torn propaganda posters flapping futilely in the breeze, while the north side is occupied by a large and entirely unattractive structure bearing the insignia of the Caledonia Guard above its wide entrance doors.
+  exits:
+    east: UNFINISHED
+    north: NORTHWATCH
+    west: CHURCH_AVENUE_2
+  light: dim
+  name: [ Northwatch Checkpoint, checkpoint ]
+  security: high
+  tags: [ EastDoubleLength, WestDoubleLength, NorthLockable, VeryWide ]
+
+NORTHWATCH_GATE:
+  desc: The eastern side of the Northwatch hall is less grand than the open space west of the short passageway, the ceiling lower and the walls closer. Aside from some crates and barrels of stored supplies there is little of special interest here, save the heavy metal door on the east wall.
+  exits:
+    east: NORTH_CALEDONIA
+    southeast: UNFINISHED
+    west: NORTHWATCH
+  light: dim
+  name: [ Northwatch Gate, gate ]
+  security: high
+  tags: [ EastDoorMetal, EastLockable, Indoors ]
+
+NORTHWATCH_JAIL:
+  desc: Here at the bottom of the spiral staircase is a small jail, consisting of two cells behind barred metal doors, a simple wooden table and a couple of chairs outside the cells, and a bare stone floor. A rumpled bedroll has been unfurled in the corner of the room.
+  exits:
+    north: NORTHWATCH_JAIL_CELL_1
+    northeast: NORTHWATCH_JAIL_CELL_2
+    up: NORTHWATCH
+  light: dim
+  name: [ Northwatch Jail, jail ]
+  security: high
+  tags: [ Indoors, NorthDoorMetal, NorthLocked, NorthLockStrong, NorthLocksWhenClosed, NortheastDoorMetal, NortheastLocked, NortheastLockStrong, NortheastLocksWhenClosed, SleepOK, Underground ]
+
+NORTHWATCH_JAIL_CELL_1:
+  desc: $JAIL_CELL
+  exits:
+    south: NORTHWATCH_JAIL
+  light: dim
+  name: [ Northwatch Jail Cell, cell ]
+  security: high
+  tags: [ Indoors, SleepOK, SouthDoorMetal, SouthLocked, SouthLockStrong, SouthLocksWhenClosed, Underground ]
+
+NORTHWATCH_JAIL_CELL_2:
+  desc: $JAIL_CELL
+  exits:
+    southwest: NORTHWATCH_JAIL
+  light: dim
+  name: [ Northwatch Jail Cell, cell ]
+  security: high
+  tags: [ Indoors, SleepOK, SouthwestDoorMetal, SouthwestLocked, SouthwestLockStrong, SouthwestLocksWhenClosed, Underground ]
+
+NORTHWATCH_YARD:
+  desc: Tall, heavy stone walls surround this training yard, the soft grass a small patch of nature in an otherwise industrialized city. A number of training dummies have been set up here - little more than crude wooden mannequins - along with some archery targets and a couple of bales of hay. {lb} ```The only exit is back through the door the way you came.
+  exits:
+    southeast: NORTHWATCH
+  light: dim
+  name: [ Training Yard, yard ]
+  security: low
+  tags: [ DigOK, SoutheastOpenable ]
+
+SPRING_LANE:
+  desc: A wide gash has opened across the street. The subway has broken through, its tracks partially buried by boulders, laid half-bare to the light. It seems easy enough to slip into the subway, though if it leads any distance is anyone's guess. {lb} ```The row of buildings to the east are silhouetted against the unclean sky. As well-lit as the road is by dilapidated aether-lanterns, there is no sound to be heard at all...
+  exits:
+    down: UNFINISHED
+    north: DESOLATION_ALLEY_EAST
+    south: EAST_ARCO
+  light: dim
+  name: [ Spring Lane, Spring ]
+  security: low
+  tags: [ DownNoMobRoam, SouthTripleLength, VeryWide ]

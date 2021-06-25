@@ -17,11 +17,12 @@ class World
 {
 public:
             World();    // Constructor, loads the room YAML data.
+    std::string generic_desc(const std::string &id) const;                  // Retrieves a generic description string.
     const std::shared_ptr<Room> get_room(uint32_t room_id) const;           // Retrieves a specified Room by ID.
     const std::shared_ptr<Room> get_room(const std::string &room_id) const; // As above, but with a Room ID string.
-    void    load(std::shared_ptr<SQLite::Database> save_db);    // Loads the World and all things within it.
-    const std::shared_ptr<Mobile>   player() const; // Retrieves a pointer to the Player object.
-    void    save(std::shared_ptr<SQLite::Database> save_db);    // Saves the World and all things within it.
+    void    load(std::shared_ptr<SQLite::Database> save_db);                // Loads the World and all things within it.
+    const std::shared_ptr<Mobile>   player() const;                         // Retrieves a pointer to the Player object.
+    void    save(std::shared_ptr<SQLite::Database> save_db);                // Saves the World and all things within it.
 
 private:
     static const std::map<std::string, uint8_t>     LIGHT_LEVEL_MAP;    // Lookup table for converting textual light levels (e.g. "bright") to integer values.
@@ -29,8 +30,10 @@ private:
     static const std::map<std::string, RoomTag>     ROOM_TAG_MAP;       // Lookup table for converting RoomTag text names into enums.
     static const std::map<std::string, Security>    SECURITY_MAP;       // Lookup table for converting textual room security (e.g. "anarchy") to enum values.
 
-    std::shared_ptr<Player> m_player;   // The player character.
-    std::map<uint32_t, std::shared_ptr<Room>>   m_room_pool; // All the Rooms in the game.
+    std::map<std::string, std::string>          m_generic_descs;    // Generic descriptions for items and rooms, where multiple share a description.
+    std::shared_ptr<Player>                     m_player;           // The player character.
+    std::map<uint32_t, std::shared_ptr<Room>>   m_room_pool;        // All the Rooms in the game.
 
-    void    load_room_pool();   // Loads the Room YAML data into memory.
+    void    load_generic_descs();   // Loads the generic descriptions YAML data into memory.
+    void    load_room_pool();       // Loads the Room YAML data into memory.
 };

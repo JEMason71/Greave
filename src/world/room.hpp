@@ -14,11 +14,25 @@ enum class LinkTag : uint16_t {
 
     // Tags at 10,000 or above are considered *permanent tags*. These tags WILL NOT be saved to save files.
     Openable = 10000,   // Can be opened and closed; a door, hatch, gate, or similar.
-    Lockable,           // Can be locked or unlocked with a key. Must be openable.
+    Lockable,           // Can be locked or unlocked with a key. Must be openable. [CURRENTLY UNUSED]
+    LockWeak,           // Does this door have a particularly weak lock? [CURRENTLY UNUSED]
+    LockStrong,         // Does this door have a particularly strong lock? [CURRENTLY UNUSED]
     Permalock,          // A locked door/etc. which can never be unlocked.
     Hidden,             // This link is not normally visible.
     DoorMetal,          // Is the door on this link metal?
     Window,             // This 'door' is actually a window.
+    DoorShop,           // This is the door to a shop and should be locked at night. [CURRENTLY UNUSED]
+    AutoClose,          // This door will automatically close after the player passes through it. [CURRENTLY UNUSED]
+    LocksWhenClosed,    // When this door is closed, it will automatically lock itself. [CURRENTLY UNUSED]
+    DoubleLength,       // This link is twice as long, so will take extra time to traverse. [CURRENTLY UNUSED]
+    TripleLength,       // This link is three times as long, so will take extra time to traverse. [CURRENTLY UNUSED]
+    Ocean,              // For links that go into the ocean. [CURRENTLY UNUSED]
+    Sky,                // This link leads to a virtual sky room, with the actual linked room below. [CURRENTLY UNUSED]
+    Sky2,               // As above, but the sky room is stacked two rooms high. [CURRENTLY UNUSED]
+    Sky3,               // As above, but three rooms high. [CURRENTLY UNUSED]
+    Incline,            // This link also leads upward. [CURRENTLY UNUSED]
+    Decline,            // This link also leads downward. [CURRENTLY UNUSED]
+    NoMobRoam,          // NPCs should not roam through this exit. [CURRENTLY UNUSED]
 };
 
 enum class RoomTag : uint16_t {
@@ -26,14 +40,33 @@ enum class RoomTag : uint16_t {
     Explored = 1,           // The player has visited this room before.
 
     // Tags at 10,000 or above are considered *permanent tags*. These tags WILL NOT be saved to save files.
-    Indoors = 10000,    // Is this room indoors?
-    Underground,        // Is this room underground?
-    Private,            // Entering this room is considered trespassing.
-    NoExploreCredit,    // This room does not count towards the number of 'explored' rooms in the player's stats.
-    Maze,               // This Room is part of a maze, and should not have its exit names labeled.
+    Indoors = 10000,    // Is this room indoors? [CURRENTLY UNUSED]
+    Underground,        // Is this room underground? [CURRENTLY UNUSED]
+    Private,            // Entering this room is considered trespassing. [CURRENTLY UNUSED]
+    NoExploreCredit,    // This room does not count towards the number of 'explored' rooms in the player's stats. [CURRENTLY UNUSED]
+    Maze,               // This Room is part of a maze, and should not have its exit names labeled. [CURRENTLY UNUSED]
+    CanSeeOutside,      // Are we indoors, but can see the weather outside? [CURRENTLY UNUSED]
+    DigOK,              // The ground here can be dug up easily with a shovel. [CURRENTLY UNUSED]
+    Wide,               // Is this room quite spacious? [CURRENTLY UNUSED]
+    VeryWide,           // Is this room extremely spacious? [CURRENTLY UNUSED]
+    WaterClean,         // There is a source of clean water nearby. [CURRENTLY UNUSED]
+    WaterTainted,       // There is a water source nearby, but it is unclean. [CURRENTLY UNUSED]
+    WaterSalt,          // There is a source of salt water nearby. [CURRENTLY UNUSED]
+    WaterShallow,       // Is this shallow water, the kind that doesn't require swimming? [CURRENTLY UNUSED]
+    WaterDeep,          // Is this deep water, which can be drowned in? [CURRENTLY UNUSED]
+    Trees,              // There are trees in this area. [CURRENTLY UNUSED]
+    ShopBuysContraband, // This room's shop is willing to buy stolen/contraband items. [CURRENTLY UNUSED]
+    ShopRespawningOwner,    // This shop's owner NPC respawns or is replaced. [CURRENTLY UNUSED]
+    PermaCampfire,      // Treat this room like it always has a campfire burning. [CURRENTLY UNUSED]
+    HideCampfireScar,   // This is a bit specific. It's for rooms with PermaCampfire, where we don't want the campfire 'scar' text showing. [CURRENTLY UNUSED]
+    SleepOK,            // Environmental noises will affect the player much less here. [CURRENTLY UNUSED]
+    Nexus,              // This room contains a nexus transportation system. [CURRENTLY UNUSED]
+    RadiationLight,     // This area is lightly irradiated. [CURRENTLY UNUSED]
+    GameSlots,          // This room contains a slot machine minigame. [CURRENTLY UNUSED]
+    GamePoker,          // This room contains a video poker minigame. [CURRENTLY UNUSED]
 };
 
-enum class Security : uint8_t { ANARCHY, LOSEC, HISEC, SANCTUARY, INACCESSIBLE };
+enum class Security : uint8_t { ANARCHY, LOW, HIGH, SANCTUARY, INACCESSIBLE };
 
 class Room
 {

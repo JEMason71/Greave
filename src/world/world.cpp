@@ -17,15 +17,22 @@
 const std::map<std::string, uint8_t>    World::LIGHT_LEVEL_MAP = { { "bright", 7 }, { "dim", 5 }, { "wilderness", 5 }, { "dark", 3 }, { "none", 0 } };
 
 // Lookup table for converting LinkTag text names into enums.
-const std::map<std::string, LinkTag>    World::LINK_TAG_MAP = { { "doormetal", LinkTag::DoorMetal }, { "hidden", LinkTag::Hidden }, { "lockable", LinkTag::Lockable },
-    { "locked", LinkTag::Locked }, { "open", LinkTag::Open }, { "openable", LinkTag::Openable }, { "permalock", LinkTag::Permalock }, { "window", LinkTag::Window } };
+const std::map<std::string, LinkTag>    World::LINK_TAG_MAP = { { "autoclose", LinkTag::AutoClose }, { "decline", LinkTag::Decline }, { "doormetal", LinkTag::DoorMetal },
+    { "doorshop", LinkTag::DoorShop }, { "doublelength", LinkTag::DoubleLength }, { "hidden", LinkTag::Hidden }, { "incline", LinkTag::Incline }, { "lockable", LinkTag::Lockable }, 
+    { "locked", LinkTag::Locked }, { "lockstrong", LinkTag::LockStrong }, { "lockswhenclosed", LinkTag::LocksWhenClosed }, { "lockweak", LinkTag::LockWeak },
+    { "nomobroam", LinkTag::NoMobRoam }, { "ocean", LinkTag::Ocean }, { "open", LinkTag::Open }, { "openable", LinkTag::Openable }, { "permalock", LinkTag::Permalock },
+    { "sky", LinkTag::Sky}, { "sky2", LinkTag::Sky2 }, { "sky3", LinkTag::Sky3 }, { "triplelength", LinkTag::TripleLength }, { "window", LinkTag::Window } };
 
 // Lookup table for converting RoomTag text names into enums.
-const std::map<std::string, RoomTag>    World::ROOM_TAG_MAP = { { "indoors", RoomTag::Indoors }, { "maze", RoomTag::Maze }, { "noexplorecredit", RoomTag::NoExploreCredit },
-    { "private", RoomTag::Private }, { "underground", RoomTag::Underground } };
+const std::map<std::string, RoomTag>    World::ROOM_TAG_MAP = { { "canseeoutside", RoomTag::CanSeeOutside }, { "digok", RoomTag::DigOK }, { "gamepoker", RoomTag::GamePoker },
+    { "gameslots", RoomTag::GameSlots }, { "hidecampfirescar", RoomTag::HideCampfireScar }, { "indoors", RoomTag::Indoors }, { "maze", RoomTag::Maze }, { "nexus", RoomTag::Nexus },
+    { "noexplorecredit", RoomTag::NoExploreCredit }, { "permacampfire", RoomTag::PermaCampfire }, { "private", RoomTag::Private }, { "radiationlight", RoomTag::RadiationLight },
+    { "shopbuyscontraband", RoomTag::ShopBuysContraband }, { "shoprespawningowner", RoomTag::ShopRespawningOwner }, { "sleepok", RoomTag::SleepOK }, { "trees", RoomTag::Trees },
+    { "underground", RoomTag::Underground }, { "verywide", RoomTag::VeryWide }, { "waterclean", RoomTag::WaterClean }, { "waterdeep", RoomTag::WaterDeep },
+    { "watersalt", RoomTag::WaterSalt }, { "watershallow", RoomTag::WaterShallow }, { "watertainted", RoomTag::WaterTainted }, { "wide", RoomTag::Wide } };
 
 // Lookup table for converting textual room security (e.g. "anarchy") to enum values.
-const std::map<std::string, Security>   World::SECURITY_MAP = { { "anarchy", Security::ANARCHY }, { "losec", Security::LOSEC }, { "hisec", Security::HISEC },
+const std::map<std::string, Security>   World::SECURITY_MAP = { { "anarchy", Security::ANARCHY }, { "low", Security::LOW }, { "high", Security::HIGH },
     { "sanctuary", Security::SANCTUARY }, { "inaccessible", Security::INACCESSIBLE } };
 
 
@@ -33,7 +40,16 @@ const std::map<std::string, Security>   World::SECURITY_MAP = { { "anarchy", Sec
 World::World()
 {
     load_room_pool();
+    load_generic_descs();
     m_player = std::make_shared<Player>();
+}
+
+// Retrieves a generic description string.
+std::string World::generic_desc(const std::string &id) const
+{
+    auto it = m_generic_descs.find(id);
+    if (it == m_generic_descs.end()) throw std::runtime_error("Invalid generic description requested: " + id);
+    return it->second;
 }
 
 // Retrieves a specified Room by ID.
@@ -49,6 +65,14 @@ const std::shared_ptr<Room> World::get_room(const std::string &room_id) const
 {
     if (!room_id.size()) throw std::runtime_error("Blank room ID requested.");
     else return get_room(StrX::hash(room_id));
+}
+
+// Loads the generic descriptions YAML data into memory.
+void World::load_generic_descs()
+{
+    const YAML::Node yaml_descs = YAML::LoadFile("data/generic descriptions.yml");
+    for (auto desc : yaml_descs)
+        m_generic_descs.insert(std::make_pair(desc.first.as<std::string>(), desc.second.as<std::string>()));
 }
 
 // Loads the Room YAML data into memory.

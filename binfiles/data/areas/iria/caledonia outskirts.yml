@@ -10,6 +10,7 @@ EAST_CALEDONIA:
   light: wilderness
   name: [ East of Caledonia, walls ]
   security: anarchy
+  tags: [ DigOK, NorthDoubleLength, SouthTripleLength, Wide ]
 
 EAST_CALEDONIA_2:
   desc: Wide, rolling green plains of wild grass stretch out to the north and east, the terrain hilly and uneven. The north/south trail leads along the outer side of the great stone city walls, towering impassively above you to the west, blocking passage within. {lb} ```Southward the grassy plains continue, eventually giving way to the deep blue ocean beyond.
@@ -19,6 +20,7 @@ EAST_CALEDONIA_2:
   light: wilderness
   name: [ East of Caledonia, walls ]
   security: anarchy
+  tags: [ DigOK, NorthTripleLength, SouthTripleLength, Wide ]
 
 EAST_CALEDONIA_3:
   desc: Following this ragged, north/south trail along the outside of the city walls, you are surrounded by rolling grassy plains flecked with brightly-coloured wildflowers stretching out to the north and east. Southward, the trail continues until it reaches the ocean, the grasses thinning and giving way to sand.
@@ -28,6 +30,7 @@ EAST_CALEDONIA_3:
   light: wilderness
   name: [ East of Caledonia, walls ]
   security: anarchy
+  tags: [ DigOK, NorthTripleLength, SouthTripleLength, Wide ]
 
 EAST_CALEDONIA_4:
   desc: Your view to the west is entirely blocked by the massive stone walls of Forge-City Caledonia reaching high into the sky, protecting the citizens within from the outside world - and preventing you from entering. {lb} ```North and east, rolling plains and uneven hills of tall grass and low shrubs stretch out before you, while to the south the grass starts to grow more sparse, giving way to sandy ground and the ocean beyond.
@@ -37,6 +40,7 @@ EAST_CALEDONIA_4:
   light: wilderness
   name: [ East of Caledonia, walls ]
   security: anarchy
+  tags: [ DigOK, NorthTripleLength, SouthDoubleLength, Wide ]
 
 EAST_CALEDONIA_5:
   desc: Rough speargrass and stubborn bushes punctuate the rolling hills of sand north of the ocean, the scent of salt strong in the air even from here. The sand dunes continue eastward, lowering to a beach flanking the ocean to the south, while the plains become more grassy and even to the north. {lb} ```Your view west is entirely blocked by a massive stone wall, reaching high into the sky and stretching out in both directions, the barrier-wall extending out into the sapphire ocean.
@@ -46,6 +50,7 @@ EAST_CALEDONIA_5:
   light: wilderness
   name: [ East of Caledonia, walls ]
   security: anarchy
+  tags: [ DigOK, NorthDoubleLength, SouthDoubleLength, Wide ]
 
 EAST_CALEDONIA_6:
   desc: The rolling dunes to the north settle into a wide beach flanking the sapphire ocean to the south, the waves gently lapping at the damp sand. North of the dunes, the wild grass grows more densely and becomes thick green plains. {lb} ```The way west is entirely blocked by a massive, ancient stone wall which extends far to the north and a fair distance south into the sapphire ocean. Eastward the beach continues, a small island visible not far to the southeast.
@@ -56,6 +61,7 @@ EAST_CALEDONIA_6:
   light: wilderness
   name: [ East of Caledonia, walls ]
   security: anarchy
+  tags: [ DigOK, EastDoubleLength, NorthDoubleLength, WaterSalt, Wide ]
 
 EAST_CALEDONIA_7:
   desc: The water is cool and refreshing, the sapphire waves gently lapping against the sandy beach to the north. The great walls of the city extend even out into the ocean, towering high above and blocking any attempt to gain passage beyond. {lb} ```A way to the east, a small island rises out of the ocean, a rickety-looking rope bridge connecting it to the mainland.
@@ -67,6 +73,7 @@ EAST_CALEDONIA_7:
   light: wilderness
   name: [ East of Caledonia (Ocean), ocean ]
   security: anarchy
+  tags: [ EastDoubleLength, SoutheastOcean, SouthOcean, WaterShallow, WaterSalt ]
 
 IANI_BEACH:
   desc: The tranquil stretch of beach reaches east and west, flanked by the sapphire ocean to the south, the waves gently lapping at the shore. Northward, the beach becomes rolling dunes of sand which eventually give way to grassy plains, while to the west, the great wall of the city stretches imposingly towards the sky. {lb} ```A small island can be seen just off the shore, a rickety rope bridge further east leading onward.
@@ -77,6 +84,7 @@ IANI_BEACH:
   light: wilderness
   name: [ Iani Beach, beach ]
   security: anarchy
+  tags: [ DigOK, EastDoubleLength, WaterSalt, WestDoubleLength ]
 
 IANI_BEACH_2:
   desc: The scent of salt is strong in the air here, the sea breeze cool and briny. The soft sand dunes stretch out before you, punctuated by a few clumps of speargrass stubbornly clinging to life. {lb} ```A little way off the coast lies a small island to the south, a rickety-looking rope bridge moored to the beach leading south onto island's rocky surface.
@@ -87,6 +95,7 @@ IANI_BEACH_2:
   light: wilderness
   name: [ Iani Beach, beach ]
   security: anarchy
+  tags: [ DigOK, EastTripleLength, SouthTripleLength, WaterSalt, WestDoubleLength ]
 
 IANI_OCEAN:
   desc: The water is cool and refreshing, the sapphire waves gently lapping against the sandy beach to the north. Looming to the west are the tall, ancient walls of the Forge-City, extending even into the ocean, while a steep, rocky face blocks passage to the east, a small island just off the shore, its walls too high to reasonably climb from here.
@@ -98,6 +107,7 @@ IANI_OCEAN:
   light: wilderness
   name: [ Iani Beach (Ocean), ocean ]
   security: anarchy
+  tags: [ SouthOcean, SouthwestOcean, WaterSalt, WaterShallow, WestDoubleLength ]
 
 NORTH_CALEDONIA:
   desc: The great wall of the city curves here, blocking progress both to southern and westerly directions, reaching high into the sky above. Elsewhere, long grasses and shrubs grow wild and untamed, the land dipping to the northeast to form a small, clear lake. {lb} ```A heavy metal door has been mounted in the wall to the west, above which hangs the crest of the Caledonia City Guard.
@@ -106,10 +116,11 @@ NORTH_CALEDONIA:
     north: UNFINISHED
     northeast: UNFINISHED
     northwest: UNFINISHED
-    west: UNFINISHED
+    west: NORTHWATCH_GATE
   light: wilderness
   name: [ North of Caledonia, walls ]
   security: anarchy
+  tags: [ DigOK, WestDoorMetal, WestLockable, Wide ]
 
 NORTH_CALEDONIA_2:
   desc: The grass beneath your feet is long and unruly, along with low scrubs and bushes hindering your progress. The overrun grassy wilderness north of the great city wall stretches out before you, the ground dipping down to form a small, clear lake. {lb} ```The main road leading out of the city lies east, and to your west the city walls curve around to block your view, though you can make out a door in the great wall.
@@ -122,6 +133,7 @@ NORTH_CALEDONIA_2:
   light: wilderness
   name: [ North of Caledonia, walls ]
   security: anarchy
+  tags: [ DigOK, EastTripleLength, Wide ]
 
 NORTH_CALEDONIA_3:
   desc: This side of the great wall of the Forge-City is much different from the other. The grass and shrubs here grow wild and untamed, dark vines climbing partway up the mighty stone wall, roots and undergrowth threatening to trip an unwary traveller. {lb} ```Grassland stretches out before you northward, nature unhindered by the troubles of the outside world, while northeast thick trunks of an ancient forest block your view.
@@ -133,6 +145,7 @@ NORTH_CALEDONIA_3:
   light: wilderness
   name: [ North of Caledonia, walls ]
   security: anarchy
+  tags: [ DigOK, EastTripleLength, NorthDoubleLength, WestTripleLength, Wide ]
 
 NORTH_CALEDONIA_4:
   desc: The great wall of the Forge-City curves at an angle here, the unkempt grassy trail leading west towards the gate, curving off along the angle of the mighty wall to the southeast. {lb} ```The shrubs and undergrowth grow denser here, and looming from the north are the tall, gnarled trunks of ancient trees.
@@ -144,6 +157,7 @@ NORTH_CALEDONIA_4:
   light: wilderness
   name: [ North of Caledonia, walls ]
   security: anarchy
+  tags: [ DigOK, SoutheastDoubleLength, WestTripleLength, Wide ]
 
 NORTH_CALEDONIA_5:
   desc: The great walls tower over you, obscuring your view of the city, though you can barely make out an elevated overpass past the walls to the south. {lb} ```Here on the other side of the wall, nature surrounds you; grassy plains stretch out all around, the tall grass and unruly undergrowth hindering your progress.
@@ -153,6 +167,7 @@ NORTH_CALEDONIA_5:
   light: wilderness
   name: [ North of Caledonia, walls ]
   security: anarchy
+  tags: [ DigOK, NorthwestDoubleLength, SoutheastDoubleLength, Wide ]
 
 NORTH_CALEDONIA_6:
   desc: The walls of the city curve again here, angled northwest and east. Past the wall to the south you can see the tops of tall buildings silhouetted against the sky. {lb} ```Here in the nook of the curved wall, brightly-coloured wildflowers thrive amidst the long grass and tangled bushes, speckling the area with vibrant colour.
@@ -162,6 +177,7 @@ NORTH_CALEDONIA_6:
   light: wilderness
   name: [ North of Caledonia, walls ]
   security: anarchy
+  tags: [ DigOK, EastTripleLength, NorthwestDoubleLength, Wide ]
 
 NORTH_CALEDONIA_7:
   desc: The great wall to the south is massive and imposing, looming over the surrounding grassy landscape. The only thing visible above the parapets are the angled roofs of tall buildings, though they're far, far out of reach from here on the ground. {lb} ```Nature surrounds you here on the north side of the wall, unruly long grasses and low shrubs making progress along this overgrown trail slow and frustrating.
@@ -171,6 +187,7 @@ NORTH_CALEDONIA_7:
   light: wilderness
   name: [ North of Caledonia, walls ]
   security: anarchy
+  tags: [ DigOK, EastDoubleLength, WestTripleLength, Wide ]
 
 NORTH_CALEDONIA_8:
   desc: The great wall curves slighly here, the Forge-City stretching slightly further to the north and taking its boundary wall with it. Above the high wall to the south you spy a few crooked roofs of tall buildings. {lb} ```Here outside of the wall, nature has conquered the land - the slightly uneven, rocky ground is covered by low shrubs and thick, hardy grasses, the plains stretching out north of the city.
@@ -180,6 +197,7 @@ NORTH_CALEDONIA_8:
   light: wilderness
   name: [ North of Caledonia, walls ]
   security: anarchy
+  tags: [ DigOK, WestDoubleLength, Wide ]
 
 NORTH_CALEDONIA_9:
   desc: Grassy plains surround you to the north, the low shrubs and tough grasses surrounding the area in a sea of soft green, speckled by brightly-coloured wildflowers. In contrast, a massive wall blocks your view to the south, towering high above you, the great Forge-City looming over the surrounding landscape.
@@ -189,6 +207,7 @@ NORTH_CALEDONIA_9:
   light: wilderness
   name: [ North of Caledonia, walls ]
   security: anarchy
+  tags: [ DigOK, EastTripleLength, Wide ]
 
 NORTH_CALEDONIA_10:
   desc: The great city to the south seems to have no end, its walls stretching far into the distance to both the east and west, great stone barriers reaching high into the sky. You can almost hear the bustle and of the city from here, though maybe it's just your imagination. {lb} ```On this side of the wall nature thrives, a rough trail choked with weeds and shrubs following the outer edge of the wall, grasslands stretching out northward.
@@ -198,6 +217,7 @@ NORTH_CALEDONIA_10:
   light: wilderness
   name: [ North of Caledonia, walls ]
   security: anarchy
+  tags: [ DigOK, EastTripleLength, WestTripleLength, Wide ]
 
 NORTH_CALEDONIA_11:
   desc: The seemingly endless expanse of the tall, impassive Forge-City walls stretch out to the east and west, blocking all passage southward. The sounds of foot-traffic and industry are barely audible here, though dismally out of reach. {lb} ```The rough trail follows the city walls through hardy grasses and low foliage, while grassy, open fields stretch out before you to the north.
@@ -207,6 +227,7 @@ NORTH_CALEDONIA_11:
   light: wilderness
   name: [ North of Caledonia, walls ]
   security: anarchy
+  tags: [ DigOK, EastTripleLength, WestTripleLength, Wide ]
 
 NORTH_CALEDONIA_12:
   desc: The great walls of the Forge-City stretch out before you to the south, the impassive stone continuing along its east-west course, reaching high into the sky. The walls seem to bulge out a little to the east, blocking your view further in that direction. {lb} ```Elsewhere, nature has reclaimed the northern side of the wall - grassy plains surround you, low shrubs grow here and there with no sense of order, and thick vines creep their way up the ancient stone walls.
@@ -216,6 +237,7 @@ NORTH_CALEDONIA_12:
   light: wilderness
   name: [ North of Caledonia, walls ]
   security: anarchy
+  tags: [ DigOK, EastDoubleLength, WestTripleLength, Wide ]
 
 NORTH_CALEDONIA_13:
   desc: The rough trail curves off to the west and northeast here, your view to the east blocked by an outcropping of the city walls, the ancient towering stone structure extending further northeast. {lb} ```Low shrubs, thick stubborn grasses and gnarled roots constantly get underfoot and make passage along this grassy trail awkward. Northward, the unkept grass extends into pleasantly green plains.
@@ -225,6 +247,7 @@ NORTH_CALEDONIA_13:
   light: wilderness
   name: [ North of Caledonia, walls ]
   security: anarchy
+  tags: [ DigOK, WestDoubleLength, Wide ]
 
 NORTH_CALEDONIA_14:
   desc: The rough trail continues east and southwest, following the tall, imposing stone walls of the Forge-City beyond. You seem to be close to the eastern side of the walls now, the stone barrier bulging northward and continuing a little way further east before disappearing from sight. {lb} ```Tall, tough grasses, low shrubs and a speckling of colourful wildflowers surrounds you, the grassy plains extending northward away from the walls.
@@ -234,6 +257,7 @@ NORTH_CALEDONIA_14:
   light: wilderness
   name: [ North of Caledonia, walls ]
   security: anarchy
+  tags: [ DigOK, EastDoubleLength, Wide ]
 
 NORTHEAST_CALEDONIA:
   desc: Here you stand at the northeastern edge of the great Forge-City Caledonia, its towering walls stretching away from you to the west and south, impeding any progress into the city. Nature is abound here, tall thick grasses and low foliage choking this rough trail, stretching out far to the north and east. {lb} ```Southward the trail continues, the massive stone walls continuing impassively out of sight, the grassy hills eventually giving way to the ocean beyond.
@@ -243,6 +267,7 @@ NORTHEAST_CALEDONIA:
   light: wilderness
   name: [ Northeast of Caledonia, walls ]
   security: anarchy
+  tags: [ DigOK, SouthDoubleLength, WestDoubleLength, Wide ]
 
 OUTSIDE_QUEENS_GATE:
   desc: You stand before the gates of the Forge-City Caledonia. The massive stone walls loom high above, the strong bricks weather-worn and dotted with patches of moss and lichen. {lb} ```Cracked and worn, an old stone road beckons northward, tufts of grass and weeds growing through the gaps. Flanking the road is long, wild grass, along with a few shrubs and trees growing wild.
@@ -250,10 +275,12 @@ OUTSIDE_QUEENS_GATE:
     east: NORTH_CALEDONIA_3
     north: QUEENS_1
     northwest: UNFINISHED
+    south: UNFINISHED
     west: NORTH_CALEDONIA_2
   light: wilderness
   name: [ Queen's Gate, Queen's Gate ]
   security: anarchy
+  tags: [ DigOK, EastTripleLength, NorthTripleLength, SouthOpenable, Trees, VeryWide, WestTripleLength ]
 
 QUEENS_1:
   desc: The grassy plains roll in gradual waves, limiting sight between one dozen-mile wide valley to the next. The cracked stone road stretches off to the north, surrounded by the encroaching wilderness - if anyone wondered what eternity looked like, this just might be it. {lb} ```Here is a small turn-out from the straight road to the north, next to a tall, rusting metal sign, long-since unreadable. The road runs south towards the towering walls of Forge-City Caledonia, and north towards gentler hills and darker skies.
@@ -265,6 +292,7 @@ QUEENS_1:
   light: wilderness
   name: [ Queen's Road, road ]
   security: anarchy
+  tags: [ EastDoubleLength, NorthTripleLength, SoutheastDoubleLength, SouthTripleLength, VeryWide, WestDoubleLength ]
 
 QUEENS_2:
   desc: A worn and cracked stone road runs roughly along a winding rivulet, just a narrow spring-fed stream, though it sits in a deep channel probably choked after winter thaws. They run from north to south, crossing the highway here; the stream ducks under a flat stone bridge, while the road climbs up the highway shoulders in an impromptu intersection. {lb} ```Northward the road seems to melt into the wilderness, untraveled as it is. The wide, ancient highway runs east and west, the arrow-straight road vanishing over either horizon.
@@ -276,6 +304,7 @@ QUEENS_2:
   light: wilderness
   name: [ Highway Crossroads, crossroads ]
   security: anarchy
+  tags: [ EastTripleLength, NorthTripleLength, SouthTripleLength, VeryWide, WestTripleLength, WaterClean ]
 
 QUEENS_3:
   desc: The long road curves here, south towards a wide, ancient highway and northeast towards greener pastures, the stone fractured and worn, stubborn grasses growing through the cracks. The grassy hills grow steeper and more rocky to the north, and you can see the distant peak of a great mountain.
@@ -285,6 +314,7 @@ QUEENS_3:
   light: wilderness
   name: [ Queen's Road, road ]
   security: anarchy
+  tags: [ NortheastDoubleLength, SouthTripleLength, VeryWide ]
 
 QUEENS_RECLAIMED:
   desc: And here ends the long stretch of road, the cracked stone torn and rent asunder as if by some natural disaster long ago, the ragged edges disappearing into grassy plains. It looks as though the land itself simply swallowed the road whole, though whatever caused this to occur must have happened long ago. {lb} ```Past the road's end, the hilly terrain is green and verdant, a scattering of trees forming into dense woodland to the northeast, while to the north the land arches upward into a steep cliff, a passage visible between crumbling, rocky walls.
@@ -294,3 +324,4 @@ QUEENS_RECLAIMED:
   light: wilderness
   name: [ Reclaimed By Nature, reclaimed road ]
   security: anarchy
+  tags: [ DigOK, NorthDoubleLength, SouthwestDoubleLength, VeryWide ]
