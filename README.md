@@ -8,7 +8,7 @@ Greave is an open-source, text-based, fantasy-themed role-playing game currently
 
 # COPYRIGHT & LICENSE
 
-Greave is copyright © 2020-2021 Raine "Gravecat" Simmons and the Greave contributors. The game is free and open-source, licensed under the [GNU Affero General Public License v3 or any later version](https://www.gnu.org/licenses/agpl-3.0.en.html).
+Greave is copyright © 2021 Raine "Gravecat" Simmons and the Greave contributors. The game is free and open-source, licensed under the [GNU Affero General Public License v3 or any later version](https://www.gnu.org/licenses/agpl-3.0.en.html).
 
 [Application icon](https://github.com/malcolmriley/unused-textures) copyright © 2020 Malcolm Riley.
 

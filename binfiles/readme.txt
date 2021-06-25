@@ -1,4 +1,4 @@
-Greave is copyright © 2020-2021 Raine "Gravecat" Simmons. The game is free and
+Greave is copyright © 2021 Raine "Gravecat" Simmons. The game is free and
 open-source, licensed under the GNU Affero General Public License v3 or any
 later version.
 

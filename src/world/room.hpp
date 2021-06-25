@@ -10,15 +10,16 @@ namespace SQLite { class Database; }    // defined in 3rdparty/SQLiteCpp/Databas
 enum class LinkTag : uint16_t {
     // Tags below 10,000 are considered *dynamic tags*. These tags WILL be saved to save files.
     Open = 1,           // A door, gate, hatch, etc. that is currently open.
-    Locked = 2,         // A closed door etc. that is currently locked.
+    Locked,             // A closed door etc. that is currently locked.
 
     // Tags at 10,000 or above are considered *permanent tags*. These tags WILL NOT be saved to save files.
     Openable = 10000,   // Can be opened and closed; a door, hatch, gate, or similar.
-    Lockable = 10001,   // Can be locked or unlocked with a key. Must be openable.
-    Permalock = 10002,  // A locked door/etc. which can never be unlocked.
-    Hidden = 10003,     // This link is not normally visible.
-    DoorMetal = 10004,  // Is the door on this link metal?
-    Window = 10005,     // This 'door' is actually a window.
+    Lockable,           // Can be locked or unlocked with a key. Must be openable.
+    Permalock,          // A locked door/etc. which can never be unlocked.
+    Hidden,             // This link is not normally visible.
+    DoorMetal,          // Is the door on this link metal?
+    Window,             // This 'door' is actually a window.
+    Unfinished,         // This room link is an unfinished part of the world -- it will be added later.
 };
 
 enum class RoomTag : uint16_t {
@@ -26,11 +27,11 @@ enum class RoomTag : uint16_t {
     Explored = 1,           // The player has visited this room before.
 
     // Tags at 10,000 or above are considered *permanent tags*. These tags WILL NOT be saved to save files.
-    Indoors = 10000,        // Is this room indoors?
-    Underground = 10001,    // Is this room underground?
-    Private = 10002,        // Entering this room is considered trespassing.
-    NoExploreCredit = 10003,    // This room does not count towards the number of 'explored' rooms in the player's stats.
-    Maze = 10004,           // This Room is part of a maze, and should not have its exit names labeled.
+    Indoors = 10000,    // Is this room indoors?
+    Underground,        // Is this room underground?
+    Private,            // Entering this room is considered trespassing.
+    NoExploreCredit,    // This room does not count towards the number of 'explored' rooms in the player's stats.
+    Maze,               // This Room is part of a maze, and should not have its exit names labeled.
 };
 
 enum class Security : uint8_t { ANARCHY, LOSEC, HISEC, SANCTUARY, INACCESSIBLE };

@@ -339,7 +339,7 @@ void Core::title()
     if (save_exists.at(m_save_slot - 1)) load(m_save_slot);
     else
     {
-        m_world->player()->set_location("TEST_ROOM");
+        m_world->player()->set_location("OUTSIDE_QUEENS_GATE");
         ActionLook::look(m_world->player());
     }
 }

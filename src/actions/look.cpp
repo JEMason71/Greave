@@ -37,11 +37,13 @@ void ActionLook::look(std::shared_ptr<Mobile> mob)
     {
         std::string exit_name;
         uint32_t room_link = room->link(e);
-        if (!room_link) continue;
+        if (!room_link && !room->link_tag(e, LinkTag::Unfinished)) continue;
         if (room->link_tag(e, LinkTag::Hidden)) continue;   // Never list hidden exits.
         exit_name = "{c}" + StrX::dir_to_name(e);
         
-        if (room_link != Room::FALSE_ROOM)
+        if (!room_link) // An unlinked exit with the Unfinished LinkTag.
+            exit_name = "{r}(" + StrX::dir_to_name(e) + "){c}";
+        else if (room_link != Room::FALSE_ROOM)
         {
             const std::shared_ptr<Room> link_room = core()->world()->get_room(room_link);
             if (link_room->tag(RoomTag::Explored) && !link_room->tag(RoomTag::Maze)) exit_name += " {B}(" + link_room->name(true) + "){c}";

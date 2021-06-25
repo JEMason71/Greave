@@ -17,7 +17,8 @@ const std::map<std::string, uint8_t>    World::LIGHT_LEVEL_MAP = { { "bright", 7
 
 // Lookup table for converting LinkTag text names into enums.
 const std::map<std::string, LinkTag>    World::LINK_TAG_MAP = { { "doormetal", LinkTag::DoorMetal }, { "hidden", LinkTag::Hidden }, { "lockable", LinkTag::Lockable },
-    { "locked", LinkTag::Locked }, { "open", LinkTag::Open }, { "openable", LinkTag::Openable }, { "permalock", LinkTag::Permalock }, { "window", LinkTag::Window } };
+    { "locked", LinkTag::Locked }, { "open", LinkTag::Open }, { "openable", LinkTag::Openable }, { "permalock", LinkTag::Permalock }, { "unfinished", LinkTag::Unfinished },
+    { "window", LinkTag::Window } };
 
 // Lookup table for converting RoomTag text names into enums.
 const std::map<std::string, RoomTag>    World::ROOM_TAG_MAP = { { "indoors", RoomTag::Indoors }, { "maze", RoomTag::Maze }, { "noexplorecredit", RoomTag::NoExploreCredit },
@@ -53,7 +54,7 @@ const std::shared_ptr<Room> World::get_room(const std::string &room_id) const
 // Loads the Room YAML data into memory.
 void World::load_room_pool()
 {
-    const std::vector<std::string> area_files = FileX::files_in_dir("data/areas");
+    const std::vector<std::string> area_files = FileX::files_in_dir("data/areas", true);
     for (auto area_file : area_files)
     {
         const YAML::Node yaml_rooms = YAML::LoadFile("data/areas/" + area_file);

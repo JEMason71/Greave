@@ -20,7 +20,11 @@ bool ActionTravel::travel(std::shared_ptr<Mobile> mob, Direction dir)
 
     if (!room->link(dir))
     {
-        if (is_player) core()->message("{y}You cannot travel {Y}" + StrX::dir_to_name(dir, StrX::DirNameType::TO_THE_ALT) + "{y}.");
+        if (is_player)
+        {
+            if (room->link_tag(dir, LinkTag::Unfinished)) core()->message("{y}That part of the game is {Y}curently unfinished{y}. Please come back later.");
+            else core()->message("{y}You cannot travel {Y}" + StrX::dir_to_name(dir, StrX::DirNameType::TO_THE_ALT) + "{y}.");
+        }
         // todo: NPC failure messages
         return false;
     }
