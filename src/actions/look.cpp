@@ -16,7 +16,8 @@ void ActionLook::look(std::shared_ptr<Mobile> mob)
     // sense right now, you never know, this code might be used in the future for some sort of "see through the target's eyes" spell or something.
     const std::shared_ptr<Room> room = core()->world()->get_room(mob->location());
 
-    const bool can_see = (room->light() >= Room::LIGHT_VISIBLE);
+    //const bool can_see = (room->light() >= Room::LIGHT_VISIBLE);
+    const bool can_see = true;
     if (!can_see)
     {
         core()->message("{U}Darkness");
@@ -37,7 +38,7 @@ void ActionLook::look(std::shared_ptr<Mobile> mob)
     {
         std::string exit_name;
         uint32_t room_link = room->link(e);
-        if (!room_link) continue;
+        if (!room_link || room_link == Room::BLOCKED) continue;
         if (room->link_tag(e, LinkTag::Hidden)) continue;   // Never list hidden exits.
         exit_name = "{c}" + StrX::dir_to_name(e);
         

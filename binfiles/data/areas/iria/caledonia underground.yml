@@ -1,0 +1,245 @@
+# areas/caledonia.yml -- The sewers and other underground regions of Forge-City Caledonia, which do not fall into any other specific area category.
+# Copyright (c) 2016-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+# Forge-City Caledonia and some of its outlying regions are originally based on and expanded from the Industrial Sector from SporkMUCK, originally made by @not_coyotic, copyright (c) 2002-2007, used with permission.
+
+COLLAPSED_CITY_TUNNEL:
+  desc: The dirt tunnels leading off to the west and north appear to have collapsed long ago here, the roof open to the city above with some rubble and rusted, wrecked old machines from above strewn around, covered in grime and thick layers of moss and vines. The walls partly consist of dirt, partly of the lower levels and foundations of the ancient brick and stone buildings which tower high above. {lb} ```Makeshift entrances into some of the buildings are visible to the east and southeast.
+  exits:
+    east: WRETCHED_ENCAMPMENT
+    north: SKITTERING_TUNNEL
+    southeast: FLOODED_UNDERCITY
+    west: WRETCHED_TUNNEL
+  light: wilderness
+  name: [ Collapsed City Tunnel, collapsed tunnel ]
+  security: anarchy
+  tags: [ DigOK, EastDoorMetal, EastOpenable, SoutheastOpenable, Underground, WaterTainted ]
+
+COLLAPSED_SUBWAY_TUNNEL:
+  desc: Light filters in from above, the ceiling collapsed and lying broken upon the tracks. {lb} ```The tunnel extends into darkness in either direction; there seems to be light to the eastern reaches of the tunnel, as well as a heavy barricade, diverting the tracks off this broken line and to another route.
+  exits:
+    east: UNFINISHED
+    up: SPRING_LANE
+    west: UNFINISHED
+  light: dark
+  name: [ Collapsed Subway Tunnel, tunnel ]
+  security: anarchy
+  tags: [ DigOK, Underground, UpNoMobRoam ]
+
+FETID_WARRENS:
+  desc: The west branch of this tunnel ends in a slightly more spacious room, largely unremarkable save for a few sizeable holes dug in the rough earth, from which an atrocious stench emerges. {lb} ```It's not hard to imagine what this room's purpose is, and why further investigation would be unwise.
+  exits:
+    east: WRETCHED_TUNNEL
+  light: none
+  name: [ Fetid Warrens, tunnel ]
+  security: anarchy
+  tags: [ DigOK, Indoors, Smelly, Underground ]
+
+FLOODED_UNDERCITY:
+  desc: What may have once been the foundations of one of the sprawling city buildings above is now a huge flooded cave, dimly lit from small openings in the rotting ceiling above, huge vine-covered pillars holding the stone sky aloft. {lb} ```Debris and rotting wood lays strewn around this cavern, and fetid greenish water sprawls out as far as the eye can see to the east, disappearing into a gloomy underground lake.
+  exits:
+    northwest: COLLAPSED_CITY_TUNNEL
+  light: none
+  name: [ Flooded Undercity, flooded cave ]
+  security: anarchy
+  tags: [ DigOK, EastOcean, Indoors, NorthwestOpenable, Underground, WaterTainted ]
+
+IGNOBLE_TUNNEL:
+  desc: This short section of poorly-lit, curved brick tunnel, ending at the west in a rusting metal door covered in flecked moss-green paint and an aged wooden door to the south, is nothing short of abhorrent. Light trickles in through a thin, rusty metal grate in the ceiling, bringing with it a merciful breeze of fresh air which does little to dispel the stench of vomit and stale urine. {lb} ```There's little of interest here beyond a few rotting old barrels, broken bottles, and other assorted debris.
+  exits:
+    south: RED_DRAGON_TAVERN
+    west: SEWER_BRICK_TUNNEL
+  light: dark
+  name: [ Ignoble Tunnel, tunnel ]
+  security: anarchy
+  tags: [ Indoors, Smelly, SouthOpenable, Underground, WestDoorMetal, WestOpenable ]
+
+SEWER_ARROW_PARK:
+  desc: Beneath the park the sewer tunnel widens, the walkway expanding to about five meters of chipped and water-worn brick. The arched ceiling rises a little higher as well. Bolted to the wall in the center of the enlarged section is a tarnished steel plaque, bearing corroded and indistinct letters. {lb} ```Beside it is a ladder leading to a gate to the east, the lock long-since rusted away.
+  exits:
+    east: SEWER_ARROW_PARK_EAST
+    northeast: SEWER_BERESTALL_KINGS
+    southwest: SEWER_MILLERS
+  light: none
+  name: [ Arrow Park Sewer, sewer ]
+  security: anarchy
+  tags: [ EastDoorMetal, EastOpenable, Indoors, NortheastDoubleLength, SouthwestDoubleLength, Underground, WaterTainted, Wide ]
+
+SEWER_ARROW_PARK_EAST:
+  desc: You find yourself at a dead end of a sewer tunnel, tarnished old pipes disappearing off into slimy brick walls, the tunnel dimly-lit from small metal grates in the ceiling above. {lb} ```Rusted iron railings curve around the edge of the red brick walkways to either side of the fetid rain water flowing below, and the tunnel continues, curving off into gloom to the east and west, though the western direction is guarded by a heavy, corroded iron gate.
+  exits:
+    east: SEWER_KINGS
+    west: SEWER_ARROW_PARK
+  light: dark
+  name: [ Arrow Park Sewer East, sewer ]
+  security: anarchy
+  tags: [ Indoors, Underground, WaterTainted, WestDoorMetal, WestOpenable, Wide ]
+
+SEWER_BERESTALL_CHURCH:
+  desc: The sewer tunnel continues its northeast/southwest progression, though the northeast path is completely blocked by a huge, rusted yet still very solid-looking metal grate through which the fetid rainwater flows slowly, bringing with it occasional debris or half-rotting corpses of small mammals. {lb} ```There's little else of note in this ancient brick-lined tunnel, aside from some old graffiti carved into the brick wall reading simply, "THIS DAY".
+  exits:
+    northeast: UNFINISHED
+    southwest: SEWER_BERESTALL_KINGS_2
+  light: dark
+  name: [ Berestall/Church Sewer, dead-end ]
+  security: anarchy
+  tags: [ Indoors, Underground, WaterTainted, Wide ]
+
+SEWER_BERESTALL_KINGS:
+  desc: The sewer tunnel seems to come to an end here, the water-stained bricks leading off to the southwest, a smaller passage leading to the east via a thick, rusting iron grate. Fixed to the wall is a rather battered metal ladder leading up to a grate above, while a flight of stone steps leads up to the north. {lb} ```There seems to be little else of interest here, besides some old graffiti scratched into a nearby wall - it's so old you can barely make out more than the letters 'L' and 'K'.
+  exits:
+    east: UNFINISHED
+    north: SEWER_BRICK_TUNNEL
+    southwest: SEWER_ARROW_PARK
+    up: BERESTALL_KINGS
+  light: dark
+  name: [ Berestall/King's Sewer, sewer ]
+  security: anarchy
+  tags: [ EastDoorMetal, EastOpenable, Indoors, NorthTripleLength, SouthwestDoubleLength, Underground, UpDoorMetal, UpOpenable, WaterTainted, Wide ]
+
+SEWER_BERESTALL_KINGS_2:
+  desc: The sewer tunnel stretches out in a northeast/southwest direction here, the tepid rainwater in the trench below an unsettling shade of yellowish green, a few dead rodents floating along downstream. {lb} ```You can keep your feet dry by sticking to the raised brick walkways flanking the flow, the iron railings rusted and near-collapse.
+  exits:
+    northeast: SEWER_BERESTALL_CHURCH
+    southwest: SEWER_KINGS
+  light: dark
+  name: [ Berestall/King's Sewer, sewer ]
+  security: anarchy
+  tags: [ Indoors, Underground, WaterTainted, Wide ]
+
+SEWER_BRICK_TUNNEL:
+  desc: This long and rather plain red brick tunnel stretches off into darkness to the north, and leads down a flight of stone steps to the south, with little of interest save for a rickety old metal ladder bolted to one wall, which leads up to a hole in the ceiling just large enough for you to fit through, and a rusty old door painted in flecked moss-green paint to the east. Dust motes glitter in the air from the light above.
+  exits:
+    east: IGNOBLE_TUNNEL
+    north: SEWER_TRASH_TUNNEL
+    south: SEWER_BERESTALL_KINGS
+    up: UNFINISHED
+  light: dark
+  name: [ Brick Tunnel, tunnel ]
+  security: anarchy
+  tags: [ EastDoorMetal, EastOpenable, Indoors, SouthTripleLength, Underground, UpDoorMetal, UpOpenable, Wide ]
+
+SEWER_KINGS:
+  desc: The sewer curves here, the stagnant stream of rainwater leading off into gloom to the west and northeast, flanked by mossy red brick walkways and rusted iron handrails. {lb} ```It's hard to see here, though the small drainage grates in the ceiling allow some light from the city above to trickle down into the oppressive gloom. {lb} ```Mounted in the brick wall to the south is a heavy, tarnished metal grate, which appears to lead into a sloped tunnel.
+  exits:
+    northeast: SEWER_BERESTALL_KINGS_2
+    south: SKYGUARD_TRENCH_CENTRAL
+    west: SEWER_ARROW_PARK_EAST
+  light: dark
+  name: [ King's Sewer, sewer ]
+  security: anarchy
+  tags: [ Indoors, SouthDoorMetal, SouthOpenable, Underground, WaterTainted, Wide ]
+
+SEWER_MILLERS:
+  desc: What little light fills this tunnel filters in from the open access above. The air is thick around you and carries a slight mist, rising off the greenly tinted water. {lb} ```The walkway is about two meters wide and runs alongside and just above the level of the water. The arching ceiling spans the full nine meter width of the sewer.
+  exits:
+    northeast: SEWER_ARROW_PARK
+    southeast: SEWER_WAREHOUSE
+    up: MILLERS_WAY_2
+  light: dark
+  name: [ Miller's Sewer, sewer ]
+  security: anarchy
+  tags: [ Indoors, NortheastDoubleLength, Underground, UpDoorMetal, UpOpenable, WaterTainted, Wide ]
+
+SEWER_SLUDGE_PIT:
+  desc: I don't know what you were expecting from walking into a sludge pit, but here you are. The sludge is surprisingly viscous, enough to walk across at a brisk pace without too much difficulty, though standing still for any measure of time causes your feet to start to sink. {lb} ```Several rotting wooden barrels float near the surface of the sludge, and the stench is terrible.
+  exits:
+    west: SEWER_TRASH_TUNNEL
+  light: none
+  name: [ Sludge Pit, sludge pit ]
+  security: anarchy
+  tags: [ Indoors, SludgePit, Smelly, Underground ]
+
+SEWER_TRASH_TUNNEL:
+  desc: This red brick tunnel has been used as a dumping-ground for trash, the ground littered with everything from rusting tools to rotting wooden barrels. The tunnel originally continued to the north, though passage in this direction has been entirely blocked by years of debris build-up. {lb} ```The passage back south is fairly clear, as is an opening to the east through which you can see a disgusting pit of viscous sludge.
+  exits:
+    east: SEWER_SLUDGE_PIT
+    south: SEWER_BRICK_TUNNEL
+  light: dark
+  name: [ Trash-Filled Tunnel, tunnel ]
+  security: anarchy
+  tags: [ Indoors, Underground, WaterTainted, Wide ]
+
+SEWER_WAREHOUSE:
+  desc: Warm steam curls from the closed grate above. This entire stretch of sewer is warmer than the rest, the water a little clearer and cleaner than the remainder of the system. The sound of rumbling steam boilers can be heard reverberating through the tunnel.
+  exits:
+    northwest: SEWER_MILLERS
+    southwest: UNFINISHED
+    up: FALSE_ROOM
+  light: dark
+  name: [ Warehouse Sewer, sewer ]
+  security: anarchy
+  tags: [ Indoors, Underground, UpDoorMetal, UpPermalock, WaterTainted, Wide ]
+
+SKITTERING_TUNNEL:
+  desc: Curving around to the west and south, this dirt tunnel has been carved roughly from the dry earth, barely high enough for you to be able to stand without hunching under dry roots or rusted pieces of metal jutting from the ceiling. {lb} ```You can barely see your way thanks to half-buried, dimly-glowing mushrooms in the ground, which rather more alarmingly reveal thousands of insects skittering around the uneven soil.
+  exits:
+    south: COLLAPSED_CITY_TUNNEL
+    west: SUBTERRANEAN_GRAVEYARD
+  light: dark
+  name: [ Skittering Tunnel, tunnel ]
+  security: anarchy
+  tags: [ DigOK, Indoors, Underground ]
+
+SKYGUARD_TRENCH:
+  desc: Smooth stone slopes up about eight feet to the ceiling, the floor clean. Seems you're on one end of a long trench, close to the surface end, the other vanished into darkness. The ceiling ends and one can probably climb up the sloped sides to the forest floor, dark evergreens and a darker ballista towering well above you. {lb} ```Barely visible in the gloom, a heavy metal door leads southwest.
+  exits:
+    east: SKYGUARD_TRENCH_CENTRAL
+    southwest: UNFINISHED
+    up: SKYGUARD_PLATFORM
+  light: dark
+  name: [ West Skyguard Trench, trench ]
+  security: anarchy
+  tags: [ CanSeeOutside, Indoors, SouthwestDoorMetal, SouthwestLocked, SouthwestNoMobRoam, Underground, Wide ]
+
+SKYGUARD_TRENCH_CENTRAL:
+  desc: You find yourself at a crossroads of a sort, a smooth stone tunnel of chipped yet clean stone, a trench with angled sides leading off into the gloom to both the east and west. {lb} ```To the southeast you see a crude hole has been torn in the slope, leading into what looks like a dry dirt tunnel, while a heavy metal grate mounted in an opening to the north leads into further darkness, along with the distant sound of running water.
+  exits:
+    east: SKYGUARD_TRENCH_COLLAPSED
+    north: SEWER_KINGS
+    southeast: SUBTERRANEAN_GRAVEYARD
+    west: SKYGUARD_TRENCH
+  light: none
+  name: [ Central Skyguard Trench, trench ]
+  security: anarchy
+  tags: [ Indoors, NorthDoorMetal, NorthOpenable, Underground, Wide ]
+
+SKYGUARD_TRENCH_COLLAPSED:
+  desc: The flak trench comes to a rather abrupt end here, its sloping walls still reaching to the tall stone ceiling, but the passage east is completely blocked by a cave-in, huge chunks of rubble packed together with dirt completely sealing off anything that may have existed to the east.
+  exits:
+    east: BLOCKED
+    west: SKYGUARD_TRENCH_CENTRAL
+  light: none
+  name: [ Collapsed Skyguard Trench, dead end ]
+  security: anarchy
+  tags: [ DigOK, Indoors, Underground, Wide ]
+
+SUBTERRANEAN_GRAVEYARD:
+  desc: This series of dirt-hewn tunnels opens up into a larger chamber, the ceiling high enough that you could barely touch it if you jumped. Glowing mushrooms in the loamy soil illuminate the area in an unearthly green haze, revealing a number of open graves -- some occupied, some not -- as well as more dirt mounds with crudely-fashioned headstones made from pieces of debris or rusting metal signs. {lb} ```Several tunnels lead off into the gloom.
+  exits:
+    east: SKITTERING_TUNNEL
+    northwest: SKYGUARD_TRENCH_CENTRAL
+    south: WRETCHED_TUNNEL
+  light: dark
+  name: [ Subterranean Graveyard, graveyard ]
+  security: anarchy
+  tags: [ DigOK, Indoors, Underground ]
+
+WRETCHED_ENCAMPMENT:
+  desc: This was probably once the basement of one of the buildings towering above, but it's now little more than a ruined scrapyard. Ancient brick walls are filthy and damaged, the ceiling above is torn open to reveal rusted pipes and dangling cables, and the floor is strewn with all manner of debris covering almost every surface, a few torn old mattresses here and there, empty bottles, rotting crates, and rusted old metal boxes. {lb} ```The exits are mostly blocked by debris, leaving only a rusted old door to the west.
+  exits:
+    west: COLLAPSED_CITY_TUNNEL
+  light: dark
+  name: [ Wretched Encampment, encampment ]
+  security: anarchy
+  tags: [ DigOK, Indoors, PermaCampfire, Underground, WestDoorMetal, WestOpenable ]
+
+WRETCHED_TUNNEL:
+  desc: This tunnel has been carved roughly out of the dry, dead earth, a few half-buried glowing mushrooms providing enough illumination to find your way along the uneven ground. {lb} ```The tunnel mostly heads east-west, with a fetid breeze blowing through from the western end, though an opening in the wall leads into a larger chamber to the north.
+  exits:
+    east: COLLAPSED_CITY_TUNNEL
+    north: SUBTERRANEAN_GRAVEYARD
+    west: FETID_WARRENS
+  light: dark
+  name: [ Rough-Hewn Dirt Tunnel, tunnel ]
+  security: anarchy
+  tags: [ DigOK, Indoors, Underground ]

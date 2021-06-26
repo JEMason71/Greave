@@ -26,12 +26,12 @@ const std::map<std::string, LinkTag>    World::LINK_TAG_MAP = { { "autoclose", L
 
 // Lookup table for converting RoomTag text names into enums.
 const std::map<std::string, RoomTag>    World::ROOM_TAG_MAP = { { "canseeoutside", RoomTag::CanSeeOutside }, { "churchaltar", RoomTag::ChurchAltar }, { "digok", RoomTag::DigOK },
-    { "gamepoker", RoomTag::GamePoker }, { "gameslots", RoomTag::GameSlots }, { "hidecampfirescar", RoomTag::HideCampfireScar }, { "indoors", RoomTag::Indoors },
-    { "maze", RoomTag::Maze }, { "nexus", RoomTag::Nexus }, { "noexplorecredit", RoomTag::NoExploreCredit }, { "permacampfire", RoomTag::PermaCampfire },
-    { "private", RoomTag::Private }, { "radiationlight", RoomTag::RadiationLight }, { "shopbuyscontraband", RoomTag::ShopBuysContraband },
-    { "shoprespawningowner", RoomTag::ShopRespawningOwner }, { "sleepok", RoomTag::SleepOK }, { "trees", RoomTag::Trees }, { "underground", RoomTag::Underground },
-    { "verywide", RoomTag::VeryWide }, { "waterclean", RoomTag::WaterClean }, { "waterdeep", RoomTag::WaterDeep }, { "watersalt", RoomTag::WaterSalt },
-    { "watershallow", RoomTag::WaterShallow }, { "watertainted", RoomTag::WaterTainted }, { "wide", RoomTag::Wide } };
+    { "gamepoker", RoomTag::GamePoker }, { "gameslots", RoomTag::GameSlots }, { "gross", RoomTag::Gross }, { "hidecampfirescar", RoomTag::HideCampfireScar },
+    { "indoors", RoomTag::Indoors }, { "maze", RoomTag::Maze }, { "nexus", RoomTag::Nexus }, { "noexplorecredit", RoomTag::NoExploreCredit },
+    { "permacampfire", RoomTag::PermaCampfire }, { "private", RoomTag::Private }, { "radiationlight", RoomTag::RadiationLight }, { "shopbuyscontraband", RoomTag::ShopBuysContraband },
+    { "shoprespawningowner", RoomTag::ShopRespawningOwner }, { "sleepok", RoomTag::SleepOK }, { "sludgepit", RoomTag::SludgePit }, { "smelly", RoomTag::Smelly },
+    { "trees", RoomTag::Trees }, { "underground", RoomTag::Underground }, { "verywide", RoomTag::VeryWide }, { "waterclean", RoomTag::WaterClean }, { "waterdeep", RoomTag::WaterDeep },
+    { "watersalt", RoomTag::WaterSalt }, { "watershallow", RoomTag::WaterShallow }, { "watertainted", RoomTag::WaterTainted }, { "wide", RoomTag::Wide } };
 
 // Lookup table for converting textual room security (e.g. "anarchy") to enum values.
 const std::map<std::string, Security>   World::SECURITY_MAP = { { "anarchy", Security::ANARCHY }, { "low", Security::LOW }, { "high", Security::HIGH },

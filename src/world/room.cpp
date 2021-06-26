@@ -12,9 +12,10 @@
 #include "world/world.hpp"
 
 
+const uint32_t  Room::BLOCKED =         538012167;  // Hashed value for BLOCKED, which is used to mark exits as impassible.
 const uint32_t  Room::FALSE_ROOM =      3399618268; // Hashed value for FALSE_ROOM, which is used to make 'fake' impassible room exits.
 const uint8_t   Room::LIGHT_VISIBLE =   3;          // Any light level below this is considered too dark to see.
-const uint32_t Room::UNFINISHED =       1909878064; // Hashed value for UNFINISHED, which is used to mark room exits as unfinished and to be completed later.
+const uint32_t  Room::UNFINISHED =      1909878064; // Hashed value for UNFINISHED, which is used to mark room exits as unfinished and to be completed later.
 
 // The SQL table construction string for the room pool.
 const std::string   Room::SQL_ROOM_POOL =   "CREATE TABLE rooms ( sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, id INTEGER UNIQUE NOT NULL, tags TEXT, link_tags TEXT )";

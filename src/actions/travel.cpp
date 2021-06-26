@@ -27,7 +27,12 @@ bool ActionTravel::travel(std::shared_ptr<Mobile> mob, Direction dir)
     }
     else if (room_link == Room::UNFINISHED)
     {
-        core()->message("{y}That part of the game is {Y}curently unfinished{y}. Please come back later.");
+        if (is_player) core()->message("{y}That part of the game is {Y}curently unfinished{y}. Please come back later.");
+        return false;
+    }
+    else if (room_link == Room::BLOCKED)
+    {
+        if (is_player) core()->message("{y}You are {Y}unable to proceeed {y}any further in that direction.");
         return false;
     }
 

@@ -40,7 +40,7 @@ BERESTALL_END:
 BERESTALL_KINGS:
   desc: Two roads collide without a sound, a battered street marker reading 'Berestall Street' and 'King's Road'. The sky is obscured by a tall building to the southeast, looming ominously over this intersection. More residential buildings make up these city walls, with a single corner shop nestled between dilapidated structures, the sign outside proclaiming it to be 'The Hunter's Mark'. {lb} ```At the northeast corner stands another tall building, a worn and creaking sign indicating it to be 'The Red Dragon Inn'.
   exits:
-    down: UNFINISHED
+    down: SEWER_BERESTALL_KINGS
     east: BERESTALL_CHURCH
     northeast: RED_DRAGON
     south: KINGS_ROAD_1
@@ -901,7 +901,7 @@ MILLERS_WAY:
 MILLERS_WAY_2:
   desc: The long road continues stretching out far to the east and west, a rusting green street sign helpfully reading, 'Miller's Way'. Tall buildings crowd the sides of the road, cracked and dirty windows betraying a muted glow within, though the doors all seem to be chained and locked shut. {lb} ```A rusted sewer grate is mounted in the ground nearby, gloom beckoning beneath.
   exits:
-    down: UNFINISHED
+    down: SEWER_MILLERS
     east: MILLERS_CROSSWOOD
     west: MILLERS_WAY_3
   light: dim
@@ -1284,7 +1284,7 @@ RED_DRAGON_STAFF_ROOM:
 RED_DRAGON_TAVERN:
   desc: This small basement tavern is simple and modest, yet cozy. The worn cobblestone floor is mostly clean aside from a few dark stains, and benches sit alongside three heavy wooden tables, while a few wooden stools flank the bar. A fire crackles merrily in the hearth, above which is mounted a shield bearing the insignia of a red dragon. {lb} ```A rickety staircase leads to the lobby and private rooms upstairs, and an old wooden door sits behind the bar.
   exits:
-    north: UNFINISHED
+    north: IGNOBLE_TUNNEL
     up: RED_DRAGON_STAIRWELL
   light: dim
   name: [ The Red Dragon Tavern, tavern ]
@@ -1303,7 +1303,7 @@ RENASCENCE_STATION:
 SKYGUARD_PLATFORM:
   desc: As if it was dropped from above, the stone platform's settled firmly within the city block-wide cluster of evergreens. The huge twin ballistae of wrought iron and sturdy dark wood reach for the sky above the tree cover - dense and deep enough the city seems it might be miles away, forgiving the encroaching plumes of smoke breaching the treetops. The platform sits about a foot off the grass below, supporting the heavy ballistae, which currently point south - the direction of the harbour. {lb} ```Stairs head down to a trail northwards, while a wide, rusted iron ring marks a passage into the ground.
   exits:
-    down: UNFINISHED
+    down: SKYGUARD_TRENCH
     north: ARROW_PARK
   light: dim
   name: [ Skyguard Platform, ballista platform ]
@@ -1313,7 +1313,7 @@ SKYGUARD_PLATFORM:
 SPRING_LANE:
   desc: A wide gash has opened across the street. The subway has broken through, its tracks partially buried by boulders, laid half-bare to the light. It seems easy enough to slip into the subway, though if it leads any distance is anyone's guess. {lb} ```The row of buildings to the east are silhouetted against the unclean sky. As well-lit as the road is by dilapidated aether-lanterns, there is no sound to be heard at all...
   exits:
-    down: UNFINISHED
+    down: COLLAPSED_SUBWAY_TUNNEL
     north: DESOLATION_ALLEY_EAST
     south: EAST_ARCO
   light: dim

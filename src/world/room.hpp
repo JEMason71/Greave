@@ -63,9 +63,12 @@ enum class RoomTag : uint16_t {
     SleepOK,            // Environmental noises will affect the player much less here. [CURRENTLY UNUSED]
     Nexus,              // This room contains a nexus transportation system. [CURRENTLY UNUSED]
     RadiationLight,     // This area is lightly irradiated. [CURRENTLY UNUSED]
+    SludgePit,          // We got a sinky sludge pit here, guys. [CURRENTLY UNUSED]
     GameSlots,          // This room contains a slot machine minigame. [CURRENTLY UNUSED]
     GamePoker,          // This room contains a video poker minigame. [CURRENTLY UNUSED]
     ChurchAltar,        // This room is a church altar, we can respawn here. [CURRENTLY UNUSED]
+    Gross,              // This room is disgusting, and can trigger sanity effects. [CURRENTLY UNUSED]
+    Smelly,             // As with the Gross tag, but in this case the effect is triggered by smell, not sight. [CURRENTLY UNUSED]
 };
 
 enum class Security : uint8_t { ANARCHY, LOW, HIGH, SANCTUARY, INACCESSIBLE };
@@ -73,6 +76,7 @@ enum class Security : uint8_t { ANARCHY, LOW, HIGH, SANCTUARY, INACCESSIBLE };
 class Room
 {
 public:
+    static const uint32_t       BLOCKED;                        // Hashed value for BLOCKED, which is used to mark exits as impassible.
     static const uint32_t       FALSE_ROOM;                     // Hashed value for FALSE_ROOM, which is used to make 'fake' impassible room exits.
     static const uint8_t        LIGHT_VISIBLE;                  // Any light level below this is considered too dark to see.
     static const unsigned int   ROOM_LINKS_MAX = 10;            // The maximum amount of exit links from one Room to another.
