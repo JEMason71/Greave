@@ -23,6 +23,7 @@ enum class LinkTag : uint16_t {
     Window,             // This 'door' is actually a window.
     DoorShop,           // This is the door to a shop and should be locked at night. [CURRENTLY UNUSED]
     AutoClose,          // This door will automatically close after the player passes through it. [CURRENTLY UNUSED]
+    AutoLock,           // This door will automatically lock after the player passes through it. [CURRENTLY UNUSED]
     LocksWhenClosed,    // When this door is closed, it will automatically lock itself. [CURRENTLY UNUSED]
     DoubleLength,       // This link is twice as long, so will take extra time to traverse. [CURRENTLY UNUSED]
     TripleLength,       // This link is three times as long, so will take extra time to traverse. [CURRENTLY UNUSED]
@@ -64,6 +65,7 @@ enum class RoomTag : uint16_t {
     RadiationLight,     // This area is lightly irradiated. [CURRENTLY UNUSED]
     GameSlots,          // This room contains a slot machine minigame. [CURRENTLY UNUSED]
     GamePoker,          // This room contains a video poker minigame. [CURRENTLY UNUSED]
+    ChurchAltar,        // This room is a church altar, we can respawn here. [CURRENTLY UNUSED]
 };
 
 enum class Security : uint8_t { ANARCHY, LOW, HIGH, SANCTUARY, INACCESSIBLE };

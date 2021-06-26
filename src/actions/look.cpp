@@ -47,12 +47,13 @@ void ActionLook::look(std::shared_ptr<Mobile> mob)
         else
         {
             const std::shared_ptr<Room> link_room = core()->world()->get_room(room_link);
+            const bool is_window = room->link_tag(e, LinkTag::Window);
             if (link_room->tag(RoomTag::Explored) && !link_room->tag(RoomTag::Maze)) exit_name += " {B}(" + link_room->name(true) + "){c}";
-            if (room->link_tag(e, LinkTag::Locked)) exit_name += " {u}[locked]{c}";
+            if (room->link_tag(e, LinkTag::Locked)) exit_name += (is_window ? " {u}[locked window]{c}" : " {u}[locked]{c}");
             else if (room->link_tag(e, LinkTag::Openable))
             {
-                if (room->link_tag(e, LinkTag::Open)) exit_name += " {u}[open]{c}";
-                else exit_name += " {u}[closed]{c}";
+                if (room->link_tag(e, LinkTag::Open)) exit_name += (is_window ? " {u}[open window]{c}" : " {u}[open]{c}");
+                else exit_name += (is_window ? " {u}[closed window]{c}" : " {u}[closed]{c}");
             }
         }
 

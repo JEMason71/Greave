@@ -7,7 +7,7 @@ ARROW_PARK:
   exits:
     east: KINGS_ROAD_1
     north: BERESTALL_STREET
-    south: UNFINISHED
+    south: SKYGUARD_PLATFORM
     west: CROSSWOOD_ALLEY
   light: dim
   name: [ Arrow Park, park ]
@@ -42,7 +42,7 @@ BERESTALL_KINGS:
   exits:
     down: UNFINISHED
     east: BERESTALL_CHURCH
-    northeast: UNFINISHED
+    northeast: RED_DRAGON
     south: KINGS_ROAD_1
     southeast: CALEDONIA_FLETCHER
     west: BERESTALL_STREET
@@ -56,7 +56,7 @@ BERESTALL_STREET:
   exits:
     east: BERESTALL_KINGS
     north: CALEDONIA_ALCHEMIST
-    northwest: UNFINISHED
+    northwest: YETUS_SUPPLIES
     south: ARROW_PARK
     west: BERESTALL_STREET_2
   light: dim
@@ -299,7 +299,7 @@ CENTRAL_UNDERGROUND_SOUTH:
 CHURCH_AVENUE:
   desc: The eastern rim of this avenue is dominated by the tall facade of the church, a great stone monument in the style of an era gone long past. A set of stairs, running the width of the church, climbs to a set of tall, wooden structures encased in dark stonework and bordered in black iron. {lb} ```The building rises three storeys plus a central bell tower that rises to four, the pointed peak of the tower standing well above the surrounding mundane structures. The holy cross rises prominently from the tower, silhouetted against the sky and casting its shadow against the walls and windows of the apothecary's shop directly across the road.
   exits:
-    east: UNFINISHED
+    east: OUR_LADY_GRAND_HALL
     north: BERESTALL_CHURCH
     northwest: DIAMOND_IN_THE_ROUGH
     south: MILLERS_CHURCH
@@ -587,6 +587,10 @@ IRREFUHREND_WATCHTOWER:
   desc: "A small platform with waist-high walls provides a place to rest, sixty meters above the yard below. A large warning beacon flashes atop the tower in a slow rhythm. From here most of the district can be seen: the park in the northern distance, ballistae reaching for the clouds, the six-storey building that houses the Red Dragon. {lb} ```Even farther away, the seemingly endless expanse of desert hills rolling north of the city district. To the south rests the shimmering bay, its coastline marking the southern boundaries of both the industrial sector and city center. Below is the yard of the Irrefuhrend complex."
   exits:
     down: IRREFUHREND_INDUSTRIAL_COMPLEX
+    east: IRREFUHREND_INDUSTRIAL_COMPLEX
+    north: IRREFUHREND_INDUSTRIAL_COMPLEX
+    south: IRREFUHREND_INDUSTRIAL_COMPLEX
+    west: IRREFUHREND_INDUSTRIAL_COMPLEX
   light: wilderness
   name: [ Irrefuhrend Watchtower, watchtower ]
   security: low
@@ -638,7 +642,7 @@ KINGS_RENASCENCE:
   exits:
     north: KINGS_IRREFUHREND
     south: IRON_KINGS
-    west: UNFINISHED
+    west: RENASCENCE_STATION
   light: dim
   name: [ King's Road - Renascence, King's ]
   security: low
@@ -839,7 +843,7 @@ LEWIN_LOBBY:
 MILLERS_CHURCH:
   desc: Church Avenue leads northwards from here. It terminates against a gnarled chainlink fence guarding the south side, a wasteland of rubble tumbling down into a deep pit from a structural collapse long ago, with some old buildings a few blocks behind, a tall watchtower standing proud. {lb} ```Through a wooden gate to the east, a blacksmith's forge and a modest dwelling are visible. At the northwest corner of the street, a small brick building appears to house a tailor's business.
   exits:
-    east: UNFINISHED
+    east: ORM_SMITHY_FORGE
     north: CHURCH_AVENUE
     northwest: JOSEPHS_FABRICS
     west: MILLERS_KINGS
@@ -996,7 +1000,6 @@ NORTHWATCH_GATE:
   desc: The eastern side of the Northwatch hall is less grand than the open space west of the short passageway, the ceiling lower and the walls closer. Aside from some crates and barrels of stored supplies there is little of special interest here, save the heavy metal door on the east wall.
   exits:
     east: NORTH_CALEDONIA
-    southeast: UNFINISHED
     west: NORTHWATCH
   light: dim
   name: [ Northwatch Gate, gate ]
@@ -1041,6 +1044,272 @@ NORTHWATCH_YARD:
   security: low
   tags: [ DigOK, SoutheastOpenable ]
 
+ORM_SMITHY:
+  desc: The inside of Orm's Smithy is a fairly simple, wood-floored room, one door leading back outside to the west. A heavy wooden counter blocks access to the two other doors, across which are displayed a number of weapons, tools, shields, and pieces of armour, the shiny metal gleaming in the light of hanging lanterns. A number of weapon and armour racks around the walls of the room display various other wares on offer.
+  exits:
+    east: ORM_SMITHY_STOREROOM
+    north: ORM_SMITHY_HOME
+    west: ORM_SMITHY_FORGE
+  light: bright
+  name: [ Orm's Smithy, blacksmith ]
+  security: low
+  tags: [ Indoors, EastLocked, NorthLocked, WestDoorShop, WestLockable ]
+
+ORM_SMITHY_FORGE:
+  desc: Just off the street and past a gated wooden fence, you stand before the local smithy, a small stone house with a hammer and anvil sign hanging above a heavy wooden door to the east, while a window to the northeast looks into a living area. {lb} ```Outside, a sturdy forge roars with a fiery glow, alongside which is a heavy, well-worn anvil, a barrel of murky water, a number of unfinished blades, and other assorted blacksmith's tools.
+  exits:
+    east: ORM_SMITHY
+    northeast: ORM_SMITHY_HOME
+    west: MILLERS_CHURCH
+  light: dim
+  name: [ Blacksmith's Forge, blacksmith ]
+  security: low
+  tags: [ EastLockable, EastLockStrong, HideCampfireScar, NortheastLocked, NortheastLockWeak, NortheastWindow, PermaCampfire, WaterTainted, Wide ]
+
+ORM_SMITHY_HOME:
+  desc: A fireplace burns merrily on the west side of this comfortable living area, above which is mounted the head of some sort of beast. A table near the fire is flanked by a couple of simple chairs, and some shelves of unremarkable personal items occupy the corner, next to which lie two sturdy-looking wooden beds with colourful green blankets. {lb} ```The street outside is visible through a window in the southwest corner, and the only other exit is a heavy wooden door to the south.
+  exits:
+    south: ORM_SMITHY
+    southwest: ORM_SMITHY_FORGE
+  light: dim
+  name: [ Blacksmith's Home, private rooms ]
+  security: low
+  tags: [ CanSeeOutside, HideCampfireScar, Indoors, PermaCampfire, Private, SouthLocked, SouthwestLocked, SouthwestLockWeak, SouthwestWindow ]
+
+ORM_SMITHY_STOREROOM:
+  desc: The storeroom at the back of the shop is cramped and untidy, various crates both open and closed containing a variety of unsold stock, along with shelves holding gleaming weapons, heavy shields and pieces of armour propped up against them. {lb} ```The only exit is back west.
+  exits:
+    west: ORM_SMITHY
+  light: dark
+  name: [ Blacksmith's Storeroom, storeroom ]
+  security: low
+  tags: [ Indoors, Private, WestLocked ]
+
+OUR_LADY_ALTAR:
+  desc: Light shines through great stained glass windows, creating large patterns on the stone altar. A stone pulpit rises before the windows, large, standing proudly before the grand hall and rows of pews, benches filling the room in three columns, stretching back into the darkness. {lb} ```A mystic sense fills the air, a reverent feeling permeating the atmosphere, sermons and services given long ago hanging still all about. The window itself is huge, rising to the arched ceiling a dozen meters above, the Holy Cross displayed proudly in white glass against an orange sunburst.
+  exits:
+    west: OUR_LADY_CENTRAL_HALL
+  light: dim
+  name: [ Our Lady of Rising Sun - Altar,  altar ]
+  security: low
+  tags: [ CanSeeOutside, ChurchAltar, Indoors, Wide ]
+
+OUR_LADY_BACK_ROOM:
+  desc: .
+  exits:
+    southeast: OUR_LADY_CENTRAL_HALL
+  light: dim
+  name: [ Back Room, back room ]
+  security: inaccessible
+  tags: [ Indoors, NoExploreCredit, Private, SoutheastPermaLock ]
+
+OUR_LADY_CENTRAL_HALL:
+  desc: Candlelight against the rows of stone columns casts deep shadows outward from the central nave, keeping the main path rather well lit. The shadows close tighter farther toward the ceiling, vaulted arches cloaked in black and the dimmest gray. The inobvious pattern of floor tile coats the floor along the nave and both aisles to either side, the pathways separated by the lines of columns. {lb} ```It runs west to the entrance, and east, where the reddish golden hue of stained glass can be seen.
+  exits:
+    east: OUR_LADY_ALTAR
+    northwest: OUR_LADY_BACK_ROOM
+    west: OUR_LADY_GRAND_HALL
+  light: dim
+  name: [ Our Lady of Rising Sun - Central Hall, central hall ]
+  security: low
+  tags: [ CanSeeOutside, Indoors, NorthwestPermaLock, Wide ]
+
+OUR_LADY_GRAND_HALL:
+  desc: Candles shed golden light on the hard floor, illuminating the subtle patterns of dark and light spread along the hallway. Columns hold buttressed ceilings, the arches high overhead creating a vast sound chamber that sends echoes into the dark distance. The walls, running parallel towards the east, are a fair ten meters apart and decorated in line art images, holy men and women of varied species it would seem. {lb} ```The hall runs toward a darkened end, just out of sight but lined with points of candlelight.
+  exits:
+    east: OUR_LADY_CENTRAL_HALL
+    west: CHURCH_AVENUE
+  light: dim
+  name: [ Our Lady of Rising Sun - Grand Hall, grand hall ]
+  security: low
+  tags: [ CanSeeOutside, Indoors, WestNoMobRoam, WestLockable, WestLockWeak, Wide ]
+
+RED_DRAGON:
+  desc: The entryway to the Red Dragon Inn is a fairly modest affair, a fairly small room with a simple wooden floor and plain brick walls. {lb} ```Doors lead inward to the north and back to the street outside southwest, while a heavy wooden counter - complete with dusty old ledger - occupies the east side.
+  exits:
+    north: RED_DRAGON_STAIRWELL
+    southwest: BERESTALL_KINGS
+  light: dim
+  name: [ The Red Dragon, inn ]
+  security: low
+  tags: [ Indoors, SouthwestLockable ]
+
+RED_DRAGON_FLOOR_2:
+  desc: The view out the large window at the south end of the hallway puts you at the level of most of the surrounding rooftops, blocking out all but the horizons and the view of the park to the southwest. The long hallway is rather dusty underfoot, in a coating of crumbled brick and sawdust. {lb} ```Several doors lead into the various inn rooms.
+  exits:
+    down: RED_DRAGON_STAIRWELL
+    east: RED_DRAGON_ROOM_RENTABLE
+    north: RED_DRAGON_ROOM_IANINA
+    northeast: RED_DRAGON_ROOM_KURTZ
+    south: RED_DRAGON_LOBBY_ROOF
+    southeast: RED_DRAGON_ROOM_204
+    up: RED_DRAGON_FLOOR_3
+  light: dim
+  name: [ Red Dragon Second Floor, second floor ]
+  security: low
+  tags: [ CanSeeOutside, EastAutoClose, EastLocked, EastLockWeak, Indoors, NorthAutoClose, NortheastAutoClose, NortheastLocked, NortheastLockWeak, NorthLocked, NorthLockWeak, SoutheastAutoClose, SoutheastLocked, SoutheastLockWeak, SouthOpenable, SouthWindow ]
+
+RED_DRAGON_FLOOR_3:
+  desc: The stairs exit on a long hallway, floorboards underfoot warped and creaking. It ends in a single window, of the same height and width of the hallway, which looks south over the lower levels of the city and allows a view from a few storeys above the surroundings. {lb} ```There are a few doors on each side of the hallway, most battered and worn, one covered in scratched graffiti.
+  exits:
+    down: RED_DRAGON_FLOOR_2
+    east: RED_DRAGON_ROOM_303
+    north: RED_DRAGON_ROOM_301
+    northeast: RED_DRAGON_ROOM_302
+    south: RED_DRAGON_LOBBY_ROOF
+    southeast: RED_DRAGON_ROOM_304
+    south: RED_DRAGON_LOBBY_ROOF
+    up: RED_DRAGON_ROOF
+  light: dim
+  name: [ Red Dragon Third Floor, third floor ]
+  security: low
+  tags: [ CanSeeOutside, EastAutoClose, EastLocked, EastLockWeak, Indoors, NorthAutoClose, NortheastAutoClose, NortheastLocked, NortheastLockWeak, NorthLocked, NorthLockWeak, SoutheastAutoClose, SoutheastLocked, SoutheastLockWeak, SouthOpenable, SouthSky, SouthWindow ]
+
+RED_DRAGON_LOBBY_ROOF:
+  desc: The roof tiles feel unsteady beneath your feet as you perch upon the slightly sloped roof that sits above the lobby area of the Red Dragon. {lb} ```The rest of the building stretches higher behind you, a single window beckoning passage back inside, while the rest of the city surrounds you to the west and south, the sound of travelers along Berestall and King's somewhat muffled by your height.
+  exits:
+    north: RED_DRAGON_FLOOR_2
+    northwest: UNFINISHED
+    southwest: BERESTALL_KINGS
+  light: dim
+  name: [ Red Dragon Lower Roof, lower roof ]
+  security: low
+  tags: [ NorthOpenable, NorthwestSky, NorthWindow, SouthwestSky ]
+
+RED_DRAGON_ROOF:
+  desc: One of the few places in the city untouched by shadows of the surrounding buildings, the roof of the Red Dragon freely gives an unimpeded view of all buildings in a fair radius. {lb} ```The tall structures of the city center reach for the clouds in the eastern distance, some capped in flame and offering black smoke to the polluted sky. Far south are the shimmering dark waters of the bay, surrounded by its docks and piers, spanned by a single bridge. The park is a straight shot to the southwest.
+  exits:
+    down: RED_DRAGON_FLOOR_3
+    northwest: UNFINISHED
+    south: RED_DRAGON_LOBBY_ROOF
+    west: UNFINISHED
+  light: dim
+  name: [ Red Dragon Roof, roof ]
+  security: low
+  tags: [ NorthwestSky3, SouthSky2, WestSky3 ]
+
+RED_DRAGON_ROOM_204:
+  desc: $INN_ROOM_RD
+  exits:
+    northwest: RED_DRAGON_FLOOR_2
+  light: dim
+  name: [ Red Dragon Inn Room, inn room ]
+  security: low
+  tags: [ CanSeeOutside, Indoors, NorthwestAutoLock, NorthwestLocked, NorthwestLockWeak, Private, SleepOK ]
+
+RED_DRAGON_ROOM_301:
+  desc: $INN_ROOM_RD
+  exits:
+    south: RED_DRAGON_FLOOR_3
+  light: dim
+  name: [ Red Dragon Inn Room, inn room ]
+  security: low
+  tags: [ CanSeeOutside, Indoors, Private, SleepOK, SouthAutoLock, SouthLocked, SouthLockWeak ]
+
+RED_DRAGON_ROOM_302:
+  desc: $INN_ROOM_RD
+  exits:
+    southwest: RED_DRAGON_FLOOR_3
+  light: dim
+  name: [ Red Dragon Inn Room, inn room ]
+  security: low
+  tags: [ CanSeeOutside, Indoors, Private, SleepOK, SouthwestAutoLock, SouthwestLocked, SouthwestLockWeak ]
+
+RED_DRAGON_ROOM_303:
+  desc: $INN_ROOM_RD
+  exits:
+    west: RED_DRAGON_FLOOR_3
+  light: dim
+  name: [ Red Dragon Inn Room, inn room ]
+  security: low
+  tags: [ CanSeeOutside, Indoors, SleepOK, WestAutoLock, WestLocked, WestLockWeak ]
+
+RED_DRAGON_ROOM_304:
+  desc: $INN_ROOM_RD
+  exits:
+    northwest: RED_DRAGON_FLOOR_3
+  light: dim
+  name: [ Red Dragon Inn Room, inn room ]
+  security: low
+  tags: [ CanSeeOutside, Indoors, NorthwestAutoLock, NorthwestLocked, NorthwestLockWeak, Private, SleepOK ]
+
+RED_DRAGON_ROOM_IANINA:
+  desc: $INN_ROOM_RD
+  exits:
+    south: RED_DRAGON_FLOOR_2
+  light: dim
+  name: [ Red Dragon Inn Room, inn room ]
+  security: low
+  tags: [ CanSeeOutside, Indoors, Private, SleepOK, SouthAutoLock, SouthLocked, SouthLockWeak ]
+
+RED_DRAGON_ROOM_KURTZ:
+  desc: $INN_ROOM_RD
+  exits:
+    southwest: RED_DRAGON_FLOOR_2
+  light: dim
+  name: [ Red Dragon Inn Room, inn room ]
+  security: low
+  tags: [ CanSeeOutside, Indoors, Private, SleepOK, SouthwestAutoLock, SouthwestLocked, SouthwestLockWeak ]
+
+RED_DRAGON_ROOM_RENTABLE:
+  desc: $INN_ROOM_RD
+  exits:
+    west: RED_DRAGON_FLOOR_2
+  light: dim
+  name: [ Red Dragon Inn Room, inn room ]
+  security: low
+  tags: [ CanSeeOutside, Indoors, SleepOK, WestAutoLock, WestLocked, WestLockWeak ]
+
+RED_DRAGON_STAIRWELL:
+  desc: Wide and fairly well lit, this set of stairs runs from the building's roof to basement, linking each of the floors and the tavern on the basement level. {lb} ```Well-worn wooden railings are set into some of the walls, lying functionless on the floor in other places, exit doors in similar states of disrepair. The lights are dimmer the farther down one goes.
+  exits:
+    down: RED_DRAGON_TAVERN
+    east: RED_DRAGON_STAFF_ROOM
+    south: RED_DRAGON
+    up: RED_DRAGON_FLOOR_2
+  light: dim
+  name: [ Red Dragon Stairwell, stairwell ]
+  security: low
+  tags: [ EastAutoClose, EastLocked, Indoors ]
+
+RED_DRAGON_STAFF_ROOM:
+  desc: A little larger than the other rooms in the inn, though not by a huge amount, this room houses two comfortable-looking beds, a writing desk and chair, and some shelves and cabinets with personal belongings. An old rug is draped on the floor partially covered by the bed, its colours faded and worn. {lb} ```The only exit lies west, through the room's single door.
+  exits:
+    west: RED_DRAGON_STAIRWELL
+  light: dim
+  name: [ Red Dragon Inn Room, private room ]
+  security: low
+  tags: [ Indoors, Private, WestAutoLock, WestLocked ]
+
+RED_DRAGON_TAVERN:
+  desc: This small basement tavern is simple and modest, yet cozy. The worn cobblestone floor is mostly clean aside from a few dark stains, and benches sit alongside three heavy wooden tables, while a few wooden stools flank the bar. A fire crackles merrily in the hearth, above which is mounted a shield bearing the insignia of a red dragon. {lb} ```A rickety staircase leads to the lobby and private rooms upstairs, and an old wooden door sits behind the bar.
+  exits:
+    north: UNFINISHED
+    up: RED_DRAGON_STAIRWELL
+  light: dim
+  name: [ The Red Dragon Tavern, tavern ]
+  security: low
+  tags: [ HideCampfireScar, Indoors, NorthOpenable, PermaCampfire, Underground ]
+
+RENASCENCE_STATION:
+  desc: You stand within a great rail station, the platforms running a city block from end to end. Its glory days must have passed, for it stands largely dormant, passenger trains arriving quite sporadically; the cargo platforms see more business, the sounds of workers echoing off the dark stone walls. {lb} ```The tracks lie to the west of the stone floored platform, its edges girded in iron. A roof slopes overhead, over the benches, ticket counters, offices and information boards. {lb} ```A large set of doors leads you east, to the street outside.
+  exits:
+    east: KINGS_RENASCENCE
+  light: bright
+  name: [ Renascence Station, station ]
+  security: low
+  tags: [ EastOpenable, Indoors, Wide, WestAutoClose, WestDoorMetal, WestOpenable ]
+
+SKYGUARD_PLATFORM:
+  desc: As if it was dropped from above, the stone platform's settled firmly within the city block-wide cluster of evergreens. The huge twin ballistae of wrought iron and sturdy dark wood reach for the sky above the tree cover - dense and deep enough the city seems it might be miles away, forgiving the encroaching plumes of smoke breaching the treetops. The platform sits about a foot off the grass below, supporting the heavy ballistae, which currently point south - the direction of the harbour. {lb} ```Stairs head down to a trail northwards, while a wide, rusted iron ring marks a passage into the ground.
+  exits:
+    down: UNFINISHED
+    north: ARROW_PARK
+  light: dim
+  name: [ Skyguard Platform, ballista platform ]
+  security: low
+  tags: [ Wide ]
+
 SPRING_LANE:
   desc: A wide gash has opened across the street. The subway has broken through, its tracks partially buried by boulders, laid half-bare to the light. It seems easy enough to slip into the subway, though if it leads any distance is anyone's guess. {lb} ```The row of buildings to the east are silhouetted against the unclean sky. As well-lit as the road is by dilapidated aether-lanterns, there is no sound to be heard at all...
   exits:
@@ -1051,3 +1320,23 @@ SPRING_LANE:
   name: [ Spring Lane, Spring ]
   security: low
   tags: [ DownNoMobRoam, SouthTripleLength, VeryWide ]
+
+YETUS_PLACE:
+  desc: The back room of Yetu's store is somewhat more homely and less cluttered than the front, though a number of crates and boxes are stacked around here and there, leaving enough room for a worn-looking bed in the corner, and a small yet functional kitchen area. {lb} ```The door to the south leads back to the store proper.
+  exits:
+    south: YETUS_SUPPLIES
+  light: dim
+  name: [ Yetu's Place, back room ]
+  security: low
+  tags: [ Indoors, Private, SleepOK, SouthLocked, SouthLockWeak ]
+
+YETUS_SUPPLIES:
+  desc: You find yourself in the front room of a general store, the floor littered with crates and heavy boxes, the walls covered in racks bearing numerous weapons, tools, and other assorted supplies. Much of the stock on offer is of little interest to you, but a few items catch your attention. The heavy, warped floorboards creak as you make your way across the shop floor, soft light cast from an aether-lantern hanging above. {lb} ```A heavy door leads further into the shop, behind a battered old counter, while a smaller door leads back out into the city.
+  exits:
+    north: YETUS_PLACE
+    southeast: BERESTALL_STREET
+  light: bright
+  name: [ Yetu's Supplies, general store ]
+  security: low
+  tags: [ Indoors, NorthLocked, SoutheastDoorShop, SoutheastLockable, SoutheastLockWeak ]
+

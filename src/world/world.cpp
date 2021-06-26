@@ -17,19 +17,21 @@
 const std::map<std::string, uint8_t>    World::LIGHT_LEVEL_MAP = { { "bright", 7 }, { "dim", 5 }, { "wilderness", 5 }, { "dark", 3 }, { "none", 0 } };
 
 // Lookup table for converting LinkTag text names into enums.
-const std::map<std::string, LinkTag>    World::LINK_TAG_MAP = { { "autoclose", LinkTag::AutoClose }, { "decline", LinkTag::Decline }, { "doormetal", LinkTag::DoorMetal },
-    { "doorshop", LinkTag::DoorShop }, { "doublelength", LinkTag::DoubleLength }, { "hidden", LinkTag::Hidden }, { "incline", LinkTag::Incline }, { "lockable", LinkTag::Lockable }, 
-    { "locked", LinkTag::Locked }, { "lockstrong", LinkTag::LockStrong }, { "lockswhenclosed", LinkTag::LocksWhenClosed }, { "lockweak", LinkTag::LockWeak },
-    { "nomobroam", LinkTag::NoMobRoam }, { "ocean", LinkTag::Ocean }, { "open", LinkTag::Open }, { "openable", LinkTag::Openable }, { "permalock", LinkTag::Permalock },
-    { "sky", LinkTag::Sky}, { "sky2", LinkTag::Sky2 }, { "sky3", LinkTag::Sky3 }, { "triplelength", LinkTag::TripleLength }, { "window", LinkTag::Window } };
+const std::map<std::string, LinkTag>    World::LINK_TAG_MAP = { { "autoclose", LinkTag::AutoClose }, { "autolock", LinkTag::AutoLock }, { "decline", LinkTag::Decline },
+    { "doormetal", LinkTag::DoorMetal }, { "doorshop", LinkTag::DoorShop }, { "doublelength", LinkTag::DoubleLength }, { "hidden", LinkTag::Hidden }, { "incline", LinkTag::Incline },
+    { "lockable", LinkTag::Lockable },  { "locked", LinkTag::Locked }, { "lockstrong", LinkTag::LockStrong }, { "lockswhenclosed", LinkTag::LocksWhenClosed },
+    { "lockweak", LinkTag::LockWeak }, { "nomobroam", LinkTag::NoMobRoam }, { "ocean", LinkTag::Ocean }, { "open", LinkTag::Open }, { "openable", LinkTag::Openable },
+    { "permalock", LinkTag::Permalock }, { "sky", LinkTag::Sky}, { "sky2", LinkTag::Sky2 }, { "sky3", LinkTag::Sky3 }, { "triplelength", LinkTag::TripleLength },
+    { "window", LinkTag::Window } };
 
 // Lookup table for converting RoomTag text names into enums.
-const std::map<std::string, RoomTag>    World::ROOM_TAG_MAP = { { "canseeoutside", RoomTag::CanSeeOutside }, { "digok", RoomTag::DigOK }, { "gamepoker", RoomTag::GamePoker },
-    { "gameslots", RoomTag::GameSlots }, { "hidecampfirescar", RoomTag::HideCampfireScar }, { "indoors", RoomTag::Indoors }, { "maze", RoomTag::Maze }, { "nexus", RoomTag::Nexus },
-    { "noexplorecredit", RoomTag::NoExploreCredit }, { "permacampfire", RoomTag::PermaCampfire }, { "private", RoomTag::Private }, { "radiationlight", RoomTag::RadiationLight },
-    { "shopbuyscontraband", RoomTag::ShopBuysContraband }, { "shoprespawningowner", RoomTag::ShopRespawningOwner }, { "sleepok", RoomTag::SleepOK }, { "trees", RoomTag::Trees },
-    { "underground", RoomTag::Underground }, { "verywide", RoomTag::VeryWide }, { "waterclean", RoomTag::WaterClean }, { "waterdeep", RoomTag::WaterDeep },
-    { "watersalt", RoomTag::WaterSalt }, { "watershallow", RoomTag::WaterShallow }, { "watertainted", RoomTag::WaterTainted }, { "wide", RoomTag::Wide } };
+const std::map<std::string, RoomTag>    World::ROOM_TAG_MAP = { { "canseeoutside", RoomTag::CanSeeOutside }, { "churchaltar", RoomTag::ChurchAltar }, { "digok", RoomTag::DigOK },
+    { "gamepoker", RoomTag::GamePoker }, { "gameslots", RoomTag::GameSlots }, { "hidecampfirescar", RoomTag::HideCampfireScar }, { "indoors", RoomTag::Indoors },
+    { "maze", RoomTag::Maze }, { "nexus", RoomTag::Nexus }, { "noexplorecredit", RoomTag::NoExploreCredit }, { "permacampfire", RoomTag::PermaCampfire },
+    { "private", RoomTag::Private }, { "radiationlight", RoomTag::RadiationLight }, { "shopbuyscontraband", RoomTag::ShopBuysContraband },
+    { "shoprespawningowner", RoomTag::ShopRespawningOwner }, { "sleepok", RoomTag::SleepOK }, { "trees", RoomTag::Trees }, { "underground", RoomTag::Underground },
+    { "verywide", RoomTag::VeryWide }, { "waterclean", RoomTag::WaterClean }, { "waterdeep", RoomTag::WaterDeep }, { "watersalt", RoomTag::WaterSalt },
+    { "watershallow", RoomTag::WaterShallow }, { "watertainted", RoomTag::WaterTainted }, { "wide", RoomTag::Wide } };
 
 // Lookup table for converting textual room security (e.g. "anarchy") to enum values.
 const std::map<std::string, Security>   World::SECURITY_MAP = { { "anarchy", Security::ANARCHY }, { "low", Security::LOW }, { "high", Security::HIGH },
@@ -48,7 +50,11 @@ World::World()
 std::string World::generic_desc(const std::string &id) const
 {
     auto it = m_generic_descs.find(id);
-    if (it == m_generic_descs.end()) throw std::runtime_error("Invalid generic description requested: " + id);
+    if (it == m_generic_descs.end())
+    {
+        core()->guru()->nonfatal("Invalid generic description requested: " + id, Guru::ERROR);
+        return "-";
+    }
     return it->second;
 }
 
@@ -94,11 +100,11 @@ void World::load_room_pool()
             if (m_room_pool.find(new_room->id()) != m_room_pool.end()) throw std::runtime_error("Room ID hash conflict: " + room_id);
 
             // The Room's long and short names.
-            if (!room_data["name"] || room_data["name"].size() < 2) core()->message("{r}Missing or invalid room name(s): " + room_id);
+            if (!room_data["name"] || room_data["name"].size() < 2) core()->guru()->nonfatal("Missing or invalid room name(s): " + room_id, Guru::ERROR);
             else new_room->set_name(room_data["name"][0].as<std::string>(), room_data["name"][1].as<std::string>());
 
             // The Room's description.
-            if (!room_data["desc"]) core()->message("{r}Missing room description: " + room_id);
+            if (!room_data["desc"]) core()->guru()->nonfatal("Missing room description: " + room_id, Guru::WARN);
             else new_room->set_desc(room_data["desc"].as<std::string>());
 
             // Links to other Rooms.
@@ -113,29 +119,29 @@ void World::load_room_pool()
             }
 
             // The light level of the Room.
-            if (!room_data["light"]) core()->message("{r}Missing room light level: " + room_id);
+            if (!room_data["light"]) core()->guru()->nonfatal("Missing room light level: " + room_id, Guru::ERROR);
             else
             {
                 const std::string light_str = room_data["light"].as<std::string>();
                 auto level_it = LIGHT_LEVEL_MAP.find(light_str);
-                if (level_it == LIGHT_LEVEL_MAP.end()) core()->message("{r}Invalid light level value: " + room_id);
+                if (level_it == LIGHT_LEVEL_MAP.end()) core()->guru()->nonfatal("Invalid light level value: " + room_id, Guru::ERROR);
                 else new_room->set_base_light(level_it->second);
             }
 
             // The security level of this Room.
-            if (!room_data["security"]) core()->message("{r}Missing room security level: " + room_id);
+            if (!room_data["security"]) core()->guru()->nonfatal("Missing room security level: " + room_id, Guru::ERROR);
             else
             {
                 const std::string sec_str = room_data["security"].as<std::string>();
                 auto sec_it = SECURITY_MAP.find(sec_str);
-                if (sec_it == SECURITY_MAP.end()) core()->message("{r}Invalid security level value: " + room_id);
+                if (sec_it == SECURITY_MAP.end()) core()->guru()->nonfatal("Invalid security level value: " + room_id, Guru::ERROR);
                 else new_room->set_security(sec_it->second);
             }
 
             // Room tags, if any.
             if (room_data["tags"])
             {
-                if (!room_data["tags"].IsSequence()) core()->message("{r}Malformed room tags: " + room_id);
+                if (!room_data["tags"].IsSequence()) core()->guru()->nonfatal("{r}Malformed room tags: " + room_id, Guru::ERROR);
                 else for (auto tag : room_data["tags"])
                 {
                     const std::string tag_str = StrX::str_tolower(tag.as<std::string>());

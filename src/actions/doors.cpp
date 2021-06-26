@@ -37,12 +37,15 @@ bool ActionDoors::open_or_close(std::shared_ptr<Mobile> mob, Direction dir, bool
         return false;
     }
 
+    // The lock code has been TEMPORARILY DISABLED while building. It will be re-enabled later, when I add a skeleton key debug item.
+    /*
     if (open && room->link_tag(dir, LinkTag::Locked))
     {
         if (is_player) core()->message("{y}You try to open it, but it appears to be {Y}locked tight{y}!");
         // todo: add fail message for NPCs
         return false;
     }
+    */
 
     const std::string door_name = room->door_name(dir);
     if (is_player) core()->message("{u}You {U}" + open_close_str + " the " + door_name + " {u}" + StrX::dir_to_name(dir, StrX::DirNameType::TO_THE) + ".");
