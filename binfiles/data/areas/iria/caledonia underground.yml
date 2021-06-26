@@ -184,7 +184,7 @@ SKYGUARD_TRENCH:
   desc: Smooth stone slopes up about eight feet to the ceiling, the floor clean. Seems you're on one end of a long trench, close to the surface end, the other vanished into darkness. The ceiling ends and one can probably climb up the sloped sides to the forest floor, dark evergreens and a darker ballista towering well above you. {lb} ```Barely visible in the gloom, a heavy metal door leads southwest.
   exits:
     east: SKYGUARD_TRENCH_CENTRAL
-    southwest: UNFINISHED
+    southwest: WHITE_STAR_ENTRYWAY
     up: SKYGUARD_PLATFORM
   light: dark
   name: [ West Skyguard Trench, trench ]

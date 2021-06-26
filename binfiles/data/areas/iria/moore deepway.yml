@@ -326,7 +326,7 @@ TUNNEL_SD_COLLAPSED:
   exits:
     east: BLOCKED
     north: TUNNEL_SD_1
-    west: UNFINISHED
+    west: WHITE_STAR_DEEPWAY
   light: dark
   name: [ Collapsed Tunnel, brick tunnel ]
   security: anarchy

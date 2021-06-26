@@ -1,0 +1,144 @@
+# rooms/iria/white star's den.yml -- The White Star's Den, hidden beneath the streets of the Forge-City Caledonia.
+# Copyright (c) 2018-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version
+
+WHITE_STAR_ARMOURY:
+  desc: This large room is divided into two distinct sides by a large, steel-topped counter close to the north door side. Past the counter, the south side of the room is filled with boxes of equipment and tools, racks of various weapons lining the walls, suits of armour hanging from a horizontal pole on one wall. The ceiling is bare, ductwork and bright aether-lights hanging high above, illuminating the armoury in a harsh, pale light.
+  exits:
+    north: WHITE_STAR_MAIN_CORRIDOR
+  light: bright
+  name: [ Armoury, armoury ]
+  security: low
+  tags: [ Indoors, NorthDoorMetal, NorthDoorShop, NorthLockable, Underground ]
+
+WHITE_STAR_BARRACKS:
+  desc: This fairly long, spacious room is the barracks for the White Star base, though there is little of interest to be seen here. The floor and ceiling are both the same metal plates as the rest of this base, while both walls and the far side are lined with identical rows of bunk beds, each uniformly featuring gray and white sheets. {lb} ```The only exit is a door leading back out to the mess hall, to the east.
+  exits:
+    east: WHITE_STAR_MESS
+  light: dim
+  name: [ Barracks, barracks ]
+  security: low
+  tags: [ EastOpenable, Indoors, SleepOK, Underground ]
+
+WHITE_STAR_DEEPWAY:
+  desc: The dull metal corridor comes to an abrupt end here, stretching off far to the west, while the east side is guarded by a pair of heavy metal doors inset with thick, semi-opaque slabs of reinforced blue glass. {lb} ```This side of the base seems more untidy than the rest, loose cables snaking across the heavy metal grate floor, a few tools and other ephemera collecting in a corner.
+  exits:
+    east: TUNNEL_SD_COLLAPSED
+    west: WHITE_STAR_EAST_CORRIDOR
+  light: dark
+  name: [ Deepway Access, corridor ]
+  security: low
+  tags: [ EastDoorMetal, EastLocked, EastLockWeak, Indoors, Underground ]
+
+WHITE_STAR_EAST_CORRIDOR:
+  desc: The east-west corridor continues to stretch the length of the underground base, though you find yourself nearing the end of the east side. {lb} ```The metal grates beneath your feet clank noisily as you walk, the gloom beneath hinting at more hidden bundles of cable and thick, winding pipes. {lb} ```Aside from what looks like some papers of engineering notes taped to one wall, there's little of interest about this corridor beyond the heavy metal door to the south.
+  exits:
+    east: WHITE_STAR_DEEPWAY
+    south: WHITE_STAR_TRAINING
+    west: WHITE_STAR_MAIN_CORRIDOR
+  light: dark
+  name: [ East Corridor, corridor ]
+  security: low
+  tags: [ Indoors, SouthDoorMetal, SouthOpenable, Underground ]
+
+WHITE_STAR_ENTRYWAY:
+  desc: Crumbling old stone walls line this fairly small room, perhaps originally some sort of storage closet or maintenance area, a pitted metal door leading out to the northeast. {lb} ```Perhaps of more interest is the hole carved into the ancient floor, a sturdy-looking ladder leading downward.
+  exits:
+    down: WHITE_STAR_MAIN_CORRIDOR
+    northeast: SKYGUARD_TRENCH
+  light: none
+  name: [ White Star's Den Entryway, entryway ]
+  security: anarchy
+  tags: [ Indoors, NortheastDoorMetal, NortheastLocked, Underground ]
+
+WHITE_STAR_FACILITIES:
+  desc: As grimly utilitarian as the rest of the base, the facilities follow suit with their uniform, brutalist style. The far end of the room houses a large communal shower, the west side of the room offers numerous cubicle toilets, and the central area is occupied by a changing room of benches and coat racks. {lb} ```The only exit from this area is a door to the south, leading back to the mess hall.
+  exits:
+    south: WHITE_STAR_MESS
+  light: dim
+  name: [ Facilities, facilities ]
+  security: low
+  tags: [ Indoors, SouthOpenable, Underground ]
+
+WHITE_STAR_JUNCTION:
+  desc: The west side of the long east-west corridor which spans the base ends abruptly here, the three walls all adorned with a heavy bulkhead door leading further inward. {lb} ```Signs above the doors indicate the destinations -- the mess hall to the north, a storage area to the south, while the western door leads to the office of Stovall, the leader of this group.
+  exits:
+    east: WHITE_STAR_WEST_CORRIDOR
+    north: WHITE_STAR_MESS
+    south: UNFINISHED
+    west: WHITE_STAR_STOVALL_OFFICE
+  light: dim
+  name: [ Corridor Junction, junction ]
+  security: low
+  tags: [ Indoors, NorthDoorMetal, NorthOpenable, SouthDoorMetal, SouthOpenable, Underground, WestDoorMetal, WestOpenable ]
+
+WHITE_STAR_KITCHEN:
+  desc: This fairly large kitchen area is nontheless surprisingly cramped, rows of ovens, fryers, sinks and other cooking equipment filling the middle of the room, cupboards and shelves around the walls, with overhead metal bars upon which hang pots, pans, knives, ladles, and other kitchen paraphernalia. {lb} ```The only exit seems to be southwest, back to the mess hall.
+  exits:
+    southwest: WHITE_STAR_MESS
+  light: bright
+  name: [ Kitchen, kitchen ]
+  security: low
+  tags: [ HideCampfireScar, Indoors, PermaCampfire, SouthwestOpenable, Underground ]
+
+WHITE_STAR_MAIN_CORRIDOR:
+  desc: A long east-west metal corridor stretches the length of the White Star's den, the walls bare metal and exposed pipework, bearing the occasional stenciled marking of numbers or a five-pointed white star. Heavy bundles of cables hang low overhead, and the floor consists of metal grates, beneath which thick pipes run through the gloom. {lb} ```A sturdy-looking ladder leads upward to a hatch above, while imposing metal doors occupy the north and south walls.
+  exits:
+    east: WHITE_STAR_EAST_CORRIDOR
+    north: WHITE_STAR_SHRINE
+    south: WHITE_STAR_ARMOURY
+    west: WHITE_STAR_WEST_CORRIDOR
+    up: WHITE_STAR_ENTRYWAY
+  light: dark
+  name: [ White Star's Den, corridor ]
+  security: low
+  tags: [ Indoors, NorthDoorMetal, NorthLockable, SouthDoorMetal, SouthLockable, Underground ]
+
+WHITE_STAR_MESS:
+  desc: Spacious and well-lit yet thoroughly unremarkable, the mess hall of the White Star's den is occupied almost entirely by a dozen or so tables ringed by uncomfortable-looking chairs. Thick beams crossing the ceiling above carry bright aether-lanterns, illuminating the area in a sterile white haze. {lb} ```Several doors lead away from this area -- barracks to the west, facilities to the north, kitchen to the northeast, and a heavy bulkhead door leading back out into the metal corridor to the south.
+  exits:
+    north: WHITE_STAR_FACILITIES
+    northeast: WHITE_STAR_KITCHEN
+    south: WHITE_STAR_JUNCTION
+    west: WHITE_STAR_BARRACKS
+  light: bright
+  name: [ Mess Hall, mess hall ]
+  security: low
+  tags: [ Indoors, NortheastOpenable, NorthOpenable, SouthDoorMetal, SouthOpenable, Underground, WestOpenable, Wide ]
+
+WHITE_STAR_SHRINE:
+  desc: The heady scent of incense hangs in the air as you enter this dimly-lit room, the walls draped with heavy, crimson-dyed curtains, the bare metal floor largely covered in an ancient rug. This seems to be a place of worship, a few simple wooden pews facing a makeshift altar at the far side, behind which a dark stone statue of a hooded figure looms. {lb} ```The only visible exit is back the way you came.
+  exits:
+    south: WHITE_STAR_MAIN_CORRIDOR
+  light: dark
+  name: [ Rakver's Shrine, shrine ]
+  security: low
+  tags: [ ChurchAltar, Indoors, SouthDoorMetal, SouthOpenable, Underground ]
+
+WHITE_STAR_STOVALL_OFFICE:
+  desc: The White Star leader's office is smaller and less impressive than you'd expect it to be. The same heavy metal walls and floor as the rest of the facility, along with a large and hefty-looking gray desk upon which rest some papers and other ephemera, and a large leather chair sitting behind it. The back walls behind the desk are function over form -- locked filing cabinets and cupboards concealing unknown secrets. {lb} ```The only exit is a bulky door leading back to the corridor, eastward.
+  exits:
+    east: WHITE_STAR_JUNCTION
+  light: bright
+  name: [ Stovall's Office, office ]
+  security: low
+  tags: [ EastDoorMetal, EastOpenable, Indoors, Underground ]
+
+WHITE_STAR_TRAINING:
+  desc: This spacious, well-lit room is walled by dull, lifeless stones on all sides but the metal bulkheads of the northern wall, a heavy door providing the only exit. {lb} ```Aether-lanterns are concealed above beneath heavy plates of frosted glass, illuminating the area in a diffuse glow.
+  exits:
+    north: WHITE_STAR_EAST_CORRIDOR
+  light: bright
+  name: [ Training Room, training room ]
+  security: low
+  tags: [ Indoors, NorthDoorMetal, NorthOpenable, Underground ]
+
+WHITE_STAR_WEST_CORRIDOR:
+  desc: The long east-west corridor, the spine of the White Star's den, nears its end here, a number of doors visible a little way further to the west. {lb} ```A number of heavy-looking metal crates have been stacked haphazardly against the northern wall, while the only other thing of interest is another tough bulkhead door to the south.
+  exits:
+    east: WHITE_STAR_MAIN_CORRIDOR
+    south: UNFINISHED
+    west: WHITE_STAR_JUNCTION
+  light: dim
+  name: [ West Corridor, corridor ]
+  security: low
+  tags: [ Indoors, SouthDoorMetal, SouthOpenable, Underground ]
