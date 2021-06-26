@@ -1,0 +1,208 @@
+# areas/iria/the pit.yml -- The Pit, located in the Forge-City Caledonia.
+# Copyright (c) 2016-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+
+PIT_1_C:
+  desc: Rubble, debris and rusting old garbage is strewn across the floor in this dilapidated warehouse room, the walls cracked and crumbling. {lb} ```Nearby passages delve deeper into the gloomy interior, while a rickety ladder leads down into an ominous hole in the ground.
+  exits:
+    down: PIT_2_C
+    east: PIT_1_E
+    north: PIT_1_N
+    south: PIT_1_S
+    west: PIT_1_W
+  light: none
+  name: [ "The Pit: Level 1", pit ]
+  security: anarchy
+  tags: [ Indoors, DownNoMobRoam ]
+
+PIT_1_E:
+  desc: "$THE_PIT"
+  exits:
+    north: PIT_1_NE
+    south: PIT_1_SE
+    west: PIT_1_C
+  light: none
+  name: [ "The Pit: Level 1", pit ]
+  security: anarchy
+  tags: [ Indoors ]
+
+PIT_1_N:
+  desc: "$THE_PIT"
+  exits:
+    east: PIT_1_NE
+    south: PIT_1_C
+    west: PIT_1_NW
+  light: none
+  name: [ "The Pit: Level 1", pit ]
+  security: anarchy
+  tags: [ Indoors ]
+
+PIT_1_NE:
+  desc: "$THE_PIT"
+  exits:
+    west: PIT_1_N
+    south: PIT_1_E
+  light: none
+  name: [ "The Pit: Level 1", pit ]
+  security: anarchy
+  tags: [ Indoors ]
+
+PIT_1_NW:
+  desc: "$THE_PIT"
+  exits:
+    east: PIT_1_N
+    south: PIT_1_W
+  light: none
+  name: [ "The Pit: Level 1", pit ]
+  security: anarchy
+  tags: [ Indoors ]
+
+PIT_1_S:
+  desc: Rubble, debris and rusting old garbage is strewn across the floor in this dilapidated warehouse room, the walls cracked and crumbling. {lb} ```A heavy metal door leads back south the lobby, while other passages delve deeper into the gloomy interior.
+  exits:
+    east: PIT_1_SE
+    north: PIT_1_C
+    south: THE_PIT
+    west: PIT_1_SW
+  light: none
+  name: [ "The Pit: Level 1", pit ]
+  security: anarchy
+  tags: [ Indoors, SouthLockable, SouthDoorMetal, SouthNoMobRoam ]
+
+PIT_1_SE:
+  desc: "$THE_PIT"
+  exits:
+    north: PIT_1_E
+    west: PIT_1_S
+  light: none
+  name: [ "The Pit: Level 1", pit ]
+  security: anarchy
+  tags: [ Indoors ]
+
+PIT_1_SW:
+  desc: "$THE_PIT"
+  exits:
+    east: PIT_1_S
+    north: PIT_1_W
+  light: none
+  name: [ "The Pit: Level 1", pit ]
+  security: anarchy
+  tags: [ Indoors ]
+
+PIT_1_W:
+  desc: "$THE_PIT"
+  exits:
+    east: PIT_1_C
+    north: PIT_1_NW
+    south: PIT_1_SW
+  light: none
+  name: [ "The Pit: Level 1", pit ]
+  security: anarchy
+  tags: [ Indoors ]
+
+PIT_2_C:
+  desc: Rubble, debris and rusting old garbage is strewn across the floor in this dilapidated warehouse room, the walls cracked and crumbling. Nearby passages delve deeper into the gloomy interior, while a rickety ladder leads both up and down into ominous holes in the ceiling and ground.
+  exits:
+    down: UNFINISHED
+    east: PIT_2_E
+    north: PIT_2_N
+    south: PIT_2_S
+    up: PIT_1_C
+    west: PIT_2_W
+  light: none
+  name: [ "The Pit: Level 2", pit ]
+  security: anarchy
+  tags: [ Indoors, DownNoMobRoam, UpNoMobRoam ]
+
+PIT_2_E:
+  desc: "$THE_PIT"
+  exits:
+    north: PIT_2_NE
+    south: PIT_2_SE
+    west: PIT_2_C
+  light: none
+  name: [ "The Pit: Level 2", pit ]
+  security: anarchy
+  tags: [ Indoors ]
+
+PIT_2_N:
+  desc: "$THE_PIT"
+  exits:
+    east: PIT_2_NE
+    south: PIT_2_C
+    west: PIT_2_NW
+  light: none
+  name: [ "The Pit: Level 2", pit ]
+  security: anarchy
+  tags: [ Indoors ]
+
+PIT_2_NE:
+  desc: "$THE_PIT"
+  exits:
+    west: PIT_2_N
+    south: PIT_2_E
+  light: none
+  name: [ "The Pit: Level 2", pit ]
+  security: anarchy
+  tags: [ Indoors ]
+
+PIT_2_NW:
+  desc: "$THE_PIT"
+  exits:
+    east: PIT_2_N
+    south: PIT_2_W
+  light: none
+  name: [ "The Pit: Level 2", pit ]
+  security: anarchy
+  tags: [ Indoors ]
+
+PIT_2_S:
+  desc: "$THE_PIT"
+  exits:
+    east: PIT_2_SE
+    north: PIT_2_C
+    west: PIT_2_SW
+  light: none
+  name: [ "The Pit: Level 2", pit ]
+  security: anarchy
+  tags: [ Indoors ]
+
+PIT_2_SE:
+  desc: "$THE_PIT"
+  exits:
+    north: PIT_2_E
+    west: PIT_2_S
+  light: none
+  name: [ "The Pit: Level 2", pit ]
+  security: anarchy
+  tags: [ Indoors ]
+
+PIT_2_SW:
+  desc: "$THE_PIT"
+  exits:
+    east: PIT_2_S
+    north: PIT_2_W
+  light: none
+  name: [ "The Pit: Level 2", pit ]
+  security: anarchy
+  tags: [ Indoors ]
+
+PIT_2_W:
+  desc: "$THE_PIT"
+  exits:
+    east: PIT_2_C
+    north: PIT_2_NW
+    south: PIT_2_SW
+  light: none
+  name: [ "The Pit: Level 2", pit ]
+  security: anarchy
+  tags: [ Indoors ]
+
+THE_PIT:
+  desc: What was once likely a fairly large warehouse is now mostly rubble, though a patchwork repair job is keeping the roof up for the moment. {lb} ```Aside from a few old crates and half-broken furniture strewn around, there isn't a great deal to see here; one heavy metal door leads south to the street outside, while the other to the north is more battered and rusted, flaking red paint scrawled across it declaring that this is the entrance to "The Pit".
+  exits:
+    north: PIT_1_S
+    south: BERESTALL_END
+  light: dark
+  name: [ "The Pit: Entryway", pit entrance ]
+  security: low
+  tags: [ Indoors, NorthDoorMetal, NorthLockable, NorthNoMobRoam, SouthDoorMetal, SouthLockable ]

@@ -30,7 +30,7 @@ BERESTALL_END:
   desc: There is the park to the east, a street, a solid wall of buildings, then as one heads westward... nothing. The city, the civilian eye will notice, has been flattened from that wall of buildings to the sea four miles distant. Rising up to the west are the foundations of a post-apocalyptic dystopia. {lb} ```The road ends here, abruptly, the paving stones underfoot melted and torn to shreds. Buildings still rise, up to twelve feet at best, above the broken sidewalks and piles of brick and shingle that litter the ground. The wide dirt track that was once a street continues on to the west.
   exits:
     east: BERESTALL_STREET_2
-    north: UNFINISHED
+    north: THE_PIT
     west: DESOLATION_ALLEY_EAST
   light: dim
   name: [ Berestall's End, Berestall ]
