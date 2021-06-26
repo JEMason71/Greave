@@ -1,0 +1,14 @@
+# areas/iria/kedozu mountain.yml -- Kedozu Mountain, north of Guka Pass.
+# Copyright (c) 2019-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+
+FOOT_OF_THE_MOUNTAIN:
+  desc: You stand at the foot of the mountain, verdant grassy plains dotted with trees surrounding you while the pale, rocky cliffs to the north reach high into the sky above. A simple trail leads east-west around the base of the colossal mountain, while another well-traveled path branches southward. {lb} ```A small cave entrance at the base of the mountain leads inward, beckoning into the gloom.
+  exits:
+    east: UNFINISHED
+    north: UNFINISHED
+    south: GUKA_PASS_1
+    west: UNFINISHED
+  light: wilderness
+  name: [ Foot of the Mountain, mountain trail ]
+  security: anarchy
+  tags: [ DigOK, SouthDoubleLength, Trees, VeryWide ]

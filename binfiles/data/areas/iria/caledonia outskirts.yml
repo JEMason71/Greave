@@ -319,7 +319,7 @@ QUEENS_3:
 QUEENS_RECLAIMED:
   desc: And here ends the long stretch of road, the cracked stone torn and rent asunder as if by some natural disaster long ago, the ragged edges disappearing into grassy plains. It looks as though the land itself simply swallowed the road whole, though whatever caused this to occur must have happened long ago. {lb} ```Past the road's end, the hilly terrain is green and verdant, a scattering of trees forming into dense woodland to the northeast, while to the north the land arches upward into a steep cliff, a passage visible between crumbling, rocky walls.
   exits:
-    north: UNFINISHED
+    north: GUKA_PASS_11
     southwest: QUEENS_3
   light: wilderness
   name: [ Reclaimed By Nature, reclaimed road ]
