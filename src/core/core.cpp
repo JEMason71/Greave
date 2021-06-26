@@ -335,10 +335,16 @@ void Core::title()
         }
     }
 
-    m_world = std::make_shared<World>();
-    if (save_exists.at(m_save_slot - 1)) load(m_save_slot);
+    if (save_exists.at(m_save_slot - 1))
+    {
+        m_guru_meditation->cache_nonfatal();
+        m_world = std::make_shared<World>();
+        load(m_save_slot);
+        m_guru_meditation->dump_nonfatal();
+    }
     else
     {
+        m_world = std::make_shared<World>();
         m_world->player()->set_location("OUTSIDE_QUEENS_GATE");
         ActionLook::look(m_world->player());
     }

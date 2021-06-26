@@ -29,7 +29,8 @@ const std::string   Guru::FILENAME_LOG =    "log.txt";  // The default name of t
 void guru_intercept_signal(int sig) { core()->guru()->intercept_signal(sig); }
 
 // Opens the output log for messages.
-Guru::Guru(std::string log_filename) : m_cascade_count(0), m_cascade_failure(false), m_cascade_timer(std::time(0)), m_console_ready(false), m_dead_already(false)
+Guru::Guru(std::string log_filename) : m_cache_nonfatal(false), m_cascade_count(0), m_cascade_failure(false), m_cascade_timer(std::time(0)), m_console_ready(false),
+    m_dead_already(false)
 {
     if (!log_filename.size()) log_filename = Guru::FILENAME_LOG;
     FileX::delete_file(log_filename);
@@ -49,8 +50,28 @@ Guru::~Guru()
     m_syslog.close();
 }
 
+// Enables or disables cache of nonfatal error messages.
+void Guru::cache_nonfatal(bool cache)
+{
+    m_cache_nonfatal = cache;
+    if (!cache) m_nonfatal_cache.clear();
+}
+
 // Tells Guru that we're ready to render Guru error messages on-screen.
 void Guru::console_ready(bool is_ready) { m_console_ready = is_ready; }
+
+// Dumps all cached nonfatal messages to the console.
+void Guru::dump_nonfatal()
+{
+    if (!m_console_ready)
+    {
+        nonfatal("Attempt to dump nonfatal errors before console is initialized!", Guru::WARN);
+        return;
+    }
+    for (auto message : m_nonfatal_cache)
+        core()->message(message);
+    cache_nonfatal(false);
+}
 
 bool Guru::is_dead() const { return m_dead_already; } // Checks if the system has halted.
 
@@ -170,4 +191,5 @@ void Guru::nonfatal(std::string error, int type)
         case Guru::CRITICAL: error = "{r}Critical Error: " + error; break;
     }
     core()->message(error);
+    if (m_cache_nonfatal) m_nonfatal_cache.push_back(error);
 }

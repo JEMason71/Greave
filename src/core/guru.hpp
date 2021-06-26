@@ -12,7 +12,9 @@ class Guru
 public:
             Guru(std::string log_filename = "");            // Opens the output log for messages.
             ~Guru();                                        // Closes the Guru log file.
+    void    cache_nonfatal(bool cache = true);              // Enables or disables cache of nonfatal error messages.
     void    console_ready(bool is_ready = true);            // Tells Guru that we're ready to render Guru error messages on-screen.
+    void    dump_nonfatal();                                // Dumps all cached nonfatal messages to the console.
     bool    is_dead() const;                                // Checks if the system has halted.
     void    halt(const std::string &error);                 // Stops the game and displays an error messge.
     void    halt(std::exception &e);                        // As above, but with an exception instead of a string.
@@ -26,12 +28,14 @@ public:
     static const int    CRITICAL;   // Critical system failure.
 
 private:
+    bool            m_cache_nonfatal;   // Temporarily caches nonfatal error messages.
     int             m_cascade_count;    // Keeps track of rapidly-occurring, non-fatal error messages.
     bool            m_cascade_failure;  // Is a cascade failure in progress?
     unsigned int    m_cascade_timer;    // Timer to check the speed of non-halting Guru warnings, to prevent cascade locks.
     bool            m_console_ready;    // Have we fully initialized the BLT console yet?
     bool            m_dead_already;     // Have we already died? Is this crash within the Guru subsystem?
     std::string     m_last_log_message; // Records the last log message, to avoid spamming the log with repeats.
+    std::vector<std::string>    m_nonfatal_cache;   // Cache of nonfatal error messages.
     std::ofstream   m_syslog;           // The system log file.
 
     static const int    CASCADE_THRESHOLD;          // The amount cascade_count can reach within CASCADE_TIMEOUT seconds before it triggers an abort screen.
