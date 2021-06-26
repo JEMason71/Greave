@@ -34,6 +34,7 @@ enum class LinkTag : uint16_t {
     Incline,            // This link also leads upward. [CURRENTLY UNUSED]
     Decline,            // This link also leads downward. [CURRENTLY UNUSED]
     NoMobRoam,          // NPCs should not roam through this exit. [CURRENTLY UNUSED]
+    NoBlockExit,        // NPCs should not block the player passing this way, even if they're going to a private room. [CURRENTLY UNUSED]
 };
 
 enum class RoomTag : uint16_t {
@@ -69,6 +70,7 @@ enum class RoomTag : uint16_t {
     ChurchAltar,        // This room is a church altar, we can respawn here. [CURRENTLY UNUSED]
     Gross,              // This room is disgusting, and can trigger sanity effects. [CURRENTLY UNUSED]
     Smelly,             // As with the Gross tag, but in this case the effect is triggered by smell, not sight. [CURRENTLY UNUSED]
+    HeatedInterior,     // Is this interior area heated? [CURRENTLY UNUSED]
 };
 
 enum class Security : uint8_t { ANARCHY, LOW, HIGH, SANCTUARY, INACCESSIBLE };

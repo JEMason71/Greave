@@ -1,0 +1,121 @@
+# areas/iria/eagle's watch.yml -- Eagle's Watch, a small Indigo Guard outpost in northern Guka Pass.
+# Copyright (c) 2019-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+
+EAGLE_WATCH_BUNKHOUSE:
+  desc: This long wooden building is comfortable and cozy, the main room decorated by a simple rug in front of a crackling fireplace, a few wooden chairs arranged around the hearth. Hunting trophies hang on the walls, pelts and heads of beasts you can't identify. {lb} ```The structure opens wider to the west, leading to a large barracks-like room with several simple bunk-beds arranged around the walls.
+  exits:
+    east: EAGLE_WATCH_W
+    northwest: EAGLE_WATCH_BUNKHOUSE_3
+    west: EAGLE_WATCH_BUNKHOUSE_2
+  light: bright
+  name: [ Eagle's Watch Bunkhouse, bunkhouse ]
+  security: low
+  tags: [ CanSeeOutside, EastOpenable, EastLocked, EastLockWeak, HideCampfireScar, Indoors, PermaCampfire, Private ]
+
+EAGLE_WATCH_BUNKHOUSE_2:
+  desc: The south side of the bunkhouse is occupied by several sets of bunk beds, between which lie simple wooden storage lockers for personal belongings. The beds are simple yet clean, several offering warm fur blankets in shades of brown and grey. {lb} ```The bunkroom extends to the north, while eastward is a crackling fireplace with comfortable seating.
+  exits:
+    east: EAGLE_WATCH_BUNKHOUSE
+    north: EAGLE_WATCH_BUNKHOUSE_3
+  light: dim
+  name: [ Eagle's Watch Bunkhouse, bunkhouse ]
+  security: low
+  tags: [ EastNoBlockExit, HeatedInterior, Indoors, Private, SleepOK ]
+
+EAGLE_WATCH_BUNKHOUSE_3:
+  desc: The north side of the bunkhouse is an oddly triangular room, yet the most has been made of the space by carefully positioning rows of bunk beds against the sloping walls. A few simple wooden lockers stand between the beds, doubtless containing personal belongings. {lb} ```The building narrows to the southeast, a communal seating area near the front door.
+  exits:
+    south: EAGLE_WATCH_BUNKHOUSE_2
+    southeast: EAGLE_WATCH_BUNKHOUSE
+  light: dim
+  name: [ Eagle's Watch Bunkhouse, bunkhouse ]
+  security: low
+  tags: [ HeatedInterior, Indoors, Private, SleepOK, SoutheastNoBlockExit ]
+
+EAGLE_WATCH_C:
+  desc: The middle of this rocky plateau is dominated by a large, roaring campfire, casting flickering shadows around the camp, several lightweight chairs arranged around the fire. {lb} ```West, north and south of here you see wooden buildings nestled up against the curved edge of the cliff-side, while the wilderness lies to the east.
+  exits:
+    east: EAGLE_WATCH_E
+    north: EAGLE_WATCH_N
+    south: EAGLE_WATCH_S
+    west: EAGLE_WATCH_W
+  light: bright
+  name: [ Eagle's Watch, campfire ]
+  security: low
+  tags: [ DigOK, HideCampfireScar, PermaCampfire, Wide ]
+
+EAGLE_WATCH_E:
+  desc: A fairly sizeable plateau stretches out around you, surrounded by cliff walls to the west, the dirt ground spotted with tiny weeds and stubborn grasses. {lb} ```A large campfire burns in the middle of the camp to the west, while beyond it, you can see several wooden buildings.
+  exits:
+    east: GUKA_PASS_CLIFF_EDGE
+    northwest: EAGLE_WATCH_N
+    southwest: EAGLE_WATCH_S
+    west: EAGLE_WATCH_C
+  light: wilderness
+  name: [ Eagle's Watch, camp ]
+  security: low
+  tags: [ DigOK, Wide ]
+
+EAGLE_WATCH_N:
+  desc: North of the campfire which sits central to the camp, the rough walls of the cliff face close in around you. {lb} ```A sturdy wooden building stands west of here, and through the small windows it appears to be some sort of trading post, stocked with various wares.
+  exits:
+    northwest: EAGLE_WATCH_TRADING_POST
+    south: EAGLE_WATCH_C
+    southeast: EAGLE_WATCH_E
+    southwest: EAGLE_WATCH_W
+  light: wilderness
+  name: [ Eagle's Watch, camp ]
+  security: low
+  tags: [ DigOK, NorthwestLockable, Wide ]
+
+EAGLE_WATCH_S:
+  desc: The south side of the plateau faces a curved, rocky wall, barren aside from a few scatted patches of moss and lichen. A squat wooden building has been erected against the wall, its walls offering no windows, merely a single heavy door - if you had to guess, it looks like a storehouse of sorts. {lb} ```The rest of the camp lies north, a flickering campfire offering warmth and light.
+  exits:
+    north: EAGLE_WATCH_C
+    northeast: EAGLE_WATCH_E
+    northwest: EAGLE_WATCH_W
+    southwest: EAGLE_WATCH_STOREHOUSE
+  light: wilderness
+  name: [ Eagle's Watch, camp ]
+  security: low
+  tags: [ DigOK, SouthwestLocked, SouthwestLockStrong, Wide ]
+
+EAGLE_WATCH_STOREHOUSE:
+  desc: This squat wooden building is lit only from the light that creeps in through cracks in the wooden walls and the doorway, illuminating tiny motes of dust hanging in the still air. {lb} ```Much of the space is empty, but a number of large, sealed wooden crates and barrels lay stacked up against the far wall, along with several heavy burlap sacks. One crate has been left open, its heavy lid resting against its side.
+  exits:
+    northeast: EAGLE_WATCH_S
+  light: dark
+  name: [ Eagle's Watch Storehouse, storehouse ]
+  security: low
+  tags: [ NortheastLocked, NortheastLockStrong, Indoors, Private ]
+
+EAGLE_WATCH_TRADING_POST:
+  desc: Scents of oil, leather and freshly-cut wood are strong in the air as you enter the trading post. The south side of the room dominated by a large wooden counter littered with all sorts of useful goods - food, survival supplies, ammunition. Various pieces of armour and weapons hang on the walls, and more valuable merchandise occupies the wall behind the counter. {lb} ```The exit lies southeast, while behind the counter is a smaller door.
+  exits:
+    south: EAGLE_WATCH_TRADING_POST_STOREROOM
+    southeast: EAGLE_WATCH_N
+  light: dim
+  name: [ Eagle's Watch Trading Post, trading post ]
+  security: low
+  tags: [ CanSeeOutside, Indoors, SoutheastDoorShop, SoutheastLockable, SouthLocked ]
+
+EAGLE_WATCH_TRADING_POST_STOREROOM:
+  desc: This small back room has no windows, lit only by a single dim bulb hanging from the ceiling. The walls of the back room are occupied by shelves loaded with surplus supplies, along with a number of sealed wooden crates stacked near the far wall.
+  exits:
+    north: EAGLE_WATCH_TRADING_POST
+  light: dark
+  name: [ Trading Post Storeroom, storeroom ]
+  security: low
+  tags: [ Indoors, NorthLocked, Private ]
+
+EAGLE_WATCH_W:
+  desc: The west side of the camp is hemmed in at all sides, the rocky cliff wall curving in to enclose the plateau, wooden buildings standing proudly upon the dirt ground. {lb} ```The large building to the west seems to be a bunkhouse of sorts, while only the sides are visible of the structures north and south.
+  exits:
+    east: EAGLE_WATCH_C
+    northeast: EAGLE_WATCH_N
+    southeast: EAGLE_WATCH_S
+    west: EAGLE_WATCH_BUNKHOUSE
+  light: wilderness
+  name: [ Eagle's Watch, camp ]
+  security: low
+  tags: [ DigOK, WestLocked, WestLockWeak, Wide ]

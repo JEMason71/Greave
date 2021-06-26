@@ -139,7 +139,7 @@ GUKA_PASS_CLIFF_EDGE:
     northeast: GUKA_PASS_3
     south: GUKA_PASS_INCLINE_U
     southeast: GUKA_PASS_4
-    west: UNFINISHED
+    west: EAGLE_WATCH_E
   light: wilderness
   name: [ Cliff's Edge, incline ]
   security: anarchy
