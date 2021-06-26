@@ -87,7 +87,7 @@ SEWER_BERESTALL_CHURCH:
 SEWER_BERESTALL_KINGS:
   desc: The sewer tunnel seems to come to an end here, the water-stained bricks leading off to the southwest, a smaller passage leading to the east via a thick, rusting iron grate. Fixed to the wall is a rather battered metal ladder leading up to a grate above, while a flight of stone steps leads up to the north. {lb} ```There seems to be little else of interest here, besides some old graffiti scratched into a nearby wall - it's so old you can barely make out more than the letters 'L' and 'K'.
   exits:
-    east: UNFINISHED
+    east: MOORE_ACCESS
     north: SEWER_BRICK_TUNNEL
     southwest: SEWER_ARROW_PARK
     up: BERESTALL_KINGS

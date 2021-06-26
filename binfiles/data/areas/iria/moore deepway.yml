@@ -1,0 +1,333 @@
+# areas/iria/moore deepway.yml -- The Moore Deepway section beneath the Forge-City Caledonia.
+# Copyright (c) 2016-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+
+MOORE_ACCESS:
+  desc: "This dilapidated tunnel comes to a fairly abrupt end to the east, the brick wall giving way to a disarray of debris from a long-ago cave-in, while a glimmer of light can be seen past a rusted old iron grate leading to a wider section of tunnel to the west. {lb} ```Perhaps more interesting is what lies below: a rough-hewn, circular tunnel heads down into the gloom, a rickety ladder bolted to the side of the vertical shaft, while a tarnished metal plate attached to the wall nearby informs you that this passage leads to something called the Moore Deepway."
+  exits:
+    down: MOORE_ENTRANCE
+    west: SEWER_BERESTALL_KINGS
+  light: dark
+  name: [ Moore Deepway Access, deepway access ]
+  security: anarchy
+  tags: [ Indoors, Underground, WestDoorMetal, WestOpenable ]
+
+MOORE_CABLE_ROOM:
+  desc: This stone room was likely once some sort of important maintenance access -- heavy bundles of rusting cables cover the west wall, leading from floor to ceiling, while part-way up a corroded metal box hangs open to reveal broken fuses and other mechanical parts long-since lost to age. {lb} ```A moss-green door, the paint flecked and marred, leads northwest, while a ragged hole around waist-height in the stone wall to the south allows a claustrophobic crawl-space into a dirt tunnel.
+  exits:
+    northeast: MOORE_JUNCTION
+    south: TUNNEL_SD_5
+  light: none
+  name: [ Maintenance Room, maintenance ]
+  security: anarchy
+  tags: [ Indoors, NortheastDoorMetal, NortheastOpenable, SouthDoubleLength, Underground ]
+
+MOORE_CRUMBLING_TUNNEL:
+  desc: "You've reached the end of the line: while this rounded train tunnel once continued much further to the west, it's long-since been blocked by a partial cave-in and general debris. You can see gloom beyond the implacable chunks of jagged stone, but there's no way to get through. {lb} ```The passage back east is clear, however, as are a smaller service tunnel to the north, and a heavy metal door with peeling moss-green paint mounted in the curved wall to the south."
+  exits:
+    east: MOORE_JUNCTION
+    north: UNFINISHED
+    south: MOORE_NEXUS
+    west: BLOCKED
+  light: none
+  name: [ End of the Line, tunnel end ]
+  security: anarchy
+  tags: [ DigOK, EastDoubleLength, Indoors, SouthDoorMetal, SouthNoMobRoam, SouthOpenable, Underground, Wide ]
+
+MOORE_ENTRANCE:
+  desc: What was once an underground train tunnel is now a cold, unmoving reminder of its former glory. Rusting tracks and rotting wooden ties stretch off into the gloom both east and west, the rounded tunnel flanked by thick, tangled bundles of ancient cables, its stone walls flecked with clinging remnants of peeling paint. {lb} ```Aside from the tunnel, a fairly narrow shaft leads directly upward to light above, a rickety-looking metal ladder mounted on the wall.
+  exits:
+    east: MOORE_TUNNEL
+    up: MOORE_ACCESS
+    west: MOORE_JUNCTION
+  light: none
+  name: [ Moore Deepway Entrance, deepway entrance ]
+  security: anarchy
+  tags: [ Indoors, Underground, Wide ]
+
+MOORE_JUNCTION:
+  desc: "The wide, round-roofed train tunnel continues into chilling gloom both east and west, the train tracks rusted and broken in parts from decades of neglect. The paint-flecked walls are covered in dusty bundles of ancient cables and rusted old pipes that seem to come and go as they please, though a few openings are apparent: {lb} ```A rust-marred, moss-green door leads to the southwest, while the wall to the north has eroded and crumbled, a narrow tunnel leading through a tangled mass of dilapidated cables."
+  exits:
+    east: MOORE_ENTRANCE
+    north: UNFINISHED
+    southwest: MOORE_CABLE_ROOM
+    west: MOORE_CRUMBLING_TUNNEL
+  light: none
+  name: [ Moore Deepway Tunnel, east-west tunnel ]
+  security: anarchy
+  tags: [ Indoors, NorthDoubleLength, SouthwestDoorMetal, SouthwestOpenable, Underground, WestDoubleLength, Wide ]
+
+MOORE_MAZE_1:
+  desc: "$MAZE_MOORE"
+  exits:
+    east: MOORE_MAZE_3
+    north: MOORE_TUNNEL_2
+    west: MOORE_MAZE_2
+  light: none
+  name: [ Maze of Twisty Little Passages, maze ]
+  security: anarchy
+  tags: [ DigOK, Indoors, Maze, Underground ]
+
+MOORE_MAZE_2:
+  desc: "$MAZE_MOORE"
+  exits:
+    east: MOORE_MAZE_1
+    south: MOORE_MAZE_4
+  light: none
+  name: [ Maze of Twisty Little Passages, maze ]
+  security: anarchy
+  tags: [ DigOK, Indoors, Maze, Underground ]
+
+MOORE_MAZE_3:
+  desc: "$MAZE_MOORE"
+  exits:
+    south: MOORE_MAZE_6
+    west: MOORE_MAZE_1
+  light: none
+  name: [ Maze of Twisty Little Passages, maze ]
+  security: anarchy
+  tags: [ DigOK, Indoors, Maze, Underground ]
+
+MOORE_MAZE_4:
+  desc: "$MAZE_MOORE"
+  exits:
+    north: MOORE_MAZE_2
+    east: MOORE_MAZE_5
+    west: UNFINISHED
+  light: none
+  name: [ Maze of Twisty Little Passages, maze ]
+  security: anarchy
+  tags: [ DigOK, Indoors, Maze, Underground ]
+
+MOORE_MAZE_5:
+  desc: "$MAZE_MOORE"
+  exits:
+    east: MOORE_MAZE_6
+    southwest: MOORE_MAZE_7
+    west: MOORE_MAZE_4
+  light: none
+  name: [ Maze of Twisty Little Passages, maze ]
+  security: anarchy
+  tags: [ DigOK, Indoors, Maze, Underground ]
+
+MOORE_MAZE_6:
+  desc: "$MAZE_MOORE"
+  exits:
+    north: MOORE_MAZE_3
+    south: MOORE_MAZE_8
+    southeast: MOORE_MAZE_9
+    west: MOORE_MAZE_5
+  light: none
+  name: [ Maze of Twisty Little Passages, maze ]
+  security: anarchy
+  tags: [ DigOK, Indoors, Maze, Underground ]
+
+MOORE_MAZE_7:
+  desc: "$MAZE_MOORE"
+  exits:
+    down: MOORE_MAZE_16
+    east: MOORE_MAZE_8
+    northeast: MOORE_MAZE_5
+    west: TUNNEL_SD_2
+  light: none
+  name: [ Maze of Twisty Little Passages, maze ]
+  security: anarchy
+  tags: [ DigOK, EastDoubleLength, Indoors, Maze, Underground, WestNoMobRoam ]
+
+MOORE_MAZE_8:
+  desc: "$MAZE_MOORE"
+  exits:
+    north: MOORE_MAZE_6
+    south: MOORE_MAZE_11
+    southwest: MOORE_MAZE_10
+    west: MOORE_MAZE_7
+  light: none
+  name: [ Maze of Twisty Little Passages, maze ]
+  security: anarchy
+  tags: [ DigOK, Indoors, Maze, Underground, WestDoubleLength ]
+
+MOORE_MAZE_9:
+  desc: "$MAZE_MOORE"
+  exits:
+    northwest: MOORE_MAZE_6
+  light: none
+  name: [ Maze of Twisty Little Passages, maze ]
+  security: anarchy
+  tags: [ DigOK, Indoors, Maze, Underground ]
+
+MOORE_MAZE_10:
+  desc: "$MAZE_MOORE"
+  exits:
+    east: MOORE_MAZE_11
+    northeast: MOORE_MAZE_8
+    south: MOORE_MAZE_12
+  light: none
+  name: [ Maze of Twisty Little Passages, maze ]
+  security: anarchy
+  tags: [ DigOK, Indoors, Maze, Underground ]
+
+MOORE_MAZE_11:
+  desc: "$MAZE_MOORE"
+  exits:
+    north: MOORE_MAZE_8
+    southeast: MOORE_MAZE_14
+    west: MOORE_MAZE_10
+  light: none
+  name: [ Maze of Twisty Little Passages, maze ]
+  security: anarchy
+  tags: [ DigOK, Indoors, Maze, Underground ]
+
+MOORE_MAZE_12:
+  desc: "$MAZE_MOORE"
+  exits:
+    east: MOORE_MAZE_13
+    north: MOORE_MAZE_10
+  light: none
+  name: [ Maze of Twisty Little Passages, maze ]
+  security: anarchy
+  tags: [ DigOK, Indoors, Maze, Underground ]
+
+MOORE_MAZE_13:
+  desc: "$MAZE_MOORE"
+  exits:
+    east: MOORE_MAZE_14
+    west: MOORE_MAZE_12
+  light: none
+  name: [ Maze of Twisty Little Passages, maze ]
+  security: anarchy
+  tags: [ DigOK, Indoors, Maze, Underground ]
+
+MOORE_MAZE_14:
+  desc: "$MAZE_MOORE"
+  exits:
+    north: MOORE_MAZE_15
+    northwest: MOORE_MAZE_11
+    west: MOORE_MAZE_13
+  light: none
+  name: [ Maze of Twisty Little Passages, maze ]
+  security: anarchy
+  tags: [ DigOK, Indoors, Maze, Underground ]
+
+MOORE_MAZE_15:
+  desc: "$MAZE_MOORE"
+  exits:
+    south: MOORE_MAZE_14
+  light: none
+  name: [ Maze of Twisty Little Passages, maze ]
+  security: anarchy
+  tags: [ DigOK, Indoors, Maze, Underground ]
+
+MOORE_MAZE_16:
+  desc: "$MAZE_MOORE"
+  exits:
+    south: MOORE_MAZE_17
+    up: MOORE_MAZE_7
+  light: none
+  name: [ Maze of Twisty Little Passages, maze ]
+  security: anarchy
+  tags: [ DigOK, Indoors, Maze, Underground ]
+
+MOORE_MAZE_17:
+  desc: "$MAZE_MOORE"
+  exits:
+    north: MOORE_MAZE_16
+    west: UNFINISHED
+  light: none
+  name: [ Maze of Twisty Little Passages, maze ]
+  security: anarchy
+  tags: [ DigOK, Indoors, Maze, Underground ]
+
+MOORE_NEXUS:
+  desc: Thick metal cables snake across the stone floor in this smallish, cramped room, the walls covered in glowing panels, blinking lights and tangled wires, parting just wide enough for a single door leading out. {lb} ```Dominating the center of the room, at the union of a dozen yellow and black striped cables, a large metallic sphere atop a column of concentric rings. {lb} ```You feel curiously drawn to touch the sphere, though it's unclear what might happen if you do.
+  exits:
+    north: MOORE_CRUMBLING_TUNNEL
+  light: dim
+  name: [ Moore Deepway Nexus, nexus ]
+  security: anarchy
+  tags: [ Indoors, Nexus, NorthDoorMetal, NorthOpenable, Underground ]
+
+MOORE_TUNNEL:
+  desc: East to west this ancient underground train tunnel stretches, the air chill and dry, every sound echoing loudly through the sepulchral gloom. {lb} ```The tracks here seem in an almost usable condition, though it's clear no trains have passed through here in many decades. The grime-speckled walls are partly covered by a twisted mass of ancient cables, though rather more striking is a patch of graffiti in stark white paint proclaiming, "7-960". {lb} ```Painted in peeling moss-green paint, a heavy metal service door can be seen in the southern wall.
+  exits:
+    east: MOORE_TUNNEL_2
+    south: UNFINISHED
+    west: MOORE_ENTRANCE
+  light: none
+  name: [ Moore Deepway Tunnel, east-west tunnel ]
+  security: anarchy
+  tags: [ EastDoubleLength, Indoors, SouthOpenable, Underground, Wide ]
+
+MOORE_TUNNEL_2:
+  desc: While generally dilapidated elsewhere, the ancient tunnel starts to show more clear signs of disrepair here, chunks of stone broken free from the ceiling above littering the rusted old train tracks and splintered wooden ties. {lb} ```The tunnel continues into the gloom to both east and west, though the walls have crumbled enough to allow passage through twisted bundles of old cables to twisty passages both north and south.
+  exits:
+    east: UNFINISHED
+    north: UNFINISHED
+    south: MOORE_MAZE_1
+    west: MOORE_TUNNEL
+  light: none
+  name: [ Moore Deepway Tunnel, east-west tunnel ]
+  security: anarchy
+  tags: [ Indoors, Underground, WestDoubleLength, Wide ]
+
+TUNNEL_SD_1:
+  desc: You find yourself in a maze of dirt tunnels, roughly round in shape, high enough to walk through at a stoop. Pale roots dangle above you like reaching tendrils, and all around is an uncomfortable sound of skittering and scratching. {lb} ```Some of the wider tunnels lead north, east and west, while many others branch off at odd angles, too small for you to squeeze through. {lb} ```The southern dirt wall opens into a hole through which dim light can be seen, while beneath your feet is a heavy metal hatch, its surface marked only with the letters 'W10/8'.
+  exits:
+    down: UNFINISHED
+    east: TUNNEL_SD_2
+    north: TUNNEL_SD_3
+    south: TUNNEL_SD_COLLAPSED
+    west: TUNNEL_SD_4
+  light: none
+  name: [ Skittering Tunnels, dirt tunnel ]
+  security: anarchy
+  tags: [ DownDoorMetal, DownOpenable, Indoors, Underground ]
+
+TUNNEL_SD_2:
+  desc: The winding tunnels branch off in multiple directions, but the only passages wide enough for you to fit are east and west. {lb} ```You can hear strange, unsettling skittering noises, especially from the small tunnel to the east, barely wide enough to fit your shoulders.
+  exits:
+    east: MOORE_MAZE_7
+    west: TUNNEL_SD_1
+  light: none
+  name: [ Skittering Tunnels, dirt tunnel ]
+  security: anarchy
+  tags: [ EastNoMobRoam, Indoors, Underground ]
+
+TUNNEL_SD_3:
+  desc: The dirt tunnel narrows here, curving away to the northwest but narrowing enough that you can't fit your shoulders through. Smaller tunnels branch off here and there, but the only way you can feasibly fit is back south. {lb} ```The ground crunches beneath your feet here as you walk across the broken bones of some small animal.
+  exits:
+    northwest: BLOCKED
+    south: TUNNEL_SD_1
+  light: none
+  name: [ Skittering Tunnels, dirt tunnel ]
+  security: anarchy
+  tags: [ Indoors, Underground ]
+
+TUNNEL_SD_4:
+  desc: This maze of twisting dirt tunnels seems to head in a mostly east-west direction, with a number of smaller tunnels too narrow for you to fit branching off in other directions. {lb} ```The dirt underfoot is dry and loose, littered with bits of debris and broken animal bones.
+  exits:
+    east: TUNNEL_SD_1
+    west: TUNNEL_SD_5
+  light: none
+  name: [ Skittering Tunnels, dirt tunnel ]
+  security: anarchy
+  tags: [ Indoors, Underground ]
+
+TUNNEL_SD_5:
+  desc: You appear to be in a dirt maze of roughly-hewn tunnels, the largest of which leads into the skittering gloom to the east. The only other tunnel wide enough for you to fit through is a long, narrow crawl to the north. {lb} ```Patches of pale moss cling to the walls around this side of the tunnel.
+  exits:
+    east: TUNNEL_SD_4
+    north: MOORE_CABLE_ROOM
+  light: none
+  name: [ Skittering Tunnels, dirt tunnel ]
+  security: anarchy
+  tags: [ Indoors, NorthDoubleLength, Underground ]
+
+TUNNEL_SD_COLLAPSED:
+  desc: This was once a wide brick tunnel, stretching off to whatever may lie to the east - such a time has long-since passed, however, and now only a sloped pile of rubble, dirt and animal bones blocks the eastern path. {lb} ```The west side seems to be the tunnel's end, an imposing brick wall marked with a pair of heavy metal doors, enough light to see trickling through semi-opaque slabs of blue glass. {lb} ```Whether by accident or design, a large hole has been torn in the north side of the tunnel wall, leading into a gloomy series of dirt tunnels.
+  exits:
+    east: BLOCKED
+    north: TUNNEL_SD_1
+    west: UNFINISHED
+  light: dark
+  name: [ Collapsed Tunnel, brick tunnel ]
+  security: anarchy
+  tags: [ Indoors, Underground, WestDoorMetal, WestLocked, WestLockWeak ]
