@@ -54,6 +54,7 @@ set(GREAVE_CPPS
   core/mathx.cpp
   core/message.cpp
   core/parser.cpp
+  core/random.cpp
   core/strx.cpp
   core/terminal-blt.cpp
   core/terminal-curses.cpp
