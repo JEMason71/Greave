@@ -6,13 +6,14 @@
 #include "actions/travel.hpp"
 #include "core/core.hpp"
 #include "core/parser.hpp"
+#include "debug/parser.hpp"
 #include "core/strx.hpp"
 #include "world/mobile.hpp"
 #include "world/world.hpp"
 
 
 // Constructor, sets default values.
-Parser::Parser() : m_special_state(SpecialState::NONE) { }
+Parser::Parser() : m_debug_parser(std::make_shared<DebugParser>()), m_special_state(SpecialState::NONE) { }
 
 // Parses input from the player!
 void Parser::parse(std::string input)
@@ -22,6 +23,7 @@ void Parser::parse(std::string input)
     if (!words.size()) return;  // This is incredibly unlikely, possibly impossible, but it can't hurt to check.
 
     const std::string first_word = words.at(0);
+    if (!first_word.size()) return; // Also incredibly unlikely, but let's be safe.
     const std::shared_ptr<Mobile> player = core()->world()->player();
 
     switch (m_special_state)
@@ -103,35 +105,9 @@ void Parser::parse(std::string input)
      * Super secret dev/debug commands! *
      ************************************/
 
-    // Hashes a string into an integer.
-    if (first_word == "#hash")
+    if (first_word[0] == '#')
     {
-        if (words.size() < 2)
-        {
-            core()->message("{y}Please specify a {Y}string to hash{y}.");
-            return;
-        }
-        const std::string hash_word = StrX::str_toupper(words.at(1));
-        core()->message("{G}" + hash_word + " {g}hashes to {G}" + std::to_string(StrX::hash(hash_word)) + "{g}.");
-        return;
-    }
-
-    // Teleports to another room.
-    if (first_word == "#tp" || first_word == "#teleport")
-    {
-        if (words.size() < 2)
-        {
-            core()->message("{y}Please specify a {Y}teleport destination{y}.");
-            return;
-        }
-        const std::string target = StrX::str_toupper(words.at(1));
-        if (core()->world()->room_exists(target))
-        {
-            core()->message("{U}The world around you {M}s{C}h{M}i{C}m{M}m{C}e{M}r{C}s{U}!");
-            core()->world()->player()->set_location(StrX::hash(target));
-            ActionLook::look(core()->world()->player());
-        }
-        else core()->message("{R}" + target + " {y}is not a valid room ID.");
+        m_debug_parser->parse(words);
         return;
     }
 

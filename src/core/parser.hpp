@@ -4,6 +4,8 @@
 #pragma once
 #include "core/greave.hpp"
 
+class DebugParser;  // defined in debug/parser.hpp
+
 
 class Parser
 {
@@ -15,7 +17,8 @@ public:
 private:
     enum class SpecialState : uint8_t { NONE, QUIT_CONFIRM };
 
-    SpecialState    m_special_state;    // Special parser states, such as waiting for the player to confirm something.
+    std::shared_ptr<DebugParser>    m_debug_parser;     // The debug parser, which handles dev/testing/cheat commands.
+    SpecialState                    m_special_state;    // Special parser states, such as waiting for the player to confirm something.
 
     void    parse_quit_confirm(const std::string &input, const std::string &first_word);   // Parses input when QUIT_CONFIRM state is active.
 };
