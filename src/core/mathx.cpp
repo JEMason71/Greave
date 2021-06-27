@@ -1,5 +1,5 @@
 // core/mathx.cpp -- Various utility functions that deal with math and number-related things.
-// Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+// Copyright (c) 2009-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #include "core/mathx.hpp"
 
@@ -25,3 +25,15 @@ Direction MathX::dir_invert(Direction dir)
 
 // As above, but using integers.
 uint8_t MathX::dir_invert(uint8_t dir) { return static_cast<uint8_t>(dir_invert(static_cast<Direction>(dir))); }
+
+// Rounds a float to a specified number of digits.
+double MathX::round_to(double num, unsigned int digits)
+{
+    const double power = std::pow(10, digits);
+    num *= power;
+    const double rounded = std::round(num);
+    return rounded / power;
+}
+
+// Rounds a float to two decimal places.
+float MathX::round_to_two(float num) { return ::floorf(num * 100 + 0.5) / 100; }

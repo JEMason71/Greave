@@ -1,5 +1,5 @@
 // core/strx.hpp -- Various utility functions that deal with string manipulation/conversion.
-// Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+// Copyright (c) 2009-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #pragma once
 #include "core/core.hpp"
@@ -16,9 +16,12 @@ public:
     static std::string  dir_to_name(Direction dir, DirNameType dnt = DirNameType::NORMAL);  // Converts a direction enum into a string.
     static std::string  dir_to_name(uint8_t dir, DirNameType dnt = DirNameType::NORMAL);    // As above, but with an integer instead of an enum.
     static bool         find_and_replace(std::string &input, const std::string &to_find, const std::string &to_replace);    // Find and replace one string with another.
+    static std::string  ftos(double num);                           // Converts a float or double to a string.
     static uint32_t     hash(const std::string &str);               // FNV string hash function.
     static uint32_t     htoi(const std::string &hex_str);           // Converts a hex string back to an integer.
+    static bool         is_number(const std::string &str);          // Checks if a string is a number.
     static std::string  itoh(unsigned int num, uint32_t min_len);   // Converts an integer into a hex string.
+    static std::string  round_to_two(double num);                   // Calls MathX::round_to_two(), then returns the result as a string.
     static std::string  str_tolower(std::string str);               // Converts a string to lower-case.
     static std::string  str_toupper(std::string str);               // Converts a string to upper-case.
     static std::vector<std::string> string_explode(std::string str, const std::string &separator);          // String split/explode function.

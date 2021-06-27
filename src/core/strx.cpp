@@ -1,8 +1,9 @@
 // core/strx.cpp -- Various utility functions that deal with string manipulation/conversion.
-// Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+// Copyright (c) 2009-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #include "core/core.hpp"
 #include "core/guru.hpp"
+#include "core/mathx.hpp"
 #include "core/strx.hpp"
 
 #include <algorithm>
@@ -93,6 +94,14 @@ bool StrX::find_and_replace(std::string &input, const std::string &to_find, cons
     return found;
 }
 
+// Converts a float or double to a string.
+std::string StrX::ftos(double num)
+{
+    std::stringstream ss;
+    ss << num;
+    return ss.str();
+}
+
 // FNV string hash function.
 uint32_t StrX::hash(const std::string &str)
 {
@@ -113,6 +122,15 @@ uint32_t StrX::htoi(const std::string &hex_str)
     return result;
 }
 
+// Checks if a string is a number.
+bool StrX::is_number(const std::string &str)
+{
+    if (str.empty()) return false;
+    size_t begin = 0;
+    if (str[0] == '-') begin = 1;
+    return std::all_of(str.begin() + begin, str.end(), ::isdigit);
+}
+
 // Converts an integer into a hex string.
 std::string StrX::itoh(uint32_t num, unsigned int min_len)
 {
@@ -122,6 +140,9 @@ std::string StrX::itoh(uint32_t num, unsigned int min_len)
     while (min_len && hex.size() < min_len) hex = "0" + hex;
     return hex;
 }
+
+// Calls MathX::round_to_two(), then returns the result as a string.
+std::string StrX::round_to_two(double num) { return ftos(MathX::round_to_two(num)); }
 
 // Converts a string to lower-case.
 std::string StrX::str_tolower(std::string str)
