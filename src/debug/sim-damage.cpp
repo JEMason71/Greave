@@ -36,10 +36,10 @@ void DamageSim::sim_armour_individual(const std::string &weapon_name, uint8_t we
     int total_raw_damage = 0, total_adjusted_damage = 0;
     for (int i = 0; i < iterations; i++)
     {
-        const int weapon_damage = m_rng->roll(weapon_roll_dice, weapon_roll_die_faces, weapon_roll_modifier);
+        const int weapon_damage = std::max(0, m_rng->roll(weapon_roll_dice, weapon_roll_die_faces, weapon_roll_modifier));
         total_raw_damage += weapon_damage;
         int armour_reduction = 0;
-        if (m_rng->percent_check(m_armour_percent)) armour_reduction = m_rng->roll(m_armour_roll_dice, m_armour_roll_die_faces, m_armour_roll_modifier);
+        if (m_rng->percent_check(m_armour_percent)) armour_reduction = std::max(0, m_rng->roll(m_armour_roll_dice, m_armour_roll_die_faces, m_armour_roll_modifier));
         if (armour_reduction < weapon_damage) total_adjusted_damage += (weapon_damage - armour_reduction);
     }
     const float damage_percent = (static_cast<float>(total_adjusted_damage) / static_cast<float>(total_raw_damage)) * 100.0f;
