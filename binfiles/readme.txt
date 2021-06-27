@@ -26,11 +26,17 @@ https://www.freetype.org/
 NanoJpeg copyright © 2009 Martin J. Fiedler.
 http://h4ck3r.net/2009/12/02/mini-jpeg-decoder/
 
-PDCurses maintained by William McBrine
+PCG copyright © 2014 Melissa O'Neill.
+http://www.pcg-random.org/
+
+PDCurses maintained by William McBrine.
 https://github.com/wmcbrine/PDCurses
 
 PicoPNG copyright © 2005-2010 Lode Vandevenne.
 https://lodev.org/lodepng/
+
+Random-Number Utilities copyright © 2015 Melissa E. O'Neill.
+https://gist.github.com/imneme/540829265469e673d045
 
 Roboto Mono Font copyright © 2015 Google Inc.
 https://fonts.google.com/specimen/Roboto+Mono
