@@ -1,0 +1,182 @@
+# areas/iria/temple of dhozaus.yml -- The Temple of Dhozaus, a dungeon buried beneath Ironroot Forest.
+# Copyright (c) 2019-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+
+DHOZAUS_1:
+  desc: "Motes of dust dance in the cold air, disturbed by your presence. The walls are rough-hewn stone, some bearing markings in an ancient-looking alphabet you don't understand. A crude stone altar has been placed at the west side of the passage, bearing cracked and ancient burial urns. {lb} ```The passage branches here, the carved stone tunnels leading in three directions: a long and narrow tunnel to the east, a shorter passage leading south, and a sloped decline to the northwest, all disappearing into the chilly gloom."
+  exits:
+    east: DHOZAUS_PIT_W
+    northwest: UNFINISHED
+    south: DHOZAUS_2
+  light: none
+  name: [ Branching Passage, branch ]
+  security: anarchy
+  tags: [ EastDoubleLength, Indoors, NorthwestDecline, Underground ]
+
+DHOZAUS_2:
+  desc: The stone passage turns here, the slanted walls rough-hewn as if this temple was carved directly into the rock. The tunnel leads north and west, the ceiling above rough and uneven, while a heavy wooden door has been set into the wall to the south.
+  exits:
+    north: DHOZAUS_1
+    south: DHOZAUS_ROOM_1
+    west: DHOZAUS_3
+  light: none
+  name: [ Stone Passage, passage ]
+  security: anarchy
+  tags: [ Indoors, SouthLocked, Underground ]
+
+DHOZAUS_3:
+  desc: The stone passage continues east-west, the walls rough and uneven, the floor beneath your feet littered with rocks and a few crumbling bones. Perhaps the only feature that stands out is the heavy wooden door mounted in a crudely-cut hole to the south.
+  exits:
+    east: DHOZAUS_2
+    south: DHOZAUS_ROOM_2
+    west: DHOZAUS_4
+  light: none
+  name: [ Stone Passage, passage ]
+  security: anarchy
+  tags: [ Indoors, SouthOpenable, Underground ]
+
+DHOZAUS_4:
+  desc: The passage here seems to have collapsed at some point long ago, huge moss-speckled boulders entirely blocking your passage to the west, along with the splintered and rotting remains of the southern door obstructed by rock. The stone passage continues unobstructed eastward, while a crawlspace through a ragged hole in the wall leads northward into a low dirt tunnel.
+  exits:
+    east: DHOZAUS_3
+    north: DHOZAUS_5
+    south: BLOCKED
+    west: BLOCKED
+  light: none
+  name: [ Crumbling Passage, passage ]
+  security: anarchy
+  tags: [ Indoors, NorthNoMobRoam, Underground ]
+
+DHOZAUS_5:
+  desc: This dirt crawlspace is barely high enough for you to make your way through on hands and knees. Jagged bits of rock and gnarled roots hang down from above, making the passage through the gloom treacherous. The crawl dips lower to the west, while an opening in the south wall leads to a larger, stone passage.
+  exits:
+    south: DHOZAUS_4
+    west: DHOZAUS_6
+  light: none
+  name: [ Dirt Crawl, crawl ]
+  security: anarchy
+  tags: [ DigOK, Indoors, SouthNoMobRoam, Underground, WestDecline ]
+
+DHOZAUS_6:
+  desc: The dirt crawl is narrow and the ceiling is low, but you manage to avoid becoming trapped. Here at the lowest point of the crawl, all is dark and quiet, nothing but dirt and silence surrounding you, the gloom oppressive and unnerving. The tunnel bends upward in both directions, disappearing into the unseen darkness to the east and west.
+  exits:
+    east: DHOZAUS_5
+    west: DHOZAUS_7
+  light: none
+  name: [ Dirt Crawl, crawl ]
+  security: anarchy
+  tags: [ DigOK, EastIncline, Indoors, Underground, WestIncline ]
+
+DHOZAUS_7:
+  desc: The low dirt crawl comes to an end here - or a beginning, depending on your perspective. Light filters in through a hole in the southwest wall, barely large enough for you to squeeze through, while the tunnel dips downward and descends into inky gloom to the east.
+  exits:
+    east: DHOZAUS_6
+    southwest: UNFINISHED
+  light: none
+  name: [ Dirt Crawl, crawl ]
+  security: anarchy
+  tags: [ DigOK, EastDecline, Indoors, SouthwestNoMobRoam, Underground ]
+
+DHOZAUS_OUBLIETTE_C:
+  desc: tbc
+  exits:
+    north: DHOZAUS_OUBLIETTE_N
+    south: DHOZAUS_OUBLIETTE_S
+  light: none
+  name: [ Oubliette, oubliette ]
+  security: anarchy
+  tags: [ Indoors, Underground ]
+
+DHOZAUS_OUBLIETTE_N:
+  desc: tbc
+  exits:
+    north: UNFINISHED
+    south: DHOZAUS_OUBLIETTE_C
+  light: none
+  name: [ Oubliette, oubliette ]
+  security: anarchy
+  tags: [ Indoors, Underground ]
+
+DHOZAUS_OUBLIETTE_S:
+  desc: tbc
+  exits:
+    north: DHOZAUS_OUBLIETTE_C
+  light: none
+  name: [ Oubliette, oubliette ]
+  security: anarchy
+  tags: [ Indoors, Underground ]
+
+DHOZAUS_PIT_C:
+  desc: The rope bridge spans the circular pit from east to west, the ancient wooden planks creaking uneasily under your feet. Eastward you can see light filtering in through a ragged hole in the stone wall; westward, only oppressive gloom. {lb} ```There's no way to reach the north or south sides of the chamber without first leaving the bridge to the east or west, but a fool could take a plunge into the abyss if they wished.
+  exits:
+    north: DHOZAUS_OUBLIETTE_N
+    east: DHOZAUS_PIT_E
+    south: DHOZAUS_OUBLIETTE_S
+    west: DHOZAUS_PIT_W
+  light: dark
+  name: [ Rope Bridge, bridge ]
+  security: anarchy
+  tags: [ Indoors, NorthSky3, SouthSky3, Underground ]
+
+DHOZAUS_PIT_E:
+  desc: You find yourself in a large, hewn-stone chamber on the eastern side of a yawning chasm below. Uncomfortably narrow carved walkways flank the pit to the northeast and southwest, while a rickety rope bridge spans the length of the abyss. Light shines through a ragged hole in the stone wall to the east, while deeper into the chamber lies only darkness.
+  exits:
+    east: IRONROOT_WELL
+    northwest: DHOZAUS_PIT_N
+    southwest: DHOZAUS_PIT_S
+    west: DHOZAUS_PIT_C
+  light: dim
+  name: [ East of the Pit, pit room ]
+  security: anarchy
+  tags: [ Indoors, Underground ]
+
+DHOZAUS_PIT_N:
+  desc: The carved stone path around the outside of this chamber is narrow and treacherous, without any handholds to steady yourself. Beneath you, the pit yawns wide and black, an inky abyss across which stretches a rickety rope bridge. You can barely make out an opening in the wall above you to the north, though it's too high to reach and the walls are too smooth to climb.
+  exits:
+    south: DHOZAUS_OUBLIETTE_C
+    southeast: DHOZAUS_PIT_E
+    southwest: DHOZAUS_PIT_W
+  light: none
+  name: [ North of the Pit, narrow path ]
+  security: anarchy
+  tags: [ Indoors, SouthSky3,Underground ]
+
+DHOZAUS_PIT_S:
+  desc: The stone walkway is chipped and crumbling, a narrow curving path around the yawning abyss opening up beneath you, beckoning you into the gloom below. The path continues northeast and northwest, while a rickety rope bridge lies just out of reach, spanning the chasm to the north.
+  exits:
+    north: DHOZAUS_OUBLIETTE_C
+    northeast: DHOZAUS_PIT_E
+    northwest: DHOZAUS_PIT_W
+  light: none
+  name: [ South of the Pit, narrow path ]
+  security: anarchy
+  tags: [ Indoors, NorthSky3, Underground ]
+
+DHOZAUS_PIT_W:
+  desc: You stand at the western side of a gaping chasm, a roughly-hewn circular hole in the ground spanned by a rickety rope bridge leading east towards a faint light. The room is wide with arched walls sloping high above, while a narrow stone walkway runs around the edge of the pit. A doorway to the west leads into a long stone tunnel, disappearing into the gloom.
+  exits:
+    east: DHOZAUS_PIT_C
+    northeast: DHOZAUS_PIT_N
+    southeast: DHOZAUS_PIT_S
+    west: DHOZAUS_1
+  light: none
+  name: [ West of the Pit, pit room ]
+  security: anarchy
+  tags: [ Indoors, Underground, WestDoubleLength ]
+
+DHOZAUS_ROOM_1:
+  desc: Barely larger than an alcove or small cupboard, this stone hollow is closed off from the passage outside by a heavy wooden door. Within, you see a number of shelves carved into the rock face itself, though for the most part, only dust remains.
+  exits:
+    north: DHOZAUS_2
+  light: none
+  name: [ Shallow Alcove, alcove ]
+  security: anarchy
+  tags: [ Indoors, NorthLocked, Underground ]
+
+DHOZAUS_ROOM_2:
+  desc: This cramped room may once have been used for storage, though little yet survived the ravages of time. A few rotting crates and barrels are of little interest to anyone, though at least the door leading back north to the corridor seems more sturdy.
+  exits:
+    north: DHOZAUS_3
+  light: none
+  name: [ Shallow Alcove, alcove ]
+  security: anarchy
+  tags: [ Indoors, NorthOpenable, Underground ]

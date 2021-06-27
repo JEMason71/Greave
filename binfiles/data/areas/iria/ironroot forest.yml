@@ -667,7 +667,7 @@ IRONROOT_WELL:
   desc: Lit only from the open well-shaft above you, the base of this well is a grimy and dismal place. The little water that remains is filthy and stagnant, a grimy pool that reaches up to your mid-thigh, while the cobblestone walls of the well are slick with moss and dirt. {lb} ```Curiously, a number of stones have been dislodged, a muddy tunnel leading into darkness to the east. If that doesn't suit you, the only other way out is a filthy old rope dangling from the opening above.
   exits:
     up: IRONROOT_CLEARING_S
-    west: UNFINISHED
+    west: DHOZAUS_PIT_E
   light: dark
   name: [ Bottom of the Well, well ]
   security: anarchy
