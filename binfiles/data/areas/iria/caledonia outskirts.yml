@@ -90,7 +90,7 @@ IANI_BEACH_2:
   desc: The scent of salt is strong in the air here, the sea breeze cool and briny. The soft sand dunes stretch out before you, punctuated by a few clumps of speargrass stubbornly clinging to life. A little way off the coast lies a small island to the south, a rickety-looking rope bridge moored to the beach leading south onto island's rocky surface.
   exits:
     east: UNFINISHED
-    south: UNFINISHED
+    south: UYOGA_ISLAND
     west: IANI_BEACH
   light: wilderness
   name: [ Iani Beach, beach ]
@@ -102,6 +102,7 @@ IANI_OCEAN:
   exits:
     north: IANI_BEACH
     south: UNFINISHED
+    southeast: BLOCKED
     southwest: UNFINISHED
     west: EAST_CALEDONIA_7
   light: wilderness

@@ -1,0 +1,128 @@
+# areas/iria/uyoga island.yml -- Uyoga Island, just off the coast southeast of Forge-City Caledonia.
+# Copyright (c) 2019-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+
+UYOGA_ISLAND:
+  desc: You stand on the south end of a rickety rope bridge, the decrepit wooden planks swaying uncertainly above the briny ocean below. The ground is rocky and uneven, a rough path curving upward to the northwest and northeast, while the terrain becomes grassier southward, a large house visible beyond the rocky cliffs.
+  exits:
+    north: IANI_BEACH_2
+    northeast: UYOGA_ISLAND_3
+    northwest: UYOGA_ISLAND_2
+    southeast: UYOGA_ISLAND_4
+  light: wilderness
+  name: [ Uyoga Island, bridge ]
+  security: low
+  tags: [ NorthNoMobRoam, NorthTripleLength ]
+
+UYOGA_ISLAND_2:
+  desc: Here on the northwest corner of the island you can see the deep blue waves of the sea beneath the rocky cliffs, beyond which lies a pale beach. Your view to the west is blocked by the imposing walls of the Forge-City, rising high into the air and plunging deep into the ocean depths. {lb} ```The path curves, leading gently downward to the southeast, while to the south a simple watchpost has been built upon a craggy plateau.
+  exits:
+    northwest: IANI_OCEAN
+    southeast: UYOGA_ISLAND
+    south: UYOGA_ISLAND_WATCHPOST
+  light: wilderness
+  name: [ Island Outcrop, outcrop ]
+  security: low
+  tags: [ SouthIncline ]
+
+UYOGA_ISLAND_3:
+  desc: Sapphire-blue ocean waves crash against rocky cliffs below, offering no further passage along this rocky path short of diving into the water below. An untamed beach stretches out north of the island, giving way to grasslands beyond, while to the west you can make out the dominating walls of the Forge-City reaching high into the sky above.
+  exits:
+    northeast: UNFINISHED
+    south: UYOGA_ISLAND_4
+    southwest: UYOGA_ISLAND
+  light: wilderness
+  name: [ Island Outcrop, outcrop ]
+  security: low
+  tags: [ SouthDoubleLength ]
+
+UYOGA_ISLAND_4:
+  desc: The dirt trail narrows here, splitting to the north as the trail leads to rocky crags and a rope bridge stretched to the beach beyond, while the land becomes more overgrown and grassy to the south, skirting around the edge of a small freshwater lake. Beyond the lake to the southeast is a large house, while smaller fishing huts are visible further down the trail to the south.
+  exits:
+    north: UYOGA_ISLAND_3
+    northwest: UYOGA_ISLAND
+    south: UYOGA_ISLAND_5
+    southeast: UYOGA_ISLAND_LAKE_NW
+  light: wilderness
+  name: [ Western Trail, trail ]
+  security: anarchy
+  tags: [ NorthDoubleLength, WaterClean, Wide ]
+
+UYOGA_ISLAND_5:
+  desc: A grassy trail follows a roughly north-south direction along the craggy edge of the island, flanking a small freshwater lake to the east. The sea below to the west is deep blue and clear, and beyond, the ancient and imposing walls of the Forge-City block all view of what lies beyond. Small fishing huts are visible to the south, while a larger house occupies the land further east.
+  exits:
+    east: UYOGA_ISLAND_LAKE_NW
+    north: UYOGA_ISLAND_4
+    south: UYOGA_ISLAND_6
+  light: wilderness
+  name: [ Western Trail, trail ]
+  security: anarchy
+  tags: [ WaterClean, Wide ]
+
+UYOGA_ISLAND_6:
+  desc: Following the rocky decline to the west, the deep blue ocean lapping waves against the weather-beaten rocks, this grassy path stretches north towards a smaller outcrop and rope bridge, and south towards a couple of wooden fishing huts on the south side of the island. A well-worn, branching trail leads east, past a small freshwater lake and towards a large house occupying the middle of the island.
+  exits:
+    east: UYOGA_ISLAND_7
+    north: UYOGA_ISLAND_5
+    northeast: UYOGA_ISLAND_LAKE_NW
+    south: UYOGA_ISLAND_8
+  light: wilderness
+  name: [ Western Trail, trail ]
+  security: low
+  tags: [ EastDoubleLength, SouthTripleLength, WaterClean, Wide ]
+
+UYOGA_ISLAND_7:
+  desc: A large two-storey house stands before you, a simple yet sturdy-looking construction of wood and stone, unevenly patched and repaired from past damage. A heavy oak door leads inward to the east, while a grassy trail leads in the opposite direction to the west side of the island, curving around a clear freshwater lake to the northwest.
+  exits:
+    east: UNFINISHED
+    northwest: UYOGA_ISLAND_LAKE_NW
+    west: UYOGA_ISLAND_6
+  light: wilderness
+  name: [ Outside House, outside house ]
+  security: low
+  tags: [ EastOpenable, WaterClean, WestDoubleLength ]
+
+UYOGA_ISLAND_8:
+  desc: The grassy trail branches three ways here - it stretches northward alongside the rocky cliffs and the sapphire ocean below, tapers off into grassy wilderness to the east and northeast, and curves southwest around a small freshwater lake towards fishing huts on island outcrops.
+  exits:
+    east: UNFINISHED
+    north: UYOGA_ISLAND_6
+    northeast: UNFINISHED
+    south: UYOGA_ISLAND_LAKE_SW
+    southwest: UNFINISHED
+  light: wilderness
+  name: [ Western Trail, trail ]
+  security: anarchy
+  tags: [ NorthTripleLength, WaterClean ]
+
+UYOGA_ISLAND_LAKE_NW:
+  desc: Just what reason compelled you to stand waist-deep in a lake of chilly freshwater is yours alone to know, but here you stand. The surface of the lake is clear and still, a grassy trail working around it to the south and west. Craggy cliffs give way to the ocean to the north, while a large building is visible close to the southeast.
+  exits:
+    northwest: UYOGA_ISLAND_4
+    southeast: UYOGA_ISLAND_7
+    southwest: UYOGA_ISLAND_6
+    west: UYOGA_ISLAND_5
+  light: wilderness
+  name: [ Freshwater Lake, lake ]
+  security: low
+  tags: [ WaterClean, WaterShallow ]
+
+UYOGA_ISLAND_LAKE_SW:
+  desc: Thankfully this small freshwater lake isn't very deep, but it is very wet and chilly as you wade around hip-deep, the clear water clouding as your feet kick up loose mud from beneath. Grassy shores lie to the north and northeast, while the trail becomes more sparse, giving way to hard-packed dirt to the west and south, beyond which lie wooden fishing huts.
+  exits:
+    north: UYOGA_ISLAND_8
+    northeast: UNFINISHED
+    south: UNFINISHED
+    west: UNFINISHED
+  light: wilderness
+  name: [ Freshwater Lake, lake ]
+  security: anarchy
+  tags: [ WaterClean, WaterShallow ]
+
+UYOGA_ISLAND_WATCHPOST:
+  desc: A simple wooden watchpost has been constructed on the rocky plateau of the northwestern tip of the island, offering a view of the beach to the north and the natural sprawl of the island to the south and east in all its agrestal glory. A sturdy roof provides shelter from the elements and a simple bedroll offers rest for the weary.
+  exits:
+    north: UYOGA_ISLAND_2
+  light: wilderness
+  name: [ Uyoga Island Watchpost, watchpost ]
+  security: low
+  tags: [ CanSeeOutside, Indoors, NorthDecline, Private, SleepOK ]
