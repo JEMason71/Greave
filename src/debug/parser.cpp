@@ -5,7 +5,6 @@
 #include "core/core.hpp"
 #include "core/strx.hpp"
 #include "debug/parser.hpp"
-#include "debug/sim-damage.hpp"
 #include "world/player.hpp"
 #include "world/world.hpp"
 
@@ -44,29 +43,6 @@ void DebugParser::parse(std::vector<std::string> words)
             ActionLook::look(core()->world()->player());
         }
         else core()->message("{R}" + target + " {y}is not a valid room ID.");
-        return;
-    }
-
-    // Runs a simulation on armour, used for balancing and testing.
-    if (first_word == "#armour-sim")
-    {
-        if (words.size() < 4)
-        {
-            core()->message("{y}Please specify {Y}armour stats {y}for simulation.");
-            return;
-        }
-        for (unsigned int i = 1; i < words.size(); i++)
-        {
-            if (!StrX::is_number(words.at(i)))
-            {
-                core()->message("{y}Invalid stats. Please only use {Y}numbers{y}.");
-                return;
-            }
-        }
-        auto sim = std::make_shared<DamageSim>();
-        int modifier = 0;
-        if (words.size() >= 5) modifier = std::stoi(words.at(4));
-        sim->sim_armour(std::stoi(words.at(1)), std::stoi(words.at(2)), std::stoi(words.at(3)), modifier);
         return;
     }
 
