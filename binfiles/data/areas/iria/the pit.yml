@@ -2,7 +2,7 @@
 # Copyright (c) 2016-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 PIT_1_C:
-  desc: Rubble, debris and rusting old garbage is strewn across the floor in this dilapidated warehouse room, the walls cracked and crumbling. {lb} ```Nearby passages delve deeper into the gloomy interior, while a rickety ladder leads down into an ominous hole in the ground.
+  desc: Rubble, debris and rusting old garbage is strewn across the floor in this dilapidated warehouse room, the walls cracked and crumbling. Nearby passages delve deeper into the gloomy interior, while a rickety ladder leads down into an ominous hole in the ground.
   exits:
     down: PIT_2_C
     east: PIT_1_E
@@ -57,7 +57,7 @@ PIT_1_NW:
   tags: [ Indoors ]
 
 PIT_1_S:
-  desc: Rubble, debris and rusting old garbage is strewn across the floor in this dilapidated warehouse room, the walls cracked and crumbling. {lb} ```A heavy metal door leads back south the lobby, while other passages delve deeper into the gloomy interior.
+  desc: Rubble, debris and rusting old garbage is strewn across the floor in this dilapidated warehouse room, the walls cracked and crumbling. A heavy metal door leads back south the lobby, while other passages delve deeper into the gloomy interior.
   exits:
     east: PIT_1_SE
     north: PIT_1_C

@@ -15,7 +15,7 @@ COLLAPSED_CITY_TUNNEL:
   tags: [ DigOK, EastDoorMetal, EastOpenable, SoutheastOpenable, Underground, WaterTainted ]
 
 COLLAPSED_SUBWAY_TUNNEL:
-  desc: Light filters in from above, the ceiling collapsed and lying broken upon the tracks. {lb} ```The tunnel extends into darkness in either direction; there seems to be light to the eastern reaches of the tunnel, as well as a heavy barricade, diverting the tracks off this broken line and to another route.
+  desc: Light filters in from above, the ceiling collapsed and lying broken upon the tracks. The tunnel extends into darkness in either direction; there seems to be light to the eastern reaches of the tunnel, as well as a heavy barricade, diverting the tracks off this broken line and to another route.
   exits:
     east: UNFINISHED
     up: SPRING_LANE
@@ -26,7 +26,7 @@ COLLAPSED_SUBWAY_TUNNEL:
   tags: [ DigOK, Underground, UpNoMobRoam ]
 
 FETID_WARRENS:
-  desc: The west branch of this tunnel ends in a slightly more spacious room, largely unremarkable save for a few sizeable holes dug in the rough earth, from which an atrocious stench emerges. {lb} ```It's not hard to imagine what this room's purpose is, and why further investigation would be unwise.
+  desc: The west branch of this tunnel ends in a slightly more spacious room, largely unremarkable save for a few sizeable holes dug in the rough earth, from which an atrocious stench emerges. It's not hard to imagine what this room's purpose is, and why further investigation would be unwise.
   exits:
     east: WRETCHED_TUNNEL
   light: none
@@ -97,7 +97,7 @@ SEWER_BERESTALL_KINGS:
   tags: [ EastDoorMetal, EastOpenable, Indoors, NorthTripleLength, SouthwestDoubleLength, Underground, UpDoorMetal, UpOpenable, WaterTainted, Wide ]
 
 SEWER_BERESTALL_KINGS_2:
-  desc: The sewer tunnel stretches out in a northeast/southwest direction here, the tepid rainwater in the trench below an unsettling shade of yellowish green, a few dead rodents floating along downstream. {lb} ```You can keep your feet dry by sticking to the raised brick walkways flanking the flow, the iron railings rusted and near-collapse.
+  desc: The sewer tunnel stretches out in a northeast/southwest direction here, the tepid rainwater in the trench below an unsettling shade of yellowish green, a few dead rodents floating along downstream. You can keep your feet dry by sticking to the raised brick walkways flanking the flow, the iron railings rusted and near-collapse.
   exits:
     northeast: SEWER_BERESTALL_CHURCH
     southwest: SEWER_KINGS
@@ -119,7 +119,7 @@ SEWER_BRICK_TUNNEL:
   tags: [ EastDoorMetal, EastOpenable, Indoors, SouthTripleLength, Underground, UpDoorMetal, UpOpenable, Wide ]
 
 SEWER_KINGS:
-  desc: The sewer curves here, the stagnant stream of rainwater leading off into gloom to the west and northeast, flanked by mossy red brick walkways and rusted iron handrails. {lb} ```It's hard to see here, though the small drainage grates in the ceiling allow some light from the city above to trickle down into the oppressive gloom. {lb} ```Mounted in the brick wall to the south is a heavy, tarnished metal grate, which appears to lead into a sloped tunnel.
+  desc: The sewer curves here, the stagnant stream of rainwater leading off into gloom to the west and northeast, flanked by mossy red brick walkways and rusted iron handrails. It's hard to see here, though the small drainage grates in the ceiling allow some light from the city above to trickle down into the oppressive gloom. {lb} ```Mounted in the brick wall to the south is a heavy, tarnished metal grate, which appears to lead into a sloped tunnel.
   exits:
     northeast: SEWER_BERESTALL_KINGS_2
     south: SKYGUARD_TRENCH_CENTRAL
@@ -130,7 +130,7 @@ SEWER_KINGS:
   tags: [ Indoors, SouthDoorMetal, SouthOpenable, Underground, WaterTainted, Wide ]
 
 SEWER_MILLERS:
-  desc: What little light fills this tunnel filters in from the open access above. The air is thick around you and carries a slight mist, rising off the greenly tinted water. {lb} ```The walkway is about two meters wide and runs alongside and just above the level of the water. The arching ceiling spans the full nine meter width of the sewer.
+  desc: What little light fills this tunnel filters in from the open access above. The air is thick around you and carries a slight mist, rising off the greenly tinted water. The walkway is about two meters wide and runs alongside and just above the level of the water. The arching ceiling spans the full nine meter width of the sewer.
   exits:
     northeast: SEWER_ARROW_PARK
     southeast: SEWER_WAREHOUSE
@@ -141,7 +141,7 @@ SEWER_MILLERS:
   tags: [ Indoors, NortheastDoubleLength, Underground, UpDoorMetal, UpOpenable, WaterTainted, Wide ]
 
 SEWER_SLUDGE_PIT:
-  desc: I don't know what you were expecting from walking into a sludge pit, but here you are. The sludge is surprisingly viscous, enough to walk across at a brisk pace without too much difficulty, though standing still for any measure of time causes your feet to start to sink. {lb} ```Several rotting wooden barrels float near the surface of the sludge, and the stench is terrible.
+  desc: I don't know what you were expecting from walking into a sludge pit, but here you are. The sludge is surprisingly viscous, enough to walk across at a brisk pace without too much difficulty, though standing still for any measure of time causes your feet to start to sink. Several rotting wooden barrels float near the surface of the sludge, and the stench is terrible.
   exits:
     west: SEWER_TRASH_TUNNEL
   light: none
@@ -181,7 +181,7 @@ SKITTERING_TUNNEL:
   tags: [ DigOK, Indoors, Underground ]
 
 SKYGUARD_TRENCH:
-  desc: Smooth stone slopes up about eight feet to the ceiling, the floor clean. Seems you're on one end of a long trench, close to the surface end, the other vanished into darkness. The ceiling ends and one can probably climb up the sloped sides to the forest floor, dark evergreens and a darker ballista towering well above you. {lb} ```Barely visible in the gloom, a heavy metal door leads southwest.
+  desc: Smooth stone slopes up about eight feet to the ceiling, the floor clean. Seems you're on one end of a long trench, close to the surface end, the other vanished into darkness. The ceiling ends and one can probably climb up the sloped sides to the forest floor, dark evergreens and a darker ballista towering well above you. Barely visible in the gloom, a heavy metal door leads southwest.
   exits:
     east: SKYGUARD_TRENCH_CENTRAL
     southwest: WHITE_STAR_ENTRYWAY
@@ -214,7 +214,7 @@ SKYGUARD_TRENCH_COLLAPSED:
   tags: [ DigOK, Indoors, Underground, Wide ]
 
 SUBTERRANEAN_GRAVEYARD:
-  desc: This series of dirt-hewn tunnels opens up into a larger chamber, the ceiling high enough that you could barely touch it if you jumped. Glowing mushrooms in the loamy soil illuminate the area in an unearthly green haze, revealing a number of open graves -- some occupied, some not -- as well as more dirt mounds with crudely-fashioned headstones made from pieces of debris or rusting metal signs. {lb} ```Several tunnels lead off into the gloom.
+  desc: This series of dirt-hewn tunnels opens up into a larger chamber, the ceiling high enough that you could barely touch it if you jumped. Glowing mushrooms in the loamy soil illuminate the area in an unearthly green haze, revealing a number of open graves -- some occupied, some not -- as well as more dirt mounds with crudely-fashioned headstones made from pieces of debris or rusting metal signs. Several tunnels lead off into the gloom.
   exits:
     east: SKITTERING_TUNNEL
     northwest: SKYGUARD_TRENCH_CENTRAL
@@ -234,7 +234,7 @@ WRETCHED_ENCAMPMENT:
   tags: [ DigOK, Indoors, PermaCampfire, Underground, WestDoorMetal, WestOpenable ]
 
 WRETCHED_TUNNEL:
-  desc: This tunnel has been carved roughly out of the dry, dead earth, a few half-buried glowing mushrooms providing enough illumination to find your way along the uneven ground. {lb} ```The tunnel mostly heads east-west, with a fetid breeze blowing through from the western end, though an opening in the wall leads into a larger chamber to the north.
+  desc: This tunnel has been carved roughly out of the dry, dead earth, a few half-buried glowing mushrooms providing enough illumination to find your way along the uneven ground. The tunnel mostly heads east-west, with a fetid breeze blowing through from the western end, though an opening in the wall leads into a larger chamber to the north.
   exits:
     east: COLLAPSED_CITY_TUNNEL
     north: SUBTERRANEAN_GRAVEYARD

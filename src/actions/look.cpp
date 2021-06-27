@@ -61,5 +61,5 @@ void ActionLook::look(std::shared_ptr<Mobile> mob)
         exits_vec.push_back(exit_name);
     }
 
-    if (exits_vec.size()) core()->message("{0}{g}Obvious exits: " + StrX::comma_list(exits_vec, StrX::CL_FLAG_USE_AND));
+    if (exits_vec.size()) core()->message("{0}{g}```Obvious exits: " + StrX::comma_list(exits_vec, StrX::CL_FLAG_USE_AND));
 }

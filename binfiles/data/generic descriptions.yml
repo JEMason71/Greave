@@ -1,10 +1,12 @@
 # generic descriptions.yml -- Generic description strings for rooms and items that share descriptions, such as jail cells or keys.
-# Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+# Copyright (c) 2016-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-INN_ROOM_RD: This unremarkable inn room is small yet cozy, large enough to house two beds, a table and a couple of wooden stools, and a small wooden cabinet. {lb} ```A small window looks out onto the city streets, yet is too small to escape through - the only exit lies through the door in which you entered.
+INN_ROOM_RD: This unremarkable inn room is small yet cozy, large enough to house two beds, a table and a couple of wooden stools, and a small wooden cabinet. A small window looks out onto the city streets, yet is too small to escape through - the only exit lies through the door in which you entered.
 
-JAIL_CELL: This simple jail cell is sparsely-furnished with only a simple bed and a bucket in the corner, the purpose of which you can probably imagine. {lb} ```The walls and floor are cracked stone slabs, and the only exit is back through the iron-barred door.
+JAIL_CELL: This simple jail cell is sparsely-furnished with only a simple bed and a bucket in the corner, the purpose of which you can probably imagine. The walls and floor are cracked stone slabs, and the only exit is back through the iron-barred door.
+
+MAZE_IRONROOT: This deep into the forest, it's almost impossible to maintain your sense of direction. Thick, gnarled trunks seem to press in from all sides, the branches above forming a dense canopy to block out the sky.
 
 MAZE_MOORE: You find yourself in a maze of dirt passages, some wide enough to pass through while others are far too narrow, twisting and bending off in various directions. It's impossible to tell one tunnel from another.
 
-THE_PIT: Rubble, debris and rusting old garbage is strewn across the floor in this dilapidated warehouse room, the walls cracked and crumbling. {lb} ```Nearby passages delve deeper into the gloomy interior.
+THE_PIT: Rubble, debris and rusting old garbage is strewn across the floor in this dilapidated warehouse room, the walls cracked and crumbling. Nearby passages delve deeper into the gloomy interior.

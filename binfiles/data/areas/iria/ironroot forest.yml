@@ -1,0 +1,674 @@
+# areas/iria/ironroot forest.yml -- The Ironroot Forest region.
+# Copyright (c) 2019-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+
+CRYSTAL_LAKE_CN:
+  desc: Here in the middle of the lake, the tranquil water makes your surroundings seem so peaceful. The lake is deeper here, though you can still see through the clear water to the silty mud beneath. The lake extends around you in all directions, flanked around its rim by tall, ancient trees.
+  exits:
+    east: CRYSTAL_LAKE_NE
+    north: CRYSTAL_LAKE_N
+    south: CRYSTAL_LAKE_CS
+    southeast: CRYSTAL_LAKE_SE
+    southwest: CRYSTAL_LAKE_SW
+    west: CRYSTAL_LAKE_NW
+  light: wilderness
+  name: [ Crystal Lake, lake ]
+  security: anarchy
+  tags: [ EastDoubleLength, NorthDoubleLength, SouthDoubleLength, SoutheastDoubleLength, SouthwestDoubleLength, WaterClean, WaterDeep, WestDoubleLength ]
+
+CRYSTAL_LAKE_CS:
+  desc: You are at the deepest point of the lake now, the crystal-clear water allowing a fair view of the silty mud ground far beneath. The lake extends around you in all directions, and beyond its edges lies a dense forest, the ancient trees standing tall and proud.
+  exits:
+    east: CRYSTAL_LAKE_SE
+    north: CRYSTAL_LAKE_CN
+    northeast: CRYSTAL_LAKE_NE
+    northwest: CRYSTAL_LAKE_NW
+    south: CRYSTAL_LAKE_S
+    west: CRYSTAL_LAKE_SW
+  light: wilderness
+  name: [ Crystal Lake, lake ]
+  security: anarchy
+  tags: [ EastDoubleLength, NorthDoubleLength, NortheastDoubleLength, NorthwestDoubleLength, SouthDoubleLength, WaterClean, WaterDeep, WestDoubleLength ]
+
+CRYSTAL_LAKE_N:
+  desc: You find yourself in the north side of a lake which stretches out further to the south, flanked by tall, ancient and gnarled trees. The water is still and crystal-clear, giving a clear view of the muddy lake-bed deep below.
+  exits:
+    northeast: IRONROOT_TRAIL_5
+    northwest: IRONROOT_1
+    south: CRYSTAL_LAKE_CN
+    southeast: CRYSTAL_LAKE_NE
+    southwest: CRYSTAL_LAKE_NW
+  light: wilderness
+  name: [ North Crystal Lake, lake ]
+  security: anarchy
+  tags: [ SouthDoubleLength, SoutheastDoubleLength, SouthwestDoubleLength, Trees, WaterClean, WaterShallow ]
+
+CRYSTAL_LAKE_NE:
+  desc: The clear water is still and cold around you, glittering beautifully as it catches the light. The lake stretches out to the south and west, the muddy shore eastward leading back to the forest, a well-worn grassy trail making its way around the edge of the water.
+  exits:
+    northeast: IRONROOT_TRAIL_6
+    northwest: CRYSTAL_LAKE_N
+    south: CRYSTAL_LAKE_SE
+    southeast: IRONROOT_TRAIL_7
+    southwest: CRYSTAL_LAKE_CS
+    west: CRYSTAL_LAKE_CN
+  light: wilderness
+  name: [ Northeast Crystal Lake, lake ]
+  security: anarchy
+  tags: [ NorthwestDoubleLength, SouthDoubleLength, SouthwestDoubleLength, Trees, WaterClean, WaterShallow, WestDoubleLength ]
+
+CRYSTAL_LAKE_NW:
+  desc: You are at the northwest side of a wide lake, its crystal-clear still water glittering beautifully. This entire side of the lake is flanked by a thick, unruly undergrowth and ancient, gnarled trees growing between the long grass, with no trail in sight.
+  exits:
+    east: CRYSTAL_LAKE_CN
+    northeast: CRYSTAL_LAKE_N
+    northwest: IRONROOT_2
+    south: CRYSTAL_LAKE_SW
+    southeast: CRYSTAL_LAKE_CS
+    southwest: IRONROOT_11
+  light: wilderness
+  name: [ Northwest Crystal Lake, lake ]
+  security: anarchy
+  tags: [ EastDoubleLength, NortheastDoubleLength, SouthDoubleLength, SoutheastDoubleLength, Trees, WaterClean, WaterShallow ]
+
+CRYSTAL_LAKE_S:
+  desc: The southern side of the lake is tranquil and beautiful, the water so crystal-clear you can see all the way down to the silty mud at the base. Heavy, ancient trees flank the edge of the lake, unruly and wild to the west, while eastward a grassy trail runs between the thick trunks and the water's edge.
+  exits:
+    north: CRYSTAL_LAKE_CS
+    northeast: CRYSTAL_LAKE_SE
+    northwest: CRYSTAL_LAKE_SW
+    southeast: IRONROOT_TRAIL_9
+    southwest: IRONROOT_17
+  light: wilderness
+  name: [ South Crystal Lake, lake ]
+  security: anarchy
+  tags: [ NorthDoubleLength, NortheastDoubleLength, NorthwestDoubleLength, Trees, WaterClean, WaterShallow ]
+
+CRYSTAL_LAKE_SE:
+  desc: The southeast corner of this wide, crystal-clear lake is bordered by a well-traveled, grassy forest trail, flanked further behind by tall, gnarled, ancient trees. The water is still and peaceful, cold and clear as glass. Below, you can see the movement of small fish causing the silty dirt at the bottom of the lake to billow and churn.
+  exits:
+    north: CRYSTAL_LAKE_NE
+    northeast: IRONROOT_TRAIL_7
+    northwest: CRYSTAL_LAKE_CN
+    southeast: IRONROOT_TRAIL_8
+    southwest: CRYSTAL_LAKE_S
+    west: CRYSTAL_LAKE_CS
+  light: wilderness
+  name: [ Southeast Crystal Lake, lake ]
+  security: anarchy
+  tags: [ NorthDoubleLength, NorthwestDoubleLength, SouthwestDoubleLength, Trees, WaterClean, WaterShallow, WestDoubleLength ]
+
+CRYSTAL_LAKE_SW:
+  desc: The water is crystal-clear and cold, glittering like waves of crystals in the light. The shore lies to the west, crowded by gnarled, thick trunks of aged trees and tall, wild grass, while the placid lake stretches out far to the east and north.
+  exits:
+    east: CRYSTAL_LAKE_CS
+    north: CRYSTAL_LAKE_NW
+    northeast: CRYSTAL_LAKE_CN
+    northwest: IRONROOT_11
+    southeast: CRYSTAL_LAKE_S
+    southwest: IRONROOT_16
+  light: wilderness
+  name: [ Southwest Crystal Lake, lake ]
+  security: anarchy
+  tags: [ EastDoubleLength, NorthDoubleLength, NortheastDoubleLength, SoutheastDoubleLength, Trees, WaterClean, WaterShallow ]
+
+IRONROOT_1:
+  desc: The forest here curves around the edge of a beautiful, crystal-clear lake to the south, though the further to the west you proceed, the more wild and unruly the undergrowth becomes. There's enough landmarks to find your way around - a moss-covered log here, a patch of vivid purple flowers there - though it gets harder to discern deeper in.
+  exits:
+    east: IRONROOT_TRAIL_5
+    north: IRONROOT_TRAIL_4
+    northwest: IRONROOT_MAZE_A
+    southeast: CRYSTAL_LAKE_N
+    southwest: IRONROOT_2
+  light: wilderness
+  name: [ Lake's Edge, lake's edge ]
+  security: anarchy
+  tags: [ DigOK, EastDoubleLength, NorthDoubleLength, SouthwestDoubleLength, Trees, WaterClean ]
+
+IRONROOT_2:
+  desc: It's hard to keep your bearings in the forest, each overgrown grassy path between thick tree-trunks seeming the same as the last. The presence of a lake to the east is somewhat of a saving grace, the glittering clear water providing a clear landmark amidst the greens and browns of the forest.
+  exits:
+    north: IRONROOT_MAZE_O
+    northeast: IRONROOT_1
+    south: IRONROOT_11
+    southeast: CRYSTAL_LAKE_NW
+    west: IRONROOT_7
+  light: wilderness
+  name: [ Lake's Edge, lake's edge ]
+  security: anarchy
+  tags: [ DigOK, NortheastDoubleLength, SouthDoubleLength, Trees, WaterClean, WestDoubleLength ]
+
+IRONROOT_3:
+  desc: The trees grow wilder and thicker the deeper you venture into the dense forest, the trail to the southeast almost out of sight already amidst the unruly undergrowth. It may be possible to push your way through the long grasses to the east or to return to the trail, but all other directions are too heavily forested to navigate.
+  exits:
+    east: IRONROOT_4
+    southwest: IRONROOT_TRAIL_6
+  light: wilderness
+  name: [ Ironroot Forest, deep forest ]
+  security: anarchy
+  tags: [ DigOK, EastDoubleLength, SouthwestDoubleLength, Trees ]
+
+IRONROOT_4:
+  desc: Ancient, gnarled trees surround you, their branches reaching high above to form a thick canopy obscuring the sky, their twisted roots threatening to trip and snag unwary travelers. The undergrowth is wild and abundant, and it's hard to make much headway deeper into the woods - you might be able to push through the foliage to the south or west, but other directions are a no go.
+  exits:
+    south: IRONROOT_8
+    west: IRONROOT_3
+  light: wilderness
+  name: [ Ironroot Forest, deep forest ]
+  security: anarchy
+  tags: [ DigOK, SouthDoubleLength, Trees, WestDoubleLength ]
+
+IRONROOT_5:
+  desc: This path between the ancient trees is a dead end, the thick trunks and gnarled roots closing in around you the further west you move. The foliage and long grasses are too wild and verdant here; the only way you can go from here is back eastward.
+  exits:
+    east: IRONROOT_6
+  light: wilderness
+  name: [ Dead End, dead end ]
+  security: anarchy
+  tags: [ DigOK, EastDoubleLength, Trees ]
+
+IRONROOT_6:
+  desc: The forest is thick and wild at the edge of clearing here, unruly paths of wild grass running deeper to the west and southwest. A clearer path is visible to the northeast, while the trees thin and open to a wide, grassy clearing spotted with colourful flowers to the east and south.
+  exits:
+    east: IRONROOT_CLEARING_N
+    northeast: IRONROOT_OLD_TRAIL_2
+    south: IRONROOT_CLEARING_W
+    southeast: IRONROOT_CLEARING_S
+    southwest: IRONROOT_9
+    west: IRONROOT_5
+  light: wilderness
+  name: [ Clearing's Edge, clearing's edge ]
+  security: anarchy
+  tags: [ DigOK, EastDoubleLength, NortheastDoubleLength, SouthDoubleLength, SoutheastDoubleLength, SouthwestDoubleLength, Trees, WestDoubleLength ]
+
+IRONROOT_7:
+  desc: The wild, fractious trees thin a little towards the west here, opening into a wide, grassy clearing where the tangled canopy of branches does not reach. Further south and west the woods grow denser and more brooding, while the undergrowth and thick, gnarled trunks grow too dense to proceed further north.
+  exits:
+    east: IRONROOT_2
+    northwest: IRONROOT_OLD_TRAIL_2
+    south: IRONROOT_10
+    southwest: IRONROOT_CLEARING_S
+    west: IRONROOT_CLEARING_N
+  light: wilderness
+  name: [ Clearing's Edge, clearing's edge ]
+  security: anarchy
+  tags: [ DigOK, EastDoubleLength, NorthwestDoubleLength, SouthDoubleLength, SouthwestDoubleLength, Trees, WestDoubleLength ]
+
+IRONROOT_8:
+  desc: The eastern side of the forest is thick and untamed, the venerable trees seeming to continue forever in each direction, the route cluttered with dense undergrowth. It's impossible to make much headway anywhere other than a north/south direction between these hoary trunks, and even then the going is relentlessly slow.
+  exits:
+    north: IRONROOT_4
+    south: IRONROOT_13
+  light: wilderness
+  name: [ Ironroot Forest, deep forest ]
+  security: anarchy
+  tags: [ DigOK, NorthDoubleLength, SouthDoubleLength, Trees ]
+
+IRONROOT_9:
+  desc: The western side of the forest is entirely too dense and overgrown to proceed any deeper, the gnarled trees thick and impassive, a carpet of soft green moss growing on their cracked trunks. The only way to proceed is in an eastern direction, where the trees start to thin and open up into a wide, grassy clearing, flecked with colourful wildflowers.
+  exits:
+    east: IRONROOT_CLEARING_W
+    northeast: IRONROOT_6
+    southeast: IRONROOT_14
+  light: wilderness
+  name: [ Clearing's Edge, clearing's edge ]
+  security: anarchy
+  tags: [ DigOK, EastDoubleLength, NortheastDoubleLength, SoutheastDoubleLength, Trees ]
+
+IRONROOT_10:
+  desc: The forest around you is thick and gloomy, the aged trees growing wide and tall, the trail clogged by long grasses and thorny vines. The trees open up into a grassy clearing to the west, through which you can see a run-down well, while the woods deepen to the east.
+  exits:
+    east: IRONROOT_11
+    north: IRONROOT_7
+    northwest: IRONROOT_CLEARING_N
+    southeast: IRONROOT_16
+    southwest: IRONROOT_15
+    west: IRONROOT_CLEARING_S
+  light: wilderness
+  name: [ Clearing's Edge, clearing's edge ]
+  security: anarchy
+  tags: [ DigOK, EastDoubleLength, NorthDoubleLength, NorthwestDoubleLength, SoutheastDoubleLength, SouthwestDoubleLength, Trees, WestDoubleLength ]
+
+IRONROOT_11:
+  desc: Here at the west side of the wide, crystal-clear lake, the trees are densely-packed and unruly, their greedy roots stretching across the grassy dirt close to the water's edge. Rough paths between the tall, wild grass wind deeper into the forest's gloom.
+  exits:
+    north: IRONROOT_2
+    northeast: CRYSTAL_LAKE_NW
+    south: IRONROOT_16
+    southeast: CRYSTAL_LAKE_SW
+    west: IRONROOT_10
+  light: wilderness
+  name: [ Lake's Edge, lake's edge ]
+  security: anarchy
+  tags: [ DigOK, NorthDoubleLength, SouthDoubleLength, Trees, WaterClean, WestDoubleLength ]
+
+IRONROOT_12:
+  desc: The woods grow thicker and denser the further you travel to the east, the talon-like branches closing in above and obscuring the sky. The thick undergrowth and thorny vines make it difficult to venture deeper, though the forest thins somewhat in the western direction. A huge fallen tree-trunk entirely blocks passage to the north, covered in a coat of soft green moss.
+  exits:
+    east: IRONROOT_13
+    west: IRONROOT_TRAIL_7
+  light: wilderness
+  name: [ Ironroot Forest, deep forest ]
+  security: anarchy
+  tags: [ DigOK, EastDoubleLength, Trees, WestDoubleLength ]
+
+IRONROOT_13:
+  desc: It's difficult to keep your bearings this deep into the woods, the ancient trees all looking alike, their branches forming a thick canopy above you to obscure the sky. The grass beneath your feet is wild and long, tiny wildflowers and toadstools sprouting between the foliage. Your path is almost entirely blocked to the east, the forest becoming too unruly and crowded with thorns and thick trees.
+  exits:
+    north: IRONROOT_8
+    southwest: IRONROOT_TRAIL_10
+    west: IRONROOT_12
+  light: wilderness
+  name: [ Ironroot Forest, deep forest ]
+  security: anarchy
+  tags: [ DigOK, NorthDoubleLength, SouthwestDoubleLength, Trees, WestDoubleLength ]
+
+IRONROOT_14:
+  desc: Here at the south side of the clearing, the broad, crooked trees grow dense, the undergrowth thorny and impenetrable. The woods extend further to the south, but you're unable to delve deeper from here. The trees thin out and form a wide clearing north of here, colourful wildflowers speckled among the long grass.
+  exits:
+    east: IRONROOT_15
+    north: IRONROOT_CLEARING_W
+    northeast: IRONROOT_CLEARING_S
+    northwest: IRONROOT_9
+  light: wilderness
+  name: [ Clearing's Edge, clearing's edge ]
+  security: anarchy
+  tags: [ DigOK, EastDoubleLength, NorthDoubleLength, NortheastDoubleLength, NorthwestDoubleLength, Trees ]
+
+IRONROOT_15:
+  desc: The massive, ancient trees seem to crowd in on you at the south side of the clearing, their crooked branches reaching high above like talons. The undergrowth is thick and impassive, thorny bushes and densely-packed woods impeding your progress deeper. The trees grow sparse to the north, opening into a grassy clearing, and you can see some sort of old stone well in the midst of the long grass.
+  exits:
+    north: IRONROOT_CLEARING_S
+    northeast: IRONROOT_10
+    northwest: IRONROOT_CLEARING_W
+    west: IRONROOT_14
+  light: wilderness
+  name: [ Clearing's Edge, clearing's edge ]
+  security: anarchy
+  tags: [ DigOK, NorthDoubleLength, NortheastDoubleLength, NorthwestDoubleLength, Trees, WestDoubleLength ]
+
+IRONROOT_16:
+  desc: Dense trees curve around the crystal-clear lake to the northeast, their twisted roots forming a thirsty border. Thorny bushes and thick, tangled grasses join with the wide tree-trunks to effectively block passage to the southwest, though the woods open somewhat as the lake's border curves north.
+  exits:
+    north: IRONROOT_11
+    northeast: CRYSTAL_LAKE_SW
+    northwest: IRONROOT_10
+    southeast: IRONROOT_17
+  light: wilderness
+  name: [ Lake's Edge, lake's edge ]
+  security: anarchy
+  tags: [ DigOK, NorthDoubleLength, NorthwestDoubleLength, SoutheastDoubleLength, Trees, WaterClean ]
+
+IRONROOT_17:
+  desc: The grassy, well-worn trail to the east becomes more unruly and wild here, the grasses long and untamed, crooked roots threatening to trip unwary travelers. There's no clear way to push into the woods to the south, the only space offering passage flanking around the wide, crystal-clear lake to the north.
+  exits:
+    east: IRONROOT_TRAIL_9
+    northeast: CRYSTAL_LAKE_S
+    northwest: IRONROOT_16
+  light: wilderness
+  name: [ Lake's Edge, lake's edge ]
+  security: anarchy
+  tags: [ DigOK, EastDoubleLength, NorthwestDoubleLength, Trees, WaterClean ]
+
+IRONROOT_CLEARING_N:
+  desc: You stand at the northern end of a wide clearing in the forest, stretching out further to the south and southwest. The gnarled old trees ring the outside, their twisted branches reaching inward, yet no trees grow on the soft, wild grass that blankets the area. Tiny, colourful wildflowers are scattered across the clearing, hiding amidst the grass.
+  exits:
+    east: IRONROOT_7
+    north: IRONROOT_OLD_TRAIL_2
+    south: IRONROOT_CLEARING_S
+    southeast: IRONROOT_10
+    southwest: IRONROOT_CLEARING_W
+    west: IRONROOT_6
+  light: wilderness
+  name: [ Forest Clearing, clearing ]
+  security: anarchy
+  tags: [ DigOK, EastDoubleLength, NorthDoubleLength, SouthDoubleLength, SoutheastDoubleLength, SouthwestDoubleLength, Trees, VeryWide, WestDoubleLength ]
+
+IRONROOT_CLEARING_S:
+  desc: The southern side of this wide clearing stretches out to the north and west, the soft grass dappled with wildflowers and tiny mushrooms. The forest surrounds you in all other directions, hoary trees reaching their crooked branches into the sky high above. An old stone well stands nearby, the wood rotten and the stones mossy, a grimy old rope dangling down into the gloom below.
+  exits:
+    down: IRONROOT_WELL
+    east: IRONROOT_10
+    north: IRONROOT_CLEARING_N
+    northeast: IRONROOT_7
+    northwest: IRONROOT_6
+    south: IRONROOT_15
+    southwest: IRONROOT_14
+    west: IRONROOT_CLEARING_W
+  light: wilderness
+  name: [ Forest Clearing, clearing ]
+  security: anarchy
+  tags: [ DigOK, DownDoubleLength, DownNoMobRoam, EastDoubleLength, NorthDoubleLength, NortheastDoubleLength, NorthwestDoubleLength, SouthDoubleLength, SouthwestDoubleLength, Trees, VeryWide, WaterTainted, WestDoubleLength ]
+
+IRONROOT_CLEARING_W:
+  desc: The western side of this wide clearing is flanked by trees curving around in a roughly semicircle shape, their crooked branches reaching menacingly inward. The clearing widens to the east and you can see some sort of small structure amidst the wild, overgrown grasses.
+  exits:
+    east: IRONROOT_CLEARING_S
+    north: IRONROOT_6
+    northeast: IRONROOT_CLEARING_N
+    south: IRONROOT_14
+    southeast: IRONROOT_15
+    west: IRONROOT_9
+  light: wilderness
+  name: [ Forest Clearing, clearing ]
+  security: anarchy
+  tags: [ DigOK, EastDoubleLength, NorthDoubleLength, NortheastDoubleLength, SouthDoubleLength, SoutheastDoubleLength, Trees, VeryWide, WestDoubleLength ]
+
+IRONROOT_FOREST_E:
+  desc: The trail here leads eastward, while curving between trees to the northwest as it winds its way through an ancient forest, the gnarled trees reaching their branches high into the sky above. The foliage is thick and wild, and there's no clear way to proceed in any direction aside from the path.
+  exits:
+    east: UNFINISHED
+    northwest: IRONROOT_TRAIL_10
+  light: wilderness
+  name: [ Eastern Ironroot Forest, trail ]
+  security: anarchy
+  tags: [ DigOK, EastDoubleLength, NorthwestDoubleLength, Trees, Wide ]
+
+IRONROOT_FOREST_S:
+  desc: You stand at the southern edge of a mighty forest, the ancient trees thick and heavy to the north, wild grasses and rugged wildflowers underfoot. A fairly well-traveled path leads northwest through the aged woods, disappearing as it curves out of sight.
+  exits:
+    northwest: IRONROOT_TRAIL_9
+    south: UNFINISHED
+  light: wilderness
+  name: [ Southern Ironroot Forest, trail ]
+  security: anarchy
+  tags: [ DigOK, NorthwestDoubleLength, SouthDoubleLength, Trees, Wide ]
+
+IRONROOT_MAZE_A:
+  desc: "$MAZE_IRONROOT"
+  exits:
+    northwest: IRONROOT_MAZE_B
+    southeast: IRONROOT_1
+  light: wilderness
+  name: [ Lost in the Forest, deep forest ]
+  security: anarchy
+  tags: [ DigOK, Maze, Trees ]
+
+IRONROOT_MAZE_B:
+  desc: "$MAZE_IRONROOT"
+  exits:
+    east: IRONROOT_MAZE_C
+    north: IRONROOT_MAZE_D
+    southeast: IRONROOT_MAZE_A
+    southwest: IRONROOT_MAZE_L
+    west: IRONROOT_MAZE_E
+  light: wilderness
+  name: [ Lost in the Forest, deep forest ]
+  security: anarchy
+  tags: [ DigOK, Maze, Trees ]
+
+IRONROOT_MAZE_C:
+  desc: "$MAZE_IRONROOT"
+  exits:
+    west: IRONROOT_MAZE_B
+  light: wilderness
+  name: [ Lost in the Forest, deep forest ]
+  security: anarchy
+  tags: [ DigOK, Maze, Trees ]
+
+IRONROOT_MAZE_D:
+  desc: "$MAZE_IRONROOT"
+  exits:
+    south: IRONROOT_MAZE_B
+  light: wilderness
+  name: [ Lost in the Forest, deep forest ]
+  security: anarchy
+  tags: [ DigOK, Maze, Trees ]
+
+IRONROOT_MAZE_E:
+  desc: "$MAZE_IRONROOT"
+  exits:
+    east: IRONROOT_MAZE_B
+    southwest: IRONROOT_MAZE_K
+    west: IRONROOT_MAZE_F
+  light: wilderness
+  name: [ Lost in the Forest, deep forest ]
+  security: anarchy
+  tags: [ DigOK, Maze, Trees ]
+
+IRONROOT_MAZE_F:
+  desc: "$MAZE_IRONROOT"
+  exits:
+    east: IRONROOT_MAZE_E
+    northwest: IRONROOT_MAZE_G
+  light: wilderness
+  name: [ Lost in the Forest, deep forest ]
+  security: anarchy
+  tags: [ DigOK, Maze, Trees ]
+
+IRONROOT_MAZE_G:
+  desc: "$MAZE_IRONROOT"
+  exits:
+    east: IRONROOT_MAZE_H
+    south: IRONROOT_MAZE_I
+    southeast: IRONROOT_MAZE_F
+  light: wilderness
+  name: [ Lost in the Forest, deep forest ]
+  security: anarchy
+  tags: [ DigOK, Maze, Trees ]
+
+IRONROOT_MAZE_H:
+  desc: "$MAZE_IRONROOT"
+  exits:
+    west: IRONROOT_MAZE_G
+  light: wilderness
+  name: [ Lost in the Forest, deep forest ]
+  security: anarchy
+  tags: [ DigOK, Maze, Trees ]
+
+IRONROOT_MAZE_I:
+  desc: "$MAZE_IRONROOT"
+  exits:
+    north: IRONROOT_MAZE_G
+    south: IRONROOT_MAZE_J
+  light: wilderness
+  name: [ Lost in the Forest, deep forest ]
+  security: anarchy
+  tags: [ DigOK, Maze, Trees ]
+
+IRONROOT_MAZE_J:
+  desc: "$MAZE_IRONROOT"
+  exits:
+    east: IRONROOT_MAZE_K
+    north: IRONROOT_MAZE_I
+    southeast: IRONROOT_MAZE_M
+  light: wilderness
+  name: [ Lost in the Forest, deep forest ]
+  security: anarchy
+  tags: [ DigOK, Maze, Trees ]
+
+IRONROOT_MAZE_K:
+  desc: "$MAZE_IRONROOT"
+  exits:
+    northeast: IRONROOT_MAZE_E
+    west: IRONROOT_MAZE_J
+  light: wilderness
+  name: [ Lost in the Forest, deep forest ]
+  security: anarchy
+  tags: [ DigOK, Maze, Trees ]
+
+IRONROOT_MAZE_L:
+  desc: "$MAZE_IRONROOT"
+  exits:
+    northeast: IRONROOT_MAZE_B
+    south: IRONROOT_MAZE_N
+  light: wilderness
+  name: [ Lost in the Forest, deep forest ]
+  security: anarchy
+  tags: [ DigOK, Maze, Trees ]
+
+IRONROOT_MAZE_M:
+  desc: "$MAZE_IRONROOT"
+  exits:
+    east: IRONROOT_MAZE_N
+    northwest: IRONROOT_MAZE_J
+  light: wilderness
+  name: [ Lost in the Forest, deep forest ]
+  security: anarchy
+  tags: [ DigOK, Maze, Trees ]
+
+IRONROOT_MAZE_N:
+  desc: "$MAZE_IRONROOT"
+  exits:
+    north: IRONROOT_MAZE_L
+    southeast: IRONROOT_MAZE_O
+    west: IRONROOT_MAZE_M
+  light: wilderness
+  name: [ Lost in the Forest, deep forest ]
+  security: anarchy
+  tags: [ DigOK, Maze, Trees ]
+
+IRONROOT_MAZE_O:
+  desc: "$MAZE_IRONROOT"
+  exits:
+    northwest: IRONROOT_MAZE_N
+    south: IRONROOT_2
+  light: wilderness
+  name: [ Lost in the Forest, deep forest ]
+  security: anarchy
+  tags: [ DigOK, Maze, Trees ]
+
+IRONROOT_OLD_TRAIL:
+  desc: What seems to have been an old trail leads north/south here, twisting and turning between the gnarled trunks of the hoary trees. The grass along the trail is wild and long, and it's easy to lose your footing in the dense undergrowth.
+  exits:
+    north: IRONROOT_TRAIL
+    south: IRONROOT_OLD_TRAIL_2
+  light: wilderness
+  name: [ Old Forest Trail, old trail ]
+  security: anarchy
+  tags: [ DigOK, NorthDoubleLength, SouthDoubleLength, Trees, Wide ]
+
+IRONROOT_OLD_TRAIL_2:
+  desc: This old, unkempt forest trail between the dense, elderly trees leads north/south, with the southern side opening up into what looks to be a small clearing in the woods. Alternate paths through the untamed foliage lead southeast and southwest, deeper beneath the thick canopy of branches above.
+  exits:
+    north: IRONROOT_OLD_TRAIL
+    south: IRONROOT_CLEARING_N
+    southeast: IRONROOT_7
+    southwest: IRONROOT_6
+  light: wilderness
+  name: [ Old Forest Trail, old trail ]
+  security: anarchy
+  tags: [ DigOK, NorthDoubleLength, SouthDoubleLength, SoutheastDoubleLength, SouthwestDoubleLength, Trees, Wide ]
+
+IRONROOT_TRAIL:
+  desc: Tall, ancient trees surround this grassy forest trail, thinning as they make way to steep rocky cliff walls to the west. The path branches, the east-west route seeming more well-traveled, while the southward path seems more overgrown and wild.
+  exits:
+    east: IRONROOT_TRAIL_2
+    south: IRONROOT_OLD_TRAIL
+    west: GUKA_PASS_7
+  light: wilderness
+  name: [ Forest Trail Junction, trail ]
+  security: anarchy
+  tags: [ DigOK, EastDoubleLength, SouthDoubleLength, Trees, WestDoubleLength, Wide ]
+
+IRONROOT_TRAIL_2:
+  desc: Tall trees and dense bushes seem to close in on the north and south sides of this well-worn trail, offering reasonable passage only along the east-west length of this well-worn, yet grassy route.
+  exits:
+    east: IRONROOT_TRAIL_3
+    west: IRONROOT_TRAIL
+  light: wilderness
+  name: [ Forest Trail, trail ]
+  security: anarchy
+  tags: [ DigOK, EastDoubleLength, Trees, WestDoubleLength, Wide ]
+
+IRONROOT_TRAIL_3:
+  desc: "The forest trail curves here as the mighty, ancient trees block passage in all but two directions: the trees seem to thin somewhat to the west, while the woods deepen to the southeast."
+  exits:
+    southeast: IRONROOT_TRAIL_4
+    west: IRONROOT_TRAIL_2
+  light: wilderness
+  name: [ Forest Trail, trail ]
+  security: anarchy
+  tags: [ DigOK, SoutheastDoubleLength, Trees, WestDoubleLength, Wide ]
+
+IRONROOT_TRAIL_4:
+  desc: The grassy trail through this densely-wooded forest extends in a roughly northwest/southeast direction, the wild grass trampled from frequent passage. Tall, ancient trees block passage deeper into the forest, save for passage between the trees leading into wild, untamed grass to the south.
+  exits:
+    northwest: IRONROOT_TRAIL_3
+    south: IRONROOT_1
+    southeast: IRONROOT_TRAIL_5
+  light: wilderness
+  name: [ Forest Trail, trail ]
+  security: anarchy
+  tags: [ DigOK, NorthwestDoubleLength, SouthDoubleLength, SoutheastDoubleLength, Trees, Wide ]
+
+IRONROOT_TRAIL_5:
+  desc: The trees seem to crowd in oppressively around you along this well-worn, grassy trail. The path continues northwest/southeast, though there's enough space through the undergrowth to venture deeper into the forest to the west. A wide lake opens up to the south, the clear water glittering beautifully.
+  exits:
+    northwest: IRONROOT_TRAIL_4
+    southeast: IRONROOT_TRAIL_6
+    southwest: CRYSTAL_LAKE_N
+    west: IRONROOT_1
+  light: wilderness
+  name: [ Forest Trail, trail ]
+  security: anarchy
+  tags: [ DigOK, NorthwestDoubleLength, SoutheastDoubleLength, Trees, WaterClean, WestDoubleLength, Wide ]
+
+IRONROOT_TRAIL_6:
+  desc: It's easy to lose your sense of direction this deep into the woods. The trail you're on curves around a crystal-clear lake, the path heading northwest and south, while an opening to wilder grass and deeper woods branches off northeast of here.
+  exits:
+    northeast: IRONROOT_3
+    northwest: IRONROOT_TRAIL_5
+    south: IRONROOT_TRAIL_7
+    southwest: CRYSTAL_LAKE_NE
+  light: wilderness
+  name: [ Forest Trail, trail ]
+  security: anarchy
+  tags: [ DigOK, NortheastDoubleLength, NorthwestDoubleLength, SouthDoubleLength, Trees, WaterClean, Wide ]
+
+IRONROOT_TRAIL_7:
+  desc: Tall, ancient gnarled trees surround you, twisted branches reaching high into the sky above. The woods thin as the ground gives way to a sparkling, clear lake to the west, and a well-worn trail through the grass leads north/south. Eastward, the forest deepens and darkens.
+  exits:
+    east: IRONROOT_12
+    north: IRONROOT_TRAIL_6
+    northwest: CRYSTAL_LAKE_NE
+    south: IRONROOT_TRAIL_8
+    southwest: CRYSTAL_LAKE_SE
+  light: wilderness
+  name: [ Forest Trail, trail ]
+  security: anarchy
+  tags: [ DigOK, EastDoubleLength, NorthDoubleLength, SouthDoubleLength, Trees, Wide, WaterClean ]
+
+IRONROOT_TRAIL_8:
+  desc: The trail branches here, curving around the crystal-clear lake as the grassy path leads north and southwest, while a well-traveled branch beckons through the tall trees to the east. The trunk of a long-since fallen tree sits south of the trail, covered in soft patches of emerald-green moss as the forest slowly reclaims it.
+  exits:
+    east: IRONROOT_TRAIL_10
+    north: IRONROOT_TRAIL_7
+    northwest: CRYSTAL_LAKE_SE
+    southwest: IRONROOT_TRAIL_9
+  light: wilderness
+  name: [ Forest Trail, trail ]
+  security: anarchy
+  tags: [ DigOK, EastDoubleLength, NorthDoubleLength, SouthwestDoubleLength, Trees, Wide, WaterClean ]
+
+IRONROOT_TRAIL_9:
+  desc: The trees have grown wild and unruly here, the grassy trail between the thick, heavy roots twisting and turning, curving around a particularly large and imposing tree as the path leads northeast and southeast. It's possible to find passage through the trees to the west, though the foliage there seems more unruly and seldom-traveled, while north of here lies a wide lake of glittering, crystal-clear water.
+  exits:
+    northeast: IRONROOT_TRAIL_8
+    northwest: CRYSTAL_LAKE_S
+    southeast: IRONROOT_FOREST_S
+    west: IRONROOT_17
+  light: wilderness
+  name: [ Forest Trail, trail ]
+  security: anarchy
+  tags: [ DigOK, NortheastDoubleLength, SoutheastDoubleLength, Trees, WaterClean, WestDoubleLength, Wide ]
+
+IRONROOT_TRAIL_10:
+  desc: Trees press in around you at all sides, ancient gnarled trunks and thick roots digging deep into the soil. The grassy trail, well-traveled yet overgrown, curves west and southeast through the woods, while there's enough space between the trees to venture deeper into the forest wilds to the northeast.
+  exits:
+    northeast: IRONROOT_13
+    southeast: IRONROOT_FOREST_E
+    west: IRONROOT_TRAIL_8
+  light: wilderness
+  name: [ Forest Trail, trail ]
+  security: anarchy
+  tags: [ DigOK, NortheastDoubleLength, SoutheastDoubleLength, Trees, Wide, WestDoubleLength ]
+
+IRONROOT_WELL:
+  desc: Lit only from the open well-shaft above you, the base of this well is a grimy and dismal place. The little water that remains is filthy and stagnant, a grimy pool that reaches up to your mid-thigh, while the cobblestone walls of the well are slick with moss and dirt. {lb} ```Curiously, a number of stones have been dislodged, a muddy tunnel leading into darkness to the east. If that doesn't suit you, the only other way out is a filthy old rope dangling from the opening above.
+  exits:
+    up: IRONROOT_CLEARING_S
+    west: UNFINISHED
+  light: dark
+  name: [ Bottom of the Well, well ]
+  security: anarchy
+  tags: [ CanSeeOutside, UpDoubleLength, Underground, UpNoMobRoam, WaterShallow, WaterTainted ]

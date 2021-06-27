@@ -119,7 +119,7 @@ BRULD_LEATHERWORKER:
   tags: [ Indoors, NorthLocked, NorthLockStrong, SouthDoorShop, SouthLockable, WestLocked ]
 
 BRULD_LEATHERWORKER_HOUSE:
-  desc: The private quarters of Bruld & Sons is a simple yet comfortable affair, a few faded yet colourful tapestries hanging on the bare brick walls, small windows letting in light from the street outside. Three beds lie beyond a hanging curtain dividing the room, and a number of shelves and cupboards hold simple personal belongings. {lb} ```The only exit lies east, a wooden door back to the storefront.
+  desc: The private quarters of Bruld & Sons is a simple yet comfortable affair, a few faded yet colourful tapestries hanging on the bare brick walls, small windows letting in light from the street outside. Three beds lie beyond a hanging curtain dividing the room, and a number of shelves and cupboards hold simple personal belongings. The only exit lies east, a wooden door back to the storefront.
   exits:
     east: BRULD_LEATHERWORKER
   light: dim
@@ -148,7 +148,7 @@ CALEDONIA_ALCHEMIST:
   tags: [ Indoors, NortheastLocked, NorthLocked, NorthLockStrong, SouthDoorShop, SouthLockable ]
 
 CALEDONIA_ALCHEMIST_HOUSE:
-  desc: The private rooms of the alchemist's shop are even more chaotic and disorganized than the storefront -- tables cluttered with potion bottles, books and bags of dried herbs, shelves heavy with assorted trinkets and knick-knacks. Colourful tapestries hang from the walls which are not already covered by shelves and cupboards, and a large bed is half-covered by dusty old books and empty bottles. {lb} ```The only exit is southwest, back to the storefront.
+  desc: The private rooms of the alchemist's shop are even more chaotic and disorganized than the storefront -- tables cluttered with potion bottles, books and bags of dried herbs, shelves heavy with assorted trinkets and knick-knacks. Colourful tapestries hang from the walls which are not already covered by shelves and cupboards, and a large bed is half-covered by dusty old books and empty bottles. The only exit is southwest, back to the storefront.
   exits:
     southwest: CALEDONIA_ALCHEMIST
   light: dim
@@ -157,7 +157,7 @@ CALEDONIA_ALCHEMIST_HOUSE:
   tags: [ Indoors, Private, SleepOK, SouthwestLocked ]
 
 CALEDONIA_ALCHEMIST_STOREROOM:
-  desc: If it was possible for the back room to be any more cluttered and disorganized than the main room of the store, it is. Half-opened crates hold contain strange, scaly beast parts padded with hay, shelves are stocked with a number of unlabelled bottles, jars with creepy-looking things floating in thick fluids, and tools you can't even begin to recognize. {lb} ```The only way out is back south.
+  desc: If it was possible for the back room to be any more cluttered and disorganized than the main room of the store, it is. Half-opened crates hold contain strange, scaly beast parts padded with hay, shelves are stocked with a number of unlabelled bottles, jars with creepy-looking things floating in thick fluids, and tools you can't even begin to recognize. The only way out is back south.
   exits:
     south: CALEDONIA_ALCHEMIST
   light: dark
@@ -177,7 +177,7 @@ CALEDONIA_APOTHECARY:
   tags: [ CanSeeOutside, EastDoorShop, EastLockable, Indoors, NorthLocked, SouthLocked, SouthLockStrong ]
 
 CALEDONIA_APOTHECARY_HOUSE:
-  desc: "This small but pleasantly-furnished room is lit from soft daylight through windows in the walls above. A round wooden table sits before a cozy, crackling fireplace set against the west wall, and a number of shelves house simple personal belongings. A large rug has been spread out beneath a comfortable looking bed, the dark red-brown fabric worn and aged. {lb} ```A heavy wooden door leads back out, south to the storefront."
+  desc: "This small but pleasantly-furnished room is lit from soft daylight through windows in the walls above. A round wooden table sits before a cozy, crackling fireplace set against the west wall, and a number of shelves house simple personal belongings. A large rug has been spread out beneath a comfortable looking bed, the dark red-brown fabric worn and aged. A heavy wooden door leads back out, south to the storefront."
   exits:
     south: CALEDONIA_APOTHECARY
   light: dim
@@ -215,7 +215,7 @@ CALEDONIA_FLETCHER_HOUSE:
   tags: [ HideCampfireScar, Indoors, WestLocked, PermaCampfire, Private, SleepOK ]
 
 CALEDONIA_FLETCHER_STOREROOM:
-  desc: Little more than a large closet at most, the walls of this storeroom are covered in shelves, each of which holds various bundles of arrows and bolts, quivers and bows, some in unfinished condition or varying states of repair. {lb} ```The exit door lies northwest.
+  desc: Little more than a large closet at most, the walls of this storeroom are covered in shelves, each of which holds various bundles of arrows and bolts, quivers and bows, some in unfinished condition or varying states of repair. The exit door lies northwest.
   exits:
     northwest: CALEDONIA_FLETCHER
   light: dark
@@ -257,7 +257,7 @@ CALEDONIA_MARKET_SE3:
   security: low
 
 CALEDONIA_NEXUS:
-  desc: Thick metal cables snake across the stone floor in this smallish, cramped room, the walls covered in glowing panels, blinking lights and tangled wires, parting just wide enough for a single door leading out, along with a metal hatch on the ground in the corner. {lb} ```Dominating the center of the room, at the union of a dozen yellow and black striped cables, a large metallic sphere atop a column of concentric rings. {lb} ```You feel curiously drawn to touch the sphere, though it's unclear what might happen if you do.
+  desc: Thick metal cables snake across the stone floor in this smallish, cramped room, the walls covered in glowing panels, blinking lights and tangled wires, parting just wide enough for a single door leading out, along with a metal hatch on the ground in the corner. {lb} ```Dominating the center of the room, at the union of a dozen yellow and black striped cables, a large metallic sphere atop a column of concentric rings. You feel curiously drawn to touch the sphere, though it's unclear what might happen if you do.
   exits:
     down: FALSE_ROOM
     northeast: CROSSWOOD_ALLEY
@@ -267,7 +267,7 @@ CALEDONIA_NEXUS:
   tags: [ DownDoorMetal, DownPermalock, Indoors, Nexus, NortheastDoorMetal, NortheastOpenable ]
 
 CALEDONIA_STEEL_FISTS:
-  desc: The guildhall's foyer is an unimpressive affair. Light filters in through a cracked window facing the corner of Miller's and King's, possibly held together only by the golden letting on the glass. The decrepit floorboards creak in irate protest under your feet, and a few old aether-lanterns keep the place reasonably-lit. {lb} ```A heavy wooden counter divides the room, holding a few dusty old books and yellowing pieces of parchment, behind which bookshelves flank an eastern door. {lb} ```A large noticeboard occupies the public-facing, north side of the wall, upon which are pinned various papers.
+  desc: The guildhall's foyer is an unimpressive affair. Light filters in through a cracked window facing the corner of Miller's and King's, possibly held together only by the golden letting on the glass. The decrepit floorboards creak in irate protest under your feet, and a few old aether-lanterns keep the place reasonably-lit. {lb} ```A heavy wooden counter divides the room, holding a few dusty old books and yellowing pieces of parchment, behind which bookshelves flank an eastern door. A large noticeboard occupies the public-facing, north side of the wall, upon which are pinned various papers.
   exits:
     east: FALSE_ROOM
     southwest: MILLERS_KINGS
@@ -343,7 +343,7 @@ DARKENED_ALLEY:
   tags: [ DigOK, Wide ]
 
 DEAD_END_ALLEY:
-  desc: The paving stones roll like a wave down this narrow alley, squeezed between two large abandoned industrial buildings. Rusted machinery sits against the brick walls, stacks of wooden crates and boxes lie between, old barrels and the stripped down remains of a wooden cart. {lb} ```Toward the back of the alley, where it ends in a brick wall, is a small wooden door leading into a factory.
+  desc: The paving stones roll like a wave down this narrow alley, squeezed between two large abandoned industrial buildings. Rusted machinery sits against the brick walls, stacks of wooden crates and boxes lie between, old barrels and the stripped down remains of a wooden cart. Toward the back of the alley, where it ends in a brick wall, is a small wooden door leading into a factory.
   exits:
     north: MILLERS_WAY_3
     south: ERROS_JUNKYARD
@@ -398,7 +398,7 @@ DIAMOND_IN_THE_ROUGH:
   tags: [ Indoors, SoutheastDoorShop, SoutheastLockable, SoutheastLockStrong, WestLocked, WestLockStrong ]
 
 DIAMOND_IN_THE_ROUGH_BARRACKS:
-  desc: This modest yet comfortable-looking room is largely occupied by two decently-sized beds, each flanked by smaller bedside cabinets containing personal belongings. {lb} ```The room is otherwise fairly unremarkable and bare, two ornate wooden doors leading outward to the north and west.
+  desc: This modest yet comfortable-looking room is largely occupied by two decently-sized beds, each flanked by smaller bedside cabinets containing personal belongings. The room is otherwise fairly unremarkable and bare, two ornate wooden doors leading outward to the north and west.
   exits:
     north: DIAMOND_IN_THE_ROUGH_CORRIDOR
     west: DIAMOND_IN_THE_ROUGH_VAULT
@@ -417,7 +417,7 @@ DIAMOND_IN_THE_ROUGH_BEDROOM:
   tags: [ CanSeeOutside, Indoors, Private, SouthLocked ]
 
 DIAMOND_IN_THE_ROUGH_CORRIDOR:
-  desc: You find yourself at a T-junction, each branch of the corridor ending in an ornate wooden door. {lb} ```Brass-mounted aether-lanterns hang on the east wall, bathing the corridor in a soft light, while the west wall is covered by a large painting depicting a pleasant nature scene.
+  desc: You find yourself at a T-junction, each branch of the corridor ending in an ornate wooden door. Brass-mounted aether-lanterns hang on the east wall, bathing the corridor in a soft light, while the west wall is covered by a large painting depicting a pleasant nature scene.
   exits:
     east: DIAMOND_IN_THE_ROUGH
     north: DIAMOND_IN_THE_ROUGH_BEDROOM
@@ -428,7 +428,7 @@ DIAMOND_IN_THE_ROUGH_CORRIDOR:
   tags: [ EastLocked, EastLockStrong, Indoors, NorthLocked, Private, SouthOpenable ]
 
 DIAMOND_IN_THE_ROUGH_VAULT:
-  desc: The storeroom is fairly small and cramped, largely consisting of boxes and cases containing a number of gemstones and pieces of jewelry in various stages of completion. A heavy workbench against the west wall holds a number of odd tools, likely used to make and repair jewelry and cut rough gemstones. {lb} ```The only exit is back the way you came, to the east.
+  desc: The storeroom is fairly small and cramped, largely consisting of boxes and cases containing a number of gemstones and pieces of jewelry in various stages of completion. A heavy workbench against the west wall holds a number of odd tools, likely used to make and repair jewelry and cut rough gemstones. The only exit is back the way you came, to the east.
   exits:
     east: DIAMOND_IN_THE_ROUGH_BARRACKS
   light: dim
@@ -449,7 +449,7 @@ EAST_ARCO:
   tags: [ NorthTripleLength, SouthLockable, VeryWide ]
 
 ERROS_JUNKYARD:
-  desc: What was once an abandoned factory, complete with rusting old machinery and discarded wooden crates, has been converted into something of a makeshift flea market. Rickety old tables are covered with all manner of debris, most of it broken and worthless, though a few useful items catch your eye amidst the dross. {lb} ```The factory floor is poorly-lit, thin beams of light shining through cracks in the boarded-up windows, illuminating motes of dust in the air and reflecting brightly off gaudy trinkets. {lb} ```The only obvious exit is a battered old wooden door to the north.
+  desc: What was once an abandoned factory, complete with rusting old machinery and discarded wooden crates, has been converted into something of a makeshift flea market. Rickety old tables are covered with all manner of debris, most of it broken and worthless, though a few useful items catch your eye amidst the dross. {lb} ```The factory floor is poorly-lit, thin beams of light shining through cracks in the boarded-up windows, illuminating motes of dust in the air and reflecting brightly off gaudy trinkets. The only obvious exit is a battered old wooden door to the north.
   exits:
     north: DEAD_END_ALLEY
   light: dark
@@ -474,7 +474,7 @@ FOUNTAIN_SQUARE:
   tags: [ WaterClean, Wide ]
 
 FOUNTAIN_SQUARE_E:
-  desc: "North and south of here are the canvas-covered stalls of a bustling street market rife with colour and exotic smells. {lb} ```To the west, the area opens to a wider plaza with a large fountain in the middle of a cobblestone path. The imposing wall of the Forge-City rises to east, blocking any further progress in that direction."
+  desc: "North and south of here are the canvas-covered stalls of a bustling street market rife with colour and exotic smells. To the west, the area opens to a wider plaza with a large fountain in the middle of a cobblestone path. The imposing wall of the Forge-City rises to east, blocking any further progress in that direction."
   exits:
     north: UNFINISHED
     south: CALEDONIA_MARKET_SE2
@@ -485,7 +485,7 @@ FOUNTAIN_SQUARE_E:
   tags: [ VeryWide ]
 
 FOUNTAIN_SQUARE_S:
-  desc: "The wide paved stone road leads north-south here, flanked by colourful, canvas-covered market stalls offering all manner of goods for sale, along with softly-glowing aether-lanterns on tall iron poles. {lb} ```The market square opens around a fountain to the north, while southward the market stalls give way to run-down industrial buildings."
+  desc: "The wide paved stone road leads north-south here, flanked by colourful, canvas-covered market stalls offering all manner of goods for sale, along with softly-glowing aether-lanterns on tall iron poles. The market square opens around a fountain to the north, while southward the market stalls give way to run-down industrial buildings."
   exits:
     east: CALEDONIA_MARKET_SE3
     north: FOUNTAIN_SQUARE
@@ -516,7 +516,7 @@ HAINAS_SUNDRIES_BEDROOM:
   tags: [ Indoors, Private ]
 
 HAINAS_SUNDRIES_STOREROOM:
-  desc: The storeroom is somehow even more cluttered than the storefront; barrels, boxes and dusty sacks lay strewn around and stacked higgledy-piggledy around, a few old wooden shelves straining to hold dusty boxes of supplies. {lb} ```A single door leads back west to the main room, while a heavy wooden ladder is propped against the wall, leading up through an open hatch into an attic area.
+  desc: The storeroom is somehow even more cluttered than the storefront; barrels, boxes and dusty sacks lay strewn around and stacked higgledy-piggledy around, a few old wooden shelves straining to hold dusty boxes of supplies. A single door leads back west to the main room, while a heavy wooden ladder is propped against the wall, leading up through an open hatch into an attic area.
   exits:
     up: HAINAS_SUNDRIES_BEDROOM
     west: HAINAS_SUNDRIES
@@ -548,7 +548,7 @@ IRON_LANE:
   tags: [ EastDoubleLength, NorthLockable, VeryWide, WestDoubleLength ]
 
 IRON_LANE_2:
-  desc: Iron Lane stretches out to the east and west, most of the northern side blocked by heavy brick industrial structures, though a narrow alley winds its way between two factory buildings. {lb} ```South, past a heavy chainlink fence blocking passage, you can see warehouses, shipping containers, and several large cargo ships floating peacefully in the still waters of the ocean.
+  desc: Iron Lane stretches out to the east and west, most of the northern side blocked by heavy brick industrial structures, though a narrow alley winds its way between two factory buildings. South, past a heavy chainlink fence blocking passage, you can see warehouses, shipping containers, and several large cargo ships floating peacefully in the still waters of the ocean.
   exits:
     east: IRON_LANE
     north: UNFINISHED
@@ -560,7 +560,7 @@ IRON_LANE_2:
   tags: [ EastDoubleLength, VeryWide, WestTripleLength ]
 
 IRON_LANE_3:
-  desc: The street is long, old, the paving stones cracked and ruined. Tall brick buildings occupy your view to the north, reaching up to the polluted sky like jagged fingers, the largest of which appears to be a high-rise apartment building in a state of disrepair. {lb} ```A heavy chainlink fence blocks passage to the south, through which you can mostly see looming warehouses blocking the view of the docks beyond.
+  desc: The street is long, old, the paving stones cracked and ruined. Tall brick buildings occupy your view to the north, reaching up to the polluted sky like jagged fingers, the largest of which appears to be a high-rise apartment building in a state of disrepair. A heavy chainlink fence blocks passage to the south, through which you can mostly see looming warehouses blocking the view of the docks beyond.
   exits:
     east: IRON_LANE_2
     north: LEWIN_LOBBY
@@ -597,7 +597,7 @@ IRREFUHREND_WATCHTOWER:
   tags: [ DownTripleLength, EastSky3, NorthSky3, SouthSky3, WestSky3 ]
 
 JOSEPHS_FABRICS:
-  desc: This small shop room is simple yet meticulously clean, the floorboards beneath your feet covered by a large, colourful rug. {lb} ```Much of the room is taken up with racks of clothes of various colours and styles, while an L-shaped wooden counter in the far corner blocks a door beyond.
+  desc: This small shop room is simple yet meticulously clean, the floorboards beneath your feet covered by a large, colourful rug. Much of the room is taken up with racks of clothes of various colours and styles, while an L-shaped wooden counter in the far corner blocks a door beyond.
   exits:
     south: JOSEPHS_FABRICS_STOREROOM
     southeast: MILLERS_CHURCH
@@ -607,7 +607,7 @@ JOSEPHS_FABRICS:
   tags: [ Indoors, SoutheastDoorShop, SoutheastLockable, SouthLocked ]
 
 JOSEPHS_FABRICS_BEDROOM:
-  desc: Another colourful carpet dominates the floor in the upper room, this one a cheerful shade of green with yellow trim. A large, comfortable-looking bed occupies the west side of the room, while a number of shelves and cupboards house personal belongings and knickknacks. {lb} ```A narrow staircase leads back down to the storeroom below.
+  desc: Another colourful carpet dominates the floor in the upper room, this one a cheerful shade of green with yellow trim. A large, comfortable-looking bed occupies the west side of the room, while a number of shelves and cupboards house personal belongings and knickknacks. A narrow staircase leads back down to the storeroom below.
   exits:
     down: JOSEPHS_FABRICS_STOREROOM
   light: dim
@@ -616,7 +616,7 @@ JOSEPHS_FABRICS_BEDROOM:
   tags: [ Indoors, Private, SleepOK ]
 
 JOSEPHS_FABRICS_STOREROOM:
-  desc: The back room of the store seems mostly dedicated to storage - various spare pieces of clothes are neatly folded in boxes and crates, while large rolls of fabric rest against a heavy workbench. {lb} ```The single door lies back north, while a narrow staircase heads up to a second floor.
+  desc: The back room of the store seems mostly dedicated to storage - various spare pieces of clothes are neatly folded in boxes and crates, while large rolls of fabric rest against a heavy workbench. The single door lies back north, while a narrow staircase heads up to a second floor.
   exits:
     north: JOSEPHS_FABRICS
     up: JOSEPHS_FABRICS_BEDROOM
@@ -681,7 +681,7 @@ KINGS_ROAD_BOOKSTORE:
   tags: [ CanSeeOutside, EastPermalock, Indoors, WestDoorShop, WestLockable, WestLockWeak ]
 
 LEWIN_102:
-  desc: Split into two rooms with a small bathroom off to the side, you enter into a small yet tidy kitchen area, various plates and bowls stacked neatly in a corner. {lb} ```Through the doorway is the sleeping area, mostly occupied by a single bed, with a couple of small cupboards by the far wall.
+  desc: Split into two rooms with a small bathroom off to the side, you enter into a small yet tidy kitchen area, various plates and bowls stacked neatly in a corner. Through the doorway is the sleeping area, mostly occupied by a single bed, with a couple of small cupboards by the far wall.
   exits:
     southwest: LEWIN_LOBBY
   light: dim
@@ -690,7 +690,7 @@ LEWIN_102:
   tags: [ Indoors, Private, SleepOK, SouthwestLocked, SouthwestLockWeak ]
 
 LEWIN_103:
-  desc: This apartment is a little larger than the others, the main room spacious enough to contain a couple of small couches and a table. {lb} ```Small rooms leading off to the sides lead to a bathroom area, a surprisingly tidy and clean kitchen, and a bedroom with a well-made double bed.
+  desc: This apartment is a little larger than the others, the main room spacious enough to contain a couple of small couches and a table. Small rooms leading off to the sides lead to a bathroom area, a surprisingly tidy and clean kitchen, and a bedroom with a well-made double bed.
   exits:
     west: LEWIN_LOBBY
   light: dim
@@ -699,7 +699,7 @@ LEWIN_103:
   tags: [ Indoors, Private, SleepOK, WestLocked, WestLockWeak ]
 
 LEWIN_104:
-  desc: Sparse is the best way to describe this apartment, lit from outside through a small window. The room is largely empty save for a wardrobe built into the wall in the far corner, and a mattress occupying abot half of the entire floor-space. {lb} ```Aside from some scattere debris, little else can be seen here.
+  desc: Sparse is the best way to describe this apartment, lit from outside through a small window. The room is largely empty save for a wardrobe built into the wall in the far corner, and a mattress occupying abot half of the entire floor-space. Aside from some scattere debris, little else can be seen here.
   exits:
     northwest: LEWIN_LOBBY
   light: dim
@@ -708,7 +708,7 @@ LEWIN_104:
   tags: [ Indoors, NorthwestLocked, NorthwestLockWeak, Private, SleepOK ]
 
 LEWIN_105:
-  desc: This tiny apartment room is largely occupied by a large mattress in the far corner, covered in a number of pillows and grubby white sheets. {lb} ```A large, opaque window offers light into the room from outside, and a few boxes are scattered around with various personal possessions stuffed inside.
+  desc: This tiny apartment room is largely occupied by a large mattress in the far corner, covered in a number of pillows and grubby white sheets. A large, opaque window offers light into the room from outside, and a few boxes are scattered around with various personal possessions stuffed inside.
   exits:
     northeast: LEWIN_LOBBY
   light: dim
@@ -717,7 +717,7 @@ LEWIN_105:
   tags: [ Indoors, NortheastLocked, NortheastLockWeak, Private, SleepOK ]
 
 LEWIN_106:
-  desc: A strangely geometric arrangement of furniture makes the most of the limited space in this long, narrow apartment. {lb} ```A small couch up against one wall sits near a bed in an enclosed half-wall section, while deeper inside is a cubicle bathroom and a small kitchen area at the far side.
+  desc: A strangely geometric arrangement of furniture makes the most of the limited space in this long, narrow apartment. A small couch up against one wall sits near a bed in an enclosed half-wall section, while deeper inside is a cubicle bathroom and a small kitchen area at the far side.
   exits:
     southeast: LEWIN_LOBBY
   light: dim
@@ -735,7 +735,7 @@ LEWIN_201:
   tags: [ Indoors, Private, SleepOK, SouthLocked, SouthLockWeak ]
 
 LEWIN_203:
-  desc: An uneven, bare wooden floor creaks loudly underfoot as you pass through this small, unremarkable apartment. The walls are largely covered in faded floral wallpaper, though one section has been torn away to reveal grimy brickwork beneath. {lb} ```There's some boxes of junk, a small table, a few wooden chairs, an icebox that looks older than this apartment, and a grimy mattress on the floor for a bed. {lb} ```A single door leads back to the stairwell.
+  desc: An uneven, bare wooden floor creaks loudly underfoot as you pass through this small, unremarkable apartment. The walls are largely covered in faded floral wallpaper, though one section has been torn away to reveal grimy brickwork beneath. {lb} ```There's some boxes of junk, a small table, a few wooden chairs, an icebox that looks older than this apartment, and a grimy mattress on the floor for a bed. A single door leads back to the stairwell.
   exits:
     west: LEWIN_FLOOR_2
   light: dim
@@ -744,7 +744,7 @@ LEWIN_203:
   tags: [ Indoors, Private, SleepOK, WestLocked, WestLockWeak ]
 
 LEWIN_204:
-  desc: This tiny, squallid apartment seems barely fit to house feral animals, let alone humans. The bare brick walls are stained and riddled with damp and mold, the wooden floor is filthy and seems half-rotted, and the only fresh air comes from a broken, grimy window in the outer wall. {lb} ```There's no furniture here, just garbage and rags cluttering the edges of the room. A single door leads back out to the stairwell.
+  desc: This tiny, squallid apartment seems barely fit to house feral animals, let alone humans. The bare brick walls are stained and riddled with damp and mold, the wooden floor is filthy and seems half-rotted, and the only fresh air comes from a broken, grimy window in the outer wall. There's no furniture here, just garbage and rags cluttering the edges of the room. A single door leads back out to the stairwell.
   exits:
     northwest: LEWIN_FLOOR_2
   light: dim
@@ -753,7 +753,7 @@ LEWIN_204:
   tags: [ Indoors, NorthwestLocked, NorthwestLockWeak, Private, SleepOK ]
 
 LEWIN_205:
-  desc: This apartment is small and squallid, but some attempt has been made to make it liveable. Ancient floral wallpaper hangs loosely from the damp-ridden walls, and amidst various discarded tools and junk, some dusty and worn wooden furniture decorates the small space. {lb} ```There's a small, decrepit kitchen area decorated in an unappealing green colour, though the water doesn't seem to be running. {lb} ```The only exit is north, through the single door.
+  desc: This apartment is small and squallid, but some attempt has been made to make it liveable. Ancient floral wallpaper hangs loosely from the damp-ridden walls, and amidst various discarded tools and junk, some dusty and worn wooden furniture decorates the small space. {lb} ```There's a small, decrepit kitchen area decorated in an unappealing green colour, though the water doesn't seem to be running. The only exit is north, through the single door.
   exits:
     north: LEWIN_FLOOR_2
   light: dim
@@ -762,7 +762,7 @@ LEWIN_205:
   tags: [ Indoors, NorthLocked, NorthLockWeak, Private, SleepOK ]
 
 LEWIN_206:
-  desc: This small and rather cramped apartment is dusty and messy, most of the space taken up by shelves and bookcases holding dusty old books and other nick-nacks, while an old oven rusts quietly away against the far wall, a heavy metal pipe leading up and into the ceiling. {lb} ```Dim light shines in from a cracked window above a worn desk, and the only other thing of note is the exit door to the northeast.
+  desc: This small and rather cramped apartment is dusty and messy, most of the space taken up by shelves and bookcases holding dusty old books and other nick-nacks, while an old oven rusts quietly away against the far wall, a heavy metal pipe leading up and into the ceiling. Dim light shines in from a cracked window above a worn desk, and the only other thing of note is the exit door to the northeast.
   exits:
     northeast: LEWIN_FLOOR_2
   light: dim
@@ -771,7 +771,7 @@ LEWIN_206:
   tags: [ Indoors, NortheastLocked, NortheastLockWeak, Private, SleepOK ]
 
 LEWIN_207:
-  desc: This small apartment is fairly clean and tidy, though cluttered with various bric-a-brac, old newspapers and books, and other items of little note covering each surface of the few tables and desks. A few odd artistic pictures are hanging on the cracked, gray-green walls, and a striped gray couch seems like it's seen better days. {lb} ```The exit lies to the east, back to the stairwell.
+  desc: This small apartment is fairly clean and tidy, though cluttered with various bric-a-brac, old newspapers and books, and other items of little note covering each surface of the few tables and desks. A few odd artistic pictures are hanging on the cracked, gray-green walls, and a striped gray couch seems like it's seen better days. The exit lies to the east, back to the stairwell.
   exits:
     east: LEWIN_FLOOR_2
   light: dim
@@ -780,7 +780,7 @@ LEWIN_207:
   tags: [ EastLocked, EastLockWeak, Indoors, Private, SleepOK ]
 
 LEWIN_208:
-  desc: This apartment room seems bizarrely barren -- the off-yellow plastered walls are bare and worn, the floor is bare wooden planks, marred and scratched, and the only furniture appears to be an old radiator near a cracked window, and a heavy, ancient white oven sitting alone near the middle of the room. {lb} ```A door leads outward to the stairwell.
+  desc: This apartment room seems bizarrely barren -- the off-yellow plastered walls are bare and worn, the floor is bare wooden planks, marred and scratched, and the only furniture appears to be an old radiator near a cracked window, and a heavy, ancient white oven sitting alone near the middle of the room. A door leads outward to the stairwell.
   exits:
     southeast: LEWIN_FLOOR_2
   light: dim
@@ -853,7 +853,7 @@ MILLERS_CHURCH:
   tags: [ NorthDoubleLength, NorthwestLockable, NorthwestLockWeak, VeryWide, WestTripleLength ]
 
 MILLERS_CROSSWOOD:
-  desc: Miller's Way, with its scarred paving stones, runs east to west at the junction. Little is of note, simply buildings lining the roads, small businesses and boarded up shops, with the park and tall pines behind a short wall nearby. {lb} ``Crosswood Alley, narrow and winding, disappears north between two buildings.
+  desc: Miller's Way, with its scarred paving stones, runs east to west at the junction. Little is of note, simply buildings lining the roads, small businesses and boarded up shops, with the park and tall pines behind a short wall nearby. Crosswood Alley, narrow and winding, disappears north between two buildings.
   exits:
     east: MILLERS_WAY
     north: CROSSWOOD_ALLEY
@@ -899,7 +899,7 @@ MILLERS_WAY:
   tags: [ EastDoubleLength, SouthLockable, SouthLockStrong, SouthNoMobRoam, VeryWide ]
 
 MILLERS_WAY_2:
-  desc: The long road continues stretching out far to the east and west, a rusting green street sign helpfully reading, 'Miller's Way'. Tall buildings crowd the sides of the road, cracked and dirty windows betraying a muted glow within, though the doors all seem to be chained and locked shut. {lb} ```A rusted sewer grate is mounted in the ground nearby, gloom beckoning beneath.
+  desc: The long road continues stretching out far to the east and west, a rusting green street sign helpfully reading, 'Miller's Way'. Tall buildings crowd the sides of the road, cracked and dirty windows betraying a muted glow within, though the doors all seem to be chained and locked shut. A rusted sewer grate is mounted in the ground nearby, gloom beckoning beneath.
   exits:
     down: SEWER_MILLERS
     east: MILLERS_CROSSWOOD
@@ -910,7 +910,7 @@ MILLERS_WAY_2:
   tags: [ DownDoorMetal, DownOpenable, VeryWide ]
 
 MILLERS_WAY_3:
-  desc: The edge of the heavy industry zone, Miller's Way bears tall residential buildings to the north and taller warehouses and factories to the south, a few dormant exhaust stacks bursting above the skyline. The low thrum of aether-engines is barely noticeable, more of a consistent background haze. {lb} ```Directly south lies an alley cluttered with debris, lined with tall brick walls and broken factory glass.
+  desc: The edge of the heavy industry zone, Miller's Way bears tall residential buildings to the north and taller warehouses and factories to the south, a few dormant exhaust stacks bursting above the skyline. The low thrum of aether-engines is barely noticeable, more of a consistent background haze. Directly south lies an alley cluttered with debris, lined with tall brick walls and broken factory glass.
   exits:
     east: MILLERS_WAY_2
     north: UNFINISHED
@@ -922,7 +922,7 @@ MILLERS_WAY_3:
   tags: [ SouthDoubleLength, VeryWide ]
 
 MK_CASINO:
-  desc: Thick, heavy smoke chokes the air in this back room, the air taking on an almost mystical haze from barely-seen aether-lanterns, buzzing in their death-throes. A dusty old pink and green sign on the wall proclaims this to be "MK's Casino", including a picture of a smiling goblin. {lb} ```Most of the strange machines here are in varying states of disrepair, though a number of slot machines, cheerfully labeled "Soopa Froot", seem in decent condition. {lb} ```A heavy door leads north, while the 'casino' continues east.
+  desc: Thick, heavy smoke chokes the air in this back room, the air taking on an almost mystical haze from barely-seen aether-lanterns, buzzing in their death-throes. A dusty old pink and green sign on the wall proclaims this to be "MK's Casino", including a picture of a smiling goblin. {lb} ```Most of the strange machines here are in varying states of disrepair, though a number of slot machines, cheerfully labeled "Soopa Froot", seem in decent condition. A heavy door leads north, while the 'casino' continues east.
   exits:
     east: MK_CASINO_2
     north: BLACK_MARKET_WAREHOUSE
@@ -932,7 +932,7 @@ MK_CASINO:
   tags: [ GameSlots, Indoors, NorthLockable, NorthLockStrong ]
 
 MK_CASINO_2:
-  desc: The east side of the casino is even more choked with stale smoke than the north, though the colourful aether-light still illuminates the hazy gloom in an otherworldly glow. {lb} ```There's a number of half-functional mechanical games machines around here, most prominent of which are a series of five-card draw video-poker cabinets.
+  desc: The east side of the casino is even more choked with stale smoke than the north, though the colourful aether-light still illuminates the hazy gloom in an otherworldly glow. There's a number of half-functional mechanical games machines around here, most prominent of which are a series of five-card draw video-poker cabinets.
   exits:
     east: KINGS_IRREFUHREND
     west: MK_CASINO
@@ -942,7 +942,7 @@ MK_CASINO_2:
   tags: [ GamePoker, Indoors, EastLocked, EastLockStrong ]
 
 MORENO_ALLEY:
-  desc: Moreno Alley, best described as an absence of warehouses. Tall brick buildings sit to either side, the walls nearest Miller's Way littered in faded adverts for restorative tonics and spices from a faraway land. The paving stones are a bit worn, as abandoned steam pipes lie partially uncovered and deep fissures cross the alley. {lb} ```There's a big metal sign leaning lengthwise against one building just beside a heavy door, though whatever was on it before has been obscured by a graffiti image of a minotaur. {lb} ```The alley continues southward into the warehouse district.
+  desc: Moreno Alley, best described as an absence of warehouses. Tall brick buildings sit to either side, the walls nearest Miller's Way littered in faded adverts for restorative tonics and spices from a faraway land. The paving stones are a bit worn, as abandoned steam pipes lie partially uncovered and deep fissures cross the alley. {lb} ```There's a big metal sign leaning lengthwise against one building just beside a heavy door, though whatever was on it before has been obscured by a graffiti image of a minotaur. The alley continues southward into the warehouse district.
   exits:
     north: MILLERS_CROSSWOOD
     south: UNFINISHED
@@ -967,7 +967,7 @@ NORTHWATCH:
   tags: [ Indoors, NorthwestLockable, SouthLockable, WestLockable, Wide ]
 
 NORTHWATCH_ARMOURY:
-  desc: Around twenty feet on each side, this wood-floored room is surrounded by heavy stone brick walls, the only exit an imposing-looking wooden door leading back north. {lb} ```Weapons and armour are stored here in abundance, hanging from racks on the walls or stacked on the ground, along with a number of stacked, sealed barrels of uncertain purpose.
+  desc: Around twenty feet on each side, this wood-floored room is surrounded by heavy stone brick walls, the only exit an imposing-looking wooden door leading back north. Weapons and armour are stored here in abundance, hanging from racks on the walls or stacked on the ground, along with a number of stacked, sealed barrels of uncertain purpose.
   exits:
     north: NORTHWATCH_BARRACKS
   light: dim
@@ -976,7 +976,7 @@ NORTHWATCH_ARMOURY:
   tags: [ Indoors, NorthLocked, NorthLockStrong, Private ]
 
 NORTHWATCH_BARRACKS:
-  desc: This wide, wood-floored room is largely dedicated to sleeping quarters - a great number of simple beds are arranged around the room, each flanked by a simple wooden cabinet for storing personal effects. {lb} ```The room is somewhat L-shaped, both the east and south sides ending in a heavy wooden door.
+  desc: This wide, wood-floored room is largely dedicated to sleeping quarters - a great number of simple beds are arranged around the room, each flanked by a simple wooden cabinet for storing personal effects. The room is somewhat L-shaped, both the east and south sides ending in a heavy wooden door.
   exits:
     east: NORTHWATCH
     south: NORTHWATCH_ARMOURY
@@ -1036,7 +1036,7 @@ NORTHWATCH_JAIL_CELL_2:
   tags: [ Indoors, SleepOK, SouthwestDoorMetal, SouthwestLocked, SouthwestLockStrong, SouthwestLocksWhenClosed, Underground ]
 
 NORTHWATCH_YARD:
-  desc: Tall, heavy stone walls surround this training yard, the soft grass a small patch of nature in an otherwise industrialized city. A number of training dummies have been set up here - little more than crude wooden mannequins - along with some archery targets and a couple of bales of hay. {lb} ```The only exit is back through the door the way you came.
+  desc: Tall, heavy stone walls surround this training yard, the soft grass a small patch of nature in an otherwise industrialized city. A number of training dummies have been set up here - little more than crude wooden mannequins - along with some archery targets and a couple of bales of hay. The only exit is back through the door the way you came.
   exits:
     southeast: NORTHWATCH
   light: dim
@@ -1077,7 +1077,7 @@ ORM_SMITHY_HOME:
   tags: [ CanSeeOutside, HideCampfireScar, Indoors, PermaCampfire, Private, SouthLocked, SouthwestLocked, SouthwestLockWeak, SouthwestWindow ]
 
 ORM_SMITHY_STOREROOM:
-  desc: The storeroom at the back of the shop is cramped and untidy, various crates both open and closed containing a variety of unsold stock, along with shelves holding gleaming weapons, heavy shields and pieces of armour propped up against them. {lb} ```The only exit is back west.
+  desc: The storeroom at the back of the shop is cramped and untidy, various crates both open and closed containing a variety of unsold stock, along with shelves holding gleaming weapons, heavy shields and pieces of armour propped up against them. The only exit is back west.
   exits:
     west: ORM_SMITHY
   light: dark
@@ -1104,7 +1104,7 @@ OUR_LADY_BACK_ROOM:
   tags: [ Indoors, NoExploreCredit, Private, SoutheastPermaLock ]
 
 OUR_LADY_CENTRAL_HALL:
-  desc: Candlelight against the rows of stone columns casts deep shadows outward from the central nave, keeping the main path rather well lit. The shadows close tighter farther toward the ceiling, vaulted arches cloaked in black and the dimmest gray. The inobvious pattern of floor tile coats the floor along the nave and both aisles to either side, the pathways separated by the lines of columns. {lb} ```It runs west to the entrance, and east, where the reddish golden hue of stained glass can be seen.
+  desc: Candlelight against the rows of stone columns casts deep shadows outward from the central nave, keeping the main path rather well lit. The shadows close tighter farther toward the ceiling, vaulted arches cloaked in black and the dimmest gray. The inobvious pattern of floor tile coats the floor along the nave and both aisles to either side, the pathways separated by the lines of columns. It runs west to the entrance, and east, where the reddish golden hue of stained glass can be seen.
   exits:
     east: OUR_LADY_ALTAR
     northwest: OUR_LADY_BACK_ROOM
@@ -1115,7 +1115,7 @@ OUR_LADY_CENTRAL_HALL:
   tags: [ CanSeeOutside, Indoors, NorthwestPermaLock, Wide ]
 
 OUR_LADY_GRAND_HALL:
-  desc: Candles shed golden light on the hard floor, illuminating the subtle patterns of dark and light spread along the hallway. Columns hold buttressed ceilings, the arches high overhead creating a vast sound chamber that sends echoes into the dark distance. The walls, running parallel towards the east, are a fair ten meters apart and decorated in line art images, holy men and women of varied species it would seem. {lb} ```The hall runs toward a darkened end, just out of sight but lined with points of candlelight.
+  desc: Candles shed golden light on the hard floor, illuminating the subtle patterns of dark and light spread along the hallway. Columns hold buttressed ceilings, the arches high overhead creating a vast sound chamber that sends echoes into the dark distance. The walls, running parallel towards the east, are a fair ten meters apart and decorated in line art images, holy men and women of varied species it would seem. The hall runs toward a darkened end, just out of sight but lined with points of candlelight.
   exits:
     east: OUR_LADY_CENTRAL_HALL
     west: CHURCH_AVENUE
@@ -1125,7 +1125,7 @@ OUR_LADY_GRAND_HALL:
   tags: [ CanSeeOutside, Indoors, WestNoMobRoam, WestLockable, WestLockWeak, Wide ]
 
 RED_DRAGON:
-  desc: The entryway to the Red Dragon Inn is a fairly modest affair, a fairly small room with a simple wooden floor and plain brick walls. {lb} ```Doors lead inward to the north and back to the street outside southwest, while a heavy wooden counter - complete with dusty old ledger - occupies the east side.
+  desc: The entryway to the Red Dragon Inn is a fairly modest affair, a fairly small room with a simple wooden floor and plain brick walls. Doors lead inward to the north and back to the street outside southwest, while a heavy wooden counter - complete with dusty old ledger - occupies the east side.
   exits:
     north: RED_DRAGON_STAIRWELL
     southwest: BERESTALL_KINGS
@@ -1135,7 +1135,7 @@ RED_DRAGON:
   tags: [ Indoors, SouthwestLockable ]
 
 RED_DRAGON_FLOOR_2:
-  desc: The view out the large window at the south end of the hallway puts you at the level of most of the surrounding rooftops, blocking out all but the horizons and the view of the park to the southwest. The long hallway is rather dusty underfoot, in a coating of crumbled brick and sawdust. {lb} ```Several doors lead into the various inn rooms.
+  desc: The view out the large window at the south end of the hallway puts you at the level of most of the surrounding rooftops, blocking out all but the horizons and the view of the park to the southwest. The long hallway is rather dusty underfoot, in a coating of crumbled brick and sawdust. Several doors lead into the various inn rooms.
   exits:
     down: RED_DRAGON_STAIRWELL
     east: RED_DRAGON_ROOM_RENTABLE
@@ -1150,7 +1150,7 @@ RED_DRAGON_FLOOR_2:
   tags: [ CanSeeOutside, EastAutoClose, EastLocked, EastLockWeak, Indoors, NorthAutoClose, NortheastAutoClose, NortheastLocked, NortheastLockWeak, NorthLocked, NorthLockWeak, SoutheastAutoClose, SoutheastLocked, SoutheastLockWeak, SouthOpenable, SouthWindow ]
 
 RED_DRAGON_FLOOR_3:
-  desc: The stairs exit on a long hallway, floorboards underfoot warped and creaking. It ends in a single window, of the same height and width of the hallway, which looks south over the lower levels of the city and allows a view from a few storeys above the surroundings. {lb} ```There are a few doors on each side of the hallway, most battered and worn, one covered in scratched graffiti.
+  desc: The stairs exit on a long hallway, floorboards underfoot warped and creaking. It ends in a single window, of the same height and width of the hallway, which looks south over the lower levels of the city and allows a view from a few storeys above the surroundings. There are a few doors on each side of the hallway, most battered and worn, one covered in scratched graffiti.
   exits:
     down: RED_DRAGON_FLOOR_2
     east: RED_DRAGON_ROOM_303
@@ -1166,7 +1166,7 @@ RED_DRAGON_FLOOR_3:
   tags: [ CanSeeOutside, EastAutoClose, EastLocked, EastLockWeak, Indoors, NorthAutoClose, NortheastAutoClose, NortheastLocked, NortheastLockWeak, NorthLocked, NorthLockWeak, SoutheastAutoClose, SoutheastLocked, SoutheastLockWeak, SouthOpenable, SouthSky, SouthWindow ]
 
 RED_DRAGON_LOBBY_ROOF:
-  desc: The roof tiles feel unsteady beneath your feet as you perch upon the slightly sloped roof that sits above the lobby area of the Red Dragon. {lb} ```The rest of the building stretches higher behind you, a single window beckoning passage back inside, while the rest of the city surrounds you to the west and south, the sound of travelers along Berestall and King's somewhat muffled by your height.
+  desc: The roof tiles feel unsteady beneath your feet as you perch upon the slightly sloped roof that sits above the lobby area of the Red Dragon. The rest of the building stretches higher behind you, a single window beckoning passage back inside, while the rest of the city surrounds you to the west and south, the sound of travelers along Berestall and King's somewhat muffled by your height.
   exits:
     north: RED_DRAGON_FLOOR_2
     northwest: UNFINISHED
@@ -1261,7 +1261,7 @@ RED_DRAGON_ROOM_RENTABLE:
   tags: [ CanSeeOutside, Indoors, SleepOK, WestAutoLock, WestLocked, WestLockWeak ]
 
 RED_DRAGON_STAIRWELL:
-  desc: Wide and fairly well lit, this set of stairs runs from the building's roof to basement, linking each of the floors and the tavern on the basement level. {lb} ```Well-worn wooden railings are set into some of the walls, lying functionless on the floor in other places, exit doors in similar states of disrepair. The lights are dimmer the farther down one goes.
+  desc: Wide and fairly well lit, this set of stairs runs from the building's roof to basement, linking each of the floors and the tavern on the basement level. Well-worn wooden railings are set into some of the walls, lying functionless on the floor in other places, exit doors in similar states of disrepair. The lights are dimmer the farther down one goes.
   exits:
     down: RED_DRAGON_TAVERN
     east: RED_DRAGON_STAFF_ROOM
@@ -1273,7 +1273,7 @@ RED_DRAGON_STAIRWELL:
   tags: [ EastAutoClose, EastLocked, Indoors ]
 
 RED_DRAGON_STAFF_ROOM:
-  desc: A little larger than the other rooms in the inn, though not by a huge amount, this room houses two comfortable-looking beds, a writing desk and chair, and some shelves and cabinets with personal belongings. An old rug is draped on the floor partially covered by the bed, its colours faded and worn. {lb} ```The only exit lies west, through the room's single door.
+  desc: A little larger than the other rooms in the inn, though not by a huge amount, this room houses two comfortable-looking beds, a writing desk and chair, and some shelves and cabinets with personal belongings. An old rug is draped on the floor partially covered by the bed, its colours faded and worn. The only exit lies west, through the room's single door.
   exits:
     west: RED_DRAGON_STAIRWELL
   light: dim
@@ -1282,7 +1282,7 @@ RED_DRAGON_STAFF_ROOM:
   tags: [ Indoors, Private, WestAutoLock, WestLocked ]
 
 RED_DRAGON_TAVERN:
-  desc: This small basement tavern is simple and modest, yet cozy. The worn cobblestone floor is mostly clean aside from a few dark stains, and benches sit alongside three heavy wooden tables, while a few wooden stools flank the bar. A fire crackles merrily in the hearth, above which is mounted a shield bearing the insignia of a red dragon. {lb} ```A rickety staircase leads to the lobby and private rooms upstairs, and an old wooden door sits behind the bar.
+  desc: This small basement tavern is simple and modest, yet cozy. The worn cobblestone floor is mostly clean aside from a few dark stains, and benches sit alongside three heavy wooden tables, while a few wooden stools flank the bar. A fire crackles merrily in the hearth, above which is mounted a shield bearing the insignia of a red dragon. A rickety staircase leads to the lobby and private rooms upstairs, and an old wooden door sits behind the bar.
   exits:
     north: IGNOBLE_TUNNEL
     up: RED_DRAGON_STAIRWELL
@@ -1292,7 +1292,7 @@ RED_DRAGON_TAVERN:
   tags: [ HideCampfireScar, Indoors, NorthOpenable, PermaCampfire, Underground ]
 
 RENASCENCE_STATION:
-  desc: You stand within a great rail station, the platforms running a city block from end to end. Its glory days must have passed, for it stands largely dormant, passenger trains arriving quite sporadically; the cargo platforms see more business, the sounds of workers echoing off the dark stone walls. {lb} ```The tracks lie to the west of the stone floored platform, its edges girded in iron. A roof slopes overhead, over the benches, ticket counters, offices and information boards. {lb} ```A large set of doors leads you east, to the street outside.
+  desc: You stand within a great rail station, the platforms running a city block from end to end. Its glory days must have passed, for it stands largely dormant, passenger trains arriving quite sporadically; the cargo platforms see more business, the sounds of workers echoing off the dark stone walls. {lb} ```The tracks lie to the west of the stone floored platform, its edges girded in iron. A roof slopes overhead, over the benches, ticket counters, offices and information boards. A large set of doors leads you east, to the street outside.
   exits:
     east: KINGS_RENASCENCE
   light: bright
@@ -1301,7 +1301,7 @@ RENASCENCE_STATION:
   tags: [ EastOpenable, Indoors, Wide, WestAutoClose, WestDoorMetal, WestOpenable ]
 
 SKYGUARD_PLATFORM:
-  desc: As if it was dropped from above, the stone platform's settled firmly within the city block-wide cluster of evergreens. The huge twin ballistae of wrought iron and sturdy dark wood reach for the sky above the tree cover - dense and deep enough the city seems it might be miles away, forgiving the encroaching plumes of smoke breaching the treetops. The platform sits about a foot off the grass below, supporting the heavy ballistae, which currently point south - the direction of the harbour. {lb} ```Stairs head down to a trail northwards, while a wide, rusted iron ring marks a passage into the ground.
+  desc: As if it was dropped from above, the stone platform's settled firmly within the city block-wide cluster of evergreens. The huge twin ballistae of wrought iron and sturdy dark wood reach for the sky above the tree cover - dense and deep enough the city seems it might be miles away, forgiving the encroaching plumes of smoke breaching the treetops. {lb} ```The platform sits about a foot off the grass below, supporting the heavy ballistae, which currently point south - the direction of the harbour. Stairs head down to a trail northwards, while a wide, rusted iron ring marks a passage into the ground.
   exits:
     down: SKYGUARD_TRENCH
     north: ARROW_PARK
@@ -1322,7 +1322,7 @@ SPRING_LANE:
   tags: [ DownNoMobRoam, SouthTripleLength, VeryWide ]
 
 YETUS_PLACE:
-  desc: The back room of Yetu's store is somewhat more homely and less cluttered than the front, though a number of crates and boxes are stacked around here and there, leaving enough room for a worn-looking bed in the corner, and a small yet functional kitchen area. {lb} ```The door to the south leads back to the store proper.
+  desc: The back room of Yetu's store is somewhat more homely and less cluttered than the front, though a number of crates and boxes are stacked around here and there, leaving enough room for a worn-looking bed in the corner, and a small yet functional kitchen area. The door to the south leads back to the store proper.
   exits:
     south: YETUS_SUPPLIES
   light: dim

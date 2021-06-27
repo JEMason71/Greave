@@ -237,7 +237,7 @@ MOORE_MAZE_17:
   tags: [ DigOK, Indoors, Maze, Underground ]
 
 MOORE_NEXUS:
-  desc: Thick metal cables snake across the stone floor in this smallish, cramped room, the walls covered in glowing panels, blinking lights and tangled wires, parting just wide enough for a single door leading out. {lb} ```Dominating the center of the room, at the union of a dozen yellow and black striped cables, a large metallic sphere atop a column of concentric rings. {lb} ```You feel curiously drawn to touch the sphere, though it's unclear what might happen if you do.
+  desc: Thick metal cables snake across the stone floor in this smallish, cramped room, the walls covered in glowing panels, blinking lights and tangled wires, parting just wide enough for a single door leading out. {lb} ```Dominating the center of the room, at the union of a dozen yellow and black striped cables, a large metallic sphere atop a column of concentric rings. You feel curiously drawn to touch the sphere, though it's unclear what might happen if you do.
   exits:
     north: MOORE_CRUMBLING_TUNNEL
   light: dim
@@ -246,7 +246,7 @@ MOORE_NEXUS:
   tags: [ Indoors, Nexus, NorthDoorMetal, NorthOpenable, Underground ]
 
 MOORE_TUNNEL:
-  desc: East to west this ancient underground train tunnel stretches, the air chill and dry, every sound echoing loudly through the sepulchral gloom. {lb} ```The tracks here seem in an almost usable condition, though it's clear no trains have passed through here in many decades. The grime-speckled walls are partly covered by a twisted mass of ancient cables, though rather more striking is a patch of graffiti in stark white paint proclaiming, "7-960". {lb} ```Painted in peeling moss-green paint, a heavy metal service door can be seen in the southern wall.
+  desc: East to west this ancient underground train tunnel stretches, the air chill and dry, every sound echoing loudly through the sepulchral gloom. The tracks here seem in an almost usable condition, though it's clear no trains have passed through here in many decades. {lb} ```The grime-speckled walls are partly covered by a twisted mass of ancient cables, though rather more striking is a patch of graffiti in stark white paint proclaiming, "7-960". Painted in peeling moss-green paint, a heavy metal service door can be seen in the southern wall.
   exits:
     east: MOORE_TUNNEL_2
     south: UNFINISHED
@@ -257,7 +257,7 @@ MOORE_TUNNEL:
   tags: [ EastDoubleLength, Indoors, SouthOpenable, Underground, Wide ]
 
 MOORE_TUNNEL_2:
-  desc: While generally dilapidated elsewhere, the ancient tunnel starts to show more clear signs of disrepair here, chunks of stone broken free from the ceiling above littering the rusted old train tracks and splintered wooden ties. {lb} ```The tunnel continues into the gloom to both east and west, though the walls have crumbled enough to allow passage through twisted bundles of old cables to twisty passages both north and south.
+  desc: While generally dilapidated elsewhere, the ancient tunnel starts to show more clear signs of disrepair here, chunks of stone broken free from the ceiling above littering the rusted old train tracks and splintered wooden ties. The tunnel continues into the gloom to both east and west, though the walls have crumbled enough to allow passage through twisted bundles of old cables to twisty passages both north and south.
   exits:
     east: UNFINISHED
     north: UNFINISHED
@@ -269,7 +269,7 @@ MOORE_TUNNEL_2:
   tags: [ Indoors, Underground, WestDoubleLength, Wide ]
 
 TUNNEL_SD_1:
-  desc: You find yourself in a maze of dirt tunnels, roughly round in shape, high enough to walk through at a stoop. Pale roots dangle above you like reaching tendrils, and all around is an uncomfortable sound of skittering and scratching. {lb} ```Some of the wider tunnels lead north, east and west, while many others branch off at odd angles, too small for you to squeeze through. {lb} ```The southern dirt wall opens into a hole through which dim light can be seen, while beneath your feet is a heavy metal hatch, its surface marked only with the letters 'W10/8'.
+  desc: You find yourself in a maze of dirt tunnels, roughly round in shape, high enough to walk through at a stoop. Pale roots dangle above you like reaching tendrils, and all around is an uncomfortable sound of skittering and scratching. Some of the wider tunnels lead north, east and west, while many others branch off at odd angles, too small for you to squeeze through. {lb} ```The southern dirt wall opens into a hole through which dim light can be seen, while beneath your feet is a heavy metal hatch, its surface marked only with the letters 'W10/8'.
   exits:
     down: UNFINISHED
     east: TUNNEL_SD_2
@@ -282,7 +282,7 @@ TUNNEL_SD_1:
   tags: [ DownDoorMetal, DownOpenable, Indoors, Underground ]
 
 TUNNEL_SD_2:
-  desc: The winding tunnels branch off in multiple directions, but the only passages wide enough for you to fit are east and west. {lb} ```You can hear strange, unsettling skittering noises, especially from the small tunnel to the east, barely wide enough to fit your shoulders.
+  desc: The winding tunnels branch off in multiple directions, but the only passages wide enough for you to fit are east and west. You can hear strange, unsettling skittering noises, especially from the small tunnel to the east, barely wide enough to fit your shoulders.
   exits:
     east: MOORE_MAZE_7
     west: TUNNEL_SD_1
@@ -292,7 +292,7 @@ TUNNEL_SD_2:
   tags: [ EastNoMobRoam, Indoors, Underground ]
 
 TUNNEL_SD_3:
-  desc: The dirt tunnel narrows here, curving away to the northwest but narrowing enough that you can't fit your shoulders through. Smaller tunnels branch off here and there, but the only way you can feasibly fit is back south. {lb} ```The ground crunches beneath your feet here as you walk across the broken bones of some small animal.
+  desc: The dirt tunnel narrows here, curving away to the northwest but narrowing enough that you can't fit your shoulders through. Smaller tunnels branch off here and there, but the only way you can feasibly fit is back south. The ground crunches beneath your feet here as you walk across the broken bones of some small animal.
   exits:
     northwest: BLOCKED
     south: TUNNEL_SD_1
@@ -302,7 +302,7 @@ TUNNEL_SD_3:
   tags: [ Indoors, Underground ]
 
 TUNNEL_SD_4:
-  desc: This maze of twisting dirt tunnels seems to head in a mostly east-west direction, with a number of smaller tunnels too narrow for you to fit branching off in other directions. {lb} ```The dirt underfoot is dry and loose, littered with bits of debris and broken animal bones.
+  desc: This maze of twisting dirt tunnels seems to head in a mostly east-west direction, with a number of smaller tunnels too narrow for you to fit branching off in other directions. The dirt underfoot is dry and loose, littered with bits of debris and broken animal bones.
   exits:
     east: TUNNEL_SD_1
     west: TUNNEL_SD_5
@@ -312,7 +312,7 @@ TUNNEL_SD_4:
   tags: [ Indoors, Underground ]
 
 TUNNEL_SD_5:
-  desc: You appear to be in a dirt maze of roughly-hewn tunnels, the largest of which leads into the skittering gloom to the east. The only other tunnel wide enough for you to fit through is a long, narrow crawl to the north. {lb} ```Patches of pale moss cling to the walls around this side of the tunnel.
+  desc: You appear to be in a dirt maze of roughly-hewn tunnels, the largest of which leads into the skittering gloom to the east. The only other tunnel wide enough for you to fit through is a long, narrow crawl to the north. Patches of pale moss cling to the walls around this side of the tunnel.
   exits:
     east: TUNNEL_SD_4
     north: MOORE_CABLE_ROOM
@@ -322,7 +322,7 @@ TUNNEL_SD_5:
   tags: [ Indoors, NorthDoubleLength, Underground ]
 
 TUNNEL_SD_COLLAPSED:
-  desc: This was once a wide brick tunnel, stretching off to whatever may lie to the east - such a time has long-since passed, however, and now only a sloped pile of rubble, dirt and animal bones blocks the eastern path. {lb} ```The west side seems to be the tunnel's end, an imposing brick wall marked with a pair of heavy metal doors, enough light to see trickling through semi-opaque slabs of blue glass. {lb} ```Whether by accident or design, a large hole has been torn in the north side of the tunnel wall, leading into a gloomy series of dirt tunnels.
+  desc: This was once a wide brick tunnel, stretching off to whatever may lie to the east - such a time has long-since passed, however, and now only a sloped pile of rubble, dirt and animal bones blocks the eastern path. The west side seems to be the tunnel's end, an imposing brick wall marked with a pair of heavy metal doors, enough light to see trickling through semi-opaque slabs of blue glass. {lb} ```Whether by accident or design, a large hole has been torn in the north side of the tunnel wall, leading into a gloomy series of dirt tunnels.
   exits:
     east: BLOCKED
     north: TUNNEL_SD_1

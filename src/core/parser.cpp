@@ -32,6 +32,11 @@ void Parser::parse(std::string input)
             return;
     }
 
+
+    /*****************
+     * Meta commands *
+     *****************/
+
     // 'quit' and 'exit' commands both exit the game, but require confirmation.
     if (first_word == "quit" || first_word == "exit")
     {
@@ -42,6 +47,11 @@ void Parser::parse(std::string input)
 
     // 'save' command, to... save the game.
     if (first_word == "save") { core()->save(); return; }
+
+
+    /****************************
+     * Basic world interactions *
+     ****************************/
 
     // Look around you. Just look around you.
     if (first_word == "look" || first_word == "l") { ActionLook::look(player); return; }
@@ -89,7 +99,11 @@ void Parser::parse(std::string input)
         return;
     }
 
-    // Super secret dev/debug commands!
+    /************************************
+     * Super secret dev/debug commands! *
+     ************************************/
+
+    // Hashes a string into an integer.
     if (first_word == "#hash")
     {
         if (words.size() < 2)
@@ -101,6 +115,30 @@ void Parser::parse(std::string input)
         core()->message("{G}" + hash_word + " {g}hashes to {G}" + std::to_string(StrX::hash(hash_word)) + "{g}.");
         return;
     }
+
+    // Teleports to another room.
+    if (first_word == "#tp" || first_word == "#teleport")
+    {
+        if (words.size() < 2)
+        {
+            core()->message("{y}Please specify a {Y}teleport destination{y}.");
+            return;
+        }
+        const std::string target = StrX::str_toupper(words.at(1));
+        if (core()->world()->room_exists(target))
+        {
+            core()->message("{U}The world around you {M}s{C}h{M}i{C}m{M}m{C}e{M}r{C}s{U}!");
+            core()->world()->player()->set_location(StrX::hash(target));
+            ActionLook::look(core()->world()->player());
+        }
+        else core()->message("{R}" + target + " {y}is not a valid room ID.");
+        return;
+    }
+
+
+    /*********
+     * Fluff *
+     *********/
 
     // Other words we can basically ignore.
     if (first_word == "yes" || first_word == "no")

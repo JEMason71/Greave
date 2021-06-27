@@ -270,6 +270,9 @@ void World::load_room_pool()
 // Retrieves a pointer to the Player object.
 const std::shared_ptr<Mobile> World::player() const { return m_player; }
 
+// Checks if a specified room ID exists.
+bool World::room_exists(const std::string &str) const { return m_room_pool.find(StrX::hash(str)) != m_room_pool.end(); }
+
 // Saves the World and all things within it.
 void World::save(std::shared_ptr<SQLite::Database> save_db)
 {

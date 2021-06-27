@@ -13,7 +13,7 @@ EAST_CALEDONIA:
   tags: [ DigOK, NorthDoubleLength, SouthTripleLength, Wide ]
 
 EAST_CALEDONIA_2:
-  desc: Wide, rolling green plains of wild grass stretch out to the north and east, the terrain hilly and uneven. The north/south trail leads along the outer side of the great stone city walls, towering impassively above you to the west, blocking passage within. {lb} ```Southward the grassy plains continue, eventually giving way to the deep blue ocean beyond.
+  desc: Wide, rolling green plains of wild grass stretch out to the north and east, the terrain hilly and uneven. The north/south trail leads along the outer side of the great stone city walls, towering impassively above you to the west, blocking passage within. Southward the grassy plains continue, eventually giving way to the deep blue ocean beyond.
   exits:
     north: EAST_CALEDONIA
     south: EAST_CALEDONIA_3
@@ -64,7 +64,7 @@ EAST_CALEDONIA_6:
   tags: [ DigOK, EastDoubleLength, NorthDoubleLength, WaterSalt, Wide ]
 
 EAST_CALEDONIA_7:
-  desc: The water is cool and refreshing, the sapphire waves gently lapping against the sandy beach to the north. The great walls of the city extend even out into the ocean, towering high above and blocking any attempt to gain passage beyond. {lb} ```A way to the east, a small island rises out of the ocean, a rickety-looking rope bridge connecting it to the mainland.
+  desc: The water is cool and refreshing, the sapphire waves gently lapping against the sandy beach to the north. The great walls of the city extend even out into the ocean, towering high above and blocking any attempt to gain passage beyond. A way to the east, a small island rises out of the ocean, a rickety-looking rope bridge connecting it to the mainland.
   exits:
     east: IANI_OCEAN
     north: EAST_CALEDONIA_6
@@ -87,7 +87,7 @@ IANI_BEACH:
   tags: [ DigOK, EastDoubleLength, WaterSalt, WestDoubleLength ]
 
 IANI_BEACH_2:
-  desc: The scent of salt is strong in the air here, the sea breeze cool and briny. The soft sand dunes stretch out before you, punctuated by a few clumps of speargrass stubbornly clinging to life. {lb} ```A little way off the coast lies a small island to the south, a rickety-looking rope bridge moored to the beach leading south onto island's rocky surface.
+  desc: The scent of salt is strong in the air here, the sea breeze cool and briny. The soft sand dunes stretch out before you, punctuated by a few clumps of speargrass stubbornly clinging to life. A little way off the coast lies a small island to the south, a rickety-looking rope bridge moored to the beach leading south onto island's rocky surface.
   exits:
     east: UNFINISHED
     south: UNFINISHED
@@ -148,7 +148,7 @@ NORTH_CALEDONIA_3:
   tags: [ DigOK, EastTripleLength, NorthDoubleLength, WestTripleLength, Wide ]
 
 NORTH_CALEDONIA_4:
-  desc: The great wall of the Forge-City curves at an angle here, the unkempt grassy trail leading west towards the gate, curving off along the angle of the mighty wall to the southeast. {lb} ```The shrubs and undergrowth grow denser here, and looming from the north are the tall, gnarled trunks of ancient trees.
+  desc: The great wall of the Forge-City curves at an angle here, the unkempt grassy trail leading west towards the gate, curving off along the angle of the mighty wall to the southeast. The shrubs and undergrowth grow denser here, and looming from the north are the tall, gnarled trunks of ancient trees.
   exits:
     northeast: UNFINISHED
     northwest: UNFINISHED
@@ -160,7 +160,7 @@ NORTH_CALEDONIA_4:
   tags: [ DigOK, SoutheastDoubleLength, WestTripleLength, Wide ]
 
 NORTH_CALEDONIA_5:
-  desc: The great walls tower over you, obscuring your view of the city, though you can barely make out an elevated overpass past the walls to the south. {lb} ```Here on the other side of the wall, nature surrounds you; grassy plains stretch out all around, the tall grass and unruly undergrowth hindering your progress.
+  desc: The great walls tower over you, obscuring your view of the city, though you can barely make out an elevated overpass past the walls to the south. Here on the other side of the wall, nature surrounds you; grassy plains stretch out all around, the tall grass and unruly undergrowth hindering your progress.
   exits:
     northwest: NORTH_CALEDONIA_4
     southeast: NORTH_CALEDONIA_6
@@ -170,7 +170,7 @@ NORTH_CALEDONIA_5:
   tags: [ DigOK, NorthwestDoubleLength, SoutheastDoubleLength, Wide ]
 
 NORTH_CALEDONIA_6:
-  desc: The walls of the city curve again here, angled northwest and east. Past the wall to the south you can see the tops of tall buildings silhouetted against the sky. {lb} ```Here in the nook of the curved wall, brightly-coloured wildflowers thrive amidst the long grass and tangled bushes, speckling the area with vibrant colour.
+  desc: The walls of the city curve again here, angled northwest and east. Past the wall to the south you can see the tops of tall buildings silhouetted against the sky. Here in the nook of the curved wall, brightly-coloured wildflowers thrive amidst the long grass and tangled bushes, speckling the area with vibrant colour.
   exits:
     east: NORTH_CALEDONIA_7
     northwest: NORTH_CALEDONIA_5
@@ -220,7 +220,7 @@ NORTH_CALEDONIA_10:
   tags: [ DigOK, EastTripleLength, WestTripleLength, Wide ]
 
 NORTH_CALEDONIA_11:
-  desc: The seemingly endless expanse of the tall, impassive Forge-City walls stretch out to the east and west, blocking all passage southward. The sounds of foot-traffic and industry are barely audible here, though dismally out of reach. {lb} ```The rough trail follows the city walls through hardy grasses and low foliage, while grassy, open fields stretch out before you to the north.
+  desc: The seemingly endless expanse of the tall, impassive Forge-City walls stretch out to the east and west, blocking all passage southward. The sounds of foot-traffic and industry are barely audible here, though dismally out of reach. The rough trail follows the city walls through hardy grasses and low foliage, while grassy, open fields stretch out before you to the north.
   exits:
     east: NORTH_CALEDONIA_12
     west: NORTH_CALEDONIA_10
@@ -270,7 +270,7 @@ NORTHEAST_CALEDONIA:
   tags: [ DigOK, SouthDoubleLength, WestDoubleLength, Wide ]
 
 OUTSIDE_QUEENS_GATE:
-  desc: You stand before the gates of the Forge-City Caledonia. The massive stone walls loom high above, the strong bricks weather-worn and dotted with patches of moss and lichen. {lb} ```Cracked and worn, an old stone road beckons northward, tufts of grass and weeds growing through the gaps. Flanking the road is long, wild grass, along with a few shrubs and trees growing wild.
+  desc: You stand before the gates of the Forge-City Caledonia. The massive stone walls loom high above, the strong bricks weather-worn and dotted with patches of moss and lichen. Cracked and worn, an old stone road beckons northward, tufts of grass and weeds growing through the gaps. Flanking the road is long, wild grass, along with a few shrubs and trees growing wild.
   exits:
     east: NORTH_CALEDONIA_3
     north: QUEENS_1

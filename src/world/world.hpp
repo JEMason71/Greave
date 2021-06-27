@@ -17,12 +17,13 @@ class World
 {
 public:
             World();    // Constructor, loads the room YAML data.
-    std::string generic_desc(const std::string &id) const;                  // Retrieves a generic description string.
-    const std::shared_ptr<Room> get_room(uint32_t room_id) const;           // Retrieves a specified Room by ID.
+    std::string generic_desc(const std::string &id) const;              // Retrieves a generic description string.
+    const std::shared_ptr<Room> get_room(uint32_t room_id) const;       // Retrieves a specified Room by ID.
     const std::shared_ptr<Room> get_room(const std::string &room_id) const; // As above, but with a Room ID string.
-    void    load(std::shared_ptr<SQLite::Database> save_db);                // Loads the World and all things within it.
-    const std::shared_ptr<Mobile>   player() const;                         // Retrieves a pointer to the Player object.
-    void    save(std::shared_ptr<SQLite::Database> save_db);                // Saves the World and all things within it.
+    void    load(std::shared_ptr<SQLite::Database> save_db);            // Loads the World and all things within it.
+    const std::shared_ptr<Mobile>   player() const;                     // Retrieves a pointer to the Player object.
+    bool    room_exists(const std::string &str) const;                  // Checks if a specified room ID exists.
+    void    save(std::shared_ptr<SQLite::Database> save_db);            // Saves the World and all things within it.
 
 private:
     static const std::map<std::string, uint8_t>     LIGHT_LEVEL_MAP;    // Lookup table for converting textual light levels (e.g. "bright") to integer values.
