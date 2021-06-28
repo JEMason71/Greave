@@ -7,6 +7,7 @@
 #include "core/guru.hpp"
 #include "core/message.hpp"
 #include "core/parser.hpp"
+#include "core/random.hpp"
 #include "core/strx.hpp"
 #include "core/terminal-blt.hpp"
 #include "core/terminal-curses.hpp"
@@ -29,7 +30,7 @@ std::shared_ptr<Core> greave = nullptr;   // The main Core object.
 
 const std::string   Core::GAME_VERSION =        "pre-alpha";    // The game's version number.
 const unsigned int  Core::MSG_FLAG_INTERRUPT =  1;              // Flags for the message() function.
-const unsigned int  Core::SAVE_VERSION =        5;              // The version number for saved game files. This should increment when old saves can no longer be loaded.
+const unsigned int  Core::SAVE_VERSION =        6;              // The version number for saved game files. This should increment when old saves can no longer be loaded.
 const unsigned int  Core::TAGS_PERMANENT =      10000;          // The tag number at which tags are considered permanent.
 
 
@@ -56,7 +57,7 @@ int main(int argc, char* argv[])
 }
 
 // Constructor, doesn't do too much aside from setting default values for member variables. Use init() to set things up.
-Core::Core() : m_message_log(nullptr), m_parser(nullptr), m_save_slot(0), m_sql_unique_id(0), m_terminal(nullptr), m_tune(nullptr), m_world(nullptr) { }
+Core::Core() : m_message_log(nullptr), m_parser(nullptr), m_rng(nullptr), m_save_slot(0), m_sql_unique_id(0), m_terminal(nullptr), m_tune(nullptr), m_world(nullptr) { }
 
 // Cleans up after we're d one.
 void Core::cleanup()
@@ -87,6 +88,9 @@ void Core::init()
 
     // Sets up the error-handling subsystem.
     m_guru_meditation = std::make_shared<Guru>("userdata/log.txt");
+
+    // Sets up the random number generator.
+    m_rng = std::make_shared<Random>();
 
     // Set up the tune settings.
     m_tune = std::make_shared<Tune>();
@@ -177,6 +181,9 @@ void Core::message(std::string msg, uint32_t flags)
 
 // Returns a pointer to the MessageLog object.
 const std::shared_ptr<MessageLog> Core::messagelog() const { return m_message_log; }
+
+// Returns a pointer to the Random object.
+const std::shared_ptr<Random> Core::rng() const { return m_rng; }
 
 // Saves the game to disk.
 void Core::save()

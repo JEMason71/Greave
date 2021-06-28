@@ -7,6 +7,7 @@
 class Guru;         // defined in core/guru.hpp
 class MessageLog;   // defined in core/message.hpp
 class Parser;       // defined in core/parser.hpp
+class Random;       // defined in core/random.hpp
 class Terminal;     // defined in terminal/terminal.hpp
 class Tune;         // defined in core/tune.hpp
 class World;        // defined in core/world.hpp
@@ -23,6 +24,7 @@ public:
     void                                main_loop();        // The main game loop.
     void                                message(std::string msg, uint32_t flags = 0);   // Prints a message in the message log.
     const std::shared_ptr<MessageLog>   messagelog() const; // Returns a pointer to the MessageLog object.
+    const std::shared_ptr<Random>       rng() const;        // Returns a pointer to the Random object.
     void                                save();             // Saves the game to disk.
     uint32_t                            sql_unique_id();    // Retrieves a new unique SQL ID.
     const std::shared_ptr<Terminal>     terminal() const;   // Returns a pointer  to the terminal emulator object.
@@ -41,6 +43,7 @@ private:
     std::shared_ptr<Guru>       m_guru_meditation;  // The Guru Meditation error-handling system.
     std::shared_ptr<MessageLog> m_message_log;      // The MessageLog object, which handles the scrolling message-log input/output window.
     std::shared_ptr<Parser>     m_parser;           // The Parser object, which processes the player's input.
+    std::shared_ptr<Random>     m_rng;              // The random number generator.
     unsigned int                m_save_slot;        // The currently-active saved game slot, or 0 if no game is in progress.
     uint32_t                    m_sql_unique_id;    // The last unique SQL ID to have been used.
     std::shared_ptr<Terminal>   m_terminal;         // The Terminal class, which handles low-level interaction with terminal emulation libraries.

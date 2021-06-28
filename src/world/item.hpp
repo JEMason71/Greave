@@ -25,10 +25,12 @@ public:
                 Item();                             // Constructor, sets default values.
     void        clear_meta(const std::string &key); // Clears a metatag from an Item. Use with caution!
     void        clear_tag(ItemTag the_tag);         // Clears a tag on this Item.
+    uint16_t    hex_id() const;                     // Retrieves the current hex ID of this Item.
     static std::shared_ptr<Item> load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id);  // Loads a new Item from the save file.
     std::string meta(const std::string &key) const; // Retrieves Item metadata.
     std::map<std::string, std::string>* meta_raw(); // Accesses the metadata map directly. Use with caution!
     std::string name() const;                       // Retrieves the name of thie Item.
+    void        new_hex_id();                       // Generates a new hex ID for this Item.
     void        save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id); // Saves the Item to the save file.
     void        set_meta(const std::string &key, const std::string &value); // Adds Item metadata.
     void        set_name(const std::string &name);  // Sets the name of this Item.
@@ -39,6 +41,7 @@ public:
     ItemType    type() const;                       // Returns the ItemType of this Item.
 
 private:
+    uint16_t    m_hex_id;       // The hex ID of this Item, for parser differentiation.
     std::map<std::string, std::string>  m_metadata; // The Item's metadata, if any.
     std::string m_name;         // The name of this Item!
     std::set<ItemTag>   m_tags; // Any and all ItemTags on this Item.

@@ -8,8 +8,17 @@
 #include "world/world.hpp"
 
 
+#include "core/guru.hpp"
 // Adds an Item to this Inventory (this will later handle auto-stacking, etc.)
-void Inventory::add_item(std::shared_ptr<Item> item) { m_items.push_back(item); }
+void Inventory::add_item(std::shared_ptr<Item> item)
+{
+    // Check the Item's hex ID. If it's unset, or if another Item in the Inventory shares its ID, we'll need a new one.
+    // Infinite loops relying on RNG to break out are VERY BAD so let's put a threshold on this bad boy.
+    int tries = 0;
+    while ((!item->hex_id() || hex_id_exists(item->hex_id())) && ++tries < 10000)
+        item->new_hex_id();
+    m_items.push_back(item);
+}
 
 // As above, but generates a new Item from a template with a specified ID.
 void Inventory::add_item(const std::string &id) { add_item(core()->world()->get_item(id)); }
@@ -22,6 +31,14 @@ std::shared_ptr<Item> Inventory::get(uint32_t pos) const
 {
     if (pos >= m_items.size()) throw std::runtime_error("Invalid inventory position requested.");
     return m_items.at(pos);
+}
+
+// Checks if a given hex ID already exists on an Item in this Inventory.
+bool Inventory::hex_id_exists(uint16_t id)
+{
+    for (auto item : m_items)
+        if (item->hex_id() == id) return true;
+    return false;
 }
 
 // Loads an Inventory from the save file.
