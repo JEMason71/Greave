@@ -60,6 +60,7 @@ set(GREAVE_CPPS
   core/terminal-curses.cpp
   core/tune.cpp
   debug/parser.cpp
+  world/item.cpp
   world/room.cpp
   world/mobile.cpp
   world/npc.cpp

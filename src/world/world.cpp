@@ -8,6 +8,7 @@
 #include "core/guru.hpp"
 #include "core/message.hpp"
 #include "core/strx.hpp"
+#include "world/item.hpp"
 #include "world/player.hpp"
 #include "world/room.hpp"
 #include "world/world.hpp"
@@ -279,6 +280,7 @@ void World::save(std::shared_ptr<SQLite::Database> save_db)
     save_db->exec(Room::SQL_ROOM_POOL);
     save_db->exec(Player::SQL_PLAYER);
     save_db->exec(Mobile::SQL_MOBILES);
+    save_db->exec(Item::SQL_ITEMS);
     save_db->exec(MessageLog::SQL_MSGLOG);
 
     for (auto room : m_room_pool)
