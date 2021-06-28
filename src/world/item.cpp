@@ -18,7 +18,7 @@ std::shared_ptr<Item> Item::load(std::shared_ptr<SQLite::Database> save_db, uint
 {
     auto new_item = std::make_shared<Item>();
 
-    SQLite::Statement query(*save_db, "SELECT FROM items WHERE sql_id = ?");
+    SQLite::Statement query(*save_db, "SELECT * FROM items WHERE sql_id = ?");
     query.bind(1, sql_id);
     if (query.executeStep())
     {
@@ -40,12 +40,12 @@ std::string Item::name() const { return m_name; }
 // Saves the Item.
 void Item::save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id)
 {
-    SQLite::Statement query(*save_db, "INSERT INTO items ( sql_id, owner_id, name, type, subtype ) VALUES ( ?, ?, ?, ? )");
+    SQLite::Statement query(*save_db, "INSERT INTO items ( sql_id, owner_id, name, type, subtype ) VALUES ( ?, ?, ?, ?, ? )");
     query.bind(1, core()->sql_unique_id());
     query.bind(2, owner_id);
     query.bind(3, m_name);
-    query.bind(4, static_cast<int>(m_type));
-    query.bind(5, static_cast<int>(m_type_sub));
+    if (m_type != ItemType::NONE) query.bind(4, static_cast<int>(m_type));
+    if (m_type_sub != ItemSub::NONE) query.bind(5, static_cast<int>(m_type_sub));
     query.exec();
 }
 

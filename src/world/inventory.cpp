@@ -5,7 +5,14 @@
 #include "core/core.hpp"
 #include "world/inventory.hpp"
 #include "world/item.hpp"
+#include "world/world.hpp"
 
+
+// Adds an Item to this Inventory (this will later handle auto-stacking, etc.)
+void Inventory::add_item(std::shared_ptr<Item> item) { m_items.push_back(item); }
+
+// As above, but generates a new Item from a template with a specified ID.
+void Inventory::add_item(const std::string &id) { add_item(core()->world()->get_item(id)); }
 
 // Returns the number of Items in this Inventory.
 unsigned int Inventory::count() const { return m_items.size(); }
@@ -28,6 +35,7 @@ void Inventory::load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id)
     {
         auto new_item = Item::load(save_db, query.getColumn("sql_id").getUInt());
         m_items.push_back(new_item);
+        loaded_items = true;
     }
     if (!loaded_items) throw std::runtime_error("Could not load inventory data " + std::to_string(sql_id));
 }

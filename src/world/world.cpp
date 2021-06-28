@@ -3,11 +3,13 @@
 
 #include "3rdparty/SQLiteCpp/SQLiteCpp.h"
 #include "3rdparty/yaml-cpp/yaml.h"
+#include "actions/look.hpp"
 #include "core/core.hpp"
 #include "core/filex.hpp"
 #include "core/guru.hpp"
 #include "core/message.hpp"
 #include "core/strx.hpp"
+#include "world/inventory.hpp"
 #include "world/item.hpp"
 #include "world/player.hpp"
 #include "world/room.hpp"
@@ -91,6 +93,18 @@ const std::shared_ptr<Room> World::get_room(const std::string &room_id) const
     else return get_room(StrX::hash(room_id));
 }
 
+// Loads the World and all things within it.
+void World::load(std::shared_ptr<SQLite::Database> save_db)
+{
+    core()->messagelog()->load(save_db);
+
+    for (auto room : m_room_pool)
+        room.second->load(save_db);
+    
+    m_player->load(save_db, 0);
+}
+
+
 // Loads the generic descriptions YAML data into memory.
 void World::load_generic_descs()
 {
@@ -120,6 +134,7 @@ void World::load_item_pool()
 
             // The Item's name.
             if (!item_data["name"]) throw std::runtime_error("Missing item name: " + item_id_str);
+            new_item->set_name(item_data["name"].as<std::string>());
 
             // The Item's type and subtype.
             if (!item_data["type"]) throw std::runtime_error("Missing item type: " + item_id_str);
@@ -339,6 +354,16 @@ void World::load_room_pool()
     }
 }
 
+// Sets up for a new game.
+void World::new_game()
+{
+    m_player->set_location("OUTSIDE_QUEENS_GATE");
+    m_player->inv()->add_item("BLUE_TEST");
+    m_player->inv()->add_item("RED_TEST");
+    m_player->inv()->add_item("RED_BLUE_TEST");
+    ActionLook::look(m_player);
+}
+
 // Retrieves a pointer to the Player object.
 const std::shared_ptr<Mobile> World::player() const { return m_player; }
 
@@ -359,15 +384,4 @@ void World::save(std::shared_ptr<SQLite::Database> save_db)
 
     m_player->save(save_db);
     core()->messagelog()->save(save_db);
-}
-
-// Loads the World and all things within it.
-void World::load(std::shared_ptr<SQLite::Database> save_db)
-{
-    core()->messagelog()->load(save_db);
-
-    for (auto room : m_room_pool)
-        room.second->load(save_db);
-    
-    m_player->load(save_db, 0);
 }

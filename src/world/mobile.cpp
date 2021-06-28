@@ -15,6 +15,9 @@ const std::string   Mobile::SQL_MOBILES =   "CREATE TABLE mobiles ( sql_id INTEG
 // Constructor, sets default values.
 Mobile::Mobile() : m_inventory(std::make_shared<Inventory>()), m_location(0) { }
 
+// Returns a pointer to the Mobile's Inventory.
+const std::shared_ptr<Inventory> Mobile::inv() const { return m_inventory; }
+
 // Loads a Mobile.
 void Mobile::load(std::shared_ptr<SQLite::Database> save_db, unsigned int sql_id)
 {

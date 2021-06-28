@@ -15,13 +15,14 @@ public:
 
     static const std::string    SQL_MOBILES;    // The SQL table construction string for Mobiles.
 
-                        Mobile();           // Constructor, sets default values.
+                        Mobile();                                   // Constructor, sets default values.
+    const std::shared_ptr<Inventory>    inv() const;                // Returns a pointer to the Mobile's Inventory.
     virtual void        load(std::shared_ptr<SQLite::Database> save_db, unsigned int sql_id);   // Loads a Mobile.
-    uint32_t            location() const;   // Retrieves the location of this Mobile, in the form of a Room ID.
+    uint32_t            location() const;                           // Retrieves the location of this Mobile, in the form of a Room ID.
     virtual uint32_t    save(std::shared_ptr<SQLite::Database> save_db);    // Saves this Mobile.
-    void                set_location(uint32_t room_id); // Sets the location of this Mobile with a Room ID.
+    void                set_location(uint32_t room_id);             // Sets the location of this Mobile with a Room ID.
     void                set_location(const std::string &room_id);   // As above, but with a string Room ID.
-    virtual Type        type() = 0;         // Mobile should never be instantiated directly, only NPC or Player.
+    virtual Type        type() = 0;                                 // Mobile should never be instantiated directly, only NPC or Player.
 
 private:
     std::shared_ptr<Inventory>  m_inventory;    // The Items being carried by this Mobile.

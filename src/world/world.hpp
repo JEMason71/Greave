@@ -25,6 +25,7 @@ public:
     const std::shared_ptr<Room> get_room(uint32_t room_id) const;           // Retrieves a specified Room by ID.
     const std::shared_ptr<Room> get_room(const std::string &room_id) const; // As above, but with a Room ID string.
     void    load(std::shared_ptr<SQLite::Database> save_db);                // Loads the World and all things within it.
+    void    new_game();                                                     // Sets up for a new game.
     const std::shared_ptr<Mobile>   player() const;                         // Retrieves a pointer to the Player object.
     bool    room_exists(const std::string &str) const;                      // Checks if a specified room ID exists.
     void    save(std::shared_ptr<SQLite::Database> save_db);                // Saves the World and all things within it.

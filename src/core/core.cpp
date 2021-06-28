@@ -2,7 +2,6 @@
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #include "3rdparty/SQLiteCpp/SQLiteCpp.h"
-#include "actions/look.hpp" // temp
 #include "core/core.hpp"
 #include "core/filex.hpp"
 #include "core/guru.hpp"
@@ -12,8 +11,6 @@
 #include "core/terminal-blt.hpp"
 #include "core/terminal-curses.hpp"
 #include "core/tune.hpp"
-#include "world/mobile.hpp"
-#include "world/room.hpp"
 #include "world/world.hpp"
 
 #include <thread>
@@ -345,8 +342,7 @@ void Core::title()
     else
     {
         m_world = std::make_shared<World>();
-        m_world->player()->set_location("OUTSIDE_QUEENS_GATE");
-        ActionLook::look(m_world->player());
+        m_world->new_game();
     }
 }
 
