@@ -21,7 +21,7 @@ public:
                 Item(); // Constructor, sets default values.
     static std::shared_ptr<Item> load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id);  // Loads a new Item from the save file.
     std::string name() const;   // Retrieves the name of thie Item.
-    void        save(std::shared_ptr<SQLite::Database> save_db);    // Saves the Item to the save file.
+    void        save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id); // Saves the Item to the save file.
     void        set_name(const std::string &name);  // Sets the name of this Item.
     void        set_type(ItemType type, ItemSub sub = ItemSub::NONE);   // Sets the type of this Item.
     ItemSub     subtype() const;    // Returns the ItemSub (sub-type) of this Item.

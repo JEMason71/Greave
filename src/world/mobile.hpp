@@ -4,6 +4,7 @@
 #pragma once
 #include "core/greave.hpp"
 
+class Inventory;    // defined in world/inventory.hpp
 namespace SQLite { class Database; }    // defined in 3rdparty/SQLiteCpp/Database.h
 
 
@@ -23,5 +24,6 @@ public:
     virtual Type        type() = 0;         // Mobile should never be instantiated directly, only NPC or Player.
 
 private:
+    std::shared_ptr<Inventory>  m_inventory;    // The Items being carried by this Mobile.
     uint32_t    m_location; // The Room that this Mobile is currently located in.
 };

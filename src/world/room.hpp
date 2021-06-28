@@ -4,6 +4,7 @@
 #pragma once
 #include "core/greave.hpp"
 
+class Inventory;    // defined in world/inventory.hpp
 namespace SQLite { class Database; }    // defined in 3rdparty/SQLiteCpp/Database.h
 
 
@@ -114,6 +115,7 @@ public:
 private:
     std::string m_desc;         // The Room's description.
     uint32_t    m_id;           // The Room's unique ID, hashed from its YAML name.
+    std::shared_ptr<Inventory>  m_inventory;    // The Room's inventory, for storing dropped items.
     uint8_t     m_light;        // The default light level of this Room.
     uint32_t    m_links[ROOM_LINKS_MAX];    // Links to other Rooms.
     std::string m_name;         // The Room's title.

@@ -4,11 +4,10 @@
 #include "3rdparty/SQLiteCpp/SQLiteCpp.h"
 #include "core/core.hpp"
 #include "world/item.hpp"
-#include "world/world.hpp"
 
 
 // The SQL table construction string for saving items.
-const std::string Item::SQL_ITEMS = "CREATE TABLE items ( sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, name TEXT NOT NULL, type INTEGER, subtype INTEGER )";
+const std::string Item::SQL_ITEMS = "CREATE TABLE items ( sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, owner_id INTEGER NOT NULL, name TEXT NOT NULL, type INTEGER, subtype INTEGER )";
 
 
 // Constructor, sets default values.
@@ -39,13 +38,14 @@ std::shared_ptr<Item> Item::load(std::shared_ptr<SQLite::Database> save_db, uint
 std::string Item::name() const { return m_name; }
 
 // Saves the Item.
-void Item::save(std::shared_ptr<SQLite::Database> save_db)
+void Item::save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id)
 {
-    SQLite::Statement query(*save_db, "INSERT INTO items ( sql_id, name, type, subtype ) VALUES ( ?, ?, ?, ? )");
+    SQLite::Statement query(*save_db, "INSERT INTO items ( sql_id, owner_id, name, type, subtype ) VALUES ( ?, ?, ?, ? )");
     query.bind(1, core()->sql_unique_id());
-    query.bind(2, m_name);
-    query.bind(3, static_cast<int>(m_type));
-    query.bind(4, static_cast<int>(m_type_sub));
+    query.bind(2, owner_id);
+    query.bind(3, m_name);
+    query.bind(4, static_cast<int>(m_type));
+    query.bind(5, static_cast<int>(m_type_sub));
     query.exec();
 }
 

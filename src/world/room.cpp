@@ -7,6 +7,7 @@
 #include "core/filex.hpp"
 #include "core/message.hpp"
 #include "core/strx.hpp"
+#include "world/inventory.hpp"
 #include "world/mobile.hpp"
 #include "world/room.hpp"
 #include "world/world.hpp"
@@ -18,10 +19,11 @@ const uint8_t   Room::LIGHT_VISIBLE =   3;          // Any light level below thi
 const uint32_t  Room::UNFINISHED =      1909878064; // Hashed value for UNFINISHED, which is used to mark room exits as unfinished and to be completed later.
 
 // The SQL table construction string for the room pool.
-const std::string   Room::SQL_ROOM_POOL =   "CREATE TABLE rooms ( sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, id INTEGER UNIQUE NOT NULL, tags TEXT, link_tags TEXT )";
+const std::string   Room::SQL_ROOM_POOL =   "CREATE TABLE rooms ( sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, id INTEGER UNIQUE NOT NULL, tags TEXT, link_tags TEXT, "
+    "inventory INTEGER UNIQUE )";
 
 
-Room::Room(std::string new_id) : m_light(0), m_security(Security::ANARCHY)
+Room::Room(std::string new_id) : m_inventory(std::make_shared<Inventory>()), m_light(0), m_security(Security::ANARCHY)
 {
     if (new_id.size()) m_id = StrX::hash(new_id);
     else m_id = 0;
@@ -106,6 +108,8 @@ std::string Room::name(bool short_name) const { return (short_name ? m_name_shor
 // Saves the Room and anything it contains.
 void Room::save(std::shared_ptr<SQLite::Database> save_db)
 {
+    const uint32_t inventory_id = m_inventory->save(save_db);
+
     const std::string tags = StrX::tags_to_string(m_tags);
     std::string link_tags;
     for (unsigned int e = 0; e < ROOM_LINKS_MAX; e++)
@@ -116,17 +120,19 @@ void Room::save(std::shared_ptr<SQLite::Database> save_db)
 
     if (!tags.size() && link_tags == ",,,,,,,,,") return;
 
-    SQLite::Statement room_query(*save_db, "INSERT INTO rooms (sql_id, id, tags, link_tags) VALUES (?, ?, ?, ?)");
+    SQLite::Statement room_query(*save_db, "INSERT INTO rooms (sql_id, id, tags, link_tags, inventory) VALUES (?, ?, ?, ?, ?)");
     room_query.bind(1, core()->sql_unique_id());
     room_query.bind(2, m_id);
     if (tags.size()) room_query.bind(3, tags);
     if (link_tags != ",,,,,,,,,") room_query.bind(4, link_tags);
+    if (inventory_id) room_query.bind(5, inventory_id);
     room_query.exec();
 }
 
 // Loads the Room and anything it contains.
 void Room::load(std::shared_ptr<SQLite::Database> save_db)
 {
+    uint32_t inventory_id = 0;
     SQLite::Statement query(*save_db, "SELECT * FROM rooms WHERE id = ?");
     query.bind(1, m_id);
     if (query.executeStep())
@@ -145,7 +151,9 @@ void Room::load(std::shared_ptr<SQLite::Database> save_db)
                     m_tags_link[e].insert(static_cast<LinkTag>(StrX::htoi(tag)));
             }
         }
+        inventory_id = query.getColumn("inventory").getUInt();
     }
+    if (inventory_id) m_inventory->load(save_db, inventory_id);
 }
 
 // Sets this Room's base light level.
