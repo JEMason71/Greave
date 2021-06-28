@@ -5,6 +5,8 @@
 #include "core/core.hpp"
 #include "core/strx.hpp"
 #include "debug/parser.hpp"
+#include "world/inventory.hpp"
+#include "world/item.hpp"
 #include "world/player.hpp"
 #include "world/world.hpp"
 
@@ -28,7 +30,7 @@ void DebugParser::parse(std::vector<std::string> words)
     }
 
     // Teleports to another room.
-    if (first_word == "#tp" || first_word == "#teleport")
+    if (first_word == "#tp")
     {
         if (words.size() < 2)
         {
@@ -43,6 +45,25 @@ void DebugParser::parse(std::vector<std::string> words)
             ActionLook::look(core()->world()->player());
         }
         else core()->message("{R}" + target + " {y}is not a valid room ID.");
+        return;
+    }
+
+    // Spawns an item.
+    if (first_word == "#si")
+    {
+        if (words.size() < 2)
+        {
+            core()->message("{y}Please specify an {Y}item ID{y}.");
+            return;
+        }
+        const std::string item_id = StrX::str_toupper(words.at(1));
+        if (core()->world()->item_exists(item_id))
+        {
+            const std::shared_ptr<Item> new_item = core()->world()->get_item(item_id);
+            core()->message("{C}You use the power of {R}w{Y}i{G}s{U}h{C}f{M}u{R}l {Y}t{G}h{U}i{C}n{M}k{R}i{Y}n{G}g {C}to bring " + new_item->name() + " {C}into the world!");
+            core()->world()->player()->inv()->add_item(new_item);
+        }
+        else core()->message("{R}" + item_id + " {y}is not a valid item ID.");
         return;
     }
 

@@ -96,6 +96,9 @@ const std::shared_ptr<Room> World::get_room(const std::string &room_id) const
     else return get_room(StrX::hash(room_id));
 }
 
+// Checks if a specified item ID exists.
+bool World::item_exists(const std::string &str) const { return m_item_pool.find(StrX::hash(str)) != m_item_pool.end(); }
+
 // Loads the World and all things within it.
 void World::load(std::shared_ptr<SQLite::Database> save_db)
 {
@@ -373,11 +376,6 @@ void World::load_room_pool()
 void World::new_game()
 {
     m_player->set_location("OUTSIDE_QUEENS_GATE");
-    m_player->inv()->add_item("BLUE_TEST");
-    m_player->inv()->add_item("RED_TEST");
-    m_player->inv()->add_item("RED_BLUE_TEST");
-    m_player->inv()->add_item("ARMOURY_KEY");
-    m_player->inv()->add_item("SKELETON_KEY");
     ActionLook::look(m_player);
 }
 
