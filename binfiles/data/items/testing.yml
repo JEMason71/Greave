@@ -1,0 +1,14 @@
+# items/testing.yml -- Temporary testing items for developing the inventory system. Will be removed later.
+# Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+
+BLUE_TEST:
+  name: blue testing item
+  type: [ none ]
+
+RED_BLUE_TEST:
+  name: red and blue testing item
+  type: none
+
+RED_TEST:
+  name: red testing item
+  type: [ none, none ]

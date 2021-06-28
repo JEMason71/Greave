@@ -14,6 +14,12 @@
 #include "world/world.hpp"
 
 
+// Lookup table for converting ItemSub text names into enums.
+const std::map<std::string, ItemSub>    World::ITEM_SUBTYPE_MAP = { { "none", ItemSub::NONE } };
+
+// Lookup table for converting ItemType text names into enums.
+const std::map<std::string, ItemType>   World::ITEM_TYPE_MAP = { { "none", ItemType::NONE } };
+
 // Lookup table for converting textual light levels (e.g. "bright") to integer values.
 const std::map<std::string, uint8_t>    World::LIGHT_LEVEL_MAP = { { "bright", 7 }, { "dim", 5 }, { "wilderness", 5 }, { "dark", 3 }, { "none", 0 } };
 
@@ -44,6 +50,7 @@ const std::map<std::string, Security>   World::SECURITY_MAP = { { "anarchy", Sec
 World::World()
 {
     load_room_pool();
+    load_item_pool();
     load_generic_descs();
     m_player = std::make_shared<Player>();
 }
@@ -57,6 +64,15 @@ std::string World::generic_desc(const std::string &id) const
         core()->guru()->nonfatal("Invalid generic description requested: " + id, Guru::ERROR);
         return "-";
     }
+    return it->second;
+}
+
+// Retrieves a specified Item by ID.
+const std::shared_ptr<Item> World::get_item(const std::string &item_id) const
+{
+    if (!item_id.size()) throw std::runtime_error("Blank item ID requested.");
+    const auto it = m_item_pool.find(StrX::hash(item_id));
+    if (it == m_item_pool.end()) throw std::runtime_error("Invalid item ID requested: " + item_id);
     return it->second;
 }
 
@@ -81,6 +97,61 @@ void World::load_generic_descs()
     const YAML::Node yaml_descs = YAML::LoadFile("data/generic descriptions.yml");
     for (auto desc : yaml_descs)
         m_generic_descs.insert(std::make_pair(desc.first.as<std::string>(), desc.second.as<std::string>()));
+}
+
+// Loads the Item YAML data into memory.
+void World::load_item_pool()
+{
+    const std::vector<std::string> item_files = FileX::files_in_dir("data/items", true);
+    for (auto item_file : item_files)
+    {
+        const YAML::Node yaml_items = YAML::LoadFile("data/items/" + item_file);
+        for (auto item : yaml_items)
+        {
+            const YAML::Node item_data = item.second;
+
+            // Create a new Item object.
+            const std::string item_id_str = item.first.as<std::string>();
+            const uint32_t item_id = StrX::hash(item_id_str);
+            const auto new_item(std::make_shared<Item>());
+
+            // Check to make sure there are no hash collisions.
+            if (m_item_pool.find(item_id) != m_item_pool.end()) throw std::runtime_error("Item ID hash conflict: " + item_id_str);
+
+            // The Item's name.
+            if (!item_data["name"]) throw std::runtime_error("Missing item name: " + item_id_str);
+
+            // The Item's type and subtype.
+            if (!item_data["type"]) throw std::runtime_error("Missing item type: " + item_id_str);
+            std::string item_type_str, item_subtype_str;
+            if (item_data["type"].IsSequence())
+            {
+                const unsigned int seq_size = item_data["type"].size();
+                if (seq_size < 1 || seq_size > 2) throw std::runtime_error("Item type data malforned: " + item_id_str);
+                item_type_str = item_data["type"][0].as<std::string>();
+                if (seq_size == 2) item_subtype_str = item_data["type"][1].as<std::string>();
+            }
+            else item_type_str = item_data["type"].as<std::string>();
+            ItemType type = ItemType::NONE;
+            ItemSub subtype = ItemSub::NONE;
+            if (item_type_str.size())
+            {
+                const auto it = ITEM_TYPE_MAP.find(item_type_str);
+                if (it == ITEM_TYPE_MAP.end()) core()->guru()->nonfatal("Invalid item type on " + item_id_str + ": " + item_type_str, Guru::ERROR);
+                else type = it->second;
+            }
+            if (item_subtype_str.size())
+            {
+                const auto it = ITEM_SUBTYPE_MAP.find(item_subtype_str);
+                if (it == ITEM_SUBTYPE_MAP.end()) core()->guru()->nonfatal("Invalid item subtype on " + item_id_str + ": " + item_subtype_str, Guru::ERROR);
+                else subtype = it->second;
+            }
+            new_item->set_type(type, subtype);
+
+            // Add the new Item to the item pool.
+            m_item_pool.insert(std::make_pair(item_id, new_item));
+        }
+    }
 }
 
 // Loads the Room YAML data into memory.
