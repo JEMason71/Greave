@@ -141,6 +141,19 @@ std::string StrX::itoh(uint32_t num, unsigned int min_len)
     return hex;
 }
 
+// Converts a metadata map into a string.
+std::string StrX::metadata_to_string(const std::map<std::string, std::string> &metadata)
+{
+    std::string output;
+    if (metadata.size())
+    {
+        for (auto mde : metadata)
+            output += mde.first + ":" + mde.second + " ";
+        output.pop_back();
+    }
+    return output;
+}
+
 // Calls MathX::round_to_two(), then returns the result as a string.
 std::string StrX::round_to_two(double num) { return ftos(MathX::round_to_two(num)); }
 
@@ -271,6 +284,19 @@ std::vector<std::string> StrX::string_explode_colour(const std::string &str, uns
     }
 
     return output;
+}
+
+// Converts a string to a metadata map.
+void StrX::string_to_metadata(const std::string &str, std::map<std::string, std::string> &metadata)
+{
+    metadata.clear();
+    std::vector<std::string> md_exp = string_explode(str, " ");
+    for (unsigned int i = 0; i < md_exp.size(); i++)
+    {
+        std::vector<std::string> md_pair = string_explode(md_exp.at(i), ":");
+        if (md_pair.size() != 2) throw std::runtime_error("Corrupt metadata in string conversion.");
+        metadata.insert(std::pair<std::string, std::string>(md_pair.at(0), md_pair.at(1)));
+    }
 }
 
 // Returns the length of a string, taking colour and high/low-ASCII tags into account.

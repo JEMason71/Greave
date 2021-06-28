@@ -19,16 +19,20 @@ public:
     static const std::string    SQL_ITEMS;  // The SQL table construction string for saving items.
 
                 Item(); // Constructor, sets default values.
+    void        clear_meta(const std::string &key); // Clears a metatag from an Item. Use with caution!
     static std::shared_ptr<Item> load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id);  // Loads a new Item from the save file.
-    std::string name() const;   // Retrieves the name of thie Item.
+    std::string meta(const std::string &key) const; // Retrieves Item metadata.
+    std::string name() const;                       // Retrieves the name of thie Item.
     void        save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id); // Saves the Item to the save file.
+    void        set_meta(const std::string &key, const std::string &value); // Adds Item metadata.
     void        set_name(const std::string &name);  // Sets the name of this Item.
     void        set_type(ItemType type, ItemSub sub = ItemSub::NONE);   // Sets the type of this Item.
-    ItemSub     subtype() const;    // Returns the ItemSub (sub-type) of this Item.
-    ItemType    type() const;   // Returns the ItemType of this Item.
+    ItemSub     subtype() const;                    // Returns the ItemSub (sub-type) of this Item.
+    ItemType    type() const;                       // Returns the ItemType of this Item.
 
 private:
-    std::string m_name; // The name of this Item!
-    ItemType    m_type; // The primary type of this Item.
+    std::map<std::string, std::string>  m_metadata; // The Item's metadata, if any.
+    std::string m_name;     // The name of this Item!
+    ItemType    m_type;     // The primary type of this Item.
     ItemSub     m_type_sub; // The subtype of this Item, if any.
 };
