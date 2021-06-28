@@ -78,7 +78,7 @@ const std::shared_ptr<Item> World::get_item(const std::string &item_id) const
     if (!item_id.size()) throw std::runtime_error("Blank item ID requested.");
     const auto it = m_item_pool.find(StrX::hash(item_id));
     if (it == m_item_pool.end()) throw std::runtime_error("Invalid item ID requested: " + item_id);
-    return it->second;
+    return std::make_shared<Item>(*it->second);
 }
 
 // Retrieves a specified Room by ID.
