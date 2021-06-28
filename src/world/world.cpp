@@ -23,7 +23,7 @@ const std::map<std::string, ItemSub>    World::ITEM_SUBTYPE_MAP = { { "none", It
 const std::map<std::string, ItemTag>    World::ITEM_TAG_MAP = { };
 
 // Lookup table for converting ItemType text names into enums.
-const std::map<std::string, ItemType>   World::ITEM_TYPE_MAP = { { "none", ItemType::NONE } };
+const std::map<std::string, ItemType>   World::ITEM_TYPE_MAP = { { "key", ItemType::KEY }, { "none", ItemType::NONE } };
 
 // Lookup table for converting textual light levels (e.g. "bright") to integer values.
 const std::map<std::string, uint8_t>    World::LIGHT_LEVEL_MAP = { { "bright", 7 }, { "dim", 5 }, { "wilderness", 5 }, { "dark", 3 }, { "none", 0 } };
@@ -348,7 +348,7 @@ void World::load_room_pool()
                                 case LinkTag::Window:
                                     new_room->set_link_tag(dt_int, LinkTag::Openable);
                                     break;
-                                case LinkTag::Locked:
+                                case LinkTag::LockedByDefault:
                                     new_room->set_link_tag(dt_int, LinkTag::Lockable);
                                     new_room->set_link_tag(dt_int, LinkTag::Openable);
                                     break;
@@ -376,6 +376,8 @@ void World::new_game()
     m_player->inv()->add_item("BLUE_TEST");
     m_player->inv()->add_item("RED_TEST");
     m_player->inv()->add_item("RED_BLUE_TEST");
+    m_player->inv()->add_item("ARMOURY_KEY");
+    m_player->inv()->add_item("SKELETON_KEY");
     ActionLook::look(m_player);
 }
 

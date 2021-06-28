@@ -1,6 +1,11 @@
 # items/testing.yml -- Temporary testing items for developing the inventory system. Will be removed later.
 # Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
+ARMOURY_KEY:
+  metadata: "key:NORTHWATCH_ARMOURY"
+  name: Northwatch Armoury key
+  type: key
+
 BLUE_TEST:
   name: blue testing item
   type: [ none ]

@@ -1042,7 +1042,7 @@ NORTHWATCH_YARD:
   light: dim
   name: [ Training Yard, yard ]
   security: low
-  tags: [ DigOK, SoutheastOpenable ]
+  tags: [ DigOK, SoutheastLockable ]
 
 ORM_SMITHY:
   desc: The inside of Orm's Smithy is a fairly simple, wood-floored room, one door leading back outside to the west. A heavy wooden counter blocks access to the two other doors, across which are displayed a number of weapons, tools, shields, and pieces of armour, the shiny metal gleaming in the light of hanging lanterns. A number of weapon and armour racks around the walls of the room display various other wares on offer.

@@ -16,6 +16,20 @@
 // Constructor, sets default values.
 Parser::Parser() : m_debug_parser(std::make_shared<DebugParser>()), m_special_state(SpecialState::NONE) { }
 
+// Checks if a directional command is valid, returns a Direction if so.
+Direction Parser::direction_command(const std::vector<std::string> &input, std::string command_override) const
+{
+    if (!command_override.size()) command_override = input.at(0);
+    if (input.size() < 2)
+    {
+        core()->message("{y}Please specify a {Y}direction {y}to " + command_override + ".");
+        return Direction::NONE;
+    }
+    const Direction dir = parse_direction(input.at(1));
+    if (dir == Direction::NONE) core()->message("{y}Please specify a {Y}compass direction {y}to " + command_override + ".");
+    return dir;
+}
+
 // Parses input from the player!
 void Parser::parse(std::string input)
 {
@@ -62,19 +76,16 @@ void Parser::parse(std::string input)
     // Atempt to open or close a door or something else openable.
     if (first_word == "open" || first_word == "close")
     {
-        if (words.size() < 2)
-        {
-            core()->message("{y}Please specify a {Y}direction {y}to " + first_word + ".");
-            return;
-        }
-        const bool open = (first_word == "open");
-        const Direction dir = parse_direction(words.at(1));
-        if (dir == Direction::NONE)
-        {
-            core()->message("{y}Please specify a {Y}compass direction {y}to " + first_word + ".");
-            return;
-        }
-        ActionDoors::open_or_close(player, dir, open);
+        const Direction dir = direction_command(words);
+        if (dir != Direction::NONE) ActionDoors::open_or_close(player, dir, (first_word == "open"));
+        return;
+    }
+
+    // Attempt to lock or unlock a door.
+    if (first_word == "lock" || first_word == "unlock")
+    {
+        const Direction dir = direction_command(words);
+        if (dir != Direction::NONE) ActionDoors::lock_or_unlock(player, dir, (first_word == "unlock"));
         return;
     }
 
@@ -85,20 +96,10 @@ void Parser::parse(std::string input)
         ActionTravel::travel(player, dir_cmd);
         return;
     }
-    else if (first_word == "go" || first_word == "travel" || first_word == "walk" || first_word == "run" || first_word == "move")
+    if (first_word == "go" || first_word == "travel" || first_word == "walk" || first_word == "run" || first_word == "move")
     {
-        if (words.size() < 2)
-        {
-            core()->message("{y}Please specify a {Y}direction {y}to travel.");
-            return;
-        }
-        const Direction dir = parse_direction(words.at(1));
-        if (dir == Direction::NONE)
-        {
-            core()->message("{y}Please specify a {Y}compass direction {y}to travel.");
-            return;
-        }
-        ActionTravel::travel(player, dir);
+        const Direction dir = direction_command(words, "travel");
+        if (dir != Direction::NONE) ActionTravel::travel(player, dir);
         return;
     }
 
@@ -107,13 +108,13 @@ void Parser::parse(std::string input)
      * Item and inventory management *
      *********************************/
 
-    else if (first_word == "inventory" || first_word == "invent" || first_word == "inv" || first_word == "i")
+    if (first_word == "inventory" || first_word == "invent" || first_word == "inv" || first_word == "i")
     {
         ActionInventory::check_inventory(player);
         return;
     }
 
-    else if (first_word == "take" || first_word == "get")
+    if (first_word == "take" || first_word == "get")
     {
         if (words.size() < 2)
         {
@@ -164,7 +165,7 @@ void Parser::parse(std::string input)
 }
 
 // Parses a string into a Direction enum.
-Direction Parser::parse_direction(const std::string &dir)
+Direction Parser::parse_direction(const std::string &dir) const
 {
     if (dir == "north" || dir == "n") return Direction::NORTH;
     else if (dir == "northeast" || dir == "ne") return Direction::NORTHEAST;

@@ -1,0 +1,7 @@
+# items/debug.yml -- Items intended for debugging/testing and development, but can also be used for cheating.
+# Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+
+SKELETON_KEY:   # The skeleton key can open any lock.
+  metadata: "key:SKELETON"
+  name: "{B}Sk{u}elet{B}on K{u}e{B}y"
+  type: key

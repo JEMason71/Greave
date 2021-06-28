@@ -5,6 +5,7 @@
 #include "core/greave.hpp"
 
 class Inventory;    // defined in world/inventory.hpp
+class Item;         // defined in world/item.hpp
 namespace SQLite { class Database; }    // defined in 3rdparty/SQLiteCpp/Database.h
 
 
@@ -94,7 +95,9 @@ public:
     void        clear_tag(RoomTag the_tag);                     // Clears a tag on this Room.
     std::string desc() const;                                   // Returns the Room's description.
     std::string door_name(Direction dir) const;                 // Returns the name of a door in the specified direction.
+    bool        fake_link(Direction dir) const;                 // Checks if a room link is fake (e.g. to FALSE_ROOM or UNFINISHED).
     uint32_t    id() const;                                     // Retrieves the unique hashed ID of this Room.
+    bool        key_can_unlock(std::shared_ptr<Item> key, Direction dir);   // Checks if a key can unlock a door in the specified direction.
     int         light(std::shared_ptr<Mobile> mob = nullptr) const; // Gets the light level of this Room, adjusted by dynamic lights, and optionally including darkvision etc.
     uint32_t    link(Direction dir) const;                      // Retrieves a Room link in the specified direction.
     uint32_t    link(uint8_t dir) const;                        // As above, but using an integer.

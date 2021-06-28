@@ -8,7 +8,7 @@ namespace SQLite { class Database; }    // defined in 3rdparty/SQLiteCpp/Databas
 
 
 // ItemType is the primary type of Item (e.g. weapon, food, etc.)
-enum class ItemType : uint16_t { NONE };
+enum class ItemType : uint16_t { NONE, KEY };
 
 // ItemSub is for sub-types of items, e.g. a tool could sub-classify itself here.
 enum class ItemSub : uint16_t { NONE };

@@ -1,5 +1,5 @@
 // world/room.cpp -- The Room class, which defines a single area in the game world that the player can visit.
-// Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+// Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #include "3rdparty/SQLiteCpp/SQLiteCpp.h"
 #include "3rdparty/yaml-cpp/yaml.h"
@@ -8,6 +8,7 @@
 #include "core/message.hpp"
 #include "core/strx.hpp"
 #include "world/inventory.hpp"
+#include "world/item.hpp"
 #include "world/mobile.hpp"
 #include "world/room.hpp"
 #include "world/world.hpp"
@@ -67,8 +68,37 @@ std::string Room::door_name(Direction dir) const
     return "door";
 }
 
+// Checks if a room link is fake (e.g. to FALSE_ROOM or UNFINISHED).
+bool Room::fake_link(Direction dir) const
+{
+    const uint32_t link_id = link(dir);
+    if (!link_id || link_id == FALSE_ROOM || link_id == UNFINISHED || link_id == BLOCKED) return true;
+    else return false;
+}
+
 // Retrieves the unique hashed ID of this Room.
 uint32_t Room::id() const { return m_id; }
+
+// Checks if a key can unlock a door in the specified direction.
+bool Room::key_can_unlock(std::shared_ptr<Item> key, Direction dir)
+{
+    // Ignore fake links (FALSE_ROOM, UNFINISHED, BLOCKED, etc.), permalocks, non-lockable exits, and non-key items.
+    if (fake_link(dir) || link_tag(dir, LinkTag::Permalock) || !link_tag(dir, LinkTag::Lockable) || key->type() != ItemType::KEY) return false;
+
+    // Get the key's metadata. If none, it can't open anything.
+	const std::string key_meta = key->meta("key");
+	if (!key_meta.size()) return false;
+
+    const uint32_t link_id = link(dir);
+    const std::shared_ptr<Room> dest_room = core()->world()->get_room(link_id);
+    const std::vector<std::string> keys = StrX::string_explode(key_meta, ",");
+    for (auto key : keys)   // Check any and all 'key' metadata on the key, see if it matches the source or destination room, or is a skeleton key.
+    {
+        const uint32_t key_hash = StrX::hash(key);
+        if (key == "SKELETON" || key_hash == link_id || key_hash == m_id) return true;
+    }
+    return false;
+}
 
 // Gets the light level of this Room, adjusted by dynamic lights, and optionally including darkvision etc.
 int Room::light(std::shared_ptr<Mobile>) const
