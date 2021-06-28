@@ -9,12 +9,15 @@
 #include "core/parser.hpp"
 #include "debug/parser.hpp"
 #include "core/strx.hpp"
+#include "world/inventory.hpp"
+#include "world/item.hpp"
 #include "world/mobile.hpp"
+#include "world/room.hpp"
 #include "world/world.hpp"
 
 
 // Constructor, sets default values.
-Parser::Parser() : m_debug_parser(std::make_shared<DebugParser>()), m_special_state(SpecialState::NONE) { }
+Parser::Parser() : m_debug_parser(std::make_shared<DebugParser>()), m_disambiguation_parsing(false), m_special_state(SpecialState::NONE) { }
 
 // Checks if a directional command is valid, returns a Direction if so.
 Direction Parser::direction_command(const std::vector<std::string> &input, std::string command_override) const
@@ -37,9 +40,27 @@ void Parser::parse(std::string input)
     std::vector<std::string> words = StrX::string_explode(StrX::str_tolower(input), " ");
     if (!words.size()) return;  // This is incredibly unlikely, possibly impossible, but it can't hurt to check.
 
-    const std::string first_word = words.at(0);
+    std::string first_word = words.at(0);
     if (!first_word.size()) return; // Also incredibly unlikely, but let's be safe.
     const std::shared_ptr<Mobile> player = core()->world()->player();
+    const std::shared_ptr<Room> room = core()->world()->get_room(player->location());
+
+    // Hide the disambiguation data temporarily. It'll be restored below, if a command cannot be parsed.
+    std::vector<uint32_t> disambiguation_copy = m_disambiguation;
+    std::string disambiguation_command_copy = m_disambiguation_command;
+
+    // Check if we're parsing a disambiguation.
+    if (first_word[0] == '}')
+    {
+        first_word = words.at(0) = first_word.substr(1);
+        m_disambiguation_parsing = true;
+    }
+    else
+    {
+        m_disambiguation_parsing = false;
+        m_disambiguation.clear();
+        m_disambiguation_command.clear();
+    }
 
     switch (m_special_state)
     {
@@ -48,6 +69,34 @@ void Parser::parse(std::string input)
             parse_quit_confirm(input, first_word);
             return;
     }
+
+    // Used for commands that target items.
+    auto item_target = [this, &words, &player, &room](bool in_inventory, std::string command, const std::string &error_specify, std::string error_not_found) -> uint32_t {
+        if (words.size() < 2)
+        {
+            core()->message(error_specify);
+            return ItemMatch::NOT_FOUND;
+        }
+        std::vector<std::string> target = words;
+        target.erase(target.begin());
+        const uint32_t inv_pos = parse_item_name(target, (in_inventory ? player->inv() : room->inv()));
+        if (inv_pos == ItemMatch::NOT_FOUND)
+        {
+            if (!m_disambiguation_parsing)
+            {
+                StrX::find_and_replace(error_not_found, "<target>", StrX::collapse_vector(target));
+                core()->message(error_not_found);
+                return ItemMatch::NOT_FOUND;
+            }
+            return ItemMatch::DO_NOTHING;
+        }
+        else if (inv_pos == ItemMatch::UNCLEAR) // Disambiguation, error message already handled by parse_item_name().
+        {
+            m_disambiguation_command = command;
+            return ItemMatch::NOT_FOUND;
+        }
+        return inv_pos;
+    };
 
 
     /*****************
@@ -116,18 +165,25 @@ void Parser::parse(std::string input)
 
     if (first_word == "take" || first_word == "get")
     {
-        if (words.size() < 2)
+        const uint32_t item_pos = item_target(false, "get {}", "{y}Please specify {Y}what you want to take{y}.", "{y}You don't see {Y}<target>{y} here.");
+        if (item_pos == ItemMatch::NOT_FOUND) return;
+        else if (item_pos != ItemMatch::DO_NOTHING)
         {
-            core()->message("{y}Please specify {Y}what you want to get{y}.");
-            return;
-        }
-        if (words.at(1) == "inventory" || words.at(1) == "invent" || words.at(1) == "inv" || words.at(1) == "i")
-        {
-            ActionInventory::check_inventory(player);
+            ActionInventory::take(player, item_pos);
             return;
         }
     }
 
+    if (first_word == "drop")
+    {
+        const uint32_t item_pos = item_target(true, "drop {}", "{y}Please specify {Y}what you want to drop{y}.", "{y}You don't seem to be carrying {Y}<target>{y}.");
+        if (item_pos == ItemMatch::NOT_FOUND) return;
+        else if (item_pos != ItemMatch::DO_NOTHING)
+        {
+            ActionInventory::drop(player, item_pos);
+            return;
+        }
+    }
 
     /************************************
      * Super secret dev/debug commands! *
@@ -161,6 +217,31 @@ void Parser::parse(std::string input)
         return;
     }
 
+
+    /******************
+     * Disambiguation *
+     ******************/
+
+    // Restore the copies of the data we made near the start of this function.
+    m_disambiguation = disambiguation_copy;
+    m_disambiguation_command = disambiguation_command_copy;
+
+    // Okay, so the player just typed "get sword" and the game said, "I'm not sure which one, did you mean red sword or blue sword?"
+    // Then the player typed "red". That's obviously not a command we recognize... but let's try to be smart.
+    if (m_disambiguation.size() && m_disambiguation_command.size())
+    {
+        if (StrX::find_and_replace(m_disambiguation_command, "{}", StrX::collapse_vector(words)))
+        {
+            parse("}" + m_disambiguation_command);
+            return;
+        }
+        else
+        {
+            m_disambiguation.clear();
+            m_disambiguation_command.clear();
+        }
+    }
+
     core()->message("{y}I'm sorry, I don't understand.");
 }
 
@@ -178,6 +259,83 @@ Direction Parser::parse_direction(const std::string &dir) const
     else if (dir == "up" || dir == "u") return Direction::UP;
     else if (dir == "down" || dir == "d") return Direction::DOWN;
     else return Direction::NONE;
+}
+
+// Attempts to match an item name in the given Inventory.
+uint32_t Parser::parse_item_name(const std::vector<std::string> &input, std::shared_ptr<Inventory> inv)
+{
+    if (!input.size() || ! inv->count()) return ItemMatch::NOT_FOUND;   // Don't even *try* with blank inputs, or empty inventories.
+
+    const uint32_t inv_size = inv->count();
+    std::vector<unsigned int> item_scores(inv_size);
+    for (unsigned int i = 0; i < inv_size; i++)
+    {
+        if (m_disambiguation_parsing)
+        {
+            bool good = false;
+            for (auto d : m_disambiguation)
+            {
+                if (i == d)
+                {
+                    good = true;
+                    break;
+                }
+            }
+            if (!good) continue;
+        }
+
+        const std::shared_ptr<Item> item = inv->get(i);
+        if (input.size() == 1 && input.at(0) == StrX::itoh(item->hex_id(), 3)) return i;    // If the hex ID matches, that's an easy one.
+
+        // Score each object by matching words in its name.
+        const std::string stripped_name_lowercase = StrX::str_tolower(StrX::strip_ansi(item->name()));
+        std::vector<std::string> name_words = StrX::string_explode(stripped_name_lowercase, " ");
+        const std::string collapsed_input = StrX::collapse_vector(input);
+        unsigned int score = 0;
+        if (stripped_name_lowercase == collapsed_input) score = 100;
+        else
+        {
+            for (unsigned int j = 0; j < input.size(); j++)
+                for (unsigned int k = 0; k < name_words.size(); k++)
+                    if (input.at(j) == name_words.at(k)) score++;
+        }
+        item_scores.at(i) = score;
+    }
+    m_disambiguation.clear();
+
+    // Determine the highest score.
+    unsigned int highest_score = 0;
+    for (unsigned int i = 0; i < inv_size; i++)
+        if (item_scores.at(i) > highest_score) highest_score = item_scores.at(i);
+    
+    // No matches at all?
+    if (!highest_score)
+    {
+        m_disambiguation.clear();
+        return ItemMatch::NOT_FOUND;
+    }
+
+    // Now loop again, see how many candidates we have.
+    for (unsigned int i = 0; i < inv_size; i++)
+        if (item_scores.at(i) == highest_score) m_disambiguation.push_back(i);
+    
+    // If we just have one, great! That was easy!
+    if (m_disambiguation.size() == 1)
+    {
+        const uint32_t choice = m_disambiguation.at(0);
+        m_disambiguation.clear();
+        return choice;
+    }
+
+    // If not...
+    std::string disambig = "{c}I'm not sure which one you mean! Did you mean ";
+    std::vector<std::string> candidate_names;
+    for (auto c : m_disambiguation)
+        candidate_names.push_back("{C}" + inv->get(c)->name() + " {B}{" + StrX::itoh(inv->get(c)->hex_id(), 3) + "}{c}");
+    disambig += StrX::comma_list(candidate_names) + "?";
+    core()->message(disambig);
+
+    return ItemMatch::UNCLEAR;
 }
 
 // Parses input when QUIT_CONFIRM state is active; the game is waiting for confirmation that the player wants to quit.

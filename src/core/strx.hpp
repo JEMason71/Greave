@@ -12,7 +12,9 @@ public:
 
     enum class DirNameType : uint8_t { NORMAL, TO_THE, TO_THE_ALT };
 
+    static std::string  collapse_vector(std::vector<std::string> vec);  // Simple function to collapse a string vector into words.
     static std::string  comma_list(std::vector<std::string> vec, unsigned int flags = 0);   // Converts a vector to a comma-separated list.
+    static unsigned int count_colour_tags(const std::string &str);  // Counts all the colour tags in a string.
     static std::string  dir_to_name(Direction dir, DirNameType dnt = DirNameType::NORMAL);  // Converts a direction enum into a string.
     static std::string  dir_to_name(uint8_t dir, DirNameType dnt = DirNameType::NORMAL);    // As above, but with an integer instead of an enum.
     static bool         find_and_replace(std::string &input, const std::string &to_find, const std::string &to_replace);    // Find and replace one string with another.
@@ -28,6 +30,7 @@ public:
     static std::vector<std::string> string_explode(std::string str, const std::string &separator);          // String split/explode function.
     static std::vector<std::string> string_explode_colour(const std::string &str, unsigned int line_len);   // Similar to string_explode(), but takes colour into account, and wraps to a given line.
     static void         string_to_metadata(const std::string &str, std::map<std::string, std::string> &metadata);   // Converts a string to a metadata map.
+    static std::string  strip_ansi(const std::string &str);         // Strips colour codes from a string.
     static unsigned int strlen_colour(const std::string &str);      // Returns the length of a string, taking colour tags into account.    
     static unsigned int word_count(const std::string &str, const std::string &word);    // Returns a count of the amount of times a string is found in a parent string.
 

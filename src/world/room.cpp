@@ -79,6 +79,9 @@ bool Room::fake_link(Direction dir) const
 // Retrieves the unique hashed ID of this Room.
 uint32_t Room::id() const { return m_id; }
 
+// Returns a pointer to the Room's Inventory.
+const std::shared_ptr<Inventory> Room::inv() const { return m_inventory; }
+
 // Checks if a key can unlock a door in the specified direction.
 bool Room::key_can_unlock(std::shared_ptr<Item> key, Direction dir)
 {

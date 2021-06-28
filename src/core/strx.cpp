@@ -7,11 +7,24 @@
 #include "core/strx.hpp"
 
 #include <algorithm>
+#include <iterator>
 #include <sstream>
 
 
 const int StrX::CL_FLAG_USE_AND = 1, StrX::CL_FLAG_SQL_MODE = 2;    // comma_list() flags
 
+
+// Simple function to collapse a string vector into words.
+std::string StrX::collapse_vector(std::vector<std::string> vec)
+{
+    std::ostringstream output;
+    if (!vec.empty())
+    {
+        std::copy(vec.begin(), vec.end() - 1, std::ostream_iterator<std::string>(output, " "));
+        output << vec.back();
+    }
+    return output.str();
+}
 
 std::string StrX::comma_list(std::vector<std::string> vec, unsigned int flags)
 {
@@ -43,6 +56,15 @@ std::string StrX::comma_list(std::vector<std::string> vec, unsigned int flags)
 	}
 
 	return str;
+}
+
+// Counts all the colour tags in a string.
+unsigned int StrX::count_colour_tags(const std::string &str)
+{
+    unsigned int tags = 0;
+    for (unsigned int i = 0; i < str.size(); i++)
+        if (str.at(i) == '{' && str.size() > i + 2 && str.at(i + 2) == '}') tags++;
+    return tags;
 }
 
 // Converts a direction enum into a string.
@@ -248,8 +270,8 @@ std::vector<std::string> StrX::string_explode_colour(const std::string &str, uns
         {
             unsigned int length = word.length();    // Find the length of the word.
 
-            const int colour_count = word_count(word, "{"); // Count the colour tags.
-            if (colour_count) length -= (colour_count * 3); // Reduce the length if one or more colour tags are found.
+            const int colour_count = count_colour_tags(word);   // Count the colour tags.
+            if (colour_count) length -= (colour_count * 3);     // Reduce the length if one or more colour tags are found.
             if (length + line_pos >= line_len)  // Is the word too long for the current line?
             {
                 line_pos = 0; current_line++;   // CR;LF
@@ -299,14 +321,26 @@ void StrX::string_to_metadata(const std::string &str, std::map<std::string, std:
     }
 }
 
+// Strips colour codes from a string.
+std::string StrX::strip_ansi(const std::string &str)
+{
+    std::string result = str;
+    size_t pos;
+    while ((pos = result.find("{")) != std::string::npos)
+    {
+        if (!pos) result = result.substr(3);
+        else result = result.substr(0, pos) + result.substr(pos + 3);
+    }
+    return result;
+}
+
 // Returns the length of a string, taking colour and high/low-ASCII tags into account.
 unsigned int StrX::strlen_colour(const std::string &str)
 {
     unsigned int len = str.size();
 
     // Count any colour tags.
-    const int openers = std::count(str.begin(), str.end(), '{');
-    if (openers) len -= openers * 3;
+    len -= count_colour_tags(str) * 3;
 
     return len;
 }

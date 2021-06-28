@@ -10,5 +10,7 @@ class Mobile;   // defined in world/mobile.hpp
 class ActionInventory
 {
 public:
-    static void check_inventory(std::shared_ptr<Mobile> mob);   // Checks to see what's being carried.
+    static void check_inventory(std::shared_ptr<Mobile> mob);           // Checks to see what's being carried.
+    static void drop(std::shared_ptr<Mobile> mob, uint32_t item_pos);   // Drops an item on the ground.
+    static void take(std::shared_ptr<Mobile> mob, uint32_t item_pos);   // Takes an item from the ground.
 };

@@ -26,6 +26,13 @@ void Inventory::add_item(const std::string &id) { add_item(core()->world()->get_
 // Returns the number of Items in this Inventory.
 unsigned int Inventory::count() const { return m_items.size(); }
 
+// Deletes an Item from this Inventory.
+void Inventory::erase(uint32_t pos)
+{
+    if (pos >= m_items.size()) throw std::runtime_error("Invalid inventory position requested.");
+    m_items.erase(m_items.begin() + pos);
+}
+
 // Retrieves an Item from this Inventory.
 std::shared_ptr<Item> Inventory::get(uint32_t pos) const
 {

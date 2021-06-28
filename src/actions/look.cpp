@@ -4,6 +4,8 @@
 #include "actions/look.hpp"
 #include "core/core.hpp"
 #include "core/strx.hpp"
+#include "world/inventory.hpp"
+#include "world/item.hpp"
 #include "world/mobile.hpp"
 #include "world/room.hpp"
 #include "world/world.hpp"
@@ -60,6 +62,14 @@ void ActionLook::look(std::shared_ptr<Mobile> mob)
 
         exits_vec.push_back(exit_name);
     }
-
     if (exits_vec.size()) core()->message("{0}{g}```Obvious exits: " + StrX::comma_list(exits_vec, StrX::CL_FLAG_USE_AND));
+
+    // Items nearby.
+    if (room->inv()->count())
+    {
+        std::vector<std::string> items_nearby;
+        for (unsigned int i = 0; i < room->inv()->count(); i++)
+            items_nearby.push_back(room->inv()->get(i)->name() + "{w}");
+        core()->message("{0}{g}```Items nearby: {w}" + StrX::comma_list(items_nearby, StrX::CL_FLAG_USE_AND));
+    }
 }

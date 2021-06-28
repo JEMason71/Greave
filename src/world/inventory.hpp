@@ -14,6 +14,7 @@ public:
     void            add_item(std::shared_ptr<Item> item);   // Adds an Item to this Inventory (this will later handle auto-stacking, etc.)
     void            add_item(const std::string &id);        // As above, but generates a new Item from a template with a specified ID.
     unsigned int    count() const;                          // Returns the number of Items in this Inventory.
+    void            erase(uint32_t pos);                    // Deletes an Item from this Inventory.
     std::shared_ptr<Item> get(uint32_t pos) const;          // Retrieves an Item from this Inventory.
     void            load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id);   // Loads an Inventory from the save file.
     uint32_t        save(std::shared_ptr<SQLite::Database> save_db);    // Saves this Inventory, returns its SQL ID.

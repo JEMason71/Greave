@@ -97,6 +97,7 @@ public:
     std::string door_name(Direction dir) const;                 // Returns the name of a door in the specified direction.
     bool        fake_link(Direction dir) const;                 // Checks if a room link is fake (e.g. to FALSE_ROOM or UNFINISHED).
     uint32_t    id() const;                                     // Retrieves the unique hashed ID of this Room.
+    const std::shared_ptr<Inventory>    inv() const;            // Returns a pointer to the Room's Inventory.
     bool        key_can_unlock(std::shared_ptr<Item> key, Direction dir);   // Checks if a key can unlock a door in the specified direction.
     int         light(std::shared_ptr<Mobile> mob = nullptr) const; // Gets the light level of this Room, adjusted by dynamic lights, and optionally including darkvision etc.
     uint32_t    link(Direction dir) const;                      // Retrieves a Room link in the specified direction.
