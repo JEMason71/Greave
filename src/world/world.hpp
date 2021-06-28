@@ -9,6 +9,7 @@ class Mobile;   // defined in world/mobile.hpp
 class Player;   // defined in world/player.hpp
 class Room;     // defined in world/room.hpp
 enum class ItemSub : uint16_t;  // defined in world/item.hpp
+enum class ItemTag : uint16_t;  // d efined in world/item.hpp
 enum class ItemType : uint16_t; // defined in world/item.hpp
 enum class LinkTag : uint16_t;  // defined in world/room.hpp
 enum class RoomTag : uint16_t;  // defined in world/room.hpp
@@ -32,6 +33,7 @@ public:
 
 private:
     static const std::map<std::string, ItemSub>     ITEM_SUBTYPE_MAP;   // Lookup table for converting ItemSub text names into enums.
+    static const std::map<std::string, ItemTag>     ITEM_TAG_MAP;       // Lookup table for converting ItemTag text names into enums.
     static const std::map<std::string, ItemType>    ITEM_TYPE_MAP;      // Lookup table for converting ItemType text names into enums.
     static const std::map<std::string, uint8_t>     LIGHT_LEVEL_MAP;    // Lookup table for converting textual light levels (e.g. "bright") to integer values.
     static const std::map<std::string, LinkTag>     LINK_TAG_MAP;       // Lookup table for converting LinkTag text names into enums.

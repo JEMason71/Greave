@@ -9,7 +9,7 @@
 
 // The SQL table construction string for saving items.
 const std::string Item::SQL_ITEMS = "CREATE TABLE items ( sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, owner_id INTEGER NOT NULL, name TEXT NOT NULL, type INTEGER, subtype INTEGER, "
-    "metadata TEXT )";
+    "tags TEXT, metadata TEXT )";
 
 
 // Constructor, sets default values.
@@ -17,6 +17,13 @@ Item::Item() : m_type(ItemType::NONE), m_type_sub(ItemSub::NONE) { }
 
 // Clears a metatag from an Item. Use with caution!
 void Item::clear_meta(const std::string &key) { m_metadata.erase(key); }
+
+// Clears a tag on this Item.
+void Item::clear_tag(ItemTag the_tag)
+{
+    if (!(m_tags.count(the_tag) > 0)) return;
+    m_tags.erase(the_tag);
+}
 
 // Loads a new Item from the save file.
 std::shared_ptr<Item> Item::load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id)
@@ -33,6 +40,7 @@ std::shared_ptr<Item> Item::load(std::shared_ptr<SQLite::Database> save_db, uint
         if (!query.isColumnNull("type")) new_type = static_cast<ItemType>(query.getColumn("type").getInt());
         if (!query.isColumnNull("subtype")) new_subtype = static_cast<ItemSub>(query.getColumn("subtype").getInt());
         new_item->set_type(new_type, new_subtype);
+        if (!query.getColumn("tags").isNull()) StrX::string_to_tags(query.getColumn("tags").getString(), new_item->m_tags);
         if (!query.getColumn("metadata").isNull()) StrX::string_to_metadata(query.getColumn("metadata").getString(), new_item->m_metadata);
     }
     else throw std::runtime_error("Could not retrieve data for item ID " + std::to_string(sql_id));
@@ -47,19 +55,23 @@ std::string Item::meta(const std::string &key) const
     else return m_metadata.at(key);
 }
 
+// Accesses the metadata map directly. Use with caution!
+std::map<std::string, std::string>* Item::meta_raw() { return &m_metadata; }
+
 // Retrieves the name of thie Item.
 std::string Item::name() const { return m_name; }
 
 // Saves the Item.
 void Item::save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id)
 {
-    SQLite::Statement query(*save_db, "INSERT INTO items ( sql_id, owner_id, name, type, subtype, metadata ) VALUES ( ?, ?, ?, ?, ?, ? )");
+    SQLite::Statement query(*save_db, "INSERT INTO items ( sql_id, owner_id, name, type, subtype, tags, metadata ) VALUES ( ?, ?, ?, ?, ?, ?, ? )");
     query.bind(1, core()->sql_unique_id());
     query.bind(2, owner_id);
     query.bind(3, m_name);
     if (m_type != ItemType::NONE) query.bind(4, static_cast<int>(m_type));
     if (m_type_sub != ItemSub::NONE) query.bind(5, static_cast<int>(m_type_sub));
-    if (m_metadata.size()) query.bind(6, StrX::metadata_to_string(m_metadata));
+    if (m_tags.size()) query.bind(6, StrX::tags_to_string(m_tags));
+    if (m_metadata.size()) query.bind(7, StrX::metadata_to_string(m_metadata));
     query.exec();
 }
 
@@ -73,6 +85,13 @@ void Item::set_meta(const std::string &key, const std::string &value)
 // Sets the name of this Item.
 void Item::set_name(const std::string &name) { m_name = name; }
 
+// Sets a tag on this Item.
+void Item::set_tag(ItemTag the_tag)
+{
+    if (m_tags.count(the_tag) > 0) return;
+    m_tags.insert(the_tag);
+}
+
 // Sets the type of this Item.
 void Item::set_type(ItemType type, ItemSub sub)
 {
@@ -82,6 +101,9 @@ void Item::set_type(ItemType type, ItemSub sub)
 
 // Returns the ItemSub (sub-type) of this Item.
 ItemSub Item::subtype() const { return m_type_sub; }
+
+// Checks if a tag is set on this Item.
+bool Item::tag(ItemTag the_tag) const { return (m_tags.count(the_tag) > 0); }
 
 // Returns the ItemType of this Item.
 ItemType Item::type() const { return m_type; }

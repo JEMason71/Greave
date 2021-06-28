@@ -19,6 +19,9 @@
 // Lookup table for converting ItemSub text names into enums.
 const std::map<std::string, ItemSub>    World::ITEM_SUBTYPE_MAP = { { "none", ItemSub::NONE } };
 
+// Lookup table for converting ItemTag text names into enums.
+const std::map<std::string, ItemTag>    World::ITEM_TAG_MAP = { };
+
 // Lookup table for converting ItemType text names into enums.
 const std::map<std::string, ItemType>   World::ITEM_TYPE_MAP = { { "none", ItemType::NONE } };
 
@@ -162,6 +165,22 @@ void World::load_item_pool()
                 else subtype = it->second;
             }
             new_item->set_type(type, subtype);
+
+            // The Item's tags, if any.
+            if (item_data["tags"])
+            {
+                if (!item_data["tags"].IsSequence()) core()->guru()->nonfatal("{r}Malformed item tags: " + item_id_str, Guru::ERROR);
+                else for (auto tag : item_data["tags"])
+                {
+                    const std::string tag_str = StrX::str_tolower(tag.as<std::string>());
+                    const auto tag_it = ITEM_TAG_MAP.find(tag_str);
+                    if (tag_it == ITEM_TAG_MAP.end()) core()->guru()->nonfatal("Unrecognized item tag (" + tag_str + "): " + item_id_str, Guru::WARN);
+                    else new_item->set_tag(tag_it->second);
+                }
+            }
+
+            // The Item's metadata, if any.
+            if (item_data["metadata"]) StrX::string_to_metadata(item_data["metadata"].as<std::string>(), *new_item->meta_raw());
 
             // Add the new Item to the item pool.
             m_item_pool.insert(std::make_pair(item_id, new_item));
@@ -313,11 +332,7 @@ void World::load_room_pool()
                     {
                         const auto tag_it = ROOM_TAG_MAP.find(tag_str);
                         if (tag_it == ROOM_TAG_MAP.end()) core()->guru()->nonfatal("Unrecognized room tag (" + tag_str + "): " + room_id, Guru::WARN);
-                        else
-                        {
-                            const RoomTag rt = tag_it->second;
-                            new_room->set_tag(rt);
-                        }
+                        else new_room->set_tag(tag_it->second);
                     }
                     else
                     {
