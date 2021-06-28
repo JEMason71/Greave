@@ -50,9 +50,6 @@ https://github.com/SRombauts/SQLiteCpp
 Tolk copyright © 2014-2016 Davy Kager.
 https://github.com/dkager/tolk
 
-VG5000 TTF Font copyright © Justin Bihan.
-https://pinspiry.com/vg5000-free-font/
-
 yaml-cpp copyright © 2008-2015 Jesse Beder.
 https://github.com/jbeder/yaml-cpp
 

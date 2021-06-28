@@ -11,44 +11,44 @@
 # USER SETTINGS: Feel free to tweak these, but I recommend doing so #
 # in userdata/tune.yml rather than editing this file directly.      #
 #####################################################################
-blt_console_size:       80x25               # The number of columns and rows the window should be sized to by default.
-blt_font:               VG5000-Regular_web.ttf  # The TTF font used in the game (must be monospace).
-blt_font_size:          14                  # The size of the main font.
-blt_log_file:           log-blt.txt         # The filename for the BearLibTerminal log file in the userdata folder.
-blt_log_level:          warning             # The minimum level of logging for BearLibTerminal.
-blt_vsync:              true                # Should the game use vsync?
-colour_black:           000000              # Hex colour definition for black.
-colour_blue:            80befa              # Hex colour definition for bold blue.
-colour_blue_dark:       2c4c96              # Hex colour definition for dark blue.
-colour_cyan:            64f0e6              # Hex colour definition for bold cyan.
-colour_cyan_dark:       169e94              # Hex colour definition for dark cyan.
-colour_green:           5bf050              # Hex colour definition for bold green.
-colour_green_dark:      28961e              # Hex colour definition for dark green.
-colour_grey:            bfbfbf              # Hex colour definition for grey.
-colour_grey_dark:       606060              # Hex colour definition for dark grey.
-colour_magenta:         f064f0              # Hex colour definition for bold magenta.
-colour_magenta_dark:    920e9e              # Hex colour definition for dark magenta.
-colour_red:             f04b4b              # Hex colour definition for bold red.
-colour_red_dark:        961414              # Hex colour definition for dark red.
-colour_white:           ffffff              # Hex colour definition for white.
-colour_yellow:          f0f064              # Hex colour definition for bold yellow.
-colour_yellow_dark:     8c7718              # Hex colour definition for dark yellow.
-curses_custom_colours:  true                # Apply custom colour values above to Curses colours.
-log_max_size:           1000                # How many lines of text to keep in the message log?
-log_mouse_scroll_step:  2                   # How many lines to scroll the window, when using the mouse-wheel.
-monochrome_mode:        false               # Set this to true to only use black/gray for the background and white for the text.
-screen_reader_external: true                # Enable automatic screen-reader support? Screen readers supported: JAWS, NVDA, SuperNova, System Access, Window-Eyes, ZoomText.
-screen_reader_process_square_brackets: true # This setting can improve narration on screen readers for square brackets.
-screen_reader_sapi:     false               # Enable this to default to Microsoft SAPI text-to-speech, without using any external screen-reader software.
-terminal:               blt                 # Set this to blt for BearLibTerminal, or curses for PDCurses/NCurses.
+blt_console_size:       80x25                   # The number of columns and rows the window should be sized to by default.
+blt_font:               RobotoMono-Regular.ttf  # The TTF font used in the game (must be monospace).
+blt_font_size:          14                      # The size of the main font.
+blt_log_file:           log-blt.txt             # The filename for the BearLibTerminal log file in the userdata folder.
+blt_log_level:          warning                 # The minimum level of logging for BearLibTerminal.
+blt_vsync:              true                    # Should the game use vsync?
+colour_black:           000000                  # Hex colour definition for black.
+colour_blue:            80befa                  # Hex colour definition for bold blue.
+colour_blue_dark:       2c4c96                  # Hex colour definition for dark blue.
+colour_cyan:            64f0e6                  # Hex colour definition for bold cyan.
+colour_cyan_dark:       169e94                  # Hex colour definition for dark cyan.
+colour_green:           5bf050                  # Hex colour definition for bold green.
+colour_green_dark:      28961e                  # Hex colour definition for dark green.
+colour_grey:            bfbfbf                  # Hex colour definition for grey.
+colour_grey_dark:       606060                  # Hex colour definition for dark grey.
+colour_magenta:         f064f0                  # Hex colour definition for bold magenta.
+colour_magenta_dark:    920e9e                  # Hex colour definition for dark magenta.
+colour_red:             f04b4b                  # Hex colour definition for bold red.
+colour_red_dark:        961414                  # Hex colour definition for dark red.
+colour_white:           ffffff                  # Hex colour definition for white.
+colour_yellow:          f0f064                  # Hex colour definition for bold yellow.
+colour_yellow_dark:     8c7718                  # Hex colour definition for dark yellow.
+curses_custom_colours:  true                    # Apply custom colour values above to Curses colours.
+log_max_size:           1000                    # How many lines of text to keep in the message log?
+log_mouse_scroll_step:  2                       # How many lines to scroll the window, when using the mouse-wheel.
+monochrome_mode:        false                   # Set this to true to only use black/gray for the background and white for the text.
+screen_reader_external: true                    # Enable automatic screen-reader support? Screen readers supported: JAWS, NVDA, SuperNova, System Access, Window-Eyes, ZoomText.
+screen_reader_process_square_brackets: true     # This setting can improve narration on screen readers for square brackets.
+screen_reader_sapi:     false                   # Enable this to default to Microsoft SAPI text-to-speech, without using any external screen-reader software.
+terminal:               blt                     # Set this to blt for BearLibTerminal, or curses for PDCurses/NCurses.
 
 
 #######################################################################
 # SYSTEM SETTINGS: These settings adjust some aspects of the game     #
 # engine and rendering. It is not recomended to change anything here. #
 #######################################################################
-log_padding_bottom:     3                   # The amount of black space below the message log window. (Must be at least 2, or the input box will be hidden.)
-log_padding_left:       2                   # The amount of black space to the left of the message log window.
-log_padding_right:      2                   # The amount of black space to the right of the message log window.
-log_padding_top:        1                   # The amount of black space above the message log window.
-save_file_slots:        5                   # The total amount of saved game slots available.
+log_padding_bottom:     3                       # The amount of black space below the message log window. (Must be at least 2, or the input box will be hidden.)
+log_padding_left:       2                       # The amount of black space to the left of the message log window.
+log_padding_right:      2                       # The amount of black space to the right of the message log window.
+log_padding_top:        1                       # The amount of black space above the message log window.
+save_file_slots:        5                       # The total amount of saved game slots available.
