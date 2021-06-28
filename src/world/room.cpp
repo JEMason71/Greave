@@ -91,10 +91,22 @@ uint32_t Room::link(uint8_t dir) const
 bool Room::link_tag(uint8_t id, LinkTag the_tag) const
 {
     if (id >= ROOM_LINKS_MAX) throw std::runtime_error("Invalid direction specified when checking room link tag.");
-    if (the_tag == LinkTag::Lockable || the_tag == LinkTag::Openable || the_tag == LinkTag::Locked || the_tag == LinkTag::Permalock)
+    if (the_tag == LinkTag::Lockable || the_tag == LinkTag::Openable || the_tag == LinkTag::Locked)
     {
         if (m_tags_link[id].count(LinkTag::Permalock) > 0) return true; // If checking for Lockable, Openable or Locked, also check for Permalock.
         if (m_links[id] == FALSE_ROOM) return true; // Links to FALSE_ROOM are always considered to be permalocked.
+
+        // Special rules check here. Because exits are usually unlocked by default, but may have the LockedByDefault tag, they then require Unlocked
+        // to mark them as currently unlocked. To simplify things, we'll just check for the Locked tag externally, and handle this special case here.
+        if (the_tag == LinkTag::Locked)
+        {
+            if (m_tags_link[id].count(LinkTag::Locked) > 0) return true;    // If it's marked as Locked then it's locked, no question.
+            if (m_tags_link[id].count(LinkTag::LockedByDefault) > 0)        // And here's the tricky bit.
+            {
+                if (m_tags_link[id].count(LinkTag::Unlocked) > 0) return false; // If it's marked Unlocked, then we're good.
+                else return true;   // If not, then yes, it's locked.
+            }
+        }
     }
     return (m_tags_link[id].count(the_tag) > 0);
 }

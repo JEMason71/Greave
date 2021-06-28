@@ -12,10 +12,12 @@ enum class LinkTag : uint16_t {
     // Tags below 10,000 are considered *dynamic tags*. These tags WILL be saved to save files.
     Open = 1,           // A door, gate, hatch, etc. that is currently open.
     Locked,             // A closed door etc. that is currently locked.
+    Unlocked,           // As above, but one that is explicitly unlocked.
 
     // Tags at 10,000 or above are considered *permanent tags*. These tags WILL NOT be saved to save files.
     Openable = 10000,   // Can be opened and closed; a door, hatch, gate, or similar.
     Lockable,           // Can be locked or unlocked with a key. Must be openable. [CURRENTLY UNUSED]
+    LockedByDefault,    // This exit is locked by default (requires the Unlocked tag to be considered unlocked).
     LockWeak,           // Does this door have a particularly weak lock? [CURRENTLY UNUSED]
     LockStrong,         // Does this door have a particularly strong lock? [CURRENTLY UNUSED]
     Permalock,          // A locked door/etc. which can never be unlocked.
