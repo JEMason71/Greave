@@ -83,7 +83,7 @@ public:
     static const uint32_t       FALSE_ROOM;                     // Hashed value for FALSE_ROOM, which is used to make 'fake' impassible room exits.
     static const uint8_t        LIGHT_VISIBLE;                  // Any light level below this is considered too dark to see.
     static const unsigned int   ROOM_LINKS_MAX = 10;            // The maximum amount of exit links from one Room to another.
-    static const std::string    SQL_ROOM_POOL;                  // The SQL table construction string for the room pool.
+    static const std::string    SQL_ROOMS;                      // The SQL table construction string for the saved rooms.
     static const uint32_t       UNFINISHED;                     // Hashed value for UNFINISHED, which is used to mark room exits as unfinished and to be completed later.
 
                 Room(std::string new_id = "");                  // Constructor, sets the Room's ID hash.

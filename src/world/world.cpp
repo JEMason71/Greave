@@ -348,7 +348,7 @@ bool World::room_exists(const std::string &str) const { return m_room_pool.find(
 // Saves the World and all things within it.
 void World::save(std::shared_ptr<SQLite::Database> save_db)
 {
-    save_db->exec(Room::SQL_ROOM_POOL);
+    save_db->exec(Room::SQL_ROOMS);
     save_db->exec(Player::SQL_PLAYER);
     save_db->exec(Mobile::SQL_MOBILES);
     save_db->exec(Item::SQL_ITEMS);
