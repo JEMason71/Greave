@@ -46,6 +46,7 @@ endif(TARGET_WINDOWS)
 # Source files.
 set(GREAVE_CPPS
   actions/doors.cpp
+  actions/inventory.cpp
   actions/look.cpp
   actions/travel.cpp
   core/core.cpp

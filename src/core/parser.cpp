@@ -2,6 +2,7 @@
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #include "actions/doors.hpp"
+#include "actions/inventory.hpp"
 #include "actions/look.hpp"
 #include "actions/travel.hpp"
 #include "core/core.hpp"
@@ -100,6 +101,32 @@ void Parser::parse(std::string input)
         ActionTravel::travel(player, dir);
         return;
     }
+
+
+    /*********************************
+     * Item and inventory management *
+     *********************************/
+
+    else if (first_word == "inventory" || first_word == "invent" || first_word == "inv" || first_word == "i")
+    {
+        ActionInventory::check_inventory(player);
+        return;
+    }
+
+    else if (first_word == "take" || first_word == "get")
+    {
+        if (words.size() < 2)
+        {
+            core()->message("{y}Please specify {Y}what you want to get{y}.");
+            return;
+        }
+        if (words.at(1) == "inventory" || words.at(1) == "invent" || words.at(1) == "inv" || words.at(1) == "i")
+        {
+            ActionInventory::check_inventory(player);
+            return;
+        }
+    }
+
 
     /************************************
      * Super secret dev/debug commands! *
