@@ -44,5 +44,5 @@ if(TARGET_LINUX)
 	  DEPENDS greave
       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/lib/lin32/libBearLibTerminal.so" "${CMAKE_BINARY_DIR}/bin"
     )
-  endif(TARGET64)
+  endif(TARGET_64)
 endif(TARGET_LINUX)

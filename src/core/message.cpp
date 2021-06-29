@@ -3,13 +3,16 @@
 // Originally based on BearLibTerminal sample code, (c) 2014 Cfyz.
 
 #include "3rdparty/SQLiteCpp/SQLiteCpp.h"
-#include "3rdparty/Tolk/Tolk.h"
 #include "core/core.hpp"
 #include "core/guru.hpp"
 #include "core/message.hpp"
 #include "core/prefs.hpp"
 #include "core/strx.hpp"
 #include "core/terminal.hpp"
+
+#ifdef GREAVE_TARGET_WINDOWS
+#include "3rdparty/Tolk/Tolk.h"
+#endif
 
 #include <regex>
 
