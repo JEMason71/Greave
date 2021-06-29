@@ -64,7 +64,7 @@ EAST_CALEDONIA_6:
   tags: [ DigOK, EastDoubleLength, NorthDoubleLength, WaterSalt, Wide ]
 
 EAST_CALEDONIA_7:
-  desc: The water is cool and refreshing, the sapphire waves gently lapping against the sandy beach to the north. The great walls of the city extend even out into the ocean, towering high above and blocking any attempt to gain passage beyond. A way to the east, a small island rises out of the ocean, a rickety-looking rope bridge connecting it to the mainland.
+  desc: The water is [springsummer:cool and refreshing][autumnwinter:bitterly cold], the sapphire waves gently lapping against the sandy beach to the north. The great walls of the city extend even out into the ocean, towering high above and blocking any attempt to gain passage beyond. A way to the east, a small island rises out of the ocean, a rickety-looking rope bridge connecting it to the mainland.
   exits:
     east: IANI_OCEAN
     north: EAST_CALEDONIA_6
@@ -87,7 +87,7 @@ IANI_BEACH:
   tags: [ DigOK, EastDoubleLength, WaterSalt, WestDoubleLength ]
 
 IANI_BEACH_2:
-  desc: The scent of salt is strong in the air here, the sea breeze cool and briny. The soft sand dunes stretch out before you, punctuated by a few clumps of speargrass stubbornly clinging to life. A little way off the coast lies a small island to the south, a rickety-looking rope bridge moored to the beach leading south onto island's rocky surface.
+  desc: The scent of salt is strong in the air here, the sea breeze [springsummer:cool and briny][autumnwinter:carrying an icy chill]. The soft sand dunes stretch out before you, punctuated by a few clumps of speargrass stubbornly clinging to life. A little way off the coast lies a small island to the south, a rickety-looking rope bridge moored to the beach leading south onto island's rocky surface.
   exits:
     east: UNFINISHED
     south: UYOGA_ISLAND
@@ -98,7 +98,7 @@ IANI_BEACH_2:
   tags: [ DigOK, EastTripleLength, SouthTripleLength, WaterSalt, WestDoubleLength ]
 
 IANI_OCEAN:
-  desc: The water is cool and refreshing, the sapphire waves gently lapping against the sandy beach to the north. Looming to the west are the tall, ancient walls of the Forge-City, extending even into the ocean, while a steep, rocky face blocks passage to the east, a small island just off the shore, its walls too high to reasonably climb from here.
+  desc: The water is [springsummer:cool and refreshing][autumnwinter:bitterly cold], the sapphire waves gently lapping against the sandy beach to the north. Looming to the west are the tall, ancient walls of the Forge-City, extending even into the ocean, while a steep, rocky face blocks passage to the east, a small island just off the shore, its walls too high to reasonably climb from here.
   exits:
     north: IANI_BEACH
     south: UNFINISHED

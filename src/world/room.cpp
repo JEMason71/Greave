@@ -10,6 +10,7 @@
 #include "world/item.hpp"
 #include "world/mobile.hpp"
 #include "world/room.hpp"
+#include "world/time-weather.hpp"
 #include "world/world.hpp"
 
 
@@ -53,8 +54,34 @@ void Room::clear_tag(RoomTag the_tag)
 // Returns the Room's description.
 std::string Room::desc() const
 {
-    if (m_desc.size() > 2 && m_desc[0] == '$') return core()->world()->generic_desc(m_desc.substr(1));
-    else return m_desc;
+    const auto time_weather = core()->world()->time_weather();
+
+    auto process_timeweather_desc = [] (std::string &desc, std::string tag, bool active) {
+        const size_t start = desc.find("[" + tag);
+        const size_t end = desc.find("]", start);
+        if (active)
+        {
+            const unsigned int insert_start = start + tag.size() + 2;
+            const std::string insert = desc.substr(insert_start, end - insert_start);
+            desc = desc.substr(0, start) + insert + desc.substr(end + 1);
+        }
+        else desc = desc.substr(0, start) + desc.substr(end + 1);
+    };
+
+    std::string desc = m_desc;
+    if (m_desc.size() > 2 && m_desc[0] == '$') desc = core()->world()->generic_desc(m_desc.substr(1));
+    const TimeWeather::Season current_season = time_weather->current_season();
+    const TimeWeather::TimeOfDay current_tod = time_weather->time_of_day(false);
+    while (desc.find("[springsummer:") != std::string::npos)
+        process_timeweather_desc(desc, "springsummer", current_season == TimeWeather::Season::SPRING || current_season == TimeWeather::Season::SUMMER);
+    while (desc.find("[autumnwinter:") != std::string::npos)
+        process_timeweather_desc(desc, "autumnwinter", current_season == TimeWeather::Season::AUTUMN || current_season == TimeWeather::Season::WINTER);
+    while (desc.find("[daydawn:") != std::string::npos)
+        process_timeweather_desc(desc, "daydawn", current_tod == TimeWeather::TimeOfDay::DAY || current_tod == TimeWeather::TimeOfDay::DAWN);
+    while (desc.find("[nightdusk:") != std::string::npos)
+        process_timeweather_desc(desc, "nightdusk", current_tod == TimeWeather::TimeOfDay::NIGHT || current_tod == TimeWeather::TimeOfDay::DUSK);
+    
+    return desc;
 }
 
 // Returns the name of a door in the specified direction.

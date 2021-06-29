@@ -2,7 +2,7 @@
 # Copyright (c) 2019-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 UYOGA_ISLAND:
-  desc: You stand on the south end of a rickety rope bridge, the decrepit wooden planks swaying uncertainly above the briny ocean below. The ground is rocky and uneven, a rough path curving upward to the northwest and northeast, while the terrain becomes grassier southward, a large house visible beyond the rocky cliffs.
+  desc: You stand on the south end of a rickety rope bridge, the decrepit wooden planks swaying uncertainly above the [springsummer:briny][autumnwinter:icy] ocean below. The ground is rocky and uneven, a rough path curving upward to the northwest and northeast, while the terrain becomes grassier southward, a large house visible beyond the rocky cliffs.
   exits:
     north: IANI_BEACH_2
     northeast: UYOGA_ISLAND_3
@@ -95,7 +95,7 @@ UYOGA_ISLAND_8:
   tags: [ NorthTripleLength, WaterClean ]
 
 UYOGA_ISLAND_LAKE_NW:
-  desc: Just what reason compelled you to stand waist-deep in a lake of chilly freshwater is yours alone to know, but here you stand. The surface of the lake is clear and still, a grassy trail working around it to the south and west. Craggy cliffs give way to the ocean to the north, while a large building is visible close to the southeast.
+  desc: Just what reason compelled you to stand waist-deep in a lake of [springsummer:chilly][autumnwinter:freezing cold] freshwater is yours alone to know, but here you stand. The surface of the lake is clear and still, a grassy trail working around it to the south and west. Craggy cliffs give way to the ocean to the north, while a large building is visible close to the southeast.
   exits:
     northwest: UYOGA_ISLAND_4
     southeast: UYOGA_ISLAND_7
@@ -107,7 +107,7 @@ UYOGA_ISLAND_LAKE_NW:
   tags: [ WaterClean, WaterShallow ]
 
 UYOGA_ISLAND_LAKE_SW:
-  desc: Thankfully this small freshwater lake isn't very deep, but it is very wet and chilly as you wade around hip-deep, the clear water clouding as your feet kick up loose mud from beneath. Grassy shores lie to the north and northeast, while the trail becomes more sparse, giving way to hard-packed dirt to the west and south, beyond which lie wooden fishing huts.
+  desc: Thankfully this small freshwater lake isn't very deep, but it is [springsummer:very wet and chilly][autumnwinter:painfully cold] as you wade around hip-deep, the clear water clouding as your feet kick up loose mud from beneath. Grassy shores lie to the north and northeast, while the trail becomes more sparse, giving way to hard-packed dirt to the west and south, beyond which lie wooden fishing huts.
   exits:
     north: UYOGA_ISLAND_8
     northeast: UNFINISHED

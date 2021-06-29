@@ -166,7 +166,7 @@ CALEDONIA_ALCHEMIST_STOREROOM:
   tags: [ Indoors, Private, SouthLocked ]
 
 CALEDONIA_APOTHECARY:
-  desc: "The bitter scents of medicinal herbs and purifying salts hang heavy in the air in this small, yet well-stocked apothecary's store. Daylight filters in through the window by the east door, and the rest of the dimly-lit shop is illuminated by a couple of hanging lanterns and some flickering candles. {lb} ```A large wooden counter spans the middle of the room, upon which rest a few books, a mortar and pestle, and some empty bottles. Behind the counter, shelves of potion bottles and jars of powders and salts are arranged in some semblance of order, and smaller doors occupy the north and south walls."
+  desc: "The bitter scents of medicinal herbs and purifying salts hang heavy in the air in this small, yet well-stocked apothecary's store. [daydawn:Daylight][nightdusk:Dim light] filters in through the window by the east door, and the rest of the dimly-lit shop is illuminated by a couple of hanging lanterns and some flickering candles. {lb} ```A large wooden counter spans the middle of the room, upon which rest a few books, a mortar and pestle, and some empty bottles. Behind the counter, shelves of potion bottles and jars of powders and salts are arranged in some semblance of order, and smaller doors occupy the north and south walls."
   exits:
     north: CALEDONIA_APOTHECARY_HOUSE
     south: CALEDONIA_APOTHECARY_STOREROOM
@@ -224,7 +224,7 @@ CALEDONIA_FLETCHER_STOREROOM:
   tags: [ Indoors, NorthwestLocked, Private ]
 
 CALEDONIA_MARKET_SE1:
-  desc: "The scent of cooking meat lingers in the air as you venture into the southeastern portion of the open-air market, the stalls here consisting mostly of produce - fruit and vegetables from local farms, fresh and cooked meat, and stalls of fish with their own distinct odour. {lb} ```The canvas-covered stalls stretch out further to the south and east, while the area clears to make room for the fountain square northwest."
+  desc: "The [daydawn:scent of cooking meat][nightdusk:faint scent of meat] lingers in the air as you venture into the southeastern portion of the open-air market, the stalls here consisting mostly of produce - fruit and vegetables from local farms, fresh and cooked meat, and stalls of fish with their own distinct odour. {lb} ```The canvas-covered stalls stretch out further to the south and east, while the area clears to make room for the fountain square northwest."
   exits:
     east: CALEDONIA_MARKET_SE2
     north: UNFINISHED
@@ -408,7 +408,7 @@ DIAMOND_IN_THE_ROUGH_BARRACKS:
   tags: [ Indoors, NorthOpenable, Private, WestLocked, WestLockStrong ]
 
 DIAMOND_IN_THE_ROUGH_BEDROOM:
-  desc: "The shopkeeper's private room is spacious and well-decorated, the carpet covered by a finely-woven indigo rug, while various paintings cover the walls. A skylight window above allows daylight to shine in, gently illuminating the area, though remains far too high to reach - the only viable exit is through the door to the south. {lb} ```A large, comfortable-looking bed sits at one side of the room, while at the other, a table flanked by fancy carved wooden chairs. A number of shelves, cupboards and cabinets around the room contain a variety of personal effects."
+  desc: "The shopkeeper's private room is spacious and well-decorated, the carpet covered by a finely-woven indigo rug, while various paintings cover the walls. A skylight window above allows [daydawn:daylight][nightdusk:moonlight] to shine in, gently illuminating the area, though remains far too high to reach - the only viable exit is through the door to the south. {lb} ```A large, comfortable-looking bed sits at one side of the room, while at the other, a table flanked by fancy carved wooden chairs. A number of shelves, cupboards and cabinets around the room contain a variety of personal effects."
   exits:
     south: DIAMOND_IN_THE_ROUGH_CORRIDOR
   light: dim
@@ -474,7 +474,7 @@ FOUNTAIN_SQUARE:
   tags: [ WaterClean, Wide ]
 
 FOUNTAIN_SQUARE_E:
-  desc: "North and south of here are the canvas-covered stalls of a bustling street market rife with colour and exotic smells. To the west, the area opens to a wider plaza with a large fountain in the middle of a cobblestone path. The imposing wall of the Forge-City rises to east, blocking any further progress in that direction."
+  desc: "North and south of here are the canvas-covered stalls of a [daydawn:bustling ]street market rife with colour and exotic smells[nightdusk:, though most of the stalls are closed for the night]. To the west, the area opens to a wider plaza with a large fountain in the middle of a cobblestone path. The imposing wall of the Forge-City rises to east, blocking any further progress in that direction."
   exits:
     north: UNFINISHED
     south: CALEDONIA_MARKET_SE2
@@ -485,7 +485,7 @@ FOUNTAIN_SQUARE_E:
   tags: [ VeryWide ]
 
 FOUNTAIN_SQUARE_S:
-  desc: "The wide paved stone road leads north-south here, flanked by colourful, canvas-covered market stalls offering all manner of goods for sale, along with softly-glowing aether-lanterns on tall iron poles. The market square opens around a fountain to the north, while southward the market stalls give way to run-down industrial buildings."
+  desc: "The wide paved stone road leads north-south here, flanked by colourful, canvas-covered market stalls[daydawn: offering all manner of goods for sale][nightdusk:, most of which are closed for the night], along with softly-glowing aether-lanterns on tall iron poles. The market square opens around a fountain to the north, while southward the market stalls give way to run-down industrial buildings."
   exits:
     east: CALEDONIA_MARKET_SE3
     north: FOUNTAIN_SQUARE
@@ -497,7 +497,7 @@ FOUNTAIN_SQUARE_S:
   tags: [ SouthTripleLength, VeryWide ]
 
 HAINAS_SUNDRIES:
-  desc: "Old floorboards creak under your feet as you enter this quaint little general supplies store, a flickering aether-lantern hanging from the ceiling adding some light to the little that shines in through the cobwebbed windows. An old wooden counter and various shelves are strewn with a number of items - much of it useless to you, old cutlery and utensils, sacks of flour, inkwells and parchment - but a few useful things stand out. {lb} ```Two doors lead out from here - back to the street to the west, and another to the east."
+  desc: "Old floorboards creak under your feet as you enter this quaint little general supplies store, a flickering aether-lantern hanging from the ceiling [daydawn:adding some light to the little that shines in through the cobwebbed windows][nightdusk:illuminating the store in a soft glow]. An old wooden counter and various shelves are strewn with a number of items - much of it useless to you, old cutlery and utensils, sacks of flour, inkwells and parchment - but a few useful things stand out. {lb} ```Two doors lead out from here - back to the street to the west, and another to the east."
   exits:
     east: HAINAS_SUNDRIES_STOREROOM
     west: BERESTALL_CHURCH
