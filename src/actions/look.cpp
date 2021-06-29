@@ -48,14 +48,14 @@ void ActionLook::look(std::shared_ptr<Mobile> mob)
             exit_name = "{r}(" + StrX::dir_to_name(e) + "){c}";
         else if (room_link == Room::FALSE_ROOM)
         {
-            if (room->link_tag(e, LinkTag::KnownLocked)) exit_name += " {u}[locked<>]{c}";
+            if (room->link_tag(e, LinkTag::KnownLocked)) exit_name += " {m}[locked<>]{c}";
             else exit_name += " {u}[closed<>]{c}";
         }
         else
         {
             const std::shared_ptr<Room> link_room = core()->world()->get_room(room_link);
             if (link_room->tag(RoomTag::Explored) && !link_room->tag(RoomTag::Maze)) exit_name += " {B}(" + link_room->name(true) + "){c}";
-            if (room->link_tag(e, LinkTag::KnownLocked)) exit_name += " {u}[locked<>]{c}";
+            if (room->link_tag(e, LinkTag::KnownLocked)) exit_name += " {m}[locked<>]{c}";
             else if (room->link_tag(e, LinkTag::Openable))
             {
                 if (room->link_tag(e, LinkTag::Open)) exit_name += " {u}[open<>]{c}";
