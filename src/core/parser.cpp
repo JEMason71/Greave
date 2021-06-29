@@ -1,248 +1,111 @@
 // core/parser.cpp -- The command parser! Converts player input into commands that the game can understand.
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
+#include "actions/cheat.hpp"
 #include "actions/doors.hpp"
 #include "actions/inventory.hpp"
 #include "actions/look.hpp"
 #include "actions/travel.hpp"
 #include "core/core.hpp"
 #include "core/parser.hpp"
-#include "debug/parser.hpp"
 #include "core/strx.hpp"
 #include "world/inventory.hpp"
 #include "world/item.hpp"
-#include "world/mobile.hpp"
+#include "world/player.hpp"
 #include "world/room.hpp"
 #include "world/world.hpp"
 
 
-// Constructor, sets default values.
-Parser::Parser() : m_debug_parser(std::make_shared<DebugParser>()), m_disambiguation_parsing(false), m_special_state(SpecialState::NONE) { }
-
-// Checks if a directional command is valid, returns a Direction if so.
-Direction Parser::direction_command(const std::vector<std::string> &input, std::string command_override) const
+// Constructor, sets up the parser.
+Parser::Parser() : m_special_state(SpecialState::NONE)
 {
-    if (!command_override.size()) command_override = input.at(0);
-    if (input.size() < 2)
+    add_command("close <dir>", ParserCommand::CLOSE);
+    add_command("drop <item:i>", ParserCommand::DROP);
+    add_command("[fuck|shit|piss|bastard] *", ParserCommand::SWEAR);
+    add_command("[go|travel|walk|run|move] <dir>", ParserCommand::GO);
+    add_command("[inventory|invent|inv|i]", ParserCommand::INVENTORY);
+    add_command("lock <dir>", ParserCommand::LOCK);
+    add_command("[look|l]", ParserCommand::LOOK);
+    add_command("no", ParserCommand::NO);
+    add_command("[north|n|east|e|south|s|west|w|northeast|ne|northwest|nw|southeast|se|southwest|sw|up|u|down|d]", ParserCommand::DIRECTION);
+    add_command("open <dir>", ParserCommand::OPEN);
+    add_command("[quit|exit]", ParserCommand::QUIT);
+    add_command("save", ParserCommand::SAVE);
+    add_command("[take|get] <item:r>", ParserCommand::TAKE);
+    add_command("unlock <dir>", ParserCommand::UNLOCK);
+    add_command("[xyzzy|frotz|plugh|plover]", ParserCommand::XYZZY);
+    add_command("yes", ParserCommand::YES);
+    add_command("#hash <txt>", ParserCommand::HASH);
+    add_command("[#spawnitem|#si] <txt>", ParserCommand::SPAWN_ITEM);
+    add_command("#tp <txt>", ParserCommand::TELEPORT);
+}
+
+// Adds a command to the parser.
+void Parser::add_command(const std::string &text, ParserCommand cmd)
+{
+    if (!text.size()) throw std::runtime_error("Attempt to add empty parser command!");
+    std::vector<std::string> words = StrX::string_explode(text, " ");
+    if (!words.size()) throw std::runtime_error("Attempt to add empty parser command!");
+
+    std::string first_word = words.at(0);
+    words.erase(words.begin());
+    
+    // If the first word has multiple possible options, we'll add them all individually.
+    if (first_word.size() > 2 && first_word.at(0) == '[' && first_word.at(first_word.size() - 1) == ']')
     {
-        core()->message("{y}Please specify a {Y}direction {y}to " + command_override + ".");
-        return Direction::NONE;
+        first_word = first_word.substr(1, first_word.size() - 2);
+        const std::vector<std::string> word_exploded = StrX::string_explode(first_word, "|");
+        for (auto word : word_exploded)
+            add_command(word + (words.size() ? " " + StrX::collapse_vector(words) : ""), cmd);
+        return;
     }
-    const Direction dir = parse_direction(input.at(1));
-    if (dir == Direction::NONE) core()->message("{y}Please specify a {Y}compass direction {y}to " + command_override + ".");
-    return dir;
+
+    // Add an individual command.
+    ParserCommandData pcd;
+    pcd.first_word = first_word;
+    pcd.words = words;
+    pcd.command = cmd;
+    pcd.direction_match = pcd.target_match = pcd.any_length = false;
+    for (auto word : words)
+    {
+        if (word.size() > 2 && word.at(0) == '<')
+        {
+            if (word.at(1) == 'd') pcd.direction_match = true;
+            else pcd.target_match = true;
+        }
+        else if (word == "*") pcd.any_length = true;
+    }
+    m_commands.push_back(pcd);
 }
 
 // Parses input from the player!
 void Parser::parse(std::string input)
 {
     if (!input.size()) return;
-    std::vector<std::string> words = StrX::string_explode(StrX::str_tolower(input), " ");
-    if (!words.size()) return;  // This is incredibly unlikely, possibly impossible, but it can't hurt to check.
+    input = StrX::str_tolower(input);
+    std::vector<std::string> words = StrX::string_explode(input, " ");
+    if (!words.size()) return;
 
-    std::string first_word = words.at(0);
-    if (!first_word.size()) return; // Also incredibly unlikely, but let's be safe.
-    const std::shared_ptr<Mobile> player = core()->world()->player();
-    const std::shared_ptr<Room> room = core()->world()->get_room(player->location());
+    const std::string first_word = words.at(0);
+    words.erase(words.begin());
 
-    // Hide the disambiguation data temporarily. It'll be restored below, if a command cannot be parsed.
-    std::vector<uint32_t> disambiguation_copy = m_disambiguation;
-    std::string disambiguation_command_copy = m_disambiguation_command;
-
-    // Check if we're parsing a disambiguation.
-    if (first_word[0] == '}')
+    bool parsed = false;
+    for (auto pcd : m_commands)
     {
-        first_word = words.at(0) = first_word.substr(1);
-        m_disambiguation_parsing = true;
-    }
-    else
-    {
-        m_disambiguation_parsing = false;
-        m_disambiguation.clear();
-        m_disambiguation_command.clear();
-    }
-
-    switch (m_special_state)
-    {
-        case SpecialState::NONE: break;
-        case SpecialState::QUIT_CONFIRM:
-            parse_quit_confirm(input, first_word);
-            return;
-    }
-
-    // Used for commands that target items.
-    auto item_target = [this, &words, &player, &room](bool in_inventory, std::string command, const std::string &error_specify, std::string error_not_found) -> uint32_t {
-        if (words.size() < 2)
+        if (pcd.first_word == first_word && (pcd.target_match || pcd.any_length || pcd.words.size() == words.size()))
         {
-            core()->message(error_specify);
-            return ItemMatch::NOT_FOUND;
-        }
-        std::vector<std::string> target = words;
-        target.erase(target.begin());
-        const uint32_t inv_pos = parse_item_name(target, (in_inventory ? player->inv() : room->inv()));
-        if (inv_pos == ItemMatch::NOT_FOUND)
-        {
-            if (!m_disambiguation_parsing)
-            {
-                StrX::find_and_replace(error_not_found, "<target>", StrX::collapse_vector(target));
-                core()->message(error_not_found);
-                return ItemMatch::NOT_FOUND;
-            }
-            return ItemMatch::DO_NOTHING;
-        }
-        else if (inv_pos == ItemMatch::UNCLEAR) // Disambiguation, error message already handled by parse_item_name().
-        {
-            m_disambiguation_command = command;
-            return ItemMatch::NOT_FOUND;
-        }
-        return inv_pos;
-    };
-
-
-    /*****************
-     * Meta commands *
-     *****************/
-
-    // 'quit' and 'exit' commands both exit the game, but require confirmation.
-    if (first_word == "quit" || first_word == "exit")
-    {
-        core()->message("{R}Are you sure you want to quit? {M}Your game will not be saved. {R}Type {C}yes {R}to confirm.");
-        m_special_state = SpecialState::QUIT_CONFIRM;
-        return;
-    }
-
-    // 'save' command, to... save the game.
-    if (first_word == "save") { core()->save(); return; }
-
-
-    /****************************
-     * Basic world interactions *
-     ****************************/
-
-    // Look around you. Just look around you.
-    if (first_word == "look" || first_word == "l") { ActionLook::look(player); return; }
-
-    // Atempt to open or close a door or something else openable.
-    if (first_word == "open" || first_word == "close")
-    {
-        const Direction dir = direction_command(words);
-        if (dir != Direction::NONE) ActionDoors::open_or_close(player, dir, (first_word == "open"));
-        return;
-    }
-
-    // Attempt to lock or unlock a door.
-    if (first_word == "lock" || first_word == "unlock")
-    {
-        const Direction dir = direction_command(words);
-        if (dir != Direction::NONE) ActionDoors::lock_or_unlock(player, dir, (first_word == "unlock"));
-        return;
-    }
-
-    // Movement to nearby Rooms.
-    const Direction dir_cmd = parse_direction(first_word);
-    if (dir_cmd != Direction::NONE)
-    {
-        ActionTravel::travel(player, dir_cmd);
-        return;
-    }
-    if (first_word == "go" || first_word == "travel" || first_word == "walk" || first_word == "run" || first_word == "move")
-    {
-        const Direction dir = direction_command(words, "travel");
-        if (dir != Direction::NONE) ActionTravel::travel(player, dir);
-        return;
-    }
-
-
-    /*********************************
-     * Item and inventory management *
-     *********************************/
-
-    if (first_word == "inventory" || first_word == "invent" || first_word == "inv" || first_word == "i")
-    {
-        ActionInventory::check_inventory(player);
-        return;
-    }
-
-    if (first_word == "take" || first_word == "get")
-    {
-        const uint32_t item_pos = item_target(false, "get {}", "{y}Please specify {Y}what you want to take{y}.", "{y}You don't see {Y}<target>{y} here.");
-        if (item_pos == ItemMatch::NOT_FOUND) return;
-        else if (item_pos != ItemMatch::DO_NOTHING)
-        {
-            ActionInventory::take(player, item_pos);
-            return;
+            parsed = true;
+            parse_pcd(first_word, words, pcd);
         }
     }
-
-    if (first_word == "drop")
+    
+    if (!parsed)
     {
-        const uint32_t item_pos = item_target(true, "drop {}", "{y}Please specify {Y}what you want to drop{y}.", "{y}You don't seem to be carrying {Y}<target>{y}.");
-        if (item_pos == ItemMatch::NOT_FOUND) return;
-        else if (item_pos != ItemMatch::DO_NOTHING)
-        {
-            ActionInventory::drop(player, item_pos);
-            return;
-        }
+        std::string msg = "{y}I'm sorry, I don't understand.";
+        if (m_special_state == SpecialState::DISAMBIGUATION) msg += " If you wanted to {Y}clarify your choice{y}, please {Y}type the entire command{y}.";
+        core()->message(msg);
+        m_special_state = SpecialState::NONE;
     }
-
-    /************************************
-     * Super secret dev/debug commands! *
-     ************************************/
-
-    if (first_word[0] == '#')
-    {
-        m_debug_parser->parse(words);
-        return;
-    }
-
-
-    /*********
-     * Fluff *
-     *********/
-
-    // Other words we can basically ignore.
-    if (first_word == "yes" || first_word == "no")
-    {
-        core()->message("{y}That was a rhetorical question.");
-        return;
-    }
-    if (first_word == "xyzzy" || first_word == "frotz" || first_word == "plugh" || first_word == "plover")
-    {
-        core()->message("{u}A hollow voice says, {m}\"Fool.\"");
-        return;
-    }
-    if (first_word == "fuck" || first_word == "shit" || first_word == "piss" || first_word == "bastard")
-    {
-        core()->message("{y}Real adventurers do not use such language.");
-        return;
-    }
-
-
-    /******************
-     * Disambiguation *
-     ******************/
-
-    // Restore the copies of the data we made near the start of this function.
-    m_disambiguation = disambiguation_copy;
-    m_disambiguation_command = disambiguation_command_copy;
-
-    // Okay, so the player just typed "get sword" and the game said, "I'm not sure which one, did you mean red sword or blue sword?"
-    // Then the player typed "red". That's obviously not a command we recognize... but let's try to be smart.
-    if (m_disambiguation.size() && m_disambiguation_command.size())
-    {
-        if (StrX::find_and_replace(m_disambiguation_command, "{}", StrX::collapse_vector(words)))
-        {
-            parse("}" + m_disambiguation_command);
-            return;
-        }
-        else
-        {
-            m_disambiguation.clear();
-            m_disambiguation_command.clear();
-        }
-    }
-
-    core()->message("{y}I'm sorry, I don't understand.");
 }
 
 // Parses a string into a Direction enum.
@@ -270,20 +133,6 @@ uint32_t Parser::parse_item_name(const std::vector<std::string> &input, std::sha
     std::vector<unsigned int> item_scores(inv_size);
     for (unsigned int i = 0; i < inv_size; i++)
     {
-        if (m_disambiguation_parsing)
-        {
-            bool good = false;
-            for (auto d : m_disambiguation)
-            {
-                if (i == d)
-                {
-                    good = true;
-                    break;
-                }
-            }
-            if (!good) continue;
-        }
-
         const std::shared_ptr<Item> item = inv->get(i);
         if (input.size() == 1 && input.at(0) == StrX::itoh(item->hex_id(), 3)) return i;    // If the hex ID matches, that's an easy one.
 
@@ -301,60 +150,148 @@ uint32_t Parser::parse_item_name(const std::vector<std::string> &input, std::sha
         }
         item_scores.at(i) = score;
     }
-    m_disambiguation.clear();
 
     // Determine the highest score.
     unsigned int highest_score = 0;
     for (unsigned int i = 0; i < inv_size; i++)
         if (item_scores.at(i) > highest_score) highest_score = item_scores.at(i);
-    
+
     // No matches at all?
-    if (!highest_score)
-    {
-        m_disambiguation.clear();
-        return ItemMatch::NOT_FOUND;
-    }
+    if (!highest_score) return ItemMatch::NOT_FOUND;
 
     // Now loop again, see how many candidates we have.
+    std::vector<uint32_t> candidates;
     for (unsigned int i = 0; i < inv_size; i++)
-        if (item_scores.at(i) == highest_score) m_disambiguation.push_back(i);
-    
+        if (item_scores.at(i) == highest_score) candidates.push_back(i);
+
     // If we just have one, great! That was easy!
-    if (m_disambiguation.size() == 1)
-    {
-        const uint32_t choice = m_disambiguation.at(0);
-        m_disambiguation.clear();
-        return choice;
-    }
+    if (candidates.size() == 1) return candidates.at(0);
 
     // If not...
     std::string disambig = "{c}I'm not sure which one you mean! Did you mean ";
     std::vector<std::string> candidate_names;
-    for (auto c : m_disambiguation)
+    for (auto c : candidates)
         candidate_names.push_back("{C}" + inv->get(c)->name() + " {B}{" + StrX::itoh(inv->get(c)->hex_id(), 3) + "}{c}");
     disambig += StrX::comma_list(candidate_names) + "?";
     core()->message(disambig);
+    m_special_state = SpecialState::DISAMBIGUATION;
 
     return ItemMatch::UNCLEAR;
 }
 
-// Parses input when QUIT_CONFIRM state is active; the game is waiting for confirmation that the player wants to quit.
-void Parser::parse_quit_confirm(const std::string &input, const std::string &first_word)
+// Parses a known command.
+void Parser::parse_pcd(const std::string &first_word, const std::vector<std::string> &words, ParserCommandData pcd)
 {
-    if (first_word == "yes")
+    const std::shared_ptr<Mobile> player = core()->world()->player();
+    Direction parsed_direction = Direction::NONE;
+    uint32_t target = Target::NONE;
+    
+    // Check if a direction needs to be parsed.
+    if (pcd.direction_match)
     {
-        core()->cleanup();
-        exit(EXIT_SUCCESS);
+        for (unsigned int i = 0; i < std::min(pcd.words.size(), words.size()); i++)
+        {
+            const std::string pcd_word = pcd.words.at(i);
+            if (pcd_word == "<dir>")
+                parsed_direction = parse_direction(words.at(i));
+        }
     }
-    else if (first_word == "no")
+
+    // Check if a target needs to be parsed.
+    if (pcd.target_match)
     {
-        core()->message("{y}Very well. Your adventure continues.");
-        m_special_state = SpecialState::NONE;
-        return;
+        Target target_type = Target::NONE;
+        for (unsigned int i = 0; i < std::min(pcd.words.size(), words.size()); i++)
+        {
+            const std::string pcd_word = pcd.words.at(i);
+            if (pcd_word == "<item:i>") target_type = Target::ITEM_INV;
+            else if (pcd_word == "<item:r>") target_type = Target::ITEM_ROOM;
+            if (target_type == Target::NONE) continue;
+
+            // Pick out the words used to match the target.
+            std::vector<std::string> target_words(words.size() - i);
+            std::copy(words.begin() + i, words.end(), target_words.begin());
+
+            // Run the target-matching parser.
+            target = parse_item_name(target_words, (target_type == Target::ITEM_INV ? player->inv() : core()->world()->get_room(player->location())->inv()));
+        }
     }
-    else
+
+    const std::string collapsed_words = StrX::collapse_vector(words);
+    switch (pcd.command)
     {
-        m_special_state = SpecialState::NONE;
-        parse(input);
+        case ParserCommand::NONE: break;
+        case ParserCommand::DIRECTION:
+            ActionTravel::travel(player, parse_direction(first_word));
+            break;
+        case ParserCommand::DROP:
+            if (!words.size()) core()->message("{y}Please specify {Y}what you want to drop{y}.");
+            else if (target == ItemMatch::NOT_FOUND) core()->message("{y}You don't seem to be carrying {Y}" + collapsed_words + "{y}.");
+            else if (target <= ItemMatch::VALID) ActionInventory::drop(player, target);
+            break;
+        case ParserCommand::GO:
+            if (parsed_direction == Direction::NONE) core()->message("{y}Please specify a {Y}direction {y}to travel.");
+            else ActionTravel::travel(player, parsed_direction);
+            break;
+        case ParserCommand::HASH:
+            if (!words.size()) core()->message("{y}Please specify a {Y}string to hash{y}.");
+            else
+            {
+                const std::string hash_word = StrX::str_toupper(collapsed_words);
+                core()->message("{G}" + hash_word + " {g}hashes to {G}" + std::to_string(StrX::hash(hash_word)) + "{g}.");
+            }
+            break;
+        case ParserCommand::INVENTORY:
+            ActionInventory::check_inventory(player);
+            break;
+        case ParserCommand::LOCK: case ParserCommand::UNLOCK:
+            if (parsed_direction == Direction::NONE) core()->message("{y}Please specify a {Y}direction {y}to " + first_word + ".");
+            else ActionDoors::lock_or_unlock(player, parsed_direction, pcd.command == ParserCommand::UNLOCK);
+            break;
+        case ParserCommand::LOOK: ActionLook::look(player); break;
+        case ParserCommand::OPEN: case ParserCommand::CLOSE:
+            if (parsed_direction == Direction::NONE) core()->message("{y}Please specify a {Y}direction {y}to " + first_word + ".");
+            else ActionDoors::open_or_close(player, parsed_direction, pcd.command == ParserCommand::OPEN);
+            break;
+        case ParserCommand::QUIT:
+            core()->message("{R}Are you sure you want to quit? {M}Your game will not be saved. {R}Type {C}yes {R}to confirm.");
+            m_special_state = SpecialState::QUIT_CONFIRM;
+            return; // not break
+        case ParserCommand::SAVE:
+            core()->save();
+            break;
+        case ParserCommand::SPAWN_ITEM:
+            if (!words.size()) core()->message("{y}Please specify an {Y}item ID{y}.");
+            else ActionsCheat::spawn_item(collapsed_words);
+            break;
+        case ParserCommand::SWEAR:
+            core()->message("{y}Real adventurers do not use such language.");
+            break;
+        case ParserCommand::TAKE:
+            if (!words.size()) core()->message("{y}Please specify {Y}what you want to take{y}.");
+            else if (target == ItemMatch::NOT_FOUND) core()->message("{y}You don't see {Y}" + collapsed_words + "{y} here.");
+            else if (target <= ItemMatch::VALID) ActionInventory::take(player, target);
+            break;
+        case ParserCommand::TELEPORT:
+            if (!words.size()) core()->message("{y}Please specify a {Y}teleport destination{y}.");
+            else ActionsCheat::teleport(collapsed_words);
+            break;
+        case ParserCommand::XYZZY:
+            core()->message("{u}A hollow voice says, {m}\"Fool.\"");
+            break;
+        case ParserCommand::YES: case ParserCommand::NO:
+            if (m_special_state == SpecialState::QUIT_CONFIRM)
+            {
+                if (pcd.command == ParserCommand::YES)
+                {
+                    core()->cleanup();
+                    exit(EXIT_SUCCESS);
+                }
+                else core()->message("{y}Very well. Your adventure continues.");
+            }
+            else core()->message("{y}That was a rhetorical question.");
+            break;
     }
+
+    if (target != ItemMatch::UNCLEAR) m_special_state = SpecialState::NONE;
 }

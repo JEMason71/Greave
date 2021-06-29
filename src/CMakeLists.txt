@@ -45,6 +45,7 @@ endif(TARGET_WINDOWS)
 
 # Source files.
 set(GREAVE_CPPS
+  actions/cheat.cpp
   actions/doors.cpp
   actions/inventory.cpp
   actions/look.cpp
@@ -60,7 +61,6 @@ set(GREAVE_CPPS
   core/terminal-blt.cpp
   core/terminal-curses.cpp
   core/tune.cpp
-  debug/parser.cpp
   world/inventory.cpp
   world/item.cpp
   world/room.cpp

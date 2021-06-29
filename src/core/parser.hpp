@@ -4,28 +4,37 @@
 #pragma once
 #include "core/greave.hpp"
 
-class DebugParser;  // defined in debug/parser.hpp
 class Inventory;    // defined in world/inventory.hpp
 
 
 class Parser
 {
 public:
-                Parser();   // Constructor, sets default values.
-    void        parse(std::string input);   // Parses input from the player!
+            Parser();                   // Constructor, sets up the parser.
+    void    parse(std::string input);   // Parses input from the player!
 
 private:
-    enum class SpecialState : uint8_t { NONE, QUIT_CONFIRM };
-    enum ItemMatch : uint32_t { NOT_FOUND = UINT_MAX, UNCLEAR = UINT_MAX - 1, DO_NOTHING = UINT_MAX - 2 };
+    enum class ParserCommand : uint16_t { NONE, CLOSE, DIRECTION, DROP, GO, HASH, INVENTORY, LOCK, LOOK, NO, OPEN, SAVE, SPAWN_ITEM, SWEAR, TAKE, TELEPORT, UNLOCK, XYZZY, YES,
+        QUIT };
+    enum class SpecialState : uint8_t { NONE, QUIT_CONFIRM, DISAMBIGUATION };
+    enum ItemMatch : uint32_t { NOT_FOUND = UINT_MAX, UNCLEAR = UINT_MAX - 1, VALID = UINT_MAX - 2 };
+    enum Target : uint32_t { NONE = UINT_MAX, ITEM_INV = UINT_MAX - 1, ITEM_ROOM = UINT_MAX - 2 };
 
-    std::shared_ptr<DebugParser>    m_debug_parser;     // The debug parser, which handles dev/testing/cheat commands.
-    std::vector<uint32_t>           m_disambiguation;   // Used when the player specifies a target and the parser isn't sure which thing they mean.
-    std::string                     m_disambiguation_command;   // Attempts to remember the player's command when they enter an uncertain target.
-    bool                            m_disambiguation_parsing;   // Are we currently parsing a reply from disambiguation?
-    SpecialState                    m_special_state;    // Special parser states, such as waiting for the player to confirm something.
+    struct ParserCommandData
+    {
+        bool            any_length;
+        bool            direction_match;
+        ParserCommand   command;
+        std::string     first_word;
+        bool            target_match;
+        std::vector<std::string>    words;
+    };
 
-    Direction   direction_command(const std::vector<std::string> &input, std::string command_override = "") const;  // Checks if a directional command is valid.
+    void        add_command(const std::string &text, ParserCommand cmd);    // Adds a command to the parser.
     Direction   parse_direction(const std::string &dir) const;  // Parses a string into a Direction enum.
     uint32_t    parse_item_name(const std::vector<std::string> &input, std::shared_ptr<Inventory> inv); // Attempts to match an item name in the given Inventory.
-    void        parse_quit_confirm(const std::string &input, const std::string &first_word);   // Parses input when QUIT_CONFIRM state is active.
+    void        parse_pcd(const std::string &first_word, const std::vector<std::string> &words, ParserCommandData pcd); // Parses a known command.
+
+    std::vector<ParserCommandData>  m_commands;         // The commands the parser can understand.
+    SpecialState                    m_special_state;    // Special parser states, such as waiting for the player to confirm something.
 };
