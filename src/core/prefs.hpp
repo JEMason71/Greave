@@ -1,14 +1,14 @@
-// core/tune.hpp -- The Tune class loads data from tune.yml, allowing for various numbers to be tweaked on-the-fly.
+// core/prefs.hpp -- The Prefs class loads data from prefs.yml, allowing the user to configure game settings.
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #pragma once
 #include "core/greave.hpp"
 
 
-class Tune
+class Prefs
 {
 public:
-        Tune(); // Constructor, loads data from tune.yml
+                    Prefs();                // Constructor, loads data from prefs.yml
 
     std::string     blt_console_size;       // The number of columns and rows the window should be sized to by default.
     std::string     blt_font;               // The TTF font used in the game (must be monospace).

@@ -7,11 +7,11 @@
 #include "core/guru.hpp"
 #include "core/message.hpp"
 #include "core/parser.hpp"
+#include "core/prefs.hpp"
 #include "core/random.hpp"
 #include "core/strx.hpp"
 #include "core/terminal-blt.hpp"
 #include "core/terminal-curses.hpp"
-#include "core/tune.hpp"
 #include "world/world.hpp"
 
 #include <thread>
@@ -57,7 +57,7 @@ int main(int argc, char* argv[])
 }
 
 // Constructor, doesn't do too much aside from setting default values for member variables. Use init() to set things up.
-Core::Core() : m_message_log(nullptr), m_parser(nullptr), m_rng(nullptr), m_save_slot(0), m_sql_unique_id(0), m_terminal(nullptr), m_tune(nullptr), m_world(nullptr) { }
+Core::Core() : m_message_log(nullptr), m_parser(nullptr), m_rng(nullptr), m_save_slot(0), m_sql_unique_id(0), m_terminal(nullptr), m_prefs(nullptr), m_world(nullptr) { }
 
 // Cleans up after we're d one.
 void Core::cleanup()
@@ -67,7 +67,7 @@ void Core::cleanup()
 
 #ifdef GREAVE_TOLK
     // Clean up Tolk, if we're on Windows.
-    if (m_tune->screen_reader_external || m_tune->screen_reader_sapi) Tolk_Unload();
+    if (m_prefs->screen_reader_external || m_prefs->screen_reader_sapi) Tolk_Unload();
 #endif
 
     m_terminal = nullptr;   // It's a smart pointer, so this'll run the destructor code.
@@ -93,12 +93,12 @@ void Core::init()
     m_rng = std::make_shared<Random>();
 
     // Set up the tune settings.
-    m_tune = std::make_shared<Tune>();
+    m_prefs = std::make_shared<Prefs>();
 
 #ifdef GREAVE_TOLK
     // Set up Tolk if we're on Windows.
-    if (m_tune->screen_reader_sapi) Tolk_TrySAPI(true); // Enable SAPI.
-    if (m_tune->screen_reader_external || m_tune->screen_reader_sapi) Tolk_Load();
+    if (m_prefs->screen_reader_sapi) Tolk_TrySAPI(true); // Enable SAPI.
+    if (m_prefs->screen_reader_external || m_prefs->screen_reader_sapi) Tolk_Load();
     if (Tolk_DetectScreenReader())
     {
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -106,7 +106,7 @@ void Core::init()
     }
 #endif
 
-    std::string terminal_choice = StrX::str_tolower(m_tune->terminal);
+    std::string terminal_choice = StrX::str_tolower(m_prefs->terminal);
 #ifdef GREAVE_TARGET_WINDOWS
     if (terminal_choice != "curses") FreeConsole();
 #endif
@@ -152,9 +152,9 @@ void Core::message(std::string msg, uint32_t flags)
 
 #ifdef GREAVE_TOLK
     const bool interrupt = ((flags & Core::MSG_FLAG_INTERRUPT) == Core::MSG_FLAG_INTERRUPT);
-    if (m_tune->screen_reader_external || m_tune->screen_reader_sapi)
+    if (m_prefs->screen_reader_external || m_prefs->screen_reader_sapi)
     {
-        if (m_tune->screen_reader_process_square_brackets)
+        if (m_prefs->screen_reader_process_square_brackets)
         {
             StrX::find_and_replace(msg, "[", "(");
             StrX::find_and_replace(msg, "]", ").");
@@ -172,6 +172,9 @@ void Core::message(std::string msg, uint32_t flags)
 
 // Returns a pointer to the MessageLog object.
 const std::shared_ptr<MessageLog> Core::messagelog() const { return m_message_log; }
+
+// Returns a pointer to the Prefs object.
+const std::shared_ptr<Prefs> Core::prefs() const { return m_prefs; }
 
 // Returns a pointer to the Random object.
 const std::shared_ptr<Random> Core::rng() const { return m_rng; }
@@ -224,7 +227,7 @@ void Core::title()
 #endif
 
     std::vector<bool> save_exists;
-    save_exists.resize(m_tune->save_file_slots);
+    save_exists.resize(m_prefs->save_file_slots);
     bool deleting_file = false;
     while (!m_save_slot)
     {
@@ -239,7 +242,7 @@ void Core::title()
             message("{U}[{C}D{U}] {R}Delete a saved game");
             message("{0}{U}[{C}Q{U}] {R}Quit game");
         }
-        for (unsigned int i = 1; i <= m_tune->save_file_slots; i++)
+        for (unsigned int i = 1; i <= m_prefs->save_file_slots; i++)
         {
             if (FileX::file_exists(save_filename(i)))
             {
@@ -286,7 +289,7 @@ void Core::title()
             else
             {
                 int input_num = input[0] - '0';
-                if (input_num < 1 || input_num > static_cast<int>(m_tune->save_file_slots))
+                if (input_num < 1 || input_num > static_cast<int>(m_prefs->save_file_slots))
                 {
                     if (++patience_counter > 5)
                     {
@@ -366,9 +369,6 @@ void Core::title()
         m_world->new_game();
     }
 }
-
-// Returns a pointer to the Tune object.
-const std::shared_ptr<Tune> Core::tune() const { return m_tune; }
 
 // Returns a pointer to the World object.
 const std::shared_ptr<World> Core::world() const { return m_world; }

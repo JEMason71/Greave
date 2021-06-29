@@ -5,42 +5,42 @@
 #include "core/core.hpp"
 #include "core/filex.hpp"
 #include "core/guru.hpp"
+#include "core/prefs.hpp"
 #include "core/strx.hpp"
 #include "core/terminal-blt.hpp"
-#include "core/tune.hpp"
 
 
 // Constructor, sets up BearLibTerminal.
 TerminalBLT::TerminalBLT() : m_cursor_visible(false), m_cursor_x(0), m_cursor_y(0)
 {
-    const std::shared_ptr<Tune> tune = core()->tune();
+    const std::shared_ptr<Prefs> prefs = core()->prefs();
     std::string ver_str = Core::GAME_VERSION;
 
     core()->guru()->log("Setting up BearLibTerminal.");
-    FileX::delete_file("userdata/" + tune->blt_log_file);
+    FileX::delete_file("userdata/" + prefs->blt_log_file);
     terminal_open();
     terminal_set((
-        "window: size = " + tune->blt_console_size + ", title = 'Greave " + ver_str + "', icon = 'data/app-icon.ico', resizeable = true, fullscreen = false, vsync = " +
-            (tune->blt_vsync ? "true" : "false") + "; "
-        "log: file = 'userdata/" + tune->blt_log_file + "', level = " + tune->blt_log_level + "; "
+        "window: size = " + prefs->blt_console_size + ", title = 'Greave " + ver_str + "', icon = 'data/app-icon.ico', resizeable = true, fullscreen = false, vsync = " +
+            (prefs->blt_vsync ? "true" : "false") + "; "
+        "log: file = 'userdata/" + prefs->blt_log_file + "', level = " + prefs->blt_log_level + "; "
         "input: filter = 'keyboard, mouse+', precise-mouse = true; "
-        "font: 'data/" + tune->blt_font + "', size = " + std::to_string(tune->blt_font_size) + "; "
-        "palette.g_black = #" + tune->colour_black + "; "
-        "palette.g_blue = #" + tune->colour_blue + "; "
-        "palette.g_blue_dark = #" + tune->colour_blue_dark + "; "
-        "palette.g_cyan = #" + tune->colour_cyan + "; "
-        "palette.g_cyan_dark = #" + tune->colour_cyan_dark + "; "
-        "palette.g_green = #" + tune->colour_green + "; "
-        "palette.g_green_dark = #" + tune->colour_green_dark + "; "
-        "palette.g_grey = #" + tune->colour_grey + "; "
-        "palette.g_grey_dark = #" + tune->colour_grey_dark + "; "
-        "palette.g_magenta = #" + tune->colour_magenta + "; "
-        "palette.g_magenta_dark = #" + tune->colour_magenta_dark + "; "
-        "palette.g_red = #" + tune->colour_red + "; "
-        "palette.g_red_dark = #" + tune->colour_red_dark + "; "
-        "palette.g_white = #" + tune->colour_white + "; "
-        "palette.g_yellow = #" + tune->colour_yellow + "; "
-        "palette.g_yellow_dark = #" + tune->colour_yellow_dark + "; "
+        "font: 'data/" + prefs->blt_font + "', size = " + std::to_string(prefs->blt_font_size) + "; "
+        "palette.g_black = #" + prefs->colour_black + "; "
+        "palette.g_blue = #" + prefs->colour_blue + "; "
+        "palette.g_blue_dark = #" + prefs->colour_blue_dark + "; "
+        "palette.g_cyan = #" + prefs->colour_cyan + "; "
+        "palette.g_cyan_dark = #" + prefs->colour_cyan_dark + "; "
+        "palette.g_green = #" + prefs->colour_green + "; "
+        "palette.g_green_dark = #" + prefs->colour_green_dark + "; "
+        "palette.g_grey = #" + prefs->colour_grey + "; "
+        "palette.g_grey_dark = #" + prefs->colour_grey_dark + "; "
+        "palette.g_magenta = #" + prefs->colour_magenta + "; "
+        "palette.g_magenta_dark = #" + prefs->colour_magenta_dark + "; "
+        "palette.g_red = #" + prefs->colour_red + "; "
+        "palette.g_red_dark = #" + prefs->colour_red_dark + "; "
+        "palette.g_white = #" + prefs->colour_white + "; "
+        "palette.g_yellow = #" + prefs->colour_yellow + "; "
+        "palette.g_yellow_dark = #" + prefs->colour_yellow_dark + "; "
         ).c_str());
 }
 
@@ -63,7 +63,7 @@ void TerminalBLT::cls()
 // Converts a Terminal::Colour into a BLT colour string.
 std::string TerminalBLT::colour(Colour col) const
 {
-    if (core()->tune()->monochrome_mode) switch(col)
+    if (core()->prefs()->monochrome_mode) switch(col)
     {
         case Colour::BLACK: case Colour::WHITE_BG: return "black";
         case Colour::BLACK_BOLD: return "darkest grey";
@@ -188,7 +188,7 @@ void TerminalBLT::print(std::string str, int x, int y, Colour col)
 
     while (str.find("{") != std::string::npos)
     {
-        const bool mono = core()->tune()->monochrome_mode;
+        const bool mono = core()->prefs()->monochrome_mode;
         if (StrX::find_and_replace(str, "{r}", mono ? "[color=g_grey]" : "[color=g_red_dark]")) continue;
         if (StrX::find_and_replace(str, "{R}", mono ? "[color=white]" : "[color=g_red]")) continue;
         if (StrX::find_and_replace(str, "{g}", mono ? "[color=g_grey]" : "[color=g_green_dark]")) continue;

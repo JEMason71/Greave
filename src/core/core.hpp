@@ -7,9 +7,9 @@
 class Guru;         // defined in core/guru.hpp
 class MessageLog;   // defined in core/message.hpp
 class Parser;       // defined in core/parser.hpp
+class Prefs;        // defined in core/prefs.hpp
 class Random;       // defined in core/random.hpp
 class Terminal;     // defined in terminal/terminal.hpp
-class Tune;         // defined in core/tune.hpp
 class World;        // defined in core/world.hpp
 
 
@@ -29,7 +29,7 @@ public:
     uint32_t                            sql_unique_id();    // Retrieves a new unique SQL ID.
     const std::shared_ptr<Terminal>     terminal() const;   // Returns a pointer  to the terminal emulator object.
     void                                title();            // The 'title screen' and saved game selection.
-    const std::shared_ptr<Tune>         tune() const;       // Returns a pointer to the Tune object.
+    const std::shared_ptr<Prefs>        prefs() const;      // Returns a pointer to the Prefs object.
     const std::shared_ptr<World>        world() const;      // Returns a pointer to the World object.
 
     static const std::string    GAME_VERSION;       // The game's version number.
@@ -48,7 +48,7 @@ private:
     unsigned int                m_save_slot;        // The currently-active saved game slot, or 0 if no game is in progress.
     uint32_t                    m_sql_unique_id;    // The last unique SQL ID to have been used.
     std::shared_ptr<Terminal>   m_terminal;         // The Terminal class, which handles low-level interaction with terminal emulation libraries.
-    std::shared_ptr<Tune>       m_tune;             // The Tune object, containing various tweakable numbers in tune.yml
+    std::shared_ptr<Prefs>      m_prefs;            // The Prefs object, containing various user settings in prefs.yml
     std::shared_ptr<World>      m_world;            // The World object, which manages the current overall state of the game.
 };
 

@@ -1,16 +1,11 @@
-# data/tune.yml -- Various values that can be adjusted to tweak gameplay and other elements.
+# data/prefs.yml -- Various values that can be adjusted to tweak gameplay and other elements.
 # Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-# If you create a file called tune.yml in your Greave userdata folder, it will look for these settings there first.
+# If you create a file called prefs.yml in your Greave userdata folder, it will look for these settings there first.
 # That way, you can tweak only the settings you want in your own personal override file, without worrying about
 # newer versions of the game overwriting your settings with the latest data files. You only need to include the
 # values that have changed, so just copy-paste the lines you want to change, not the entire file.
 
-
-#####################################################################
-# USER SETTINGS: Feel free to tweak these, but I recommend doing so #
-# in userdata/tune.yml rather than editing this file directly.      #
-#####################################################################
 blt_console_size:       80x25                   # The number of columns and rows the window should be sized to by default.
 blt_font:               RobotoMono-Regular.ttf  # The TTF font used in the game (must be monospace).
 blt_font_size:          14                      # The size of the main font.
@@ -36,19 +31,13 @@ colour_yellow_dark:     8c7718                  # Hex colour definition for dark
 curses_custom_colours:  true                    # Apply custom colour values above to Curses colours.
 log_max_size:           1000                    # How many lines of text to keep in the message log?
 log_mouse_scroll_step:  2                       # How many lines to scroll the window, when using the mouse-wheel.
-monochrome_mode:        false                   # Set this to true to only use black/gray for the background and white for the text.
-screen_reader_external: true                    # Enable automatic screen-reader support? Screen readers supported: JAWS, NVDA, SuperNova, System Access, Window-Eyes, ZoomText.
-screen_reader_process_square_brackets: true     # This setting can improve narration on screen readers for square brackets.
-screen_reader_sapi:     false                   # Enable this to default to Microsoft SAPI text-to-speech, without using any external screen-reader software.
-terminal:               blt                     # Set this to blt for BearLibTerminal, or curses for PDCurses/NCurses.
-
-
-#######################################################################
-# SYSTEM SETTINGS: These settings adjust some aspects of the game     #
-# engine and rendering. It is not recomended to change anything here. #
-#######################################################################
 log_padding_bottom:     3                       # The amount of black space below the message log window. (Must be at least 2, or the input box will be hidden.)
 log_padding_left:       2                       # The amount of black space to the left of the message log window.
 log_padding_right:      2                       # The amount of black space to the right of the message log window.
 log_padding_top:        1                       # The amount of black space above the message log window.
+monochrome_mode:        false                   # Set this to true to only use black/gray for the background and white for the text.
 save_file_slots:        5                       # The total amount of saved game slots available.
+screen_reader_external: true                    # Enable automatic screen-reader support? Screen readers supported: JAWS, NVDA, SuperNova, System Access, Window-Eyes, ZoomText.
+screen_reader_process_square_brackets: true     # This setting can improve narration on screen readers for square brackets.
+screen_reader_sapi:     false                   # Enable this to default to Microsoft SAPI text-to-speech, without using any external screen-reader software.
+terminal:               blt                     # Set this to blt for BearLibTerminal, or curses for PDCurses/NCurses.

@@ -7,9 +7,9 @@
 #include "core/core.hpp"
 #include "core/guru.hpp"
 #include "core/message.hpp"
+#include "core/prefs.hpp"
 #include "core/strx.hpp"
 #include "core/terminal.hpp"
-#include "core/tune.hpp"
 
 #include <regex>
 
@@ -67,8 +67,8 @@ void MessageLog::msg(std::string str)
 // Recalculates the size and coordinates of the windows.
 void MessageLog::recalc_window_sizes()
 {
-    const std::shared_ptr<Tune> tune = core()->tune();
-    const int padding_top = tune->log_padding_top, padding_bottom = tune->log_padding_bottom, padding_left = tune->log_padding_left, padding_right = tune->log_padding_right;
+    const std::shared_ptr<Prefs> prefs = core()->prefs();
+    const int padding_top = prefs->log_padding_top, padding_bottom = prefs->log_padding_bottom, padding_left = prefs->log_padding_left, padding_right = prefs->log_padding_right;
     int screen_width, screen_height;
     core()->terminal()->get_size(&screen_width, &screen_height);
     m_output_window_width = screen_width - padding_left - padding_right;
@@ -82,7 +82,7 @@ void MessageLog::recalc_window_sizes()
 // Renders the message log, returns user input.
 std::string MessageLog::render_message_log(bool accept_blank_input)
 {
-    const std::shared_ptr<Tune> tune = core()->tune();
+    const std::shared_ptr<Prefs> prefs = core()->prefs();
     while(true)
     {
         // Clear the screen, fill in dark gray areas for the input and output areas.
@@ -106,14 +106,14 @@ std::string MessageLog::render_message_log(bool accept_blank_input)
         core()->terminal()->print(input_buf, m_input_window_x, m_input_window_y, Terminal::Colour::WHITE_BOLD);
 
         // Render the scroll bar.
-        const int scrollbar_x = tune->log_padding_left + m_output_window_width;
+        const int scrollbar_x = prefs->log_padding_left + m_output_window_width;
         const int scrollbar_height = std::min<int>(std::ceil(m_output_window_height * (m_output_window_height / static_cast<float>(m_output_processed.size()))), m_output_window_height);
         int scrollbar_offset;
-        if (!(m_output_processed.size() - m_output_window_height)) scrollbar_offset = (tune->log_padding_top + (m_output_window_height - scrollbar_height));
-        else scrollbar_offset = (tune->log_padding_top + (m_output_window_height - scrollbar_height) * (static_cast<float>(m_offset) / static_cast<float>(m_output_processed.size() - m_output_window_height)));
+        if (!(m_output_processed.size() - m_output_window_height)) scrollbar_offset = (prefs->log_padding_top + (m_output_window_height - scrollbar_height));
+        else scrollbar_offset = (prefs->log_padding_top + (m_output_window_height - scrollbar_height) * (static_cast<float>(m_offset) / static_cast<float>(m_output_processed.size() - m_output_window_height)));
         core()->terminal()->set_background(Terminal::Colour::BLACK);
         for (unsigned int i = 0; i < m_output_window_height; i++)
-            core()->terminal()->put('|', scrollbar_x, tune->log_padding_top + i, Terminal::Colour::WHITE);
+            core()->terminal()->put('|', scrollbar_x, prefs->log_padding_top + i, Terminal::Colour::WHITE);
         for (int i = 0; i < scrollbar_height; i++)
             core()->terminal()->put(' ', scrollbar_x, i + scrollbar_offset, Terminal::Colour::WHITE_BG);
 
@@ -166,12 +166,12 @@ std::string MessageLog::render_message_log(bool accept_blank_input)
         }
         else if ((key == Terminal::Key::ARROW_UP || key == Terminal::Key::MOUSE_SCROLL_UP) && m_offset > 1)
         {
-            m_offset -= (key == Terminal::Key::MOUSE_SCROLL_UP ? tune->log_mouse_scroll_step : 1);
+            m_offset -= (key == Terminal::Key::MOUSE_SCROLL_UP ? prefs->log_mouse_scroll_step : 1);
             if (m_offset < 1) m_offset = 1;
         }
         else if ((key == Terminal::Key::ARROW_DOWN || key == Terminal::Key::MOUSE_SCROLL_DOWN) && m_offset < scroll_bottom)
         {
-            m_offset += (key == Terminal::Key::MOUSE_SCROLL_DOWN ? tune->log_mouse_scroll_step : 1);
+            m_offset += (key == Terminal::Key::MOUSE_SCROLL_DOWN ? prefs->log_mouse_scroll_step : 1);
             if (m_offset > scroll_bottom) m_offset = scroll_bottom;
         }
         else if (key == Terminal::Key::HOME && m_output_processed.size() > m_output_window_height) m_offset = 1;
@@ -200,7 +200,7 @@ std::string MessageLog::render_message_log(bool accept_blank_input)
         else if (key == Terminal::Key::MOUSE_LEFT_RELEASED) m_dragging_scrollbar = false;
         else if (key == Terminal::Key::MOUSE_MOVED && m_dragging_scrollbar) scroll_to_pixel(core()->terminal()->get_mouse_y_pixel() - m_dragging_scrollbar_offset);
 #ifdef GREAVE_TOLK
-        else if (key == Terminal::Key::TAB && m_latest_messages.size() && (tune->screen_reader_external || tune->screen_reader_sapi))
+        else if (key == Terminal::Key::TAB && m_latest_messages.size() && (prefs->screen_reader_external || prefs->screen_reader_sapi))
         {
             Tolk_Silence();
             for (auto line : m_latest_messages)
@@ -218,7 +218,7 @@ std::string MessageLog::render_message_log(bool accept_blank_input)
 void MessageLog::reprocess_output()
 {
     recalc_window_sizes();
-    while (m_output_raw.size() > static_cast<unsigned int>(core()->tune()->log_max_size))
+    while (m_output_raw.size() > static_cast<unsigned int>(core()->prefs()->log_max_size))
         m_output_raw.erase(m_output_raw.begin());
 
     m_output_processed.clear();
@@ -251,7 +251,7 @@ void MessageLog::save(std::shared_ptr<SQLite::Database> save_db)
 // Scrolls the scrollbar to the given position.
 void MessageLog::scroll_to_pixel(int pixel_y)
 {
-    pixel_y -= core()->tune()->log_padding_top * core()->terminal()->cell_height();
+    pixel_y -= core()->prefs()->log_padding_top * core()->terminal()->cell_height();
     const float factor = pixel_y / (static_cast<float>(m_output_window_height) * core()->terminal()->cell_height());
     m_offset = std::max<int>(1, std::min<int>(m_output_processed.size() - m_output_window_height, m_output_processed.size() * factor));
 }
