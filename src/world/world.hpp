@@ -4,10 +4,11 @@
 #pragma once
 #include "core/greave.hpp"
 
-class Item;     // defined in world/item.hpp
-class Mobile;   // defined in world/mobile.hpp
-class Player;   // defined in world/player.hpp
-class Room;     // defined in world/room.hpp
+class Item;         // defined in world/item.hpp
+class Mobile;       // defined in world/mobile.hpp
+class Player;       // defined in world/player.hpp
+class Room;         // defined in world/room.hpp
+class TimeWeather;  // defined in world/time-weather.hpp
 enum class ItemSub : uint16_t;  // defined in world/item.hpp
 enum class ItemTag : uint16_t;  // d efined in world/item.hpp
 enum class ItemType : uint16_t; // defined in world/item.hpp
@@ -31,6 +32,7 @@ public:
     const std::shared_ptr<Mobile>   player() const;                         // Retrieves a pointer to the Player object.
     bool    room_exists(const std::string &str) const;                      // Checks if a specified room ID exists.
     void    save(std::shared_ptr<SQLite::Database> save_db);                // Saves the World and all things within it.
+    const std::shared_ptr<TimeWeather> time_weather() const;                // Gets a pointer to the TimeWeather object.
 
 private:
     static const std::map<std::string, ItemSub>     ITEM_SUBTYPE_MAP;   // Lookup table for converting ItemSub text names into enums.
@@ -45,6 +47,7 @@ private:
     std::map<uint32_t, std::shared_ptr<Item>>   m_item_pool;        // All the Item templates in the game.
     std::shared_ptr<Player>                     m_player;           // The player character.
     std::map<uint32_t, std::shared_ptr<Room>>   m_room_pool;        // All the Room templates in the game.
+    std::shared_ptr<TimeWeather>                m_time_weather;     // The World's TimeWeather object, for tracking... well, the time and weather.
 
     void    load_generic_descs();   // Loads the generic descriptions YAML data into memory.
     void    load_item_pool();       // Loads the Item YAML data into memory.

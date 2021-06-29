@@ -1,0 +1,535 @@
+# data/weather.yml -- Time and weather strings.
+# Adapted from Keran's MUSH/MUX Weather and Time Code Package Version 4.0 beta, copyright (c) 1996-1998 Keran.
+# http://www.mushcode.com/File/Kerans-Weather-System-And-Time-Code-4-0-(PennMUSH)
+
+
+#####################################
+# WEATHER/TIME DESCRIPTION MESSAGES #
+#####################################
+
+WINTER_DAWN_BLIZZARD:   "Dawn breaks to reveal snow falling from a dark sky that gradually lightens to grey-white. The snowfall is heavy and piles up in drifts, blown about by the shifting wind."
+WINTER_DAWN_STORMY:     "Freezing cold rain pours from clouds slowly lightening from black to grey, driven by a howling northeastern wind." # replaced with AUTUMN_DAWN_STORMY, modified
+WINTER_DAWN_RAIN:       "Icy cold rain is falling as the sky begins to lighten to overcast grey. A raw wind blows from the east."   # replaced with AUTUMN_DAWN_RAIN, modified
+WINTER_DAWN_CLEAR:      "The light of a cruelly cold dawn breaks in the southeast. The sky is clear and the northwest wind blasts snow across the landscape in gusts. Your breath fogs in the frigid air."
+WINTER_DAWN_FAIR:       "Fair weather clouds glow pink in the southeast, catching the rays of the rising sun while the earth remains in shadow. A cold wind blows from the west. You can see your breath misting in the cold air."
+WINTER_DAWN_OVERCAST:   "Dawn's light is grey. A thin layer of translucent cloud obscures the sun, showing only a bright patch in the sky. The air is cold and slightly damp."
+WINTER_DAWN_FOG:        "The sky slowly lightens from deep grey to pale, and a chilly mist veils everything."
+WINTER_DAWN_LIGHTSNOW:  "The overcast sky slowly lightens from the grey-black of night to pale grey. Powdery snow falls from the clouds."
+WINTER_DAWN_SLEET:      "Darkness lingers and the dawn that breaks is grey. Sleet and freezing rain fall from heavy clouds, coating everything with ice and making the walking treacherous. Raw winds blow from the northeast."
+
+WINTER_DAY_BLIZZARD:    "Heavy snow falls, making it hard to walk through the accumulating drifts, and occasionally even hard to see. All the world seems grey and white. The wind blows the snow about from the east, and it swirls around objects and never falls straight down."
+WINTER_DAY_STORMY:      "Bone-chilling rain pours from thick grey clouds, driven by a furious northeast wind."  # replaced with AUTUMN_DAY_STORMY, modified
+WINTER_DAY_RAIN:        "Chilly rain falls from a grey sky. It's bleak and raw. The wind blows from the east."  # replaced with AUTUMN_DAY_RAIN
+WINTER_DAY_CLEAR:       "The sky is cloudless and brilliant blue. The northwest wind is icy, blowing snow across the landscape in swirling white gusts."
+WINTER_DAY_FAIR:        "Fair weather clouds drift through the blue sky from the west, along with the wind. The sunlight on the snow is dazzling, and it gleams on the ice."
+WINTER_DAY_OVERCAST:    "The air is damp and cold, the sky a translucent grey, brighter to the south. Shadows are muted in the dim light."
+WINTER_DAY_FOG:         "The landscape looks ghostly and drained of colour in the cold pale fog."
+WINTER_DAY_LIGHTSNOW:   "Snow flurries drift silently down from the pale grey sky. The air is damp and cold, and there is little wind."
+WINTER_DAY_SLEET:       "Sleet and freezing rain fall from heavy clouds, coating everything with ice and making the ground slippery. The world looks silver in the icy grey light. A raw wind blows from the northeast."
+
+WINTER_DUSK_BLIZZARD:   "Snow falls heavily in the deepening twilight, making it hard to walk through the accumulating drifts, and hard to see. The wind blows the snow about from the east, and it swirls around objects and never falls straight down."
+WINTER_DUSK_STORMY:     "An ice-cold rain driven by a howling northeast wind drenches you while the clouded sky fades from grey to black."  # replaced with AUTUMN_DUSK_STORMY, modified
+WINTER_DUSK_RAIN:       "A chilling rain falls as the grey sky darkens in the twilight. It's cold and wet. The wind blows from the east."   # replaced with AUTUMN_DUSK_RAIN
+WINTER_DUSK_CLEAR:      "The cold becomes intense as the light fades from the sky. The evening stars glitter brightly. The northwest wind blows the snow about in freezing gusts."
+WINTER_DUSK_FAIR:       "The fair weather clouds in the west turn purple, gold, and vermillion as the sun sets. The snow, in shadow, looks blue. A cold wind blows from the west."
+WINTER_DUSK_OVERCAST:   "The sky is a dull iron grey, and darkness closes in early. The air is cold and damp."
+WINTER_DUSK_FOG:        "The pale grey mists darken and begin to freeze, forming a slick of ice over the ground."
+WINTER_DUSK_LIGHTSNOW:  "Darkness closes in early as thick grey clouds block the sun. A light snow is falling. There is scant wind."
+WINTER_DUSK_SLEET:      "Darkness comes early as thick clouds block the fading light of grey day. Freezing rain and sleet fall, coating everything with ice and making the ground slippery. Raw winds blow from the northeast."
+
+WINTER_NIGHT_BLIZZARD:  "Night has come, and heavy snow falls. It's difficult to walk through the accumulating drifts, and difficult to see. It's hard to keep a sense of direction in the darkness and the blinding, swirling snow."
+WINTER_NIGHT_STORMY:    "Icy rain pours from grey-black clouds driven by a howling northeast wind." # replaced with AUTUMN_NIGHT_STORMY
+WINTER_NIGHT_RAIN:      "Cold rain falls from a grey-black sky without moon or stars. A raw wind blows from the east."  # replaced with AUTUMN_NIGHT_RAIN
+WINTER_NIGHT_CLEAR:     "The icy northwest wind howls, blowing snow about in savage gusts. The cold is intense. The sky is clear deep blue and the stars glitter, brilliant as diamonds."
+WINTER_NIGHT_FAIR:      "A cold wind blows from the west, driving charcoal clouds before it and blotting out the stars in isolated patches overhead. The air is clear and elsewhere the stars shine brightly."
+WINTER_NIGHT_OVERCAST:  "The sky is grey-black, moonless and starless. Human eyes can distinguish the snow from everything else, and not much more: every shape that isn't snow-covered is a black shadow. The air is damp and cold. There is little wind."
+WINTER_NIGHT_FOG:       "The night is shrouded in cold bleak mist, dark grey and colourless. The ground is icy and the air wet."
+WINTER_NIGHT_LIGHTSNOW: "The sky is grey-black, without moon or stars. The air is cold and wet, and there is little wind. Snow flurries fall. It is easier to feel the flakes landing than it is to see them, in the darkness."
+WINTER_NIGHT_SLEET:     "Icy rain and sleet fall invisibly from a grey-black sky. It's very dark and the ice makes walking on the slippery ground difficult. A raw wind blows from the northeast."
+
+SPRING_DAWN_BLIZZARD:   "Dawn breaks to reveal snow falling from a dark sky that gradually lightens to grey-white. The snowfall is heavy and piles up in drifts, blown about by the shifting wind." # copied from WINTER_DAWN_BLIZZARD
+SPRING_DAWN_STORMY:     "A cold driving rain pours from clouds slowly lightening from black to grey, propelled by a howling northeasterly wind."
+SPRING_DAWN_RAIN:       "Rain is falling as the sky begins to lighten to overcast grey. It's cool and there's a slight wind from the east."
+SPRING_DAWN_CLEAR:      "The sky begins to brighten as the stars fade out. It's a chilly morning and the sky is clear blue and cloudless."
+SPRING_DAWN_FAIR:       "The blue sky brightens. The sun lights the fair weather clouds in the east with pink and pale gold before it touches the ground, which remains in shadow. A mild breeze blows from the west."
+SPRING_DAWN_OVERCAST:   "The sky begins to lighten. It's grey and overcast. A light wind blows from the southwest."
+SPRING_DAWN_FOG:        "It grows lighter, and you see that everything is veiled by fog. It's moderately cool and the air feels damp and still."
+SPRING_DAWN_LIGHTSNOW:  "The overcast sky slowly lightens from the grey-black of night to pale grey. Powdery snow falls from the clouds."   # copied from WINTER_DAWN_LIGHTSNOW
+
+SPRING_DAY_BLIZZARD:    "Heavy snow falls, making it hard to see your way. All the world seems grey and white. The wind blows the snow about from the east, and it swirls around objects and never falls straight down."    # modified from WINTER_DAY_BLIZZARD
+SPRING_DAY_STORMY:      "Cold rain pours from thick grey clouds, driven by a howling northeast wind."
+SPRING_DAY_RAIN:        "A light rain falls from a grey sky. It's cool and there's a mild wind from the east."
+SPRING_DAY_CLEAR:       "The sky is blue and cloudless, the sunlight is bright, and a cool wind blows from the northwest."
+SPRING_DAY_FAIR:        "Fair weather clouds sail across the blue sky, propelled by light breezes from the west. It's warm in the sun, cool in the shade, and the air is clear and dry."
+SPRING_DAY_OVERCAST:    "The sky is cloudy grey, shadows dull and muted. A light wind blows from the southwest."
+SPRING_DAY_FOG:         "Everything is grey, veiled by mist. It's cool and the air feels damp. There is no wind."
+SPRING_DAY_LIGHTSNOW:   "Snow flurries drift silently down from the pale grey sky. The air is damp and cold, and there is little wind." # copied from WINTER_DAY_LIGHTSNOW
+
+SPRING_DUSK_BLIZZARD:   "Snow falls heavily in the deepening twilight, making it hard to see. The wind blows the snow about from the east, and it swirls around objects and never falls straight down." # modified from WINTER_DUSK_BLIZZARD
+SPRING_DUSK_STORMY:     "Twilight falls and the clouds darken from grey to charcoal as cold driving rain pours from them, lashed by a raging northeast wind."
+SPRING_DUSK_RAIN:       "A light rain falls as the grey sky darkens in the twilight. The temperature is moderate and there's a slight wind from the east."
+SPRING_DUSK_CLEAR:      "The sun sets and the evening stars begin to appear in a blue and cloudless sky. A cool wind blows from the northwest."
+SPRING_DUSK_FAIR:       "Oranges, reds, and golds light the fair weather clouds, shadowed in purple, around the setting sun. A soft breeze blows from the west."
+SPRING_DUSK_OVERCAST:   "The grey of the clouds begins to darken, and it becomes cooler. A light wind is blowing from the southwest."
+SPRING_DUSK_FOG:        "The mist begins to darken as twilight comes. It's cool and the air feels damp. There is no wind."
+SPRING_DUSK_LIGHTSNOW:  "Darkness closes in early as thick grey clouds block the sun. A light snow is falling. There is scant wind."    # copied from WINTER_DUSK_LIGHTSNOW
+
+SPRING_NIGHT_BLIZZARD:  "Night has come, and heavy snow falls. It's hard to keep a sense of direction in the darkness and the blinding, swirling snow." # modified from WINTER_NIGHT_BLIZZARD
+SPRING_NIGHT_STORMY:    "Cold driving rain pours down upon you in the dark from black clouds, propelled by a howling northeast wind."
+SPRING_NIGHT_RAIN:      "Light rain falls from a grey-black sky without moon or stars. It's chilly and there's a fresh wind from the east."
+SPRING_NIGHT_CLEAR:     "The deep blue night sky is clear and cloudless, and the stars glitter. A brisk breeze blows from the northwest."
+SPRING_NIGHT_FAIR:      "A cool breeze blows from the west, driving dark clouds before it which blot out the stars in patches overhead. Elsewhere they glitter brightly in the dark sapphire sky."
+SPRING_NIGHT_OVERCAST:  "The sky is grey-black, moonless and starless. It's hard for human eyes to see anything in the deep shadows without a light. It's cool and a light breeze blows from the southwest."
+SPRING_NIGHT_FOG:       "The world is dark and foggy. Everything is half-hidden, nothing clearly seen. It almost feels as if you walk through some otherworld. It's cool and the air feels damp and still."
+SPRING_NIGHT_LIGHTSNOW: "The sky is grey-black, without moon or stars. The air is cold and wet, and there is little wind. Snow flurries fall. It is easier to feel the flakes landing than it is to see them, in the darkness." # copied from WINTER_NIGHT_LIGHTSNOW
+
+SUMMER_DAWN_STORMY:     "Heavy rain pours from clouds slowly lightening from black to grey, propelled by a howling east wind."
+SUMMER_DAWN_RAIN:       "Soft rain is falling as the sky lightens to overcast grey. A warm breeze blows from the southeast."
+SUMMER_DAWN_CLEAR:      "The sky starts to lighten and the stars fade out. The sky is clear and there's a cool breeze from the west."
+SUMMER_DAWN_FAIR:       "The sky turns a lighter blue and the stars fade out. It's clear and there's a soft breeze from the west."
+SUMMER_DAWN_OVERCAST:   "The sky pales in the east, turning overcast grey. There's little wind, and it's warm and humid."
+SUMMER_DAWN_FOG:        "The sky begins to lighten from dark grey to pale, for the world is veiled by fog. It's still, warm, and the air feels damp."
+
+SUMMER_DAY_STORMY:      "Heavy rain pours from dark grey clouds, propelled by a furious east wind."
+SUMMER_DAY_RAIN:        "A light rain falls from a grey sky. It's warm and there's a slight wind from the southeast."
+SUMMER_DAY_CLEAR:       "The sky is clear brilliant blue and there's a light breeze from the west. It's warm."
+SUMMER_DAY_FAIR:        "Towering white clouds drift slowly through the blue sky. It's hazy and hot, and the glare of the sun seems to drain the colour from the landscape."
+SUMMER_DAY_OVERCAST:    "The sky is grey and cloudy, the shadows dull and muted. It's hot, humid, and still."
+SUMMER_DAY_FOG:         "Everything is pale grey, veiled by mist. It's warm, humid, and still."
+
+SUMMER_DUSK_STORMY:     "Driving rain pours from clouds darkening from grey to black as daylight fades, propelled by a furious east wind."
+SUMMER_DUSK_RAIN:       "Light rain falls as the grey clouds darkens in the twilight. It's warm and there's a gentle wind from the southeast."
+SUMMER_DUSK_CLEAR:      "The sun sets and the evening stars begin to appear in a blue and cloudless sky. There's a cool breeze from the west."
+SUMMER_DUSK_FAIR:       "The sun sets, the western clouds turning purple, red, and gold. It's hazy and warm."
+SUMMER_DUSK_OVERCAST:   "The grey of the clouds begins to darken, and the temperature drops slightly. It's warm and still."
+SUMMER_DUSK_FOG:        "Everything is grey, veiled by darkening twilight mist. It's still, warm, and the air feels damp."
+
+SUMMER_NIGHT_STORMY:    "Heavy rain drenches you in the dark as it falls from grey-black clouds, driven by a howling east wind."
+SUMMER_NIGHT_RAIN:      "Soft rain falls from a grey-black sky without moon or stars. A warm gentle wind blows from the southeast."
+SUMMER_NIGHT_CLEAR:     "The deep blue night sky is clear and cloudless, and the stars glitter. A cool breeze blows from the west."
+SUMMER_NIGHT_FAIR:      "The night is warm and sultry, and dark clouds hide the stars in patches. Elsewhere they shine brightly. Dew forms on the ground."
+SUMMER_NIGHT_OVERCAST:  "The sky is grey-black, moonless and starless. It's hard for human eyes to see anything in the deep shadows without a light. It's warm, still, and humid."
+SUMMER_NIGHT_FOG:       "Everything is half-hidden, nothing clearly seen in the dark fog. It's warm and still."
+
+AUTUMN_DAWN_STORMY:     "Cold rain pours from clouds slowly lightening from black to grey, driven by a howling northeastern wind."
+AUTUMN_DAWN_RAIN:       "Cold rain is falling as the sky begins to lighten to overcast grey. A raw wind blows from the east."
+AUTUMN_DAWN_CLEAR:      "It's a chilly morning and the brightening sky is clear and cloudless. The northwest wind is biting."
+AUTUMN_DAWN_FAIR:       "Fair weather clouds glow pink and white-gold in the southeast, catching the rays of the rising sun while the earth remains in shadow. A cool wind blows from the west."
+AUTUMN_DAWN_OVERCAST:   "The overcast sky lightens from grey-black to cloudy grey as the sun rises. A chill wind blows from the northwest."
+AUTUMN_DAWN_FOG:        "The sky slowly changes from dark grey to pale. Everything is veiled by fog. The air feels damp and chilly, and there is little wind."
+
+AUTUMN_DAY_STORMY:      "Chilling rain pours from thick grey clouds, driven by a furious northeast wind."
+AUTUMN_DAY_RAIN:        "Chilly rain falls from a grey sky. It's bleak and raw. The wind blows from the east."
+AUTUMN_DAY_CLEAR:       "The sky is brilliant blue and cloudless, the sunlight is bright, and a brisk wind blows from the northwest."
+AUTUMN_DAY_FAIR:        "Fair weather clouds drift through the blue sky from the west. The wind is gusty."
+AUTUMN_DAY_OVERCAST:    "The sky is grey and cloudy, the shadows dull and muted. The northwest wind is chilly."
+AUTUMN_DAY_FOG:         "Everything is grey, veiled by mist. It's chilly and the air feels damp. There is no wind."
+
+AUTUMN_DUSK_STORMY:     "A cold rain driven by a howling northeast wind drenches you while the clouded sky fades from grey to black."
+AUTUMN_DUSK_RAIN:       "A chilling rain falls as the grey sky darkens in the twilight. It's cold and wet. The wind blows from the east."
+AUTUMN_DUSK_CLEAR:      "The sun sets and the evening stars begin to appear in a blue and cloudless sky. A biting wind blows from the northwest."
+AUTUMN_DUSK_FAIR:       "The fair weather clouds in the west turn orange, gold, carmine, and purple as the sun sets. A chill wind blows from the west."
+AUTUMN_DUSK_OVERCAST:   "The grey of the clouds begins to darken. A chilling wind blows from the west."
+AUTUMN_DUSK_FOG:        "Everything is grey, veiled by darkening twilight mist. There is little wind. It's chilly and the air feels damp."
+
+AUTUMN_NIGHT_STORMY:    "Icy rain pours from grey-black clouds driven by a howling northeast wind."
+AUTUMN_NIGHT_RAIN:      "Cold rain falls from a grey-black sky without moon or stars. A raw wind blows from the east."
+AUTUMN_NIGHT_CLEAR:     "The deep blue night sky is clear and cloudless, and the stars glitter. An icy wind blows from the northwest."
+AUTUMN_NIGHT_FAIR:      "A chilly wind blows from the west, driving dark clouds before it and blotting out the stars in patches overhead. The air is clear and elsewhere the stars glitter brightly in the dark sapphire sky."
+AUTUMN_NIGHT_OVERCAST:  "The sky is grey-black, without moon or star. It's hard for human eyes to see anything in the deep shadows without a light. The wind is chilly."
+AUTUMN_NIGHT_FOG:       "The world is dark and foggy. Everything is half-hidden, nothing clearly seen. It's chilly and the air feels damp. No wind blows."
+
+
+####################################################
+# INDOOR VARIANTS, ADAPTED FROM THE MESSAGES ABOVE #
+####################################################
+
+WINTER_DAWN_BLIZZARD_INDOORS:   "Outside, dawn breaks to reveal snow falling from a dark sky that gradually lightens to grey-white. The snowfall is heavy and piles up in drifts, blown about by the shifting wind."
+WINTER_DAWN_STORMY_INDOORS:     "Outside, rain pours from clouds slowly lightening from black to grey, driven by a howling northeastern wind."
+WINTER_DAWN_RAIN_INDOORS:       "Outside, rain is falling as the sky begins to lighten to overcast grey. A howling wind blows from the east."
+WINTER_DAWN_CLEAR_INDOORS:      "Outside, the light of a cruelly cold dawn breaks in the southeast. The sky is clear and the northwest wind blasts snow across the landscape in gusts."
+WINTER_DAWN_FAIR_INDOORS:       "Outside, fair weather clouds glow pink in the southeast, catching the rays of the rising sun while the earth remains in shadow. A strong wind blows from the west."
+WINTER_DAWN_OVERCAST_INDOORS:   "Outside, dawn's light is grey. A thin layer of translucent cloud obscures the sun, showing only a bright patch in the sky."
+WINTER_DAWN_FOG_INDOORS:        "Outside, the sky slowly lightens from deep grey to pale, and a thick mist veils everything."
+WINTER_DAWN_LIGHTSNOW_INDOORS:  "Outside, the overcast sky slowly lightens from the grey-black of night to pale grey. Powdery snow falls from the clouds."
+WINTER_DAWN_SLEET_INDOORS:      "Outside, darkness lingers and the dawn that breaks is grey. Sleet and rain fall from heavy clouds, coating everything with ice and making walking treacherous. Raw winds blow from the northeast."
+
+WINTER_DAY_BLIZZARD_INDOORS:    "Outside, heavy snow falls in accumulating drifts, making it hard to see the world outside. All the world seems grey and white. The wind blows the snow about from the east, and it swirls around objects and never falls straight down."
+WINTER_DAY_STORMY_INDOORS:      "Outside, rain pours from thick grey clouds, driven by a furious northeast wind."
+WINTER_DAY_RAIN_INDOORS:        "Outside, rain falls from a bleak grey sky. The wind blows from the east."
+WINTER_DAY_CLEAR_INDOORS:        "Outside, the sky is cloudless and brilliant blue. The northwest wind is strong, blowing snow across the landscape in swirling white gusts."
+WINTER_DAY_FAIR_INDOORS:        "Outside, fair weather clouds drift through the blue sky from the west, along with the wind. The sunlight on the snow is dazzling, and it gleams on the ice."
+WINTER_DAY_OVERCAST_INDOORS:    "Outside, the sky is a translucent grey, brighter to the south. Shadows are muted in the dim light."
+WINTER_DAY_FOG_INDOORS:         "Outside, the landscape looks ghostly and drained of colour in the pale fog."
+WINTER_DAY_LIGHTSNOW_INDOORS:   "Outside, snow flurries drift silently down from the pale grey sky. There is little wind."
+WINTER_DAY_SLEET_INDOORS:       "Outside, sleet and rain fall from heavy clouds, coating everything with ice and making the ground slippery. The world looks silver in the icy grey light. A howling wind blows from the northeast."
+
+WINTER_DUSK_BLIZZARD_INDOORS:   "Outside, snow falls heavily in the deepening twilight, accumulating in large drifts, and making it hard to see outside. The wind blows the snow about from the east, and it swirls around objects and never falls straight down."
+WINTER_DUSK_STORMY_INDOORS:     "Outside, rain driven by a howling northeast wind drenches the streets while the clouded sky fades from grey to black."
+WINTER_DUSK_RAIN_INDOORS:       "Outside, rain falls as the grey sky darkens in the twilight. The wind blows from the east."
+WINTER_DUSK_CLEAR_INDOORS:      "Outside, the light fades from the sky, the evening stars glittering brightly. The northwest wind blows the snow about in freezing gusts."
+WINTER_DUSK_FAIR_INDOORS:       "Outside, the fair weather clouds in the west turn purple, gold, and vermillion as the sun sets. The snow, in shadow, looks blue. A strong wind blows from the west."
+WINTER_DUSK_OVERCAST_INDOORS:   "Outside, the sky is a dull iron grey, and darkness closes in early."
+WINTER_DUSK_FOG_INDOORS:        "Outside, the pale grey mists darken and begin to freeze, forming a slick of ice over the ground."
+WINTER_DUSK_LIGHTSNOW_INDOORS:  "Outside, darkness closes in early as thick grey clouds block the sun. A light snow is falling. There is scant wind."
+WINTER_DUSK_SLEET_INDOORS:      "Outside, darkness comes early as thick clouds block the fading light of grey day. Rain and sleet fall, coating everything with ice and making the ground slippery. Howling winds blow from the northeast."
+
+WINTER_NIGHT_BLIZZARD_INDOORS:  "Outside, night has come, and heavy snow falls. It's hard to see anything outside, the world a blinding mass of swirling snow."
+WINTER_NIGHT_STORMY_INDOORS:    "Outside, rain pours from grey-black clouds driven by a howling northeast wind."
+WINTER_NIGHT_RAIN_INDOORS:      "Outside, rain falls from a grey-black sky without moon or stars. A howling wind blows from the east."
+WINTER_NIGHT_CLEAR_INDOORS:     "Outside, the northwest wind howls, blowing snow about in savage gusts. The sky is clear deep blue and the stars glitter, brilliant as diamonds."
+WINTER_NIGHT_FAIR_INDOORS:      "Outside, a strong wind blows from the west, driving charcoal clouds before it and blotting out the stars in isolated patches overhead. The air is clear and elsewhere the stars shine brightly."
+WINTER_NIGHT_OVERCAST_INDOORS:  "Outside, the sky is grey-black, moonless and starless. Human eyes can distinguish the snow from everything else, and not much more: every shape that isn't snow-covered is a black shadow. There is little wind."
+WINTER_NIGHT_FOG_INDOORS:       "Outside, the night is shrouded in bleak mist, dark grey and colourless. The ground is icy and the air wet."
+WINTER_NIGHT_LIGHTSNOW_INDOORS: "Outside, the sky is grey-black, without moon or stars, and there is little wind. Snow flurries fall in the darkness."
+WINTER_NIGHT_SLEET_INDOORS:     "Outside, rain and sleet fall invisibly from a grey-black sky. It's very dark and the ice makes the slippery ground treacherous. Wind blows from the northeast."
+
+SPRING_DAWN_BLIZZARD_INDOORS:   "Outside, dawn breaks to reveal snow falling from a dark sky that gradually lightens to grey-white. The snowfall is heavy and piles up in drifts, blown about by the shifting wind."
+SPRING_DAWN_STORMY_INDOORS:     "Outside, a driving rain pours from clouds slowly lightening from black to grey, propelled by a howling northeasterly wind."
+SPRING_DAWN_RAIN_INDOORS:       "Outside, rain is falling as the sky begins to lighten to overcast grey. There's a slight wind from the east."
+SPRING_DAWN_CLEAR_INDOORS:      "Outside, the sky begins to brighten as the stars fade out. It's a chilly morning and the sky is clear blue and cloudless."
+SPRING_DAWN_FAIR_INDOORS:       "Outside, the blue sky brightens. The sun lights the fair weather clouds in the east with pink and pale gold before it touches the ground, which remains in shadow. A mild breeze blows from the west."
+SPRING_DAWN_OVERCAST_INDOORS:   "Outside, the sky begins to lighten. It's grey and overcast. A light wind blows from the southwest."
+SPRING_DAWN_FOG_INDOORS:        "Outside, it grows lighter and you see that everything is veiled by fog."
+SPRING_DAWN_LIGHTSNOW_INDOORS:  "Outside, the overcast sky slowly lightens from the grey-black of night to pale grey. Powdery snow falls from the clouds."
+
+SPRING_DAY_BLIZZARD_INDOORS:    "Outside, heavy snow falls, making it hard to see very far. All the world seems grey and white. The wind blows the snow about from the east, and it swirls around objects and never falls straight down."
+SPRING_DAY_STORMY_INDOORS:      "Outside, rain pours from thick grey clouds, driven by a howling northeast wind."
+SPRING_DAY_RAIN_INDOORS:        "Outside, a light rain falls from a grey sky. There's a mild wind from the east."
+SPRING_DAY_CLEAR_INDOORS:       "Outside, the sky is blue and cloudless, the sunlight is bright, and a light wind blows from the northwest."
+SPRING_DAY_FAIR_INDOORS:        "Outside, fair weather clouds sail across the blue sky, propelled by light breezes from the west."
+SPRING_DAY_OVERCAST_INDOORS:    "Outside, the sky is cloudy grey, shadows dull and muted. A light wind blows from the southwest."
+SPRING_DAY_FOG_INDOORS:         "Outside, everything is grey, veiled by mist. There is no wind."
+SPRING_DAY_LIGHTSNOW_INDOORS:   "Outside, snow flurries drift silently down from the pale grey sky. There is little wind."
+
+SPRING_DUSK_BLIZZARD_INDOORS:   "Outside, snow falls heavily in the deepening twilight, making it hard to see. The wind blows the snow about from the east, and it swirls around objects and never falls straight down."
+SPRING_DUSK_STORMY_INDOORS:     "Outside, twilight falls and the clouds darken from grey to charcoal as driving rain pours from them, lashed by a raging northeast wind."
+SPRING_DUSK_RAIN_INDOORS:       "Outside, a light rain falls as the grey sky darkens in the twilight. There's a slight wind from the east."
+SPRING_DUSK_CLEAR_INDOORS:      "Outside, the sun sets and the evening stars begin to appear in a blue and cloudless sky. A light wind blows from the northwest."
+SPRING_DUSK_FAIR_INDOORS:       "Outside, oranges, reds, and golds light the fair weather clouds, shadowed in purple, around the setting sun. A soft breeze blows from the west."
+SPRING_DUSK_OVERCAST_INDOORS:   "Outside, the grey of the clouds begins to darken. A light wind is blowing from the southwest."
+SPRING_DUSK_FOG_INDOORS:        "Outside, the mist begins to darken as twilight comes. There is no wind."
+SPRING_DUSK_LIGHTSNOW_INDOORS:  "Outside, darkness closes in early as thick grey clouds block the sun. A light snow is falling. There is scant wind."
+
+SPRING_NIGHT_BLIZZARD_INDOORS:  "Outside, night has come and heavy snow falls. It's hard to see much through the blinding, swirling snow."
+SPRING_NIGHT_STORMY_INDOORS:    "Outside, cold driving rain pours down in the dark from black clouds, propelled by a howling northeast wind."
+SPRING_NIGHT_RAIN_INDOORS:      "Outside, light rain falls from a grey-black sky without moon or stars. There's a mild wind from the east."
+SPRING_NIGHT_CLEAR_INDOORS:     "Outside, the deep blue night sky is clear and cloudless, and the stars glitter. A brisk breeze blows from the northwest."
+SPRING_NIGHT_FAIR_INDOORS:      "Outside, a light breeze blows from the west, driving dark clouds before it which blot out the stars in patches overhead. Elsewhere they glitter brightly in the dark sapphire sky."
+SPRING_NIGHT_OVERCAST_INDOORS:  "Outside, the sky is grey-black, moonless and starless. It's hard for human eyes to see anything in the deep shadows without a light."
+SPRING_NIGHT_FOG_INDOORS:       "Outside, the world is dark and foggy. Everything is half-hidden, nothing clearly seen. It almost feels like some otherworld."
+SPRING_NIGHT_LIGHTSNOW_INDOORS: "Outside, the sky is grey-black, without moon or stars. Snow flurries fall, though there is little wind."
+
+SUMMER_DAWN_STORMY_INDOORS:     "Outside, heavy rain pours from clouds slowly lightening from black to grey, propelled by a howling east wind."
+SUMMER_DAWN_RAIN_INDOORS:       "Outside, soft rain is falling as the sky lightens to overcast grey. A light breeze blows from the southeast."
+SUMMER_DAWN_CLEAR_INDOORS:      "Outside, the sky starts to lighten and the stars fade out. The sky is clear and there's a mild breeze from the west."
+SUMMER_DAWN_FAIR_INDOORS:       "Outside, the sky turns a lighter blue and the stars fade out. It's clear and there's a soft breeze from the west."
+SUMMER_DAWN_OVERCAST_INDOORS:   "Outside, the sky pales in the east, turning overcast grey. There's little wind, and it's warm and humid."
+SUMMER_DAWN_FOG_INDOORS:        "Outside, the sky begins to lighten from dark grey to pale, for the world is veiled by fog."
+
+SUMMER_DAY_STORMY_INDOORS:      "Outside, heavy rain pours from dark grey clouds, propelled by a furious east wind."
+SUMMER_DAY_RAIN_INDOORS:        "Outside, a light rain falls from a grey sky. There's a slight wind from the southeast."
+SUMMER_DAY_CLEAR_INDOORS:       "Outside, the sky is clear brilliant blue and there's a light breeze from the west."
+SUMMER_DAY_FAIR_INDOORS:        "Outside, towering white clouds drift slowly through the blue sky. It's hazy and hot, and the glare of the sun seems to drain the colour from the landscape."
+SUMMER_DAY_OVERCAST_INDOORS:    "Outside, the sky is grey and cloudy, the shadows dull and muted. It's hot, humid, and still."
+SUMMER_DAY_FOG_INDOORS:         "Outside, everything is pale grey, veiled by mist. It's warm, humid, and still."
+
+SUMMER_DUSK_STORMY_INDOORS:     "Outside, driving rain pours from clouds darkening from grey to black as daylight fades, propelled by a furious east wind."
+SUMMER_DUSK_RAIN_INDOORS:       "Outside, Light rain falls as the grey clouds darkens in the twilight. There's a gentle wind from the southeast."
+SUMMER_DUSK_CLEAR_INDOORS:      "Outside, the sun sets and the evening stars begin to appear in a blue and cloudless sky. There's a light breeze from the west."
+SUMMER_DUSK_FAIR_INDOORS:       "Outside, the sun sets, the western clouds turning purple, red, and gold. It's hazy and warm."
+SUMMER_DUSK_OVERCAST_INDOORS:   "Outside, The grey of the clouds begins to darken. It's warm and still."
+SUMMER_DUSK_FOG_INDOORS:        "Outside, everything is grey, veiled by darkening twilight mist."
+
+SUMMER_NIGHT_STORMY_INDOORS:    "Outside, heavy rain drenches the streets in the dark as it falls from grey-black clouds, driven by a howling east wind."
+SUMMER_NIGHT_RAIN_INDOORS:      "Outside, soft rain falls from a grey-black sky without moon or stars. A gentle wind blows from the southeast."
+SUMMER_NIGHT_CLEAR_INDOORS:     "Outside, the deep blue night sky is clear and cloudless, and the stars glitter. A soft breeze blows from the west."
+SUMMER_NIGHT_FAIR_INDOORS:      "Outside, the night is warm and sultry, and dark clouds hide the stars in patches. Elsewhere they shine brightly. Dew forms on the ground."
+SUMMER_NIGHT_OVERCAST_INDOORS:  "Outside, the sky is grey-black, moonless and starless. It's hard for human eyes to see anything in the deep shadows without a light."
+SUMMER_NIGHT_FOG_INDOORS:       "Outside, everything is half-hidden, nothing clearly seen in the dark fog."
+
+AUTUMN_DAWN_STORMY_INDOORS:     "Outside, rain pours from clouds slowly lightening from black to grey, driven by a howling northeastern wind."
+AUTUMN_DAWN_RAIN_INDOORS:       "Outside, rain is falling as the sky begins to lighten to overcast grey. A raw wind blows from the east."
+AUTUMN_DAWN_CLEAR_INDOORS:      "Outside, it's a chilly morning and the brightening sky is clear and cloudless, a raw wind blowing from the northwest."
+AUTUMN_DAWN_FAIR_INDOORS:       "Outside, fair weather clouds glow pink and white-gold in the southeast, catching the rays of the rising sun while the earth remains in shadow. A light wind blows from the west."
+AUTUMN_DAWN_OVERCAST_INDOORS:   "Outside, the overcast sky lightens from grey-black to cloudy grey as the sun rises. A strong wind blows from the northwest."
+AUTUMN_DAWN_FOG_INDOORS:        "Outside, the sky slowly changes from dark grey to pale. Everything is veiled by fog, and there is little wind."
+
+AUTUMN_DAY_STORMY_INDOORS:      "Outside, rain pours from thick grey clouds, driven by a furious northeast wind."
+AUTUMN_DAY_RAIN_INDOORS:        "Outside, rain falls from a grey sky, bleak and raw. The wind blows from the east."
+AUTUMN_DAY_CLEAR_INDOORS:       "Outside, the sky is brilliant blue and cloudless, the sunlight is bright, and a brisk wind blows from the northwest."
+AUTUMN_DAY_FAIR_INDOORS:        "Outside, fair weather clouds drift through the blue sky from the west. The wind is gusty."
+AUTUMN_DAY_OVERCAST_INDOORS:    "Outside, the sky is grey and cloudy, the shadows dull and muted. A strong wind blows from the northwest."
+AUTUMN_DAY_FOG_INDOORS:         "Outside, everything is grey, veiled by mist. There is no wind."
+
+AUTUMN_DUSK_STORMY_INDOORS:     "Outside, rain driven by a howling northeast wind drenches the streets while the clouded sky fades from grey to black."
+AUTUMN_DUSK_RAIN_INDOORS:       "Outside, rain falls as the grey sky darkens in the twilight. The wind blows from the east."
+AUTUMN_DUSK_CLEAR_INDOORS:      "Outside, the sun sets and the evening stars begin to appear in a blue and cloudless sky. A biting wind blows from the northwest."
+AUTUMN_DUSK_FAIR_INDOORS:       "Outside, the fair weather clouds in the west turn orange, gold, carmine, and purple as the sun sets. A chill wind blows from the west."
+AUTUMN_DUSK_OVERCAST_INDOORS:   "Outside, the grey of the clouds begins to darken. A chilling wind blows from the west."
+AUTUMN_DUSK_FOG_INDOORS:        "Outside, everything is grey, veiled by darkening twilight mist. There is little wind."
+
+AUTUMN_NIGHT_STORMY_INDOORS:    "Outside, rain pours from grey-black clouds driven by a howling northeast wind."
+AUTUMN_NIGHT_RAIN_INDOORS:      "Outside, rain falls from a grey-black sky without moon or stars. A raw wind blows from the east."
+AUTUMN_NIGHT_CLEAR_INDOORS:     "Outside, the deep blue night sky is clear and cloudless, and the stars glitter. A howling wind blows from the northwest."
+AUTUMN_NIGHT_FAIR_INDOORS:      "Outside, wind blows from the west, driving dark clouds before it and blotting out the stars in patches overhead. The air is clear and elsewhere the stars glitter brightly in the dark sapphire sky."
+AUTUMN_NIGHT_OVERCAST_INDOORS:  "Outside, the sky is grey-black, without moon or star. It's hard for human eyes to see anything in the deep shadows without a light."
+AUTUMN_NIGHT_FOG_INDOORS:       "Outside, the world is dark and foggy. Everything is half-hidden, nothing clearly seen. No wind blows."
+
+
+##################################
+# WEATHER/TIME TREE DESCRIPTIONS #
+##################################
+
+WINTER_DAY_BLIZZARD_TREES:      "The whirling curtain of snow accumulates in the forks of the trees and piles up in drifts against their trunks."
+WINTER_DAY_STORMY_TREES:        "Gusts of wind tear through the tree limbs and howl around rocks. Loose leaves swirl past you on the wind." # replaced with AUTUMN_DAY_STORMY_TREES, modified
+WINTER_DAY_RAIN_TREES:          "Rain freezes on the bare twigs of the broadleafed trees and the needles of the conifers, coating them with a layer of glistening silver ice and weighing the branches down."
+WINTER_DAY_CLEAR_TREES:         "Blowing snow drifts against the trunks of the trees, clinging to their windward sides."
+WINTER_DAY_FAIR_TREES:          "Blowing snow drifts against the trunks of the trees."
+WINTER_DAY_OVERCAST_TREES:      "Snow lingers in the forks of the broadleafed trees and on the needle-clad branches of the conifers."
+WINTER_DAY_FOG_TREES:           "The bare branches of the trees form stark silhouettes of darker grey."
+WINTER_DAY_LIGHTSNOW_TREES:     "Snowflurries dust the bare branches of the broadleaves and the needles of the conifers."
+WINTER_DAY_SLEET_TREES:         "Rain freezes on the bare twigs of the broadleafed trees and the needles of the conifers, coating them with a layer of glistening silver ice and weighing the branches down."
+
+WINTER_NIGHT_BLIZZARD_TREES:    "The whirling curtain of snow accumulates in the forks of the trees, outlining them in the darkness, and piles up in drifts against their trunks."
+WINTER_NIGHT_STORMY_TREES:      "Gusts of wind tear through the tree limbs and howl around rocks. Fallen leaves blow past you in the dark." # replaced with AUTUMN_NIGHT_STORMY_TREES
+WINTER_NIGHT_RAIN_TREES:        "Rain freezes on the tree limbs. Occasionally you hear the crack of a branch breaking, weighed down by its coating of ice."
+WINTER_NIGHT_CLEAR_TREES:       "Blowing snow drifts against the trunks of the dark trees, clinging to their windward sides."
+WINTER_NIGHT_FAIR_TREES:        "Blowing snow drifts against the trunks of the dark trees."
+WINTER_NIGHT_OVERCAST_TREES:    "Snow lingers in the forks of the broadleafed trees and on the needle-clad branches of the conifers, lining them palely in the darkness."
+WINTER_NIGHT_FOG_TREES:         "In the darkness and the veils of fog, the bare branches of the trees fade from sight."
+WINTER_NIGHT_LIGHTSNOW_TREES:   "Snowflurries dust the bare branches of the broadleaves and the needles of the conifers, giving them faint pale outlines which render them visible in the darkness."
+WINTER_NIGHT_SLEET_TREES:       "Rain freezes on the tree limbs. Occasionally you hear the crack of a branch breaking, weighed down by its coating of ice."
+
+SPRING_DAY_BLIZZARD_TREES:      "Gusts of wind tear through the tree limbs and howl around rocks, turning the leaves over so that you can see their silvery undersides."
+SPRING_DAY_STORMY_TREES:        "Gusts of wind tear through the tree limbs and howl around rocks, turning the leaves over so that you can see their silvery undersides."
+SPRING_DAY_RAIN_TREES:          "Raindrops patter against the fresh leaves, and glisten like silver beads on their bright green surfaces. The wet tree trunks have darkened from grey to brown."
+SPRING_DAY_CLEAR_TREES:         "The wind rustles the bright green leaves of trees and bushes and carries pollen, downy seeds, and the fragrance of wildflowers along with it."
+SPRING_DAY_FAIR_TREES:          "The wind rustles the bright green leaves of trees and bushes and carries pollen, downy seeds, and the fragrance of wildflowers along with it."
+SPRING_DAY_OVERCAST_TREES:      "The wind rustles the bright green leaves of trees and bushes and carries pollen, downy seeds, and the fragrance of wildflowers along with it."
+SPRING_DAY_FOG_TREES:           "Only the nearest tree branches show the full colour of their buds and new leaves; more distant trees and branches are colourless and indistinct in the pallid grey fog, looking ghostly and not quite real."
+SPRING_DAY_LIGHTSNOW_TREES:     "The wind rustles the bright green leaves of trees and bushes and carries pollen, downy seeds, and the fragrance of wildflowers along with it."
+
+SPRING_NIGHT_BLIZZARD_TREES:    "Gusts of wind tear through the tree limbs and howl around rocks."
+SPRING_NIGHT_STORMY_TREES:      "Gusts of wind tear through the tree limbs and howl around rocks."
+SPRING_NIGHT_RAIN_TREES:        "Raindrops patter against the leaves, invisible in the darkness."
+SPRING_NIGHT_CLEAR_TREES:       "You can hear peepfrogs, bullfrogs, and treefrogs singing. The leaves of the trees and bushes rustle in the wind."
+SPRING_NIGHT_FAIR_TREES:        "You can hear peepfrogs, bullfrogs, and treefrogs singing. The leaves of the trees and bushes rustle in the wind."
+SPRING_NIGHT_OVERCAST_TREES:    "You can hear peepfrogs, bullfrogs, and treefrogs singing. The leaves of the trees and bushes rustle in the wind."
+SPRING_NIGHT_FOG_TREES:         "The dark shapes of nearby trees loom at you suddenly out of the deep grey fog as you approach them."
+SPRING_NIGHT_LIGHTSNOW_TREES:   "You can hear peepfrogs, bullfrogs, and treefrogs singing. The leaves of the trees and bushes rustle in the wind."
+
+SUMMER_DAY_STORMY_TREES:        "Gusts of wind tear through the tree limbs and howl around rocks."
+SUMMER_DAY_RAIN_TREES:          "Raindrops patter against the leaves, and glisten like silver beads on their deep green surfaces. The wet tree trunks have darkened from grey to brown."
+SUMMER_DAY_CLEAR_TREES:         "The deep green leaves of the trees and bushes rustle in the breeze, which provides welcome cooling from the heat of the blazing sun."
+SUMMER_DAY_FAIR_TREES:          "The shade under the deep green leaves of the trees is welcome relief from the hot glare of the sun."
+SUMMER_DAY_OVERCAST_TREES:      "The deep green leaves of the trees are unstirred."
+SUMMER_DAY_FOG_TREES:           "Only the nearest tree branches show their full colour; more distant trees and branches are colourless and indistinct in the pallid grey fog, looking ghostly and not quite real."
+
+SUMMER_NIGHT_STORMY_TREES:      "Gusts of wind tear through the tree limbs and howl around rocks."
+SUMMER_NIGHT_RAIN_TREES:        "Raindrops patter against the leaves, invisible in the darkness."
+SUMMER_NIGHT_CLEAR_TREES:       "The leaves of the trees and bushes rustle in the breeze. Crickets and katydids sing throughout the night."
+SUMMER_NIGHT_FAIR_TREES:        "The shadows under the canopy of leaves are deep, and you can hear cicadas and crickets singing all around you."
+SUMMER_NIGHT_OVERCAST_TREES:    "The leaves of the trees and bushes are unstirred."
+SUMMER_NIGHT_FOG_TREES:         "The dark shapes of nearby trees loom at you suddenly out of the deep grey fog as you approach them."
+
+AUTUMN_DAY_STORMY_TREES:        "Gusts of wind tear through the tree limbs and howl around rocks. Red, orange and gold leaves swirl past you on the wind."
+AUTUMN_DAY_RAIN_TREES:          "Raindrops patter against the leaves, and glisten like silver beads on their fiery vermillion and gold surfaces. The wet tree trunks have darkened from grey to brown."
+AUTUMN_DAY_CLEAR_TREES:         "Fiery red, gold, and orange leaves rustle and blow past you, swirling in the wind."
+AUTUMN_DAY_FAIR_TREES:          "Fiery red, gold, and orange leaves rustle and blow past you, swirling in the wind."
+AUTUMN_DAY_OVERCAST_TREES:      "Fiery red, gold, and orange leaves rustle and blow past you, swirling in the wind."
+AUTUMN_DAY_FOG_TREES:           "Only the nearest tree branches, half-bereft of leaves, show their full colour; more distant trees and branches are colourless and indistinct in the pallid grey fog, looking ghostly and not quite real."
+
+AUTUMN_NIGHT_STORMY_TREES:      "Gusts of wind tear through the tree limbs and howl around rocks. Fallen leaves blow past you in the dark."
+AUTUMN_NIGHT_RAIN_TREES:        "Raindrops patter against the leaves, invisible in the darkness."
+AUTUMN_NIGHT_CLEAR_TREES:       "Leaves on the ground rustle, unseen, stirred by the winds. Falling leaves blow past you, whirled around by the wind in the dark."
+AUTUMN_NIGHT_FAIR_TREES:        "Leaves on the ground rustle, unseen, stirred by the winds. Falling leaves blow past you, whirled around by the wind in the dark."
+AUTUMN_NIGHT_OVERCAST_TREES:     "Leaves on the ground rustle, unseen, stirred by the winds. Falling leaves blow past you, whirled around by the wind in the dark."
+AUTUMN_NIGHT_FOG_TREES:         "The dark shapes of nearby trees loom at you suddenly out of the deep grey fog as you approach them."
+
+
+###############################
+# WEATHER/TIME EVENT MESSAGES #
+###############################
+
+MIDNIGHT_BLIZZARD:  "The blizzard and the darkness of midnight hide everything."
+DAWN_BLIZZARD:      "Faintly, a grey pallor illuminates the thick snowfall."
+SUNRISE_BLIZZARD:   "Snow cascades from the sky in the half-light of dawn."
+MORNING_BLIZZARD:   "Heavy, wet snow falls throughout the morning."
+NOON_BLIZZARD:      "The world is lost in whiteness as snow blows about you at mid-day."
+SUNSET_BLIZZARD:    "Blinding snow spills from the sky as the twilight deepens."
+DUSK_BLIZZARD:      "The whiteness of the whirling snow fades to blanched grey."
+NIGHT_BLIZZARD:     "Snow swirls about you in gusts as night falls."
+
+MIDNIGHT_STORMY:    "The ferocity of the gale is unabated at midnight."
+DAWN_STORMY:        "The stormy sky lightens faintly to the east."
+SUNRISE_STORMY:     "Rain falls in wind-lashed sheets at dawn."
+MORNING_STORMY:     "Furious winds drive rain into the ground at angle. The morning sky is slate grey."
+NOON_STORMY:        "Torrential rains fall at mid-day, driven by raging winds."
+SUNSET_STORMY:      "The last light in the west begins to fail, heralding a stormy night."
+DUSK_STORMY:        "The clouds darken further, rain drenching the landscape as evening approaches."
+NIGHT_STORMY:       "Wailing wind blows rain through the darkness."
+
+MIDNIGHT_RAIN:      "Rain falls at midnight, unseen in the darkness."
+DAWN_RAIN:          "Through the veils of rain, the clouds to the east pale."
+SUNRISE_RAIN:       "Rain falls in the dawn's light."
+MORNING_RAIN:       "It's a wan grey morning. Rain patters to earth."
+NOON_RAIN:          "Droplets splash in puddles at mid-day."
+SUNSET_RAIN:        "The shower soaks the earth as twilight deepens."
+DUSK_RAIN:          "A rainy late afternoon gives way to evening."
+NIGHT_RAIN:         "Raindrops sprinkle down from a night sky obscured by dark grey clouds."
+
+MIDNIGHT_CLEAR:     "Stars glitter brilliantly in the deep blue of the midnight sky."
+DAWN_CLEAR:         "The stars in the east begin to look washed out as the sapphire night sky pales."
+SUNRISE_CLEAR:      "Pink-gold light gilds the land as the sun creeps over the eastern horizon into a cloudless blue sky."
+MORNING_CLEAR:      "The sun climbs into a brilliant blue sky."
+NOON_CLEAR:         "The sun blazes overhead in the clear blue sky."
+SUNSET_CLEAR:       "The evening stars come out as the red-orange sun sinks below the horizon."
+DUSK_CLEAR:         "Shadows lengthen and the light turns golden as the sun sinks toward the west through a clear sky."
+NIGHT_CLEAR:        "The stars glitter like diamonds in the deep sapphire blue of the night sky."
+
+MIDNIGHT_FAIR:      "Stars sparkle in the midnight sky, obscured here and there by clouds."
+DAWN_FAIR:          "A faint sheen touches the clouds in the sapphire night sky to the east."
+SUNRISE_FAIR:       "The sun rises, painting the eastern clouds with a pink and pale gold glow."
+MORNING_FAIR:       "The sun ascends in a bright blue sky filled with fluffy fair weather clouds and a few wisps of cirrus."
+NOON_FAIR:          "The sun shines overhead, bracketed by puffy fair weather clouds."
+SUNSET_FAIR:        "The orange-red sun sinks below the western horizon, leaving a darkening tapestry of purple and red-gold clouds behind it."
+DUSK_FAIR:          "Purple, gold, and vermillion clouds grace the western sky as the sun descends toward the west."
+NIGHT_FAIR:         "Brindled clouds conceal a few patches of starlit sky."
+
+MIDNIGHT_OVERCAST:  "Charcoal clouds fill the midnight sky."
+DAWN_OVERCAST:      "Faint grey light seeps through a leaden layer of clouds toward the east."
+SUNRISE_OVERCAST:   "A grey dawn breaks."
+MORNING_OVERCAST:   "The light from the overcast sky is diffuse, the shadows indistinct and muted."
+NOON_OVERCAST:      "A thick layer of stratus clouds cloaks the sky at mid-day."
+SUNSET_OVERCAST:    "A featureless blanket of grey cloud covers the evening sky."
+DUSK_OVERCAST:      "The soft light dims at dusk."
+NIGHT_OVERCAST:     "The night is moonless and starless."
+
+MIDNIGHT_FOG:       "It's hard to see through the midnight darkness and the fog."
+DAWN_FOG:           "The eastern mist pales almost imperceptibly."
+SUNRISE_FOG:        "Everything is half-concealed by fog in the grey half-light."
+MORNING_FOG:        "Pale grey mists half-hide the world around you."
+NOON_FOG:           "The fog is grey-white in the light of mid-day."
+SUNSET_FOG:         "Twilight deepens the grey of the fog."
+DUSK_FOG:           "The misty light dims slightly."
+NIGHT_FOG:          "Fog and darkness shroud the world."
+
+MIDNIGHT_LIGHTSNOW: "Powdery snow drifts down from the grey-black midnight sky, felt rather than seen in the darkness."
+DAWN_LIGHTSNOW:     "The dark grey sky in the east pales as damp, cold dawn approaches."
+SUNRISE_LIGHTSNOW:  "Through the snow flurries, the translucent grey sky brightens to the east."
+MORNING_LIGHTSNOW:  "The pallid gleam of the sun rises behind a veil of pearlescent grey, from which snow flurries drift. The air is chilly and damp."
+NOON_LIGHTSNOW:     "Light snow wafts gently down from the pale grey mid-day sky."
+SUNSET_LIGHTSNOW:   "Snow flurries fall from a darkening grey sky."
+DUSK_LIGHTSNOW:     "Through the drifting snowflakes, the translucent pale grey of the sky deepens."
+NIGHT_LIGHTSNOW:    "The night is raw. Snow flurries drift down from the overcast sky."
+
+MIDNIGHT_SLEET:     "Sleet spatters from the midnight sky."
+DAWN_SLEET:         "A faint gleam touches the eastern sky through the sleet and the cold wind."
+SUNRISE_SLEET:      "Freezing rain falls in the grey light of dawn."
+MORNING_SLEET:      "Icing rain plates the world with silver in the cold light of morning."
+NOON_SLEET:         "Freezing rain pours from the sky at mid-day."
+SUNSET_SLEET:       "In the deepening twilight, the freezing rain makes the footing treacherous."
+DUSK_SLEET:         "Sleet coats the ground with ice as evening draws near."
+NIGHT_SLEET:        "As night falls, the icy rain is whipped about by the wind."
+
+
+####################################################
+# INDOOR VARIANTS, ADAPTED FROM THE MESSAGES ABOVE #
+####################################################
+
+MIDNIGHT_BLIZZARD_INDOORS:  "The blizzard and the darkness of midnight hide everything outside."
+DAWN_BLIZZARD_INDOORS:      "Faintly, a grey pallor illuminates the thick snowfall outside."
+SUNRISE_BLIZZARD_INDOORS:   "Snow cascades from the sky outside in the half-light of dawn."
+MORNING_BLIZZARD_INDOORS:   "Heavy, wet snow falls outside throughout the morning."
+NOON_BLIZZARD_INDOORS:      "The world outside is lost in whiteness as snow blows about at mid-day."
+SUNSET_BLIZZARD_INDOORS:    "Blinding snow spills from the sky outside as the twilight deepens."
+DUSK_BLIZZARD_INDOORS:      "The whiteness of the whirling snow outside fades to blanched grey."
+NIGHT_BLIZZARD_INDOORS:     "Snow swirls about outside in gusts as night falls."
+
+MIDNIGHT_STORMY_INDOORS:    "The ferocity of the gale outside is unabated at midnight."
+DAWN_STORMY_INDOORS:        "The stormy sky outside lightens faintly to the east."
+SUNRISE_STORMY_INDOORS:     "Rain falls outside in wind-lashed sheets at dawn."
+MORNING_STORMY_INDOORS:     "Furious winds drive rain into the street outside at angle. The morning sky is slate grey."
+NOON_STORMY_INDOORS:        "Torrential rains fall outside at mid-day, driven by raging winds."
+SUNSET_STORMY_INDOORS:      "The last light in the west begins to fail, heralding a stormy night."
+DUSK_STORMY_INDOORS:        "The clouds darken further, rain drenching the streets outside as evening approaches."
+NIGHT_STORMY_INDOORS:       "Wailing wind blows rain through the darkness outside."
+
+MIDNIGHT_RAIN_INDOORS:      "Rain falls heavily at midnight, heard yet unseen in the darkness outside."
+DAWN_RAIN_INDOORS:          "Through the veils of rain outside, the clouds to the east pale."
+SUNRISE_RAIN_INDOORS:       "Rain falls outside in the dawn's light."
+MORNING_RAIN_INDOORS:       "It's a wan grey morning. Rain patters to the strets outside."
+NOON_RAIN_INDOORS:          "Droplets splash in puddles outside at mid-day."
+SUNSET_RAIN_INDOORS:        "The shower soaks the strets outside as twilight deepens."
+DUSK_RAIN_INDOORS:          "A rainy late afternoon gives way to evening."
+NIGHT_RAIN_INDOORS:         "Raindrops sprinkle down from a night sky outside, obscured by dark grey clouds."
+
+MIDNIGHT_CLEAR_INDOORS:     "Stars glitter brilliantly in the deep blue of the midnight sky."
+DAWN_CLEAR_INDOORS:         "The stars in the east begin to look washed out as the sapphire night sky pales."
+SUNRISE_CLEAR_INDOORS:      "Pink-gold light gilds the city as the sun creeps over the eastern horizon into a cloudless blue sky."
+MORNING_CLEAR_INDOORS:      "The sun climbs into a brilliant blue sky."
+NOON_CLEAR_INDOORS:         "The sun blazes overhead in the clear blue sky."
+SUNSET_CLEAR_INDOORS:       "The evening stars come out as the red-orange sun sinks below the horizon."
+DUSK_CLEAR_INDOORS:         "Shadows lengthen and the light turns golden as the sun sinks toward the west through a clear sky."
+NIGHT_CLEAR_INDOORS:        "The stars glitter like diamonds in the deep sapphire blue of the night sky."
+
+MIDNIGHT_FAIR_INDOORS:      "Stars sparkle in the midnight sky, obscured here and there by clouds."
+DAWN_FAIR_INDOORS:          "A faint sheen touches the clouds in the sapphire night sky to the east."
+SUNRISE_FAIR_INDOORS:       "The sun rises, painting the eastern clouds with a pink and pale gold glow."
+MORNING_FAIR_INDOORS:       "The sun ascends in a bright blue sky filled with fluffy fair weather clouds and a few wisps of cirrus."
+NOON_FAIR_INDOORS:          "The sun shines overhead, bracketed by puffy fair weather clouds."
+SUNSET_FAIR_INDOORS:        "The orange-red sun sinks below the western horizon, leaving a darkening tapestry of purple and red-gold clouds behind it."
+DUSK_FAIR_INDOORS:          "Purple, gold, and vermillion clouds grace the western sky as the sun descends toward the west."
+NIGHT_FAIR_INDOORS:         "Brindled clouds conceal a few patches of starlit sky."
+
+MIDNIGHT_OVERCAST_INDOORS:  "Charcoal clouds fill the midnight sky."
+DAWN_OVERCAST_INDOORS:      "Faint grey light seeps through a leaden layer of clouds toward the east."
+SUNRISE_OVERCAST_INDOORS:   "A grey dawn breaks."
+MORNING_OVERCAST_INDOORS:   "The light from the overcast sky is diffuse, the shadows indistinct and muted."
+NOON_OVERCAST_INDOORS:      "A thick layer of stratus clouds cloaks the sky at mid-day."
+SUNSET_OVERCAST_INDOORS:    "A featureless blanket of grey cloud covers the evening sky."
+DUSK_OVERCAST_INDOORS:      "The soft light outside dims at dusk."
+NIGHT_OVERCAST_INDOORS:     "The night is moonless and starless."
+
+MIDNIGHT_FOG_INDOORS:       "It's hard to see the streets outside through the midnight darkness and the fog."
+DAWN_FOG_INDOORS:           "The eastern mist pales almost imperceptibly."
+SUNRISE_FOG_INDOORS:        "Everything outside is half-concealed by fog in the grey half-light."
+MORNING_FOG_INDOORS:        "Pale grey mists half-hide the streets outside."
+NOON_FOG_INDOORS:           "The fog outside is grey-white in the light of mid-day."
+SUNSET_FOG_INDOORS:         "Twilight deepens the grey of the fog outside."
+DUSK_FOG_INDOORS:           "The misty light outside dims slightly."
+NIGHT_FOG_INDOORS:          "Fog and darkness shroud the world outside."
+
+MIDNIGHT_LIGHTSNOW_INDOORS: "Powdery snow drifts down from the grey-black midnight sky outside."
+DAWN_LIGHTSNOW_INDOORS:     "The dark grey sky in the east pales as a cold dawn approaches."
+SUNRISE_LIGHTSNOW_INDOORS:  "Through the snow flurries outside, the translucent grey sky brightens to the east."
+MORNING_LIGHTSNOW_INDOORS:  "The pallid gleam of the sun rises behind a veil of pearlescent grey, from which snow flurries drift outside."
+NOON_LIGHTSNOW_INDOORS:     "Light snow wafts gently down outside from the pale grey mid-day sky."
+SUNSET_LIGHTSNOW_INDOORS:   "Snow flurries fall from a darkening grey sky outside."
+DUSK_LIGHTSNOW_INDOORS:     "Through the drifting snowflakes outside, the translucent pale grey of the sky deepens."
+NIGHT_LIGHTSNOW_INDOORS:    "The night outside is raw. Snow flurries drift down from the overcast sky."
+
+MIDNIGHT_SLEET_INDOORS:     "Sleet spatters the strets outside from the midnight sky."
+DAWN_SLEET_INDOORS:         "A faint gleam touches the eastern sky through the sleet and the howling wind."
+SUNRISE_SLEET_INDOORS:      "Freezing rain falls outside in the grey light of dawn."
+MORNING_SLEET_INDOORS:      "Icing rain plates the streets outside with silver in the cold light of morning."
+NOON_SLEET_INDOORS:         "Freezing rain pours from the sky at mid-day, drenching the streets outside."
+SUNSET_SLEET_INDOORS:       "In the deepening twilight, the freezing rain outside makes walking treacherous."
+DUSK_SLEET_INDOORS:         "Sleet coats the ground outside with ice as evening draws near."
+NIGHT_SLEET_INDOORS:        "As night falls, the icy rain outside is whipped about by the wind."
+
+
+#######################
+# WEATHER CHANGE MAPS #
+#######################
+
+WMAP0:  "14c8frFFSsbloo"            # blizzard
+WMAP1:  "41c16f3r6F3S4oLlb"         # stormy
+WMAP2:  "20c58f4Ll19Fb13o11r4S"     # rain
+WMAP3:  "19c38f3r5F3S4olLb"         # clear
+WMAP4:  "8c57f11r13F3S13o5lbL"      # fair
+WMAP5:  "4c38f19r28F3S16o7L5lb"     # overcast
+WMAP6:  "20c52f15r21F3S11oll4Lb"    # fog
+WMAP7:  "10c29f4L4l5Fbb7o4rS"       # light snow
+WMAP8:  "10c29f4Ll6Fb6o4rS"         # sleet

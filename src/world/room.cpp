@@ -2,7 +2,6 @@
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #include "3rdparty/SQLiteCpp/SQLiteCpp.h"
-#include "3rdparty/yaml-cpp/yaml.h"
 #include "core/core.hpp"
 #include "core/filex.hpp"
 #include "core/message.hpp"

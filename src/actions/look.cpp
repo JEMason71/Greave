@@ -8,6 +8,7 @@
 #include "world/item.hpp"
 #include "world/mobile.hpp"
 #include "world/room.hpp"
+#include "world/time-weather.hpp"
 #include "world/world.hpp"
 
 
@@ -78,4 +79,38 @@ void ActionLook::look(std::shared_ptr<Mobile> mob)
             items_nearby.push_back(room->inv()->get(i)->name() + "{w}");
         core()->message("{0}{g}```Items nearby: {w}" + StrX::comma_list(items_nearby, StrX::CL_FLAG_USE_AND));
     }
+}
+
+// Determines the current time of day.
+void ActionLook::time(std::shared_ptr<Mobile> mob)
+{
+    const auto time_weather = core()->world()->time_weather();
+    const std::shared_ptr<Room> room = core()->world()->get_room(mob->location());
+    const bool indoors = room->tag(RoomTag::Indoors);
+    const bool can_see_outside = room->tag(RoomTag::CanSeeOutside);
+    const std::string date = time_weather->day_name() + ", the " + time_weather->day_of_month_string() + " day of " +  time_weather->month_name();
+
+    std::string time_str;
+    if (can_see_outside || !indoors) time_str = "It is now " + StrX::str_tolower(time_weather->time_of_day_str(true));
+    else
+    {
+        std::string tod_str = time_weather->time_of_day_str(false);
+        if (tod_str == "DAY") tod_str = "daytime";
+        time_str = "It is around " + StrX::str_tolower(tod_str);
+    }
+    core()->message(time_weather->weather_message_colour() + time_str + " on " + date + ".");
+}
+
+// Checks the nearby weather.
+void ActionLook::weather(std::shared_ptr<Mobile> mob)
+{
+    const std::shared_ptr<Room> room = core()->world()->get_room(mob->location());
+    const bool indoors = room->tag(RoomTag::Indoors);
+    const bool can_see_outside = room->tag(RoomTag::CanSeeOutside);
+    if (indoors && !can_see_outside)
+    {
+        core()->message("{y}You {Y}can't see {y}the weather outside from here.");
+        return;
+    }
+    core()->message(core()->world()->time_weather()->weather_message_colour() + core()->world()->time_weather()->weather_desc());
 }

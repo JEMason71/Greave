@@ -14,17 +14,19 @@ Greave is copyright © 2021 Raine "Gravecat" Simmons and the Greave contributors
 
 [BearLibTerminal](http://foo.wyrd.name/en:bearlibterminal) copyright © 2013-2017 Cfyz. BearLibTerminal includes: [FreeType](https://www.freetype.org/) (copyright © 1996-2002, 2006 David Turner, Robert Wilhelm, and Werner Lemberg), [NanoJpeg](http://h4ck3r.net/2009/12/02/mini-jpeg-decoder/) (copyright © 2009 Martin J. Fiedler), and [PicoPNG](https://lodev.org/lodepng/) (copyright © 2005-2010 Lode Vandevenne).
 
-[PCG](http://www.pcg-random.org/) (c) 2014 Melissa O'Neill.
+[PCG](http://www.pcg-random.org/) copyright © 2014 Melissa O'Neill.
 
 [PDCurses](https://github.com/wmcbrine/PDCurses) maintained by William McBrine.
 
-[Random-Number Utilities](https://gist.github.com/imneme/540829265469e673d045) (c) 2015 Melissa E. O'Neill.
+[Random-Number Utilities](https://gist.github.com/imneme/540829265469e673d045) copyright © 2015 Melissa E. O'Neill.
 
 [Roboto Mono Font](https://fonts.google.com/specimen/Roboto+Mono) copyright © 2015 Google Inc.
 
 [SQLite](https://www.sqlite.org/) by SQLite Consortium.
 
 [SQLiteCpp](https://github.com/SRombauts/SQLiteCpp) copyright © 2012-2020 Sebastien Rombauts.
+
+Time and weather system adapted from [Keran's MUSH/MUX Weather and Time Code Package Version 4.0 beta](http://www.mushcode.com/File/Kerans-Weather-System-And-Time-Code-4-0-(PennMUSH)), copyright © 1996-1998 Keran.
 
 [Tolk](https://github.com/dkager/tolk) copyright © 2014-2016 Davy Kager.
 

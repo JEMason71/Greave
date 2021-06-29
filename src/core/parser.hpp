@@ -14,8 +14,8 @@ public:
     void    parse(std::string input);   // Parses input from the player!
 
 private:
-    enum class ParserCommand : uint16_t { NONE, CLOSE, DIRECTION, DROP, GO, HASH, INVENTORY, LOCK, LOOK, NO, OPEN, SAVE, SPAWN_ITEM, SWEAR, TAKE, TELEPORT, UNLOCK, XYZZY, YES,
-        QUIT };
+    enum class ParserCommand : uint16_t { NONE, CLOSE, DIRECTION, DROP, GO, HASH, INVENTORY, LOCK, LOOK, NO, OPEN, SAVE, SPAWN_ITEM, SWEAR, TAKE, TELEPORT, TIME, UNLOCK, WAIT,
+        WEATHER, XYZZY, YES, QUIT };
     enum class SpecialState : uint8_t { NONE, QUIT_CONFIRM, DISAMBIGUATION };
     enum ItemMatch : uint32_t { NOT_FOUND = UINT_MAX, UNCLEAR = UINT_MAX - 1, VALID = UINT_MAX - 2 };
     enum Target : uint32_t { NONE = UINT_MAX, ITEM_INV = UINT_MAX - 1, ITEM_ROOM = UINT_MAX - 2 };

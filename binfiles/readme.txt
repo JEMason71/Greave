@@ -47,6 +47,10 @@ https://www.sqlite.org/
 SQLiteCpp copyright © 2012-2020 Sebastien Rombauts.
 https://github.com/SRombauts/SQLiteCpp
 
+Time and weather system adapted from Keran's MUSH/MUX Weather and Time Code
+Package Version 4.0 beta, copyright © 1996-1998 Keran.
+http://www.mushcode.com/File/Kerans-Weather-System-And-Time-Code-4-0-(PennMUSH)
+
 Tolk copyright © 2014-2016 Davy Kager.
 https://github.com/dkager/tolk
 

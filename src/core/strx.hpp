@@ -15,6 +15,7 @@ public:
     static std::string  collapse_vector(std::vector<std::string> vec);  // Simple function to collapse a string vector into words.
     static std::string  comma_list(std::vector<std::string> vec, unsigned int flags = 0);   // Converts a vector to a comma-separated list.
     static unsigned int count_colour_tags(const std::string &str);  // Counts all the colour tags in a string.
+    static std::string  decode_compressed_string(std::string cb);   // Decodes a compressed string (e.g. 4cab2z becomes ccccabzz).
     static std::string  dir_to_name(Direction dir, DirNameType dnt = DirNameType::NORMAL);  // Converts a direction enum into a string.
     static std::string  dir_to_name(uint8_t dir, DirNameType dnt = DirNameType::NORMAL);    // As above, but with an integer instead of an enum.
     static bool         find_and_replace(std::string &input, const std::string &to_find, const std::string &to_replace);    // Find and replace one string with another.

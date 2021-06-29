@@ -67,6 +67,7 @@ set(GREAVE_CPPS
   world/mobile.cpp
   world/npc.cpp
   world/player.cpp
+  world/time-weather.cpp
   world/world.cpp
 )
 

@@ -11,4 +11,6 @@ class ActionLook
 {
 public:
     static void look(std::shared_ptr<Mobile> mob);      // Take a look around at your surroundings.
+    static void time(std::shared_ptr<Mobile> mob);      // Determines the current time of day.
+    static void weather(std::shared_ptr<Mobile> mob);   // Checks the nearby weather.
 };

@@ -13,6 +13,7 @@
 #include "world/item.hpp"
 #include "world/player.hpp"
 #include "world/room.hpp"
+#include "world/time-weather.hpp"
 #include "world/world.hpp"
 
 
@@ -52,12 +53,11 @@ const std::map<std::string, Security>   World::SECURITY_MAP = { { "anarchy", Sec
 
 
 // Constructor, loads the room YAML data.
-World::World()
+World::World() : m_player(std::make_shared<Player>()), m_time_weather(std::make_shared<TimeWeather>())
 {
     load_room_pool();
     load_item_pool();
     load_generic_descs();
-    m_player = std::make_shared<Player>();
 }
 
 // Retrieves a generic description string.
@@ -103,11 +103,10 @@ bool World::item_exists(const std::string &str) const { return m_item_pool.find(
 void World::load(std::shared_ptr<SQLite::Database> save_db)
 {
     core()->messagelog()->load(save_db);
-
     for (auto room : m_room_pool)
         room.second->load(save_db);
-    
     m_player->load(save_db, 0);
+    m_time_weather->load(save_db);
 }
 
 
@@ -393,10 +392,14 @@ void World::save(std::shared_ptr<SQLite::Database> save_db)
     save_db->exec(Mobile::SQL_MOBILES);
     save_db->exec(Item::SQL_ITEMS);
     save_db->exec(MessageLog::SQL_MSGLOG);
+    save_db->exec(TimeWeather::SQL_TIME_WEATHER);
 
     for (auto room : m_room_pool)
         room.second->save(save_db);
-
     m_player->save(save_db);
     core()->messagelog()->save(save_db);
+    m_time_weather->save(save_db);
 }
+
+// Gets a pointer to the TimeWeather object.
+const std::shared_ptr<TimeWeather> World::time_weather() const { return m_time_weather; }

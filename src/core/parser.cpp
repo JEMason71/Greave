@@ -13,6 +13,7 @@
 #include "world/item.hpp"
 #include "world/player.hpp"
 #include "world/room.hpp"
+#include "world/time-weather.hpp"
 #include "world/world.hpp"
 
 
@@ -32,7 +33,10 @@ Parser::Parser() : m_special_state(SpecialState::NONE)
     add_command("[quit|exit]", ParserCommand::QUIT);
     add_command("save", ParserCommand::SAVE);
     add_command("[take|get] <item:r>", ParserCommand::TAKE);
+    add_command("time", ParserCommand::TIME);
     add_command("unlock <dir>", ParserCommand::UNLOCK);
+    add_command("wait", ParserCommand::WAIT);
+    add_command("weather", ParserCommand::WEATHER);
     add_command("[xyzzy|frotz|plugh|plover]", ParserCommand::XYZZY);
     add_command("yes", ParserCommand::YES);
     add_command("#hash <txt>", ParserCommand::HASH);
@@ -275,6 +279,16 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
         case ParserCommand::TELEPORT:
             if (!words.size()) core()->message("{y}Please specify a {Y}teleport destination{y}.");
             else ActionsCheat::teleport(collapsed_words);
+            break;
+        case ParserCommand::TIME:
+            ActionLook::time(player);
+            break;
+        case ParserCommand::WAIT:
+            core()->message("Time passes...");
+            core()->world()->time_weather()->pass_time(TimeWeather::HOUR);
+            break;
+        case ParserCommand::WEATHER:
+            ActionLook::weather(player);
             break;
         case ParserCommand::XYZZY:
             core()->message("{u}A hollow voice says, {m}\"Fool.\"");

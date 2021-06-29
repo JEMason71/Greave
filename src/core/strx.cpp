@@ -67,6 +67,33 @@ unsigned int StrX::count_colour_tags(const std::string &str)
     return tags;
 }
 
+// Decodes a compressed string (e.g. 4cab2z becomes ccccabzz).
+std::string StrX::decode_compressed_string(std::string cb)
+{
+    std::string result;
+    while(cb.size())
+    {
+        std::string letter = cb.substr(0, 1);
+        cb = cb.substr(1);
+        if (letter[0] >= '0' && letter[0] <= '9')
+        {
+            int number = letter[0] - '0';
+            letter = cb.substr(0, 1);
+            cb = cb.substr(1);
+            while (letter[0] >= '0' && letter[0] <= '9')
+            {
+                number *= 10;
+                number += letter[0] - '0';
+                letter = cb.substr(0, 1);
+                cb = cb.substr(1);
+            }
+            result += std::string(number, letter[0]);
+        }
+        else result += letter;
+    }
+    return result;
+}
+
 // Converts a direction enum into a string.
 std::string StrX::dir_to_name(Direction dir, DirNameType dnt)
 {
