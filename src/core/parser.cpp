@@ -33,7 +33,7 @@ Parser::Parser() : m_special_state(SpecialState::NONE)
     add_command("[quit|exit]", ParserCommand::QUIT);
     add_command("save", ParserCommand::SAVE);
     add_command("[take|get] <item:r>", ParserCommand::TAKE);
-    add_command("time", ParserCommand::TIME);
+    add_command("[time|date]", ParserCommand::TIME);
     add_command("unlock <dir>", ParserCommand::UNLOCK);
     add_command("wait", ParserCommand::WAIT);
     add_command("weather", ParserCommand::WEATHER);
