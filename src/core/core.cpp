@@ -131,15 +131,6 @@ void Core::load(unsigned int save_slot)
 {
     m_save_slot = save_slot;
     std::shared_ptr<SQLite::Database> save_db = std::make_shared<SQLite::Database>(save_filename(save_slot), SQLite::OPEN_READONLY);
-
-    SQLite::Statement version_query(*save_db, "PRAGMA user_version");
-    if (version_query.executeStep())
-    {
-        const unsigned int version = version_query.getColumn(0).getInt();
-        if (version != Core::SAVE_VERSION) throw std::runtime_error("Invalid saved game version!");
-    }
-    else throw std::runtime_error("Could not load version information from save file!");
-
     m_world->load(save_db);
 }
 
@@ -207,6 +198,16 @@ void Core::save()
 // Returns a filename for a saved game file.
 const std::string Core::save_filename(unsigned int slot, bool old_save) const { return "userdata/save/save-" + std::to_string(slot) + (old_save ? ".old" : ".sqlite"); }
 
+// Checks the saved game version of a save file.
+unsigned int Core::save_version(unsigned int slot)
+{
+    unsigned int version = 0;
+    std::shared_ptr<SQLite::Database> save_db = std::make_shared<SQLite::Database>(save_filename(slot), SQLite::OPEN_READONLY);
+    SQLite::Statement version_query(*save_db, "PRAGMA user_version");
+    if (version_query.executeStep()) version = version_query.getColumn(0).getInt();
+    return version;
+}
+
 // Retrieves a new unique SQL ID.
 uint32_t Core::sql_unique_id() { return ++m_sql_unique_id; }
 
@@ -242,7 +243,11 @@ void Core::title()
         {
             if (FileX::file_exists(save_filename(i)))
             {
-                message("{0}{U}[{C}" + std::to_string(i) + "{U}] {W}Saved game #" + std::to_string(i));
+                std::string save_str = "Saved game #" + std::to_string(i);
+                const unsigned int save_ver = save_version(i);
+                if (save_ver == SAVE_VERSION) save_str = "{W}" + save_str;
+                else save_str = "{R}" + save_str + " {M}<incompatible>";
+                message("{0}{U}[{C}" + std::to_string(i) + "{U}] " + save_str);
                 save_exists.at(i - 1) = true;
             }
             else
@@ -331,8 +336,17 @@ void Core::title()
                     }
                     else
                     {
-                        m_save_slot = input_num;
-                        inner_loop = false;
+                        unsigned int save_file_ver = 0;
+                        const bool file_exists = FileX::file_exists(save_filename(input_num));
+                        if (file_exists) save_file_ver = save_version(input_num);
+                        if (!file_exists || save_file_ver == SAVE_VERSION)
+                        {
+                            m_save_slot = input_num;
+                            inner_loop = false;
+                        }
+                        else message("{R}This saved game is {M}incompatible {R}with this version of the game. Greave " + GAME_VERSION + " uses save file {M}version " +
+                                std::to_string(SAVE_VERSION) + "{R}, this save file is using {M}" + (save_file_ver ? "version " + std::to_string(save_file_ver) :
+                                "an unknown version") + "{R}.");
                     }
                 }
             }

@@ -39,6 +39,7 @@ public:
 
 private:
     const std::string           save_filename(unsigned int slot, bool old_save = false) const;  // Returns a filename for a saved game file.
+    unsigned int                save_version(unsigned int slot);    // Checks the saved game version of a save file.
 
     std::shared_ptr<Guru>       m_guru_meditation;  // The Guru Meditation error-handling system.
     std::shared_ptr<MessageLog> m_message_log;      // The MessageLog object, which handles the scrolling message-log input/output window.
