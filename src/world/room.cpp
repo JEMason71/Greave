@@ -68,6 +68,9 @@ std::string Room::door_name(Direction dir) const
     return "door";
 }
 
+// As above, but for non-enum integer directions.
+std::string Room::door_name(uint8_t dir) const { return door_name(static_cast<Direction>(dir)); }
+
 // Checks if a room link is fake (e.g. to FALSE_ROOM or UNFINISHED).
 bool Room::fake_link(Direction dir) const
 {

@@ -14,6 +14,7 @@ enum class LinkTag : uint16_t {
     Open = 1,           // A door, gate, hatch, etc. that is currently open.
     Locked,             // A closed door etc. that is currently locked.
     Unlocked,           // As above, but one that is explicitly unlocked.
+    KnownLocked,        // The player is aware that this exit is locked.
 
     // Tags at 10,000 or above are considered *permanent tags*. These tags WILL NOT be saved to save files.
     Openable = 10000,   // Can be opened and closed; a door, hatch, gate, or similar.
@@ -95,6 +96,7 @@ public:
     void        clear_tag(RoomTag the_tag);                     // Clears a tag on this Room.
     std::string desc() const;                                   // Returns the Room's description.
     std::string door_name(Direction dir) const;                 // Returns the name of a door in the specified direction.
+    std::string door_name(uint8_t dir) const;                   // As above, but for non-enum integer directions.
     bool        fake_link(Direction dir) const;                 // Checks if a room link is fake (e.g. to FALSE_ROOM or UNFINISHED).
     uint32_t    id() const;                                     // Retrieves the unique hashed ID of this Room.
     const std::shared_ptr<Inventory>    inv() const;            // Returns a pointer to the Room's Inventory.

@@ -83,8 +83,10 @@ bool ActionDoors::lock_or_unlock(std::shared_ptr<Mobile> mob, Direction dir, boo
     {
         room->set_link_tag(dir, LinkTag::Unlocked);
         room->clear_link_tag(dir, LinkTag::Locked);
+        room->clear_link_tag(dir, LinkTag::KnownLocked);
         dest_room->set_link_tag(dir_invert, LinkTag::Unlocked);
         dest_room->clear_link_tag(dir_invert, LinkTag::Locked);
+        dest_room->clear_link_tag(dir_invert, LinkTag::KnownLocked);
     }
     else
     {
@@ -92,6 +94,11 @@ bool ActionDoors::lock_or_unlock(std::shared_ptr<Mobile> mob, Direction dir, boo
         room->clear_link_tag(dir, LinkTag::Unlocked);
         dest_room->set_link_tag(dir_invert, LinkTag::Locked);
         dest_room->clear_link_tag(dir_invert, LinkTag::Unlocked);
+        if (is_player)
+        {
+            room->set_link_tag(dir, LinkTag::KnownLocked);
+            dest_room->set_link_tag(dir_invert, LinkTag::KnownLocked);
+        }
     }
 
     return true;
@@ -126,7 +133,16 @@ bool ActionDoors::open_or_close(std::shared_ptr<Mobile> mob, Direction dir, bool
         bool unlock_attempt = lock_or_unlock(mob, dir, true, true);
         if (!unlock_attempt)
         {
-            if (is_player) core()->message("{y}You try to open it, but it appears to be {Y}locked tight{y}!");
+            if (is_player)
+            {
+                core()->message("{y}You try to open it, but it appears to be {Y}locked tight{y}!");
+                room->set_link_tag(dir, LinkTag::KnownLocked);
+                if (!room->fake_link(dir))
+                {
+                    const std::shared_ptr<Room> dest_room = core()->world()->get_room(room->link(dir));
+                    dest_room->set_link_tag(MathX::dir_invert(dir), LinkTag::KnownLocked);
+                }
+            }
             // todo: add fail message for NPCs
             return false;
         }

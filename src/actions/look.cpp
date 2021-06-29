@@ -38,27 +38,33 @@ void ActionLook::look(std::shared_ptr<Mobile> mob)
     std::vector<std::string> exits_vec;
     for (unsigned int e = 0; e < Room::ROOM_LINKS_MAX; e++)
     {
-        std::string exit_name;
         uint32_t room_link = room->link(e);
         if (!room_link || room_link == Room::BLOCKED) continue;
         if (room->link_tag(e, LinkTag::Hidden)) continue;   // Never list hidden exits.
-        exit_name = "{c}" + StrX::dir_to_name(e);
+        std::string exit_name = "{c}" + StrX::dir_to_name(e);
+        const std::string door_name = room->door_name(e);
         
         if (room_link == Room::UNFINISHED)  // An exit that is due to be finished later.
             exit_name = "{r}(" + StrX::dir_to_name(e) + "){c}";
-        else if (room_link == Room::FALSE_ROOM) exit_name += " {u}[locked]{c}";
+        else if (room_link == Room::FALSE_ROOM)
+        {
+            if (room->link_tag(e, LinkTag::KnownLocked)) exit_name += " {u}[locked<>]{c}";
+            else exit_name += " {u}[closed<>]{c}";
+        }
         else
         {
             const std::shared_ptr<Room> link_room = core()->world()->get_room(room_link);
-            const bool is_window = room->link_tag(e, LinkTag::Window);
             if (link_room->tag(RoomTag::Explored) && !link_room->tag(RoomTag::Maze)) exit_name += " {B}(" + link_room->name(true) + "){c}";
-            if (room->link_tag(e, LinkTag::Locked)) exit_name += (is_window ? " {u}[locked window]{c}" : " {u}[locked]{c}");
+            if (room->link_tag(e, LinkTag::KnownLocked)) exit_name += " {u}[locked<>]{c}";
             else if (room->link_tag(e, LinkTag::Openable))
             {
-                if (room->link_tag(e, LinkTag::Open)) exit_name += (is_window ? " {u}[open window]{c}" : " {u}[open]{c}");
-                else exit_name += (is_window ? " {u}[closed window]{c}" : " {u}[closed]{c}");
+                if (room->link_tag(e, LinkTag::Open)) exit_name += " {u}[open<>]{c}";
+                else exit_name += " {u}[closed<>]{c}";
             }
         }
+
+        if (door_name == "door" || door_name == "metal door") StrX::find_and_replace(exit_name, "<>", "");   // Don't specify 'door' if it's just a door.
+        else StrX::find_and_replace(exit_name, "<>", " " + door_name);  // Any other 'door' types (windows, grates, etc.) should be specified.
 
         exits_vec.push_back(exit_name);
     }
