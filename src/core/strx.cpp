@@ -191,6 +191,14 @@ std::string StrX::itoh(uint32_t num, unsigned int min_len)
     return hex;
 }
 
+// Converts an integer to a string, but optionally pads it to a minimum length with leading zeroes.
+std::string StrX::itos(unsigned int num, uint32_t min_len)
+{
+    std::string result = std::to_string(num);
+    while (result.size() < min_len) result = "0" + result;
+    return result;
+}
+
 // Converts a metadata map into a string.
 std::string StrX::metadata_to_string(const std::map<std::string, std::string> &metadata)
 {

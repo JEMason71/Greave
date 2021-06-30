@@ -36,12 +36,12 @@ public:
     void        clear_meta(const std::string &key); // Clears a metatag from an Item. Use with caution!
     void        clear_tag(ItemTag the_tag);         // Clears a tag on this Item.
     EquipSlot   equip_slot() const;                 // Checks what slot this Item equips in, if any.
-    uint16_t    hex_id() const;                     // Retrieves the current hex ID of this Item.
     static std::shared_ptr<Item> load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id);  // Loads a new Item from the save file.
     std::string meta(const std::string &key) const; // Retrieves Item metadata.
     std::map<std::string, std::string>* meta_raw(); // Accesses the metadata map directly. Use with caution!
     std::string name(ItemName level = ItemName::BASIC) const;   // Retrieves the name of thie Item.
-    void        new_hex_id();                       // Generates a new hex ID for this Item.
+    void        new_parser_id();                    // Generates a new parser ID for this Item.
+    uint16_t    parser_id() const;                  // Retrieves the current ID of this Item, for parser differentiation.
     uint16_t    power() const;                      // Retrieves this Item's power.
     void        save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id); // Saves the Item to the save file.
     void        set_equip_slot(EquipSlot es);       // Sets this Item's equipment slot.
@@ -56,9 +56,9 @@ public:
 
 private:
     EquipSlot   m_equip_slot;   // The slot this Item is equipped in, if any.
-    uint16_t    m_hex_id;       // The hex ID of this Item, for parser differentiation.
     std::map<std::string, std::string>  m_metadata; // The Item's metadata, if any.
     std::string m_name;         // The name of this Item!
+    uint16_t    m_parser_id;    // The semi-unique ID of this Item, for parser differentiation.
     uint16_t    m_power;        // The power of this Item, if any.
     std::set<ItemTag>   m_tags; // Any and all ItemTags on this Item.
     ItemType    m_type;         // The primary type of this Item.

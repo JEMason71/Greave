@@ -15,8 +15,8 @@ void Inventory::add_item(std::shared_ptr<Item> item)
     // Check the Item's hex ID. If it's unset, or if another Item in the Inventory shares its ID, we'll need a new one.
     // Infinite loops relying on RNG to break out are VERY BAD so let's put a threshold on this bad boy.
     int tries = 0;
-    while ((!item->hex_id() || hex_id_exists(item->hex_id())) && ++tries < 10000)
-        item->new_hex_id();
+    while ((!item->parser_id() || parser_id_exists(item->parser_id())) && ++tries < 10000)
+        item->new_parser_id();
     m_items.push_back(item);
 }
 
@@ -48,14 +48,6 @@ std::shared_ptr<Item> Inventory::get(EquipSlot es) const
     return nullptr;
 }
 
-// Checks if a given hex ID already exists on an Item in this Inventory.
-bool Inventory::hex_id_exists(uint16_t id)
-{
-    for (auto item : m_items)
-        if (item->hex_id() == id) return true;
-    return false;
-}
-
 // Loads an Inventory from the save file.
 void Inventory::load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id)
 {
@@ -70,6 +62,14 @@ void Inventory::load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id)
         loaded_items = true;
     }
     if (!loaded_items) throw std::runtime_error("Could not load inventory data " + std::to_string(sql_id));
+}
+
+// Checks if a given parser ID already exists on an Item in this Inventory.
+bool Inventory::parser_id_exists(uint16_t id)
+{
+    for (auto item : m_items)
+        if (item->parser_id() == id) return true;
+    return false;
 }
 
 // Removes an Item from this Inventory.

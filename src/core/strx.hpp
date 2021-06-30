@@ -24,6 +24,7 @@ public:
     static uint32_t     htoi(const std::string &hex_str);           // Converts a hex string back to an integer.
     static bool         is_number(const std::string &str);          // Checks if a string is a number.
     static std::string  itoh(unsigned int num, uint32_t min_len);   // Converts an integer into a hex string.
+    static std::string  itos(unsigned int num, uint32_t min_len);   // Converts an integer to a string, but optionally pads it to a minimum length with leading zeroes.
     static std::string  metadata_to_string(const std::map<std::string, std::string> &metadata); // Converts a metadata map into a string.
     static std::string  round_to_two(double num);                   // Calls MathX::round_to_two(), then returns the result as a string.
     static std::string  str_tolower(std::string str);               // Converts a string to lower-case.

@@ -137,7 +137,7 @@ uint32_t Parser::parse_item_name(const std::vector<std::string> &input, std::sha
     for (unsigned int i = 0; i < inv_size; i++)
     {
         const std::shared_ptr<Item> item = inv->get(i);
-        if (input.size() == 1 && input.at(0) == StrX::itoh(item->hex_id(), 3)) return i;    // If the hex ID matches, that's an easy one.
+        if (input.size() == 1 && input.at(0) == StrX::itos(item->parser_id(), 4)) return i; // If the hex ID matches, that's an easy one.
 
         // Score each object by matching words in its name.
         const std::string stripped_name_lowercase = StrX::str_tolower(StrX::strip_ansi(item->name()));
@@ -174,7 +174,7 @@ uint32_t Parser::parse_item_name(const std::vector<std::string> &input, std::sha
     std::string disambig = "{c}I'm not sure which one you mean! Did you mean ";
     std::vector<std::string> candidate_names;
     for (auto c : candidates)
-        candidate_names.push_back("{C}" + inv->get(c)->name() + " {B}{" + StrX::itoh(inv->get(c)->hex_id(), 3) + "}{c}");
+        candidate_names.push_back("{C}" + inv->get(c)->name() + " {B}{" + StrX::itos(inv->get(c)->parser_id(), 4) + "}{c}");
     disambig += StrX::comma_list(candidate_names) + "?";
     core()->message(disambig);
     m_special_state = SpecialState::DISAMBIGUATION;
