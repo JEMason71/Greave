@@ -101,6 +101,18 @@ bool ActionInventory::equip(std::shared_ptr<Mobile> mob, uint32_t item_pos)
         item->set_equip_slot(slot);
     }
 
+    // Extra check for layered armour.
+    if (slot == EquipSlot::BODY && equ->get(EquipSlot::ARMOUR))
+    {
+        if (mob->type() == Mobile::Type::PLAYER)
+        {
+            core()->message("{y}You'll need to remove your {Y}" + equ->get(EquipSlot::ARMOUR)->name() + " {y}first.");
+            return false;
+        }
+        // For NPCs, just unequip the outer armour first.
+        if (!unequip(mob, EquipSlot::ARMOUR)) return false;
+    }
+
     // Attempt to unequip the item currently using the slot. If it's not possible (cursed?), just stop here.
     if (equ->get(slot) != nullptr && !unequip(mob, slot)) return false;
 
@@ -186,6 +198,17 @@ bool ActionInventory::unequip(std::shared_ptr<Mobile> mob, uint32_t item_pos)
     const auto inv = mob->inv();
     if (item_pos >= equ->count()) throw std::runtime_error("Invalid equipment vector position.");
     const auto item = equ->get(item_pos);
+
+    if (item->equip_slot() == EquipSlot::BODY && equ->get(EquipSlot::ARMOUR))
+    {
+        if (mob->type() == Mobile::Type::PLAYER)
+        {
+            core()->message("{y}You'll need to remove your {Y}" + equ->get(EquipSlot::ARMOUR)->name() + " {y}first.");
+            return false;
+        }
+        // For NPCs, just unequip the outer armour first.
+        if (!unequip(mob, EquipSlot::ARMOUR)) return false;
+    }
 
     // todo: add message for NPCs unequipping items
     std::string action = "remove";
