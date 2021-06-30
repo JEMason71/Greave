@@ -32,12 +32,7 @@ void ActionInventory::check_inventory(std::shared_ptr<Mobile> mob)
 
     core()->message("{G}You are carrying:");
     for (unsigned int i = 0; i < inv_size; i++)
-    {
-        const std::shared_ptr<Item> item = inventory->get(i);
-        std::string item_name = item->name();
-        item_name += " {B}{" + StrX::itoh(item->hex_id(), 3) + "}";
-        core()->message("{0}" + item_name);
-    }
+        core()->message("{0}" + inventory->get(i)->name(Item::ItemName::INVENTORY));
 }
 
 // Drops an item on the ground.
@@ -62,6 +57,7 @@ bool ActionInventory::equip(std::shared_ptr<Mobile> mob, uint32_t item_pos)
     const bool off_used = (equ->get(EquipSlot::HAND_OFF) != nullptr);
     const bool two_handed_equipped = main_used && equ->get(EquipSlot::HAND_MAIN)->tag(ItemTag::TwoHanded);
     const bool two_handed_item = item->tag(ItemTag::TwoHanded);
+    const bool prefer_off_hand = item->tag(ItemTag::PreferOffHand);
 
     // Determine which slot to use for held items, since they may go in either hand.
     if (slot == EquipSlot::HAND_MAIN || slot == EquipSlot::HAND_OFF)
@@ -73,7 +69,8 @@ bool ActionInventory::equip(std::shared_ptr<Mobile> mob, uint32_t item_pos)
             if ((main_used && !unequip(mob, EquipSlot::HAND_MAIN)) || (off_used && !unequip(mob, EquipSlot::HAND_OFF))) return false;
             slot = EquipSlot::HAND_MAIN;
         }
-        else
+        // Normal one-handed equipping.
+        else if (!prefer_off_hand)
         {
             // First, check if the main hand is free.
             if (!main_used) slot = EquipSlot::HAND_MAIN;
@@ -88,6 +85,15 @@ bool ActionInventory::equip(std::shared_ptr<Mobile> mob, uint32_t item_pos)
             else if (!two_handed_equipped && unequip(mob, EquipSlot::HAND_OFF)) slot = EquipSlot::HAND_OFF;
 
             // Just give up if we can't even do that.
+            else return false;
+        }
+        // Prefer off-hand is the same rules as above, just flipped.
+        else
+        {
+            if (!two_handed_equipped && !off_used) slot = EquipSlot::HAND_OFF;
+            else if (!main_used) slot = EquipSlot::HAND_MAIN;
+            else if (!two_handed_equipped && unequip(mob, EquipSlot::HAND_OFF)) slot = EquipSlot::HAND_OFF;
+            else if (unequip(mob, EquipSlot::HAND_MAIN)) slot = EquipSlot::HAND_MAIN;
             else return false;
         }
 
@@ -118,6 +124,8 @@ bool ActionInventory::equip(std::shared_ptr<Mobile> mob, uint32_t item_pos)
     // todo: messages for NPCs equipping gear
     StrX::find_and_replace(slot_name, "%your%", "your");
     core()->message("{U}You " + action + " the " + item->name() + " {U}" + slot_name + ".");
+
+    const auto room = core()->world()->get_room(mob->location());
     equ->add_item(item);
     inv->remove_item(item_pos);
 
@@ -156,7 +164,7 @@ void ActionInventory::equipment(std::shared_ptr<Mobile> mob)
             case EquipSlot::HANDS: slot_name = "on hands"; break;
             case EquipSlot::HEAD: slot_name = "on head"; break;
         }
-        core()->message("{0}" + item->name() + " {B}(" + slot_name + ")");
+        core()->message("{0}" + item->name(Item::ItemName::INVENTORY) + " {B}(" + slot_name + ")");
     }
 }
 

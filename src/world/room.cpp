@@ -133,10 +133,31 @@ bool Room::key_can_unlock(std::shared_ptr<Item> key, Direction dir)
 }
 
 // Gets the light level of this Room, adjusted by dynamic lights, and optionally including darkvision etc.
-int Room::light(std::shared_ptr<Mobile>) const
+int Room::light(std::shared_ptr<Mobile> mob) const
 {
-    // Right now, we'll just use the base light level; dynamic lights come later.
-    return m_light;
+    int dynamic_light = m_light;
+    const auto equ = mob->equ();
+
+    // Check for equipped light sources.
+    for (unsigned int i = 0; i < equ->count(); i++)
+    {
+        const auto item = equ->get(i);
+        if (item->type() != ItemType::LIGHT) continue;
+
+        // If a light source's power is brighter than the dynamic light so far, up the dynamic light to its power.
+        // It's not *additive*, light sources will never make a bright room brighter, they just bring the light level up to a minimum value.
+        if (item->power() > dynamic_light) dynamic_light = item->power();
+    }
+
+    // Check for anything glowing on the floor.
+    for (unsigned int i = 0; i < m_inventory->count(); i++)
+    {
+        const auto item = m_inventory->get(i);
+        if (item->type() != ItemType::LIGHT) continue;
+        if (item->power() > dynamic_light) dynamic_light = item->power();
+    }
+
+    return dynamic_light;
 }
 
 // Retrieves a Room link in the specified direction.

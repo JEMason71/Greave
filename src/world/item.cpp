@@ -9,12 +9,12 @@
 
 
 // The SQL table construction string for saving items.
-const std::string Item::SQL_ITEMS = "CREATE TABLE items ( sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, owner_id INTEGER NOT NULL, name TEXT NOT NULL, type INTEGER, subtype INTEGER, "
-    "tags TEXT, metadata TEXT, hex_id INTEGER NOT NULL, equip_slot INTEGER )";
+const std::string Item::SQL_ITEMS = "CREATE TABLE items ( equip_slot INTEGER, hex_id INTEGER NOT NULL, metadata TEXT, name TEXT NOT NULL, owner_id INTEGER NOT NULL, "
+    "power INTEGER, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, subtype INTEGER, tags TEXT, type INTEGER )";
 
 
 // Constructor, sets default values.
-Item::Item() : m_equip_slot(EquipSlot::NONE), m_hex_id(0), m_type(ItemType::NONE), m_type_sub(ItemSub::NONE) { }
+Item::Item() : m_equip_slot(EquipSlot::NONE), m_hex_id(0), m_power(0), m_type(ItemType::NONE), m_type_sub(ItemSub::NONE) { }
 
 // Clears a metatag from an Item. Use with caution!
 void Item::clear_meta(const std::string &key) { m_metadata.erase(key); }
@@ -51,6 +51,7 @@ std::shared_ptr<Item> Item::load(std::shared_ptr<SQLite::Database> save_db, uint
         if (!query.getColumn("metadata").isNull()) StrX::string_to_metadata(query.getColumn("metadata").getString(), new_item->m_metadata);
         new_item->m_hex_id = query.getColumn("hex_id").getUInt();
         if (!query.getColumn("equip_slot").isNull()) new_item->set_equip_slot(static_cast<EquipSlot>(query.getColumn("equip_slot").getInt()));
+        if (!query.getColumn("power").isNull()) new_item->set_power(query.getColumn("power").getInt());
     }
     else throw std::runtime_error("Could not retrieve data for item ID " + std::to_string(sql_id));
 
@@ -68,15 +69,26 @@ std::string Item::meta(const std::string &key) const
 std::map<std::string, std::string>* Item::meta_raw() { return &m_metadata; }
 
 // Retrieves the name of thie Item.
-std::string Item::name() const { return m_name; }
+std::string Item::name(ItemName level) const 
+{
+    if (level == ItemName::BASIC) return m_name;
+    std::string name = m_name;
+    if (m_type == ItemType::LIGHT) name += " {Y}<gl{W}o{Y}wing>";
+    if (level == ItemName::INVENTORY) name += " {B}{" + StrX::itoh(m_hex_id, 3) + "}";
+    return name;
+}
 
 // Generates a new hex ID for this Item.
 void Item::new_hex_id() { m_hex_id = core()->rng()->rnd(1, 0xFFF); }
 
+// Retrieves this Item's power.
+uint16_t Item::power() const { return m_power; }
+
 // Saves the Item.
 void Item::save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id)
 {
-    SQLite::Statement query(*save_db, "INSERT INTO items ( sql_id, owner_id, name, type, subtype, tags, metadata, hex_id, equip_slot ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ? )");
+    SQLite::Statement query(*save_db, "INSERT INTO items ( sql_id, owner_id, name, type, subtype, tags, metadata, hex_id, equip_slot, power ) "
+        "VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
     query.bind(1, core()->sql_unique_id());
     query.bind(2, owner_id);
     query.bind(3, m_name);
@@ -86,6 +98,7 @@ void Item::save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id)
     if (m_metadata.size()) query.bind(7, StrX::metadata_to_string(m_metadata));
     query.bind(8, m_hex_id);
     if (m_equip_slot != EquipSlot::NONE) query.bind(9, static_cast<int>(m_equip_slot));
+    if (m_power) query.bind(10, m_power);
     query.exec();
 }
 
@@ -101,6 +114,9 @@ void Item::set_meta(const std::string &key, const std::string &value)
 
 // Sets the name of this Item.
 void Item::set_name(const std::string &name) { m_name = name; }
+
+// Sets the power of this Item.
+void Item::set_power(uint16_t power) { m_power = power; }
 
 // Sets a tag on this Item.
 void Item::set_tag(ItemTag the_tag)

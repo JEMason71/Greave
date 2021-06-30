@@ -26,11 +26,11 @@ const std::map<std::string, ItemSub>    World::ITEM_SUBTYPE_MAP = { { "clothing"
     { "medium", ItemSub::MEDIUM }, { "melee", ItemSub::MELEE }, { "none", ItemSub::NONE } };
 
 // Lookup table for converting ItemTag text names into enums.
-const std::map<std::string, ItemTag>    World::ITEM_TAG_MAP = { { "twohanded", ItemTag::TwoHanded } };
+const std::map<std::string, ItemTag>    World::ITEM_TAG_MAP = { { "preferoffhand", ItemTag::PreferOffHand }, { "twohanded", ItemTag::TwoHanded } };
 
 // Lookup table for converting ItemType text names into enums.
-const std::map<std::string, ItemType>   World::ITEM_TYPE_MAP = { { "armour", ItemType::ARMOUR }, { "key", ItemType::KEY }, { "none", ItemType::NONE },
-    { "weapon", ItemType::WEAPON } };
+const std::map<std::string, ItemType>   World::ITEM_TYPE_MAP = { { "armour", ItemType::ARMOUR }, { "key", ItemType::KEY }, { "light", ItemType::LIGHT },
+    { "none", ItemType::NONE }, { "weapon", ItemType::WEAPON } };
 
 // Lookup table for converting textual light levels (e.g. "bright") to integer values.
 const std::map<std::string, uint8_t>    World::LIGHT_LEVEL_MAP = { { "bright", 7 }, { "dim", 5 }, { "wilderness", 5 }, { "dark", 3 }, { "none", 0 } };
@@ -198,6 +198,9 @@ void World::load_item_pool()
                 if (slot_it == EQUIP_SLOT_MAP.end()) core()->guru()->nonfatal("Unrecognized equipment slot (" + slot_str + "): " + item_id_str, Guru::ERROR);
                 else new_item->set_equip_slot(slot_it->second);
             }
+
+            // The Item's power, if any.
+            if (item_data["power"]) new_item->set_power(item_data["power"].as<int>());
 
             // Add the new Item to the item pool.
             m_item_pool.insert(std::make_pair(item_id, new_item));

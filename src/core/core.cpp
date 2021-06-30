@@ -2,6 +2,7 @@
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #include "3rdparty/SQLiteCpp/SQLiteCpp.h"
+#include "actions/look.hpp"
 #include "core/core.hpp"
 #include "core/filex.hpp"
 #include "core/guru.hpp"
@@ -12,6 +13,8 @@
 #include "core/strx.hpp"
 #include "core/terminal-blt.hpp"
 #include "core/terminal-curses.hpp"
+#include "world/player.hpp"
+#include "world/room.hpp"
 #include "world/world.hpp"
 
 #include <thread>
@@ -30,7 +33,7 @@ std::shared_ptr<Core> greave = nullptr;   // The main Core object.
 
 const std::string   Core::GAME_VERSION =        "pre-alpha";    // The game's version number.
 const unsigned int  Core::MSG_FLAG_INTERRUPT =  1;              // Flags for the message() function.
-const unsigned int  Core::SAVE_VERSION =        9;              // The version number for saved game files. This should increment when old saves can no longer be loaded.
+const unsigned int  Core::SAVE_VERSION =        10;             // The version number for saved game files. This should increment when old saves can no longer be loaded.
 const unsigned int  Core::TAGS_PERMANENT =      10000;          // The tag number at which tags are considered permanent.
 
 
@@ -140,8 +143,26 @@ void Core::main_loop()
     // bröther may I have some lööps
     while (true)
     {
+        // For checking if the light level has changed due to something that happened this turn.
+        const auto player = m_world->player();
+        const uint32_t location = player->location();
+        const auto room = m_world->get_room(location);
+        int old_light = room->light(player);
+
         const std::string input = m_message_log->render_message_log();
         m_parser->parse(input);
+
+        // Check to see if the light level has changed.
+        if (player->location() == location)
+        {
+            int new_light = room->light(player);
+            if (old_light >= Room::LIGHT_VISIBLE && new_light < Room::LIGHT_VISIBLE) message("{u}You are plunged into {B}darkness{u}!");
+            else if (old_light < Room::LIGHT_VISIBLE && new_light >= Room::LIGHT_VISIBLE)
+            {
+                message("{U}You can now see {W}clearly{U}!");
+                ActionLook::look(player);
+            }
+        }
     }
 }
 

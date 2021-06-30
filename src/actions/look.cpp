@@ -19,8 +19,7 @@ void ActionLook::look(std::shared_ptr<Mobile> mob)
     // sense right now, you never know, this code might be used in the future for some sort of "see through the target's eyes" spell or something.
     const std::shared_ptr<Room> room = core()->world()->get_room(mob->location());
 
-    //const bool can_see = (room->light() >= Room::LIGHT_VISIBLE);
-    const bool can_see = true;
+    const bool can_see = (room->light(mob) >= Room::LIGHT_VISIBLE);
     if (!can_see)
     {
         core()->message("{U}Darkness");
@@ -76,7 +75,7 @@ void ActionLook::look(std::shared_ptr<Mobile> mob)
     {
         std::vector<std::string> items_nearby;
         for (unsigned int i = 0; i < room->inv()->count(); i++)
-            items_nearby.push_back(room->inv()->get(i)->name() + "{w}");
+            items_nearby.push_back(room->inv()->get(i)->name(Item::ItemName::ROOM) + "{w}");
         core()->message("{0}{g}```Items nearby: {w}" + StrX::comma_list(items_nearby, StrX::CL_FLAG_USE_AND));
     }
 }

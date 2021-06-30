@@ -56,3 +56,10 @@ MAIL_HAUBERK:
   name: mail hauberk
   slot: body
   type: [ armour, medium ]
+
+TORCH:
+  name: torch
+  power: 3
+  slot: held
+  tags: [ PreferOffHand]
+  type: light

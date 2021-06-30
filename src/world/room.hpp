@@ -101,7 +101,7 @@ public:
     uint32_t    id() const;                                     // Retrieves the unique hashed ID of this Room.
     const std::shared_ptr<Inventory>    inv() const;            // Returns a pointer to the Room's Inventory.
     bool        key_can_unlock(std::shared_ptr<Item> key, Direction dir);   // Checks if a key can unlock a door in the specified direction.
-    int         light(std::shared_ptr<Mobile> mob = nullptr) const; // Gets the light level of this Room, adjusted by dynamic lights, and optionally including darkvision etc.
+    int         light(std::shared_ptr<Mobile> mob) const;       // Gets the light level of this Room, adjusted by dynamic lights, and optionally including darkvision etc.
     uint32_t    link(Direction dir) const;                      // Retrieves a Room link in the specified direction.
     uint32_t    link(uint8_t dir) const;                        // As above, but using an integer.
 	bool        link_tag(uint8_t id, LinkTag the_tag) const;    // Checks if a tag is set on this Room's link.
