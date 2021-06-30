@@ -28,4 +28,4 @@ To run the game in NCurses (console mode), make a `userdata` folder within the `
 
 ## Other Platforms
 
-macOS X and other platforms are unsupported and untested at the time of writing. If you are able to compile Greave on another target platform and require changes to the build environment, please open a pull request.
+macOS X and other platforms are unsupported and untested at the time of writing. If you are able to compile Greave on another target platform and require changes to the build environment, please open a pull request. See [here](https://github.com/Gravecat/Greave/issues/3) for a relevant issue regarding OS X support.
