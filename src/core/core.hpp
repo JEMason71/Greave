@@ -30,7 +30,7 @@ public:
     void                                init();             // Sets up the core game classes and data.
     void                                load(unsigned int save_slot);   // Loads a specified slot's saved game.
     void                                main_loop();        // The main game loop.
-    void                                message(std::string msg, Show show = Show::ALWAYS, Wake wake = Wake::NEVER, uint32_t flags = 0);    // Prints a message in the message log.
+    void                                message(std::string msg, Show show = Show::ALWAYS, Wake wake = Wake::NEVER, bool interrupt = false);    // Prints a message.
     const std::shared_ptr<MessageLog>   messagelog() const; // Returns a pointer to the MessageLog object.
     const std::shared_ptr<Random>       rng() const;        // Returns a pointer to the Random object.
     void                                save();             // Saves the game to disk.
@@ -41,7 +41,6 @@ public:
     const std::shared_ptr<World>        world() const;      // Returns a pointer to the World object.
 
     static const std::string    GAME_VERSION;       // The game's version number.
-    static const uint32_t       MSG_FLAG_INTERRUPT; // Flags for the message() function.
     static const unsigned int   SAVE_VERSION;       // The version number for saved game files. This should increment when old saves can no longer be loaded.
     static const unsigned int   TAGS_PERMANENT;     // The tag number at which tags are considered permanent.
 

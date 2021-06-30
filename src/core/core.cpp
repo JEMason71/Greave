@@ -31,10 +31,9 @@
 
 std::shared_ptr<Core> greave = nullptr;   // The main Core object.
 
-const std::string   Core::GAME_VERSION =        "pre-alpha";    // The game's version number.
-const unsigned int  Core::MSG_FLAG_INTERRUPT =  1;              // Flags for the message() function.
-const unsigned int  Core::SAVE_VERSION =        13;             // The version number for saved game files. This should increment when old saves can no longer be loaded.
-const unsigned int  Core::TAGS_PERMANENT =      10000;          // The tag number at which tags are considered permanent.
+const std::string   Core::GAME_VERSION =    "pre-alpha";    // The game's version number.
+const unsigned int  Core::SAVE_VERSION =    13;             // The version number for saved game files. This should increment when old saves can no longer be loaded.
+const unsigned int  Core::TAGS_PERMANENT =  10000;          // The tag number at which tags are considered permanent.
 
 
 // Main program entry point.
@@ -170,7 +169,11 @@ void Core::main_loop()
 }
 
 // Prints a message in the message log.
-void Core::message(std::string msg, Show show, Wake wake, uint32_t flags)
+#ifdef GREAVE_TOLK
+void Core::message(std::string msg, Show show, Wake wake, bool interrupt)
+#else
+void Core::message(std::string msg, Show show, Wake wake, bool)
+#endif
 {
     if (m_world)
     {
@@ -182,7 +185,6 @@ void Core::message(std::string msg, Show show, Wake wake, uint32_t flags)
     m_message_log->msg(msg);
 
 #ifdef GREAVE_TOLK
-    const bool interrupt = ((flags & Core::MSG_FLAG_INTERRUPT) == Core::MSG_FLAG_INTERRUPT);
     if (m_prefs->screen_reader_external || m_prefs->screen_reader_sapi)
     {
         if (m_prefs->screen_reader_process_square_brackets)
