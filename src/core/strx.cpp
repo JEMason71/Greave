@@ -8,6 +8,7 @@
 
 #include <algorithm>
 #include <iterator>
+#include <regex>
 #include <sstream>
 
 
@@ -351,14 +352,8 @@ void StrX::string_to_metadata(const std::string &str, std::map<std::string, std:
 // Strips colour codes from a string.
 std::string StrX::strip_ansi(const std::string &str)
 {
-    std::string result = str;
-    size_t pos;
-    while ((pos = result.find("{")) != std::string::npos)
-    {
-        if (!pos) result = result.substr(3);
-        else result = result.substr(0, pos) + result.substr(pos + 3);
-    }
-    return result;
+    std::regex filter("\\{[a-zA-Z0-9].?\\}");
+    return std::regex_replace(str, filter, "");
 }
 
 // Returns the length of a string, taking colour and high/low-ASCII tags into account.
