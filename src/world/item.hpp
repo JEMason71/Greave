@@ -6,6 +6,8 @@
 
 namespace SQLite { class Database; }    // defined in 3rdparty/SQLiteCpp/Database.h
 
+// The slot that an item is equipped in.
+enum class EquipSlot : uint8_t { NONE, HAND_MAIN, HAND_OFF, BODY, ARMOUR, ABOUT_BODY, HEAD, HANDS, FEET };
 
 // ItemType is the primary type of Item (e.g. weapon, food, etc.)
 enum class ItemType : uint16_t { NONE, KEY };
@@ -25,6 +27,7 @@ public:
                 Item();                             // Constructor, sets default values.
     void        clear_meta(const std::string &key); // Clears a metatag from an Item. Use with caution!
     void        clear_tag(ItemTag the_tag);         // Clears a tag on this Item.
+    EquipSlot   equip_slot() const;                 // Checks what slot this Item equips in, if any.
     uint16_t    hex_id() const;                     // Retrieves the current hex ID of this Item.
     static std::shared_ptr<Item> load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id);  // Loads a new Item from the save file.
     std::string meta(const std::string &key) const; // Retrieves Item metadata.
@@ -32,6 +35,7 @@ public:
     std::string name() const;                       // Retrieves the name of thie Item.
     void        new_hex_id();                       // Generates a new hex ID for this Item.
     void        save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id); // Saves the Item to the save file.
+    void        set_equip_slot(EquipSlot es);       // Sets this Item's equipment slot.
     void        set_meta(const std::string &key, const std::string &value); // Adds Item metadata.
     void        set_name(const std::string &name);  // Sets the name of this Item.
     void        set_tag(ItemTag the_tag);           // Sets a tag on this Item.
@@ -41,6 +45,7 @@ public:
     ItemType    type() const;                       // Returns the ItemType of this Item.
 
 private:
+    EquipSlot   m_equip_slot;   // The slot this Item is equipped in, if any.
     uint16_t    m_hex_id;       // The hex ID of this Item, for parser differentiation.
     std::map<std::string, std::string>  m_metadata; // The Item's metadata, if any.
     std::string m_name;         // The name of this Item!

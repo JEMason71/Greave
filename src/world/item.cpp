@@ -10,11 +10,11 @@
 
 // The SQL table construction string for saving items.
 const std::string Item::SQL_ITEMS = "CREATE TABLE items ( sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, owner_id INTEGER NOT NULL, name TEXT NOT NULL, type INTEGER, subtype INTEGER, "
-    "tags TEXT, metadata TEXT, hex_id INTEGER NOT NULL )";
+    "tags TEXT, metadata TEXT, hex_id INTEGER NOT NULL, equip_slot INTEGER )";
 
 
 // Constructor, sets default values.
-Item::Item() : m_hex_id(0), m_type(ItemType::NONE), m_type_sub(ItemSub::NONE) { }
+Item::Item() : m_equip_slot(EquipSlot::NONE), m_hex_id(0), m_type(ItemType::NONE), m_type_sub(ItemSub::NONE) { }
 
 // Clears a metatag from an Item. Use with caution!
 void Item::clear_meta(const std::string &key) { m_metadata.erase(key); }
@@ -25,6 +25,9 @@ void Item::clear_tag(ItemTag the_tag)
     if (!(m_tags.count(the_tag) > 0)) return;
     m_tags.erase(the_tag);
 }
+
+// Checks what slot this Item equips in, if any.
+EquipSlot Item::equip_slot() const { return m_equip_slot; }
 
 // Retrieves the current hex ID of this Item.
 uint16_t Item::hex_id() const { return m_hex_id; }
@@ -47,6 +50,7 @@ std::shared_ptr<Item> Item::load(std::shared_ptr<SQLite::Database> save_db, uint
         if (!query.getColumn("tags").isNull()) StrX::string_to_tags(query.getColumn("tags").getString(), new_item->m_tags);
         if (!query.getColumn("metadata").isNull()) StrX::string_to_metadata(query.getColumn("metadata").getString(), new_item->m_metadata);
         new_item->m_hex_id = query.getColumn("hex_id").getUInt();
+        if (!query.getColumn("equip_slot").isNull()) new_item->set_equip_slot(static_cast<EquipSlot>(query.getColumn("equip_slot").getInt()));
     }
     else throw std::runtime_error("Could not retrieve data for item ID " + std::to_string(sql_id));
 
@@ -72,7 +76,7 @@ void Item::new_hex_id() { m_hex_id = core()->rng()->rnd(1, 0xFFF); }
 // Saves the Item.
 void Item::save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id)
 {
-    SQLite::Statement query(*save_db, "INSERT INTO items ( sql_id, owner_id, name, type, subtype, tags, metadata, hex_id ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ? )");
+    SQLite::Statement query(*save_db, "INSERT INTO items ( sql_id, owner_id, name, type, subtype, tags, metadata, hex_id, equip_slot ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ? )");
     query.bind(1, core()->sql_unique_id());
     query.bind(2, owner_id);
     query.bind(3, m_name);
@@ -81,8 +85,12 @@ void Item::save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id)
     if (m_tags.size()) query.bind(6, StrX::tags_to_string(m_tags));
     if (m_metadata.size()) query.bind(7, StrX::metadata_to_string(m_metadata));
     query.bind(8, m_hex_id);
+    if (m_equip_slot != EquipSlot::NONE) query.bind(9, static_cast<int>(m_equip_slot));
     query.exec();
 }
+
+// Sets this Item's equipment slot.
+void Item::set_equip_slot(EquipSlot es) { m_equip_slot = es; }
 
 // Adds Item metadata.
 void Item::set_meta(const std::string &key, const std::string &value)

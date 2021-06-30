@@ -4,7 +4,8 @@
 #pragma once
 #include "core/greave.hpp"
 
-class Item; // defined in world/item.hpp
+class Item;                             // defined in world/item.hpp
+enum class EquipSlot : uint8_t;         // defined in world/item.hpp
 namespace SQLite { class Database; }    // defined in 3rdparty/SQLiteCpp/Database.h
 
 
@@ -18,6 +19,7 @@ public:
     std::shared_ptr<Item> get(uint32_t pos) const;          // Retrieves an Item from this Inventory.
     void            load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id);   // Loads an Inventory from the save file.
     uint32_t        save(std::shared_ptr<SQLite::Database> save_db);    // Saves this Inventory, returns its SQL ID.
+    std::shared_ptr<Item> slot(EquipSlot es) const;         // Much like get(), but retrieves an item based on a given equipment slot.
 
 private:
     bool            hex_id_exists(uint16_t id);     // Checks if a given hex ID already exists on an Item in this Inventory.

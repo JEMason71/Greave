@@ -9,11 +9,15 @@
 
 
 // The SQL table construction string for Mobiles.
-const std::string   Mobile::SQL_MOBILES =   "CREATE TABLE mobiles ( sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, location INTEGER NOT NULL, inventory INTEGER UNIQUE )";
+const std::string   Mobile::SQL_MOBILES =   "CREATE TABLE mobiles ( sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, location INTEGER NOT NULL, inventory INTEGER UNIQUE, "
+    "equipment INTEGER UNIQUE )";
 
 
 // Constructor, sets default values.
-Mobile::Mobile() : m_inventory(std::make_shared<Inventory>()), m_location(0) { }
+Mobile::Mobile() : m_equipment(std::make_shared<Inventory>()), m_inventory(std::make_shared<Inventory>()), m_location(0) { }
+
+// Returns a pointer to the Movile's equipment.
+const std::shared_ptr<Inventory> Mobile::equ() const { return m_equipment; }
 
 // Returns a pointer to the Mobile's Inventory.
 const std::shared_ptr<Inventory> Mobile::inv() const { return m_inventory; }
@@ -21,17 +25,19 @@ const std::shared_ptr<Inventory> Mobile::inv() const { return m_inventory; }
 // Loads a Mobile.
 void Mobile::load(std::shared_ptr<SQLite::Database> save_db, unsigned int sql_id)
 {
-    uint32_t inventory_id = 0;
+    uint32_t inventory_id = 0, equipment_id = 0;
     SQLite::Statement query(*save_db, "SELECT * FROM mobiles WHERE sql_id = ?");
     query.bind(1, sql_id);
     if (query.executeStep())
     {
         m_location = query.getColumn("location").getUInt();
         if (!query.isColumnNull("inventory")) inventory_id = query.getColumn("inventory").getUInt();
+        if (!query.isColumnNull("equipment")) equipment_id = query.getColumn("equipment").getUInt();
     }
     else throw std::runtime_error("Could not load mobile data!");
 
     if (inventory_id) m_inventory->load(save_db, inventory_id);
+    if (equipment_id) m_equipment->load(save_db, equipment_id);
 }
 
 // Retrieves the location of this Mobile, in the form of a Room ID.
@@ -41,12 +47,14 @@ uint32_t Mobile::location() const { return m_location; }
 uint32_t Mobile::save(std::shared_ptr<SQLite::Database> save_db)
 {
     const uint32_t inventory_id = m_inventory->save(save_db);
+    const uint32_t equipment_id = m_equipment->save(save_db);
 
     const uint32_t sql_id = core()->sql_unique_id();
-    SQLite::Statement query(*save_db, "INSERT INTO mobiles ( sql_id, location, inventory ) VALUES ( ?, ?, ? )");
+    SQLite::Statement query(*save_db, "INSERT INTO mobiles ( sql_id, location, inventory, equipment ) VALUES ( ?, ?, ?, ? )");
     query.bind(1, sql_id);
     query.bind(2, m_location);
     if (inventory_id) query.bind(3, inventory_id);
+    if (equipment_id) query.bind(4, equipment_id);
     query.exec();
     return sql_id;
 }

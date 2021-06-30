@@ -73,3 +73,11 @@ uint32_t Inventory::save(std::shared_ptr<SQLite::Database> save_db)
         m_items.at(i)->save(save_db, sql_id);
     return sql_id;
 }
+
+// Much like get(), but retrieves an item based on a given equipment slot.
+std::shared_ptr<Item> Inventory::slot(EquipSlot es) const
+{
+    for (auto item : m_items)
+        if (item->equip_slot() == es) return item;
+    return nullptr;
+}
