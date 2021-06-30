@@ -68,7 +68,7 @@ std::string Item::meta(const std::string &key) const
 std::map<std::string, std::string>* Item::meta_raw() { return &m_metadata; }
 
 // Retrieves the name of thie Item.
-std::string Item::name(ItemName level) const 
+std::string Item::name(ItemName level) const
 {
     if (level == ItemName::BASIC) return m_name;
     std::string name = m_name;

@@ -19,28 +19,28 @@ set(BLT_LIBRARIES BearLibTerminal)
 
 # Main platform-specific settings.
 if(TARGET_WINDOWS)
-  
+
   # Platform-specific libraries.
   set(OS_LIBRARIES mingw32)
   set(TOLK_LIBRARIES Tolk)
   add_definitions(-DGREAVE_TOLK)
   set(YAMLCPP_LIBRARIES yaml-cpp.dll)
   set(CURSES_LIBRARIES pdcurses)
-  
+
   # Application icon
   enable_language(RC)
   set(CMAKE_RC_COMPILER_INIT windres)
   set(CMAKE_RC_COMPILE_OBJECT "<CMAKE_RC_COMPILER> <FLAGS> -O coff <DEFINES> -i <SOURCE> -o <OBJECT>")
   set(GREAVE_RC core/app-icon.rc)
-  
+
 else()
-  
+
   # Platform-specific libraries.
   set(OS_LIBRARIES ${X11_LIBRARIES})
   set(YAMLCPP_LIBRARIES yaml-cpp)
   set(CURSES_LIBRARIES ncurses)
   set(CMAKE_EXE_LINKER_FLAGS_RELEASE "-s -Wl,-rpath='${ORIGIN}'")
-  
+
 endif(TARGET_WINDOWS)
 
 # Source files.

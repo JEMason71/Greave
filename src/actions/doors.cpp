@@ -65,7 +65,7 @@ bool ActionDoors::lock_or_unlock(std::shared_ptr<Mobile> mob, Direction dir, boo
     }
 
     const std::string door_name = room->door_name(dir);
-    
+
     // If we're locking a door, make sure it's closed first.
     if (!unlock && room->link_tag(dir, LinkTag::Open))
     {

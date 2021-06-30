@@ -57,7 +57,7 @@ void Parser::add_command(const std::string &text, ParserCommand cmd)
 
     std::string first_word = words.at(0);
     words.erase(words.begin());
-    
+
     // If the first word has multiple possible options, we'll add them all individually.
     if (first_word.size() > 2 && first_word.at(0) == '[' && first_word.at(first_word.size() - 1) == ']')
     {
@@ -105,7 +105,7 @@ void Parser::parse(std::string input)
             return;
         }
     }
-    
+
     std::string msg = "{y}I'm sorry, I don't understand.";
     if (m_special_state == SpecialState::DISAMBIGUATION) msg += " If you wanted to {Y}clarify your choice{y}, please {Y}type the entire command{y}.";
     core()->message(msg);
@@ -189,7 +189,7 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
     const std::shared_ptr<Mobile> player = core()->world()->player();
     Direction parsed_direction = Direction::NONE;
     uint32_t target = Target::NONE;
-    
+
     // Check if a direction needs to be parsed.
     if (pcd.direction_match)
     {

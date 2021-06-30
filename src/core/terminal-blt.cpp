@@ -172,7 +172,7 @@ void TerminalBLT::print(std::string str, int x, int y, Colour col)
     size_t nbsp_pos;
     while ((nbsp_pos = str.find("`")) != std::string::npos)
         str.at(nbsp_pos) = ' ';
-    
+
     if (str.find('[') != std::string::npos)
     {
         StrX::find_and_replace(str, "[", "[[");

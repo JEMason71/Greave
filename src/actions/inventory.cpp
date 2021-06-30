@@ -23,7 +23,7 @@ void ActionInventory::check_inventory(std::shared_ptr<Mobile> mob)
 
     const auto inventory = mob->inv();
     const uint32_t inv_size = inventory->count();
-    
+
     if (!inv_size)
     {
         core()->message("{y}You are not carrying anything.");

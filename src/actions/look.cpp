@@ -61,7 +61,7 @@ void ActionLook::obvious_exits(std::shared_ptr<Mobile> mob, bool indent)
         if (room->link_tag(e, LinkTag::Hidden)) continue;   // Never list hidden exits.
         std::string exit_name = "{c}" + StrX::dir_to_name(e);
         const std::string door_name = room->door_name(e);
-        
+
         if (room_link == Room::UNFINISHED)  // An exit that is due to be finished later.
             exit_name = "{r}(" + StrX::dir_to_name(e) + "){c}";
         else if (room_link == Room::FALSE_ROOM)

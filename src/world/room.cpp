@@ -80,7 +80,7 @@ std::string Room::desc() const
         process_timeweather_desc(desc, "daydawn", current_tod == TimeWeather::TimeOfDay::DAY || current_tod == TimeWeather::TimeOfDay::DAWN);
     while (desc.find("[nightdusk:") != std::string::npos)
         process_timeweather_desc(desc, "nightdusk", current_tod == TimeWeather::TimeOfDay::NIGHT || current_tod == TimeWeather::TimeOfDay::DUSK);
-    
+
     return desc;
 }
 

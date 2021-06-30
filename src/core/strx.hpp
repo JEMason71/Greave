@@ -33,7 +33,7 @@ public:
     static std::vector<std::string> string_explode_colour(const std::string &str, unsigned int line_len);   // Similar to string_explode(), but takes colour into account, and wraps to a given line.
     static void         string_to_metadata(const std::string &str, std::map<std::string, std::string> &metadata);   // Converts a string to a metadata map.
     static std::string  strip_ansi(const std::string &str);         // Strips colour codes from a string.
-    static unsigned int strlen_colour(const std::string &str);      // Returns the length of a string, taking colour tags into account.    
+    static unsigned int strlen_colour(const std::string &str);      // Returns the length of a string, taking colour tags into account.
     static unsigned int word_count(const std::string &str, const std::string &word);    // Returns a count of the amount of times a string is found in a parent string.
 
     template<class T> static void string_to_tags(const std::string &tag_string, std::set<T> &tags)
