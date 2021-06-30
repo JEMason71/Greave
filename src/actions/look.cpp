@@ -19,22 +19,40 @@ void ActionLook::look(std::shared_ptr<Mobile> mob)
     // sense right now, you never know, this code might be used in the future for some sort of "see through the target's eyes" spell or something.
     const std::shared_ptr<Room> room = core()->world()->get_room(mob->location());
 
-    const bool can_see = (room->light(mob) >= Room::LIGHT_VISIBLE);
-    if (!can_see)
+    if (room->light(mob) < Room::LIGHT_VISIBLE)
     {
         core()->message("{U}Darkness");
         core()->message("{0}```{u}It is {B}pitch black{u}, and you can see {B}nothing{u}. You are likely to be eaten by a grue.");
-        core()->message("{0}{u}It's so {B}dark{u}, you can't see where the exits are!");
         return;
     }
 
     room->set_tag(RoomTag::Explored);
 
-    // Room name and description.
+    // Room name, description, and obvious exits.
     core()->message("{G}" + room->name());
     core()->message("{0}```" + room->desc());
+    obvious_exits(mob, true);
 
-    // Obvious exits.
+    // Items nearby.
+    if (room->inv()->count())
+    {
+        std::vector<std::string> items_nearby;
+        for (unsigned int i = 0; i < room->inv()->count(); i++)
+            items_nearby.push_back(room->inv()->get(i)->name(Item::ItemName::ROOM) + "{w}");
+        core()->message("{0}{g}```Items nearby: {w}" + StrX::comma_list(items_nearby, StrX::CL_FLAG_USE_AND));
+    }
+}
+
+// Lists the exits from this area.
+void ActionLook::obvious_exits(std::shared_ptr<Mobile> mob, bool indent)
+{
+    const std::shared_ptr<Room> room = core()->world()->get_room(mob->location());
+    if (room->light(mob) < Room::LIGHT_VISIBLE)
+    {
+        core()->message(std::string(indent ? "{0}" : "") + "{u}It's so {B}dark{u}, you can't see where the exits are!");
+        return;
+    }
+
     std::vector<std::string> exits_vec;
     for (unsigned int e = 0; e < Room::ROOM_LINKS_MAX; e++)
     {
@@ -68,16 +86,7 @@ void ActionLook::look(std::shared_ptr<Mobile> mob)
 
         exits_vec.push_back(exit_name);
     }
-    if (exits_vec.size()) core()->message("{0}{g}```Obvious exits: " + StrX::comma_list(exits_vec, StrX::CL_FLAG_USE_AND));
-
-    // Items nearby.
-    if (room->inv()->count())
-    {
-        std::vector<std::string> items_nearby;
-        for (unsigned int i = 0; i < room->inv()->count(); i++)
-            items_nearby.push_back(room->inv()->get(i)->name(Item::ItemName::ROOM) + "{w}");
-        core()->message("{0}{g}```Items nearby: {w}" + StrX::comma_list(items_nearby, StrX::CL_FLAG_USE_AND));
-    }
+    if (exits_vec.size()) core()->message(std::string(indent ? "{0}```" : "") + "{g}Obvious exits: " + StrX::comma_list(exits_vec, StrX::CL_FLAG_USE_AND));
 }
 
 // Determines the current time of day.

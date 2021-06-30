@@ -24,6 +24,7 @@ Parser::Parser() : m_special_state(SpecialState::NONE)
     add_command("drop <item:i>", ParserCommand::DROP);
     add_command("[equipment|equip|eq]", ParserCommand::EQUIPMENT);
     add_command("[equip|eq|wield|hold|wear] <item:i>", ParserCommand::EQUIP);
+    add_command("exits", ParserCommand::EXITS);
     add_command("[fuck|shit|piss|bastard] *", ParserCommand::SWEAR);
     add_command("[go|travel|walk|run|move] <dir>", ParserCommand::GO);
     add_command("[inventory|invent|inv|i]", ParserCommand::INVENTORY);
@@ -248,6 +249,9 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             break;
         case ParserCommand::EQUIPMENT:
             ActionInventory::equipment(player);
+            break;
+        case ParserCommand::EXITS:
+            ActionLook::obvious_exits(player, false);
             break;
         case ParserCommand::GO:
             if (parsed_direction == Direction::NONE) core()->message("{y}Please specify a {Y}direction {y}to travel.");
