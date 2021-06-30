@@ -52,7 +52,7 @@ Package Version 4.0 beta, copyright © 1996-1998 Keran.
 http://www.mushcode.com/File/Kerans-Weather-System-And-Time-Code-4-0-(PennMUSH)
 
 Tolk copyright © 2014-2016 Davy Kager.
-https://github.com/dkager/tolk
+https://github.com/ndarilek/tolk
 
 yaml-cpp copyright © 2008-2015 Jesse Beder.
 https://github.com/jbeder/yaml-cpp

@@ -28,7 +28,7 @@ Greave is copyright © 2021 Raine "Gravecat" Simmons and the Greave contributors
 
 Time and weather system adapted from [Keran's MUSH/MUX Weather and Time Code Package Version 4.0 beta](http://www.mushcode.com/File/Kerans-Weather-System-And-Time-Code-4-0-(PennMUSH)), copyright © 1996-1998 Keran.
 
-[Tolk](https://github.com/dkager/tolk) copyright © 2014-2016 Davy Kager.
+[Tolk](https://github.com/ndarilek/tolk) copyright © 2014-2016 Davy Kager.
 
 [yaml-cpp](https://github.com/jbeder/yaml-cpp) copyright © 2008-2015 Jesse Beder.
 
