@@ -1,0 +1,5 @@
+# mobiles/testing.yml -- Temporary testing NPCs/monsters. Will be removed later.
+# Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+
+TEST_GOBLIN:
+  name: test goblin

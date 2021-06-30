@@ -16,7 +16,7 @@ bool ActionTravel::travel(std::shared_ptr<Mobile> mob, Direction dir)
 {
     const uint32_t mob_loc = mob->location();
     const std::shared_ptr<Room> room = core()->world()->get_room(mob_loc);
-    const bool is_player = (mob->type() == Mobile::Type::PLAYER);
+    const bool is_player = mob->is_player();
     const uint32_t room_link = room->link(dir);
 
     if (!room_link)

@@ -39,8 +39,19 @@ void ActionLook::look(std::shared_ptr<Mobile> mob)
         std::vector<std::string> items_nearby;
         for (unsigned int i = 0; i < room->inv()->count(); i++)
             items_nearby.push_back(room->inv()->get(i)->name(Item::ItemName::ROOM) + "{w}");
-        core()->message("{0}{g}```Items nearby: {w}" + StrX::comma_list(items_nearby, StrX::CL_FLAG_USE_AND));
+        core()->message("{0}{g}```Items: {w}" + StrX::comma_list(items_nearby, StrX::CL_FLAG_USE_AND));
     }
+
+    // Mobiles nearby.
+    std::vector<std::string> mobs_nearby;
+    for (unsigned int i = 0; i < core()->world()->mob_count(); i++)
+    {
+        const auto world_mob = core()->world()->mob(i);
+        if (!world_mob) continue; // Ignore any nullptr Mobiles.
+        if (world_mob->location() != mob->location()) continue; // Ignore any Mobiles not in this Room.
+        mobs_nearby.push_back("{Y}" + world_mob->name());
+    }
+    if (mobs_nearby.size()) core()->message("{0}{g}```Nearby: {w}" + StrX::comma_list(mobs_nearby, StrX::CL_FLAG_USE_AND));
 }
 
 // Lists the exits from this area.

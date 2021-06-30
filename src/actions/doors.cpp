@@ -17,7 +17,7 @@ bool ActionDoors::lock_or_unlock(std::shared_ptr<Mobile> mob, Direction dir, boo
 {
     const uint32_t mob_loc = mob->location();
     const std::shared_ptr<Room> room = core()->world()->get_room(mob_loc);
-    const bool is_player = (mob->type() == Mobile::Type::PLAYER);
+    const bool is_player = mob->is_player();
     const bool is_unlocked = !room->link_tag(dir, LinkTag::Locked);
     const std::string lock_unlock_str = (unlock ? "unlock" : "lock");
     const std::string locked_unlocked_str = (unlock ? "unlocked" : "locked");
@@ -109,7 +109,7 @@ bool ActionDoors::open_or_close(std::shared_ptr<Mobile> mob, Direction dir, bool
 {
     const uint32_t mob_loc = mob->location();
     const std::shared_ptr<Room> room = core()->world()->get_room(mob_loc);
-    const bool is_player = (mob->type() == Mobile::Type::PLAYER);
+    const bool is_player = mob->is_player();
     const bool is_open = room->link_tag(dir, LinkTag::Open);
     const std::string open_close_str = (open ? "open" : "close");
     const std::string open_closed_str = (open ? "open" : "closed");

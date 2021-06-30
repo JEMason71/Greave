@@ -10,8 +10,11 @@
 const std::string   Player::SQL_PLAYER = "CREATE TABLE player ( sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL )";
 
 
+// Returns true if this Mobile is a Player, false if not.
+bool Player::is_player() const { return true; }
+
 // Loads the Player data.
-void Player::load(std::shared_ptr<SQLite::Database> save_db, unsigned int sql_id)
+uint32_t Player::load(std::shared_ptr<SQLite::Database> save_db, unsigned int sql_id)
 {
     SQLite::Statement query(*save_db, "SELECT * FROM player");
     if (query.executeStep())
@@ -19,7 +22,7 @@ void Player::load(std::shared_ptr<SQLite::Database> save_db, unsigned int sql_id
         sql_id = query.getColumn("sql_id").getUInt();
     }
     else throw std::runtime_error("Could not load player data!");
-    Mobile::load(save_db, sql_id);
+    return Mobile::load(save_db, sql_id);
 }
 
 // Saves this Player.
@@ -31,6 +34,3 @@ uint32_t Player::save(std::shared_ptr<SQLite::Database> save_db)
     query.exec();
     return sql_id;
 }
-
-// Returns Mobile::Type::Player, so we can check what type of Mobile this is when using a Mobile pointer.
-Mobile::Type Player::type() { return Mobile::Type::PLAYER; }

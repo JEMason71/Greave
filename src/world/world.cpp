@@ -63,8 +63,12 @@ World::World() : m_player(std::make_shared<Player>()), m_time_weather(std::make_
 {
     load_room_pool();
     load_item_pool();
+    load_mob_pool();
     load_generic_descs();
 }
+
+// Adds a Mobile to the world.
+void World::add_mobile(std::shared_ptr<Mobile> mob) { m_mobiles.push_back(mob); }
 
 // Retrieves a generic description string.
 std::string World::generic_desc(const std::string &id) const
@@ -85,6 +89,15 @@ const std::shared_ptr<Item> World::get_item(const std::string &item_id) const
     const auto it = m_item_pool.find(StrX::hash(item_id));
     if (it == m_item_pool.end()) throw std::runtime_error("Invalid item ID requested: " + item_id);
     return std::make_shared<Item>(*it->second);
+}
+
+// Retrieves a specified Mobile by ID.
+const std::shared_ptr<Mobile> World::get_mob(const std::string &mob_id) const
+{
+    if (!mob_id.size()) throw std::runtime_error("Blank mobile ID requested.");
+    const auto it = m_mob_pool.find(StrX::hash(mob_id));
+    if (it == m_mob_pool.end()) throw std::runtime_error("Invalid mobile ID requested: " + mob_id);
+    return std::make_shared<Mobile>(*it->second);
 }
 
 // Retrieves a specified Room by ID.
@@ -111,10 +124,27 @@ void World::load(std::shared_ptr<SQLite::Database> save_db)
     core()->messagelog()->load(save_db);
     for (auto room : m_room_pool)
         room.second->load(save_db);
-    m_player->load(save_db, 0);
+    const uint32_t player_sql_id = m_player->load(save_db, 0);
     m_time_weather->load(save_db);
+
+    SQLite::Statement query(*save_db, "SELECT sql_id FROM mobiles WHERE sql_id != " + std::to_string(player_sql_id) + " ORDER BY sql_id ASC");
+    while (query.executeStep())
+    {
+        auto new_mob = std::make_shared<Mobile>();
+        new_mob->load(save_db, query.getColumn("sql_id").getUInt());
+        add_mobile(new_mob);
+    }
 }
 
+// Retrieves a Mobile by vector position.
+const std::shared_ptr<Mobile> World::mob(uint32_t vec_pos) const
+{
+    if (vec_pos >= m_mobiles.size()) throw std::runtime_error("Invalid mobile vector position.");
+    return m_mobiles.at(vec_pos);
+}
+
+// Returns the number of Mobiles currently active.
+unsigned int World::mob_count() const { return m_mobiles.size(); }
 
 // Loads the generic descriptions YAML data into memory.
 void World::load_generic_descs()
@@ -204,6 +234,35 @@ void World::load_item_pool()
 
             // Add the new Item to the item pool.
             m_item_pool.insert(std::make_pair(item_id, new_item));
+        }
+    }
+}
+
+// Loads the Mobile YAML data into memory.
+void World::load_mob_pool()
+{
+    const std::vector<std::string> mobile_files = FileX::files_in_dir("data/mobiles", true);
+    for (auto mobile_file : mobile_files)
+    {
+        const YAML::Node yaml_mobiles = YAML::LoadFile("data/mobiles/" + mobile_file);
+        for (auto mobile : yaml_mobiles)
+        {
+            const YAML::Node mobile_data = mobile.second;
+
+            // Create a new Mobile object, and remember its unique ID.
+            const std::string mobile_id_str = mobile.first.as<std::string>();
+            const uint32_t mobile_id = StrX::hash(mobile_id_str);
+            const auto new_mob(std::make_shared<Mobile>());
+
+            // Check to make sure there are no hash collisions.
+            if (m_mob_pool.find(mobile_id) != m_mob_pool.end()) throw std::runtime_error("Mobile ID hash conflict: " + mobile_id_str);
+
+            // The Mobile's name.
+            if (!mobile_data["name"]) core()->guru()->nonfatal("Missing mobile name: " + mobile_id_str, Guru::ERROR);
+            else new_mob->set_name(mobile_data["name"].as<std::string>());
+
+            // Add the Mobile to the mob pool.
+            m_mob_pool.insert(std::make_pair(mobile_id, new_mob));
         }
     }
 }
@@ -393,11 +452,42 @@ void World::load_room_pool()
 void World::new_game()
 {
     m_player->set_location("OUTSIDE_QUEENS_GATE");
+    auto new_mob = get_mob("TEST_GOBLIN");
+    new_mob->set_location("OUTSIDE_QUEENS_GATE");
+    add_mobile(new_mob);
     ActionLook::look(m_player);
 }
 
 // Retrieves a pointer to the Player object.
 const std::shared_ptr<Mobile> World::player() const { return m_player; }
+
+// Purges null entries from the active Mobiles. Only call this from the main loop, for safety.
+void World::purge_mobs()
+{
+    for (unsigned int i = 0; i < m_mobiles.size(); i++)
+    {
+        if (m_mobiles.at(i) == nullptr)
+        {
+            m_mobiles.erase(m_mobiles.begin() + i);
+            i--;
+            continue;
+        }
+    }
+}
+
+// Removes a Mobile from the world.
+void World::remove_mobile(std::shared_ptr<Mobile> mob)
+{
+    for (unsigned int i = 0; i < m_mobiles.size(); i++)
+    {
+        if (m_mobiles.at(i) == mob)
+        {
+            m_mobiles.at(i) = nullptr;
+            return;
+        }
+    }
+    core()->guru()->nonfatal("Attempt to remove mobile that does not exist in the world: " + mob->name(), Guru::ERROR);
+}
 
 // Checks if a specified room ID exists.
 bool World::room_exists(const std::string &str) const { return m_room_pool.find(StrX::hash(str)) != m_room_pool.end(); }
@@ -412,11 +502,14 @@ void World::save(std::shared_ptr<SQLite::Database> save_db)
     save_db->exec(MessageLog::SQL_MSGLOG);
     save_db->exec(TimeWeather::SQL_TIME_WEATHER);
 
-    for (auto room : m_room_pool)
-        room.second->save(save_db);
     m_player->save(save_db);
     core()->messagelog()->save(save_db);
     m_time_weather->save(save_db);
+
+    for (auto room : m_room_pool)
+        room.second->save(save_db);
+    for (auto mob : m_mobiles)
+        mob->save(save_db);
 }
 
 // Gets a pointer to the TimeWeather object.

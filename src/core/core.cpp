@@ -33,7 +33,7 @@ std::shared_ptr<Core> greave = nullptr;   // The main Core object.
 
 const std::string   Core::GAME_VERSION =        "pre-alpha";    // The game's version number.
 const unsigned int  Core::MSG_FLAG_INTERRUPT =  1;              // Flags for the message() function.
-const unsigned int  Core::SAVE_VERSION =        11;             // The version number for saved game files. This should increment when old saves can no longer be loaded.
+const unsigned int  Core::SAVE_VERSION =        12;             // The version number for saved game files. This should increment when old saves can no longer be loaded.
 const unsigned int  Core::TAGS_PERMANENT =      10000;          // The tag number at which tags are considered permanent.
 
 
@@ -163,6 +163,9 @@ void Core::main_loop()
                 ActionLook::look(player);
             }
         }
+
+        // Purge any null entries from the World's active Mobiles.
+        m_world->purge_mobs();
     }
 }
 

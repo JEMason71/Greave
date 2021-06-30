@@ -1,4 +1,4 @@
-// world/mobile.cpp -- The Mobile class defines entities that can move and interact with the game world. Derived classes are used for more specific entities.
+// world/mobile.cpp -- The Mobile class defines entities that can move and interact with the game world.
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #include "3rdparty/SQLiteCpp/SQLiteCpp.h"
@@ -9,8 +9,8 @@
 
 
 // The SQL table construction string for Mobiles.
-const std::string   Mobile::SQL_MOBILES =   "CREATE TABLE mobiles ( sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, location INTEGER NOT NULL, inventory INTEGER UNIQUE, "
-    "equipment INTEGER UNIQUE )";
+const std::string   Mobile::SQL_MOBILES =   "CREATE TABLE mobiles ( equipment INTEGER UNIQUE, inventory INTEGER UNIQUE, location INTEGER NOT NULL, name TEXT, "
+    "sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL )";
 
 
 // Constructor, sets default values.
@@ -22,26 +22,35 @@ const std::shared_ptr<Inventory> Mobile::equ() const { return m_equipment; }
 // Returns a pointer to the Mobile's Inventory.
 const std::shared_ptr<Inventory> Mobile::inv() const { return m_inventory; }
 
+// Returns true if this Mobile is a Player, false if not.
+bool Mobile::is_player() const { return false; }
+
 // Loads a Mobile.
-void Mobile::load(std::shared_ptr<SQLite::Database> save_db, unsigned int sql_id)
+uint32_t Mobile::load(std::shared_ptr<SQLite::Database> save_db, unsigned int sql_id)
 {
     uint32_t inventory_id = 0, equipment_id = 0;
     SQLite::Statement query(*save_db, "SELECT * FROM mobiles WHERE sql_id = ?");
     query.bind(1, sql_id);
     if (query.executeStep())
     {
-        m_location = query.getColumn("location").getUInt();
-        if (!query.isColumnNull("inventory")) inventory_id = query.getColumn("inventory").getUInt();
         if (!query.isColumnNull("equipment")) equipment_id = query.getColumn("equipment").getUInt();
+        if (!query.isColumnNull("inventory")) inventory_id = query.getColumn("inventory").getUInt();
+        m_location = query.getColumn("location").getUInt();
+        if (!query.isColumnNull("name")) m_name = query.getColumn("name").getString();
     }
     else throw std::runtime_error("Could not load mobile data!");
 
     if (inventory_id) m_inventory->load(save_db, inventory_id);
     if (equipment_id) m_equipment->load(save_db, equipment_id);
+
+    return sql_id;
 }
 
 // Retrieves the location of this Mobile, in the form of a Room ID.
 uint32_t Mobile::location() const { return m_location; }
+
+// Retrieves the name of this Mobile.
+std::string Mobile::name() const { return m_name; }
 
 // Saves this Mobile.
 uint32_t Mobile::save(std::shared_ptr<SQLite::Database> save_db)
@@ -50,11 +59,12 @@ uint32_t Mobile::save(std::shared_ptr<SQLite::Database> save_db)
     const uint32_t equipment_id = m_equipment->save(save_db);
 
     const uint32_t sql_id = core()->sql_unique_id();
-    SQLite::Statement query(*save_db, "INSERT INTO mobiles ( sql_id, location, inventory, equipment ) VALUES ( ?, ?, ?, ? )");
-    query.bind(1, sql_id);
-    query.bind(2, m_location);
-    if (inventory_id) query.bind(3, inventory_id);
-    if (equipment_id) query.bind(4, equipment_id);
+    SQLite::Statement query(*save_db, "INSERT INTO mobiles ( equipment, inventory, location, name, sql_id ) VALUES ( ?, ?, ?, ?, ? )");
+    if (equipment_id) query.bind(1, equipment_id);
+    if (inventory_id) query.bind(2, inventory_id);
+    query.bind(3, m_location);
+    if (m_name.size()) query.bind(4, m_name);
+    query.bind(5, sql_id);
     query.exec();
     return sql_id;
 }
@@ -68,3 +78,6 @@ void Mobile::set_location(const std::string &room_id)
     if (!room_id.size()) set_location(0);
     else set_location(StrX::hash(room_id));
 }
+
+// Sets the name of this Mobile.
+void Mobile::set_name(const std::string &name) { m_name = name; }
