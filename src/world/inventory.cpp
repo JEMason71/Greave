@@ -40,6 +40,14 @@ std::shared_ptr<Item> Inventory::get(uint32_t pos) const
     return m_items.at(pos);
 }
 
+// As above, but retrieves an item based on a given equipment slot.
+std::shared_ptr<Item> Inventory::get(EquipSlot es) const
+{
+    for (auto item : m_items)
+        if (item->equip_slot() == es) return item;
+    return nullptr;
+}
+
 // Checks if a given hex ID already exists on an Item in this Inventory.
 bool Inventory::hex_id_exists(uint16_t id)
 {
@@ -64,6 +72,27 @@ void Inventory::load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id)
     if (!loaded_items) throw std::runtime_error("Could not load inventory data " + std::to_string(sql_id));
 }
 
+// Removes an Item from this Inventory.
+void Inventory::remove_item(uint32_t pos)
+{
+    if (pos >= m_items.size()) throw std::runtime_error("Attempt to remove item with invalid inventory position.");
+    m_items.erase(m_items.begin() + pos);
+}
+
+// As above, but with a specified equipment slot.
+void Inventory::remove_item(EquipSlot es)
+{
+    for (unsigned int i = 0; i < m_items.size(); i++)
+    {
+        if (m_items.at(i)->equip_slot() == es)
+        {
+            remove_item(i);
+            return;
+        }
+    }
+    core()->guru()->nonfatal("Attempt to remove empty equipment slot item.", Guru::ERROR);
+}
+
 // Saves this Inventory, returns its SQL ID.
 uint32_t Inventory::save(std::shared_ptr<SQLite::Database> save_db)
 {
@@ -72,12 +101,4 @@ uint32_t Inventory::save(std::shared_ptr<SQLite::Database> save_db)
     for (unsigned int i = 0; i < m_items.size(); i++)
         m_items.at(i)->save(save_db, sql_id);
     return sql_id;
-}
-
-// Much like get(), but retrieves an item based on a given equipment slot.
-std::shared_ptr<Item> Inventory::slot(EquipSlot es) const
-{
-    for (auto item : m_items)
-        if (item->equip_slot() == es) return item;
-    return nullptr;
 }

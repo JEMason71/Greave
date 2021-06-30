@@ -1,19 +1,58 @@
 # items/testing.yml -- Temporary testing items for developing the inventory system. Will be removed later.
 # Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-ARMOURY_KEY:
-  metadata: "key:NORTHWATCH_ARMOURY"
-  name: Northwatch Armoury key
-  type: key
+BOOTS:
+  name: boots
+  slot: feet
+  type: [ armour, clothing ]
 
-BLUE_TEST:
-  name: blue testing item
-  type: [ none ]
+BREASTPLATE:
+  name: breastplate
+  slot: armour
+  type: [ armour, heavy ]
 
-RED_BLUE_TEST:
-  name: red and blue testing item
-  type: none
+CLOAK:
+  name: cloak
+  slot: about
+  type: [ armour, clothing ]
 
-RED_TEST:
-  name: red testing item
-  type: [ none, none ]
+DAGGER:
+  name: dagger
+  slot: held
+  type: [ weapon, melee ]
+
+GLOVES:
+  name: gloves
+  slot: hands
+  type: [ armour, clothing ]
+
+GREATSWORD:
+  name: greatsword
+  slot: held
+  tags: [ TwoHanded ]
+  type: [ weapon, melee ]
+
+HELMET:
+  name: helmet
+  slot: head
+  type: [ armour, medium ]
+
+LEATHER_CUIRASS:
+  name: leather cuirass
+  slot: armour
+  type: [ armour, light ]
+
+LONGSWORD:
+  name: longsword
+  slot: held
+  type: [ weapon, melee ]
+
+MACE:
+  name: mace
+  slot: held
+  type: [ weapon, melee ]
+
+MAIL_HAUBERK:
+  name: mail hauberk
+  slot: body
+  type: [ armour, medium ]

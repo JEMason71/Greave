@@ -17,9 +17,11 @@ public:
     unsigned int    count() const;                          // Returns the number of Items in this Inventory.
     void            erase(uint32_t pos);                    // Deletes an Item from this Inventory.
     std::shared_ptr<Item> get(uint32_t pos) const;          // Retrieves an Item from this Inventory.
+    std::shared_ptr<Item> get(EquipSlot es) const;          // As above, but retrieves an item based on a given equipment slot.
     void            load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id);   // Loads an Inventory from the save file.
+    void            remove_item(uint32_t pos);              // Removes an Item from this Inventory.
+    void            remove_item(EquipSlot es);              // As above, but with a specified equipment slot.
     uint32_t        save(std::shared_ptr<SQLite::Database> save_db);    // Saves this Inventory, returns its SQL ID.
-    std::shared_ptr<Item> slot(EquipSlot es) const;         // Much like get(), but retrieves an item based on a given equipment slot.
 
 private:
     bool            hex_id_exists(uint16_t id);     // Checks if a given hex ID already exists on an Item in this Inventory.

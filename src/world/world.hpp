@@ -4,24 +4,25 @@
 #pragma once
 #include "core/greave.hpp"
 
-class Item;         // defined in world/item.hpp
-class Mobile;       // defined in world/mobile.hpp
-class Player;       // defined in world/player.hpp
-class Room;         // defined in world/room.hpp
-class TimeWeather;  // defined in world/time-weather.hpp
-enum class ItemSub : uint16_t;  // defined in world/item.hpp
-enum class ItemTag : uint16_t;  // d efined in world/item.hpp
-enum class ItemType : uint16_t; // defined in world/item.hpp
-enum class LinkTag : uint16_t;  // defined in world/room.hpp
-enum class RoomTag : uint16_t;  // defined in world/room.hpp
-enum class Security : uint8_t;  // defined in world/room.hpp
+class Item;                             // defined in world/item.hpp
+class Mobile;                           // defined in world/mobile.hpp
+class Player;                           // defined in world/player.hpp
+class Room;                             // defined in world/room.hpp
+class TimeWeather;                      // defined in world/time-weather.hpp
+enum class EquipSlot : uint8_t;         // defined in world/item.hpp
+enum class ItemSub : uint16_t;          // defined in world/item.hpp
+enum class ItemTag : uint16_t;          // defined in world/item.hpp
+enum class ItemType : uint16_t;         // defined in world/item.hpp
+enum class LinkTag : uint16_t;          // defined in world/room.hpp
+enum class RoomTag : uint16_t;          // defined in world/room.hpp
+enum class Security : uint8_t;          // defined in world/room.hpp
 namespace SQLite { class Database; }    // defined in 3rdparty/SQLiteCpp/Database.h
 
 
 class World
 {
 public:
-            World();    // Constructor, loads the room YAML data.
+            World();                                                        // Constructor, loads the room YAML data.
     std::string generic_desc(const std::string &id) const;                  // Retrieves a generic description string.
     const std::shared_ptr<Item> get_item(const std::string &item_id) const; // Retrieves a specified Item by ID.
     const std::shared_ptr<Room> get_room(uint32_t room_id) const;           // Retrieves a specified Room by ID.
@@ -35,6 +36,7 @@ public:
     const std::shared_ptr<TimeWeather> time_weather() const;                // Gets a pointer to the TimeWeather object.
 
 private:
+    static const std::map<std::string, EquipSlot>   EQUIP_SLOT_MAP;     // Lookup table for converting EquipSlot text names into enums.
     static const std::map<std::string, ItemSub>     ITEM_SUBTYPE_MAP;   // Lookup table for converting ItemSub text names into enums.
     static const std::map<std::string, ItemTag>     ITEM_TAG_MAP;       // Lookup table for converting ItemTag text names into enums.
     static const std::map<std::string, ItemType>    ITEM_TYPE_MAP;      // Lookup table for converting ItemType text names into enums.

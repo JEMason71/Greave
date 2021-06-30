@@ -22,6 +22,8 @@ Parser::Parser() : m_special_state(SpecialState::NONE)
 {
     add_command("close <dir>", ParserCommand::CLOSE);
     add_command("drop <item:i>", ParserCommand::DROP);
+    add_command("[equipment|equip|eq]", ParserCommand::EQUIPMENT);
+    add_command("[equip|eq|wield|hold|wear] <item:i>", ParserCommand::EQUIP);
     add_command("[fuck|shit|piss|bastard] *", ParserCommand::SWEAR);
     add_command("[go|travel|walk|run|move] <dir>", ParserCommand::GO);
     add_command("[inventory|invent|inv|i]", ParserCommand::INVENTORY);
@@ -34,6 +36,7 @@ Parser::Parser() : m_special_state(SpecialState::NONE)
     add_command("save", ParserCommand::SAVE);
     add_command("[take|get] <item:r>", ParserCommand::TAKE);
     add_command("[time|date]", ParserCommand::TIME);
+    add_command("[unequip|uneq|remove] <item:e>", ParserCommand::UNEQUIP);
     add_command("unlock <dir>", ParserCommand::UNLOCK);
     add_command("wait", ParserCommand::WAIT);
     add_command("weather", ParserCommand::WEATHER);
@@ -93,23 +96,19 @@ void Parser::parse(std::string input)
     const std::string first_word = words.at(0);
     words.erase(words.begin());
 
-    bool parsed = false;
     for (auto pcd : m_commands)
     {
         if (pcd.first_word == first_word && (pcd.target_match || pcd.any_length || pcd.words.size() == words.size()))
         {
-            parsed = true;
             parse_pcd(first_word, words, pcd);
+            return;
         }
     }
     
-    if (!parsed)
-    {
-        std::string msg = "{y}I'm sorry, I don't understand.";
-        if (m_special_state == SpecialState::DISAMBIGUATION) msg += " If you wanted to {Y}clarify your choice{y}, please {Y}type the entire command{y}.";
-        core()->message(msg);
-        m_special_state = SpecialState::NONE;
-    }
+    std::string msg = "{y}I'm sorry, I don't understand.";
+    if (m_special_state == SpecialState::DISAMBIGUATION) msg += " If you wanted to {Y}clarify your choice{y}, please {Y}type the entire command{y}.";
+    core()->message(msg);
+    m_special_state = SpecialState::NONE;
 }
 
 // Parses a string into a Direction enum.
@@ -209,6 +208,7 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
         {
             const std::string pcd_word = pcd.words.at(i);
             if (pcd_word == "<item:i>") target_type = Target::ITEM_INV;
+            else if (pcd_word == "<item:e>") target_type = Target::ITEM_EQU;
             else if (pcd_word == "<item:r>") target_type = Target::ITEM_ROOM;
             if (target_type == Target::NONE) continue;
 
@@ -217,7 +217,15 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             std::copy(words.begin() + i, words.end(), target_words.begin());
 
             // Run the target-matching parser.
-            target = parse_item_name(target_words, (target_type == Target::ITEM_INV ? player->inv() : core()->world()->get_room(player->location())->inv()));
+            std::shared_ptr<Inventory> inv_target = nullptr;
+            switch (target_type)
+            {
+                case Target::ITEM_EQU: inv_target = player->equ(); break;
+                case Target::ITEM_INV: inv_target = player->inv(); break;
+                case Target::ITEM_ROOM: inv_target = core()->world()->get_room(player->location())->inv(); break;
+                default: throw std::runtime_error("Unknown parser target type.");
+            }
+            target = parse_item_name(target_words, inv_target);
         }
     }
 
@@ -232,6 +240,14 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             if (!words.size()) core()->message("{y}Please specify {Y}what you want to drop{y}.");
             else if (target == ItemMatch::NOT_FOUND) core()->message("{y}You don't seem to be carrying {Y}" + collapsed_words + "{y}.");
             else if (target <= ItemMatch::VALID) ActionInventory::drop(player, target);
+            break;
+        case ParserCommand::EQUIP:
+            if (!words.size()) core()->message("{y}Please specify {Y}what you want to equip{y}.");
+            else if (target == ItemMatch::NOT_FOUND) core()->message("{y}You don't seem to be carrying {Y}" + collapsed_words + "{y}.");
+            else if (target <= ItemMatch::VALID) ActionInventory::equip(player, target);
+            break;
+        case ParserCommand::EQUIPMENT:
+            ActionInventory::equipment(player);
             break;
         case ParserCommand::GO:
             if (parsed_direction == Direction::NONE) core()->message("{y}Please specify a {Y}direction {y}to travel.");
@@ -282,6 +298,11 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             break;
         case ParserCommand::TIME:
             ActionLook::time(player);
+            break;
+        case ParserCommand::UNEQUIP:
+            if (!words.size()) core()->message("{y}Please specify {Y}what you want to unequip{y}.");
+            else if (target == ItemMatch::NOT_FOUND) core()->message("{y}You don't seem to be wearing or wielding {Y}" + collapsed_words + "{y}.");
+            else if (target <= ItemMatch::VALID) ActionInventory::unequip(player, target);
             break;
         case ParserCommand::WAIT:
             core()->message("Time passes...");

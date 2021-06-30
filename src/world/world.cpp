@@ -17,14 +17,20 @@
 #include "world/world.hpp"
 
 
+// Lookup table for converting EquipSlot text names into enums.
+const std::map<std::string, EquipSlot>  World::EQUIP_SLOT_MAP = { { "about", EquipSlot::ABOUT_BODY }, { "armour", EquipSlot::ARMOUR }, { "body", EquipSlot::BODY },
+    { "feet", EquipSlot::FEET }, { "hands", EquipSlot::HANDS }, { "head", EquipSlot::HEAD }, { "held", EquipSlot::HAND_MAIN } };
+
 // Lookup table for converting ItemSub text names into enums.
-const std::map<std::string, ItemSub>    World::ITEM_SUBTYPE_MAP = { { "none", ItemSub::NONE } };
+const std::map<std::string, ItemSub>    World::ITEM_SUBTYPE_MAP = { { "clothing", ItemSub::CLOTHING }, { "heavy", ItemSub::HEAVY }, { "light", ItemSub::LIGHT },
+    { "medium", ItemSub::MEDIUM }, { "melee", ItemSub::MELEE }, { "none", ItemSub::NONE } };
 
 // Lookup table for converting ItemTag text names into enums.
-const std::map<std::string, ItemTag>    World::ITEM_TAG_MAP = { };
+const std::map<std::string, ItemTag>    World::ITEM_TAG_MAP = { { "twohanded", ItemTag::TwoHanded } };
 
 // Lookup table for converting ItemType text names into enums.
-const std::map<std::string, ItemType>   World::ITEM_TYPE_MAP = { { "key", ItemType::KEY }, { "none", ItemType::NONE } };
+const std::map<std::string, ItemType>   World::ITEM_TYPE_MAP = { { "armour", ItemType::ARMOUR }, { "key", ItemType::KEY }, { "none", ItemType::NONE },
+    { "weapon", ItemType::WEAPON } };
 
 // Lookup table for converting textual light levels (e.g. "bright") to integer values.
 const std::map<std::string, uint8_t>    World::LIGHT_LEVEL_MAP = { { "bright", 7 }, { "dim", 5 }, { "wilderness", 5 }, { "dark", 3 }, { "none", 0 } };
@@ -176,13 +182,22 @@ void World::load_item_pool()
                 {
                     const std::string tag_str = StrX::str_tolower(tag.as<std::string>());
                     const auto tag_it = ITEM_TAG_MAP.find(tag_str);
-                    if (tag_it == ITEM_TAG_MAP.end()) core()->guru()->nonfatal("Unrecognized item tag (" + tag_str + "): " + item_id_str, Guru::WARN);
+                    if (tag_it == ITEM_TAG_MAP.end()) core()->guru()->nonfatal("Unrecognized item tag (" + tag_str + "): " + item_id_str, Guru::ERROR);
                     else new_item->set_tag(tag_it->second);
                 }
             }
 
             // The Item's metadata, if any.
             if (item_data["metadata"]) StrX::string_to_metadata(item_data["metadata"].as<std::string>(), *new_item->meta_raw());
+
+            // The Item's EquipSlot, if any.
+            if (item_data["slot"])
+            {
+                const std::string slot_str = item_data["slot"].as<std::string>();
+                const auto slot_it = EQUIP_SLOT_MAP.find(slot_str);
+                if (slot_it == EQUIP_SLOT_MAP.end()) core()->guru()->nonfatal("Unrecognized equipment slot (" + slot_str + "): " + item_id_str, Guru::ERROR);
+                else new_item->set_equip_slot(slot_it->second);
+            }
 
             // Add the new Item to the item pool.
             m_item_pool.insert(std::make_pair(item_id, new_item));
