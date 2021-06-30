@@ -203,7 +203,7 @@ bool TimeWeather::pass_time(float seconds, bool allow_interrupt)
         {
             if (++m_day > 364) m_day = 1;
             if (++m_moon >= LUNAR_CYCLE_DAYS) m_moon = 0;
-            core()->message("{B}It is now " + day_name() + ", the " + day_of_month_string() + " day of " +  month_name() + ".");
+            core()->message("{B}It is now " + day_name() + ", the " + day_of_month_string() + " day of " +  month_name() + ".", Show::ALWAYS, Wake::NEVER);
         }
         old_time = m_time;
         if (time_of_day(true) != old_time_of_day)
@@ -214,7 +214,7 @@ bool TimeWeather::pass_time(float seconds, bool allow_interrupt)
             change_happened = show_weather_messages;
         }
 
-        if (change_happened) core()->message(weather_message_colour() + weather_msg.substr(1));
+        if (change_happened) core()->message(weather_message_colour() + weather_msg.substr(1), Show::WAITING, Wake::NEVER);
     }
 
     return true;
@@ -328,7 +328,7 @@ void TimeWeather::trigger_event(TimeWeather::Season season, std::string *message
     if (indoors && !can_see_outside) return;
     const std::string time_message = m_tw_string_map.at(time_of_day_str(true) + "_" + weather_str(fix_weather(m_weather, season)) + (indoors ? "_INDOORS" : ""));
     if (message_to_append) *message_to_append += " " + time_message;
-    else core()->message(weather_message_colour() + time_message);
+    else core()->message(weather_message_colour() + time_message, Show::WAITING, Wake::NEVER);
 }
 
 // Returns a weather description for the current time/weather, based on the current season.

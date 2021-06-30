@@ -459,7 +459,7 @@ void World::new_game()
 }
 
 // Retrieves a pointer to the Player object.
-const std::shared_ptr<Mobile> World::player() const { return m_player; }
+const std::shared_ptr<Player> World::player() const { return m_player; }
 
 // Purges null entries from the active Mobiles. Only call this from the main loop, for safety.
 void World::purge_mobs()

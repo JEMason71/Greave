@@ -152,7 +152,7 @@ std::string MessageLog::render_message_log(bool accept_blank_input)
             std::string result = std::regex_replace(m_input_buffer, std::regex("^ +| +$|( ) +"), "$1");
             if (result.size())
             {
-                core()->message("{c}> " + result, Core::MSG_FLAG_INTERRUPT);
+                core()->message("{c}> " + result, Show::ALWAYS, Wake::ALWAYS, Core::MSG_FLAG_INTERRUPT);
                 m_input_buffer = "";
                 m_last_input = result;
                 return result;
