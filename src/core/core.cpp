@@ -159,7 +159,7 @@ void Core::message(std::string msg, uint32_t flags)
             StrX::find_and_replace(msg, "[", "(");
             StrX::find_and_replace(msg, "]", ").");
         }
-        std::regex filter("\\{.*?\\}");
+        std::regex filter("\\{.\\}");
         std::string msg_voice = std::regex_replace(msg, filter, "");
         if (msg_voice.size() >= 2 && msg_voice[0] == '>') msg_voice = msg_voice.substr(2);
         const std::wstring msg_wide(msg_voice.begin(), msg_voice.end());
