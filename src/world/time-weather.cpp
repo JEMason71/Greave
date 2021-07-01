@@ -166,7 +166,7 @@ TimeWeather::LunarPhase TimeWeather::moon_phase() const
 }
 
 // Causes time to pass.
-bool TimeWeather::pass_time(float seconds, bool allow_interrupt)
+bool TimeWeather::pass_time(float seconds)
 {
     const std::shared_ptr<Room> room = core()->world()->get_room(core()->world()->player()->location());
     const bool indoors = room->tag(RoomTag::Indoors);
@@ -186,15 +186,16 @@ bool TimeWeather::pass_time(float seconds, bool allow_interrupt)
     while (seconds_to_add)
     {
         seconds_to_add--;
-        //if (World::player()->game_over()) return false;
-        if (allow_interrupt && seconds > UNINTERRUPTABLE_TIME)
+
+        if (seconds > UNINTERRUPTABLE_TIME)
         {
-            //if (World::player()->hp() < player_old_hp) return false;
-            //player_old_hp = World::player()->hp();  // Because HP might go *up* in the meantime.
+            // todo: check if the player is in combat, or something else that'll interrupt their actions
         }
-        const bool show_weather_messages = (!indoors || can_see_outside);
+
+        // todo: check player HP/poison/other conditions, and wake them if needed
 
         // Update the time of day and weather.
+        const bool show_weather_messages = (!indoors || can_see_outside);
         TimeOfDay old_time_of_day = time_of_day(true);
         int old_time = m_time;
         bool change_happened = false;

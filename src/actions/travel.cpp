@@ -8,7 +8,13 @@
 #include "core/strx.hpp"
 #include "world/mobile.hpp"
 #include "world/room.hpp"
+#include "world/time-weather.hpp"
 #include "world/world.hpp"
+
+
+const float ActionTravel::TRAVEL_TIME_DOUBLE =  120.0f; // The time (in seconds) it takes to travel across a double-length room link.
+const float ActionTravel::TRAVEL_TIME_NORMAL =  30.0f;  // The time (in seconds) it takes to travel across a normal room link.
+const float ActionTravel::TRAVEL_TIME_TRIPLE =  480.0f; // The time (in seconds) it takes to travel across a triple-length room link.
 
 
 // Attempts to move from one Room to another.
@@ -43,6 +49,17 @@ bool ActionTravel::travel(std::shared_ptr<Mobile> mob, Direction dir)
         if (!opened) return false;
     }
 
+    float travel_time = TRAVEL_TIME_NORMAL;
+    if (room->link_tag(dir, LinkTag::DoubleLength)) travel_time = TRAVEL_TIME_DOUBLE;
+    else if (room->link_tag(dir, LinkTag::TripleLength)) travel_time = TRAVEL_TIME_TRIPLE;
+    const bool success = core()->world()->time_weather()->pass_time(travel_time);
+    if (!success)
+    {
+        core()->message("{R}You are interrupted before you are able to leave!");
+        return false;
+    }
+
+    // todo: messages for NPC travel
     mob->set_location(room_link);
     if (is_player) ActionLook::look(mob);
     return true;

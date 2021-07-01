@@ -30,8 +30,8 @@ enum class LinkTag : uint16_t {
     AutoClose,          // This door will automatically close after the player passes through it. [CURRENTLY UNUSED]
     AutoLock,           // This door will automatically lock after the player passes through it. [CURRENTLY UNUSED]
     LocksWhenClosed,    // When this door is closed, it will automatically lock itself. [CURRENTLY UNUSED]
-    DoubleLength,       // This link is twice as long, so will take extra time to traverse. [CURRENTLY UNUSED]
-    TripleLength,       // This link is three times as long, so will take extra time to traverse. [CURRENTLY UNUSED]
+    DoubleLength,       // This link is twice as long, so will take extra time to traverse.
+    TripleLength,       // This link is three times as long, so will take extra time to traverse.
     Ocean,              // For links that go into the ocean. [CURRENTLY UNUSED]
     Sky,                // This link leads to a virtual sky room, with the actual linked room below. [CURRENTLY UNUSED]
     Sky2,               // As above, but the sky room is stacked two rooms high. [CURRENTLY UNUSED]
