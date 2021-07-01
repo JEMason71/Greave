@@ -39,12 +39,24 @@ void ActionLook::examine_item(std::shared_ptr<Mobile>, std::shared_ptr<Item> tar
         {
             switch (target->subtype())
             {
-                case ItemSub::CLOTHING: stat_string = "This is {U}clothing {w}that can be worn. "; break;
-                case ItemSub::HEAVY: stat_string = "This is {U}heavy armour {w}that can be worn. "; break;
-                case ItemSub::LIGHT: stat_string = "This is {U}lightweight armour {w}that can be worn. "; break;
-                case ItemSub::MEDIUM: stat_string = "This is {U}medium armour {w}that can be worn. "; break;
+                case ItemSub::CLOTHING: stat_string = "This is {U}clothing {w}that can be worn"; break;
+                case ItemSub::HEAVY: stat_string = "This is {U}heavy armour {w}that can be worn"; break;
+                case ItemSub::LIGHT: stat_string = "This is {U}lightweight armour {w}that can be worn"; break;
+                case ItemSub::MEDIUM: stat_string = "This is {U}medium armour {w}that can be worn"; break;
                 default: break;
             }
+            std::string slot;
+            switch (target->equip_slot())
+            {
+                case EquipSlot::ABOUT_BODY: slot = "about the body"; break;
+                case EquipSlot::ARMOUR: slot = "over your body"; break;
+                case EquipSlot::BODY: slot = "on your body"; break;
+                case EquipSlot::FEET: slot = "on your feet"; break;
+                case EquipSlot::HANDS: slot = "on your hands"; break;
+                case EquipSlot::HEAD: slot = "on your head"; break;
+                default: break;
+            }
+            stat_string += " {U}" + slot + "{w}. ";
             break;
         }
         case ItemType::KEY: stat_string = "This is a {U}key {w}which can unlock certain doors. "; break;
@@ -59,7 +71,8 @@ void ActionLook::examine_item(std::shared_ptr<Mobile>, std::shared_ptr<Item> tar
                 case ItemSub::MELEE: stat_string = "This is a {U}melee weapon {w}which can be wielded. "; break;
                 default: break;
             }
-            if (target->tag(ItemTag::TwoHanded)) stat_string += "It is heavy and requires {U}two hands {w}to wield.";
+            if (target->tag(ItemTag::TwoHanded)) stat_string += "It is heavy and requires {U}two hands {w}to wield. ";
+            stat_string += "It has a damage value of {U}" + std::to_string(target->power()) + "{c}d{U}" + std::to_string(target->power(true)) + "{w}. ";
             break;
         }
     }

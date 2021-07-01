@@ -16,21 +16,10 @@ CLOAK:
   slot: about
   type: [ armour, clothing ]
 
-DAGGER:
-  name: dagger
-  slot: held
-  type: [ weapon, melee ]
-
 GLOVES:
   name: gloves
   slot: hands
   type: [ armour, clothing ]
-
-GREATSWORD:
-  name: greatsword
-  slot: held
-  tags: [ TwoHanded ]
-  type: [ weapon, melee ]
 
 HELMET:
   name: helmet
@@ -41,16 +30,6 @@ LEATHER_CUIRASS:
   name: leather cuirass
   slot: armour
   type: [ armour, light ]
-
-LONGSWORD:
-  name: longsword
-  slot: held
-  type: [ weapon, melee ]
-
-MACE:
-  name: mace
-  slot: held
-  type: [ weapon, melee ]
 
 MAIL_HAUBERK:
   name: mail hauberk
