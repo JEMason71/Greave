@@ -12,15 +12,21 @@
 
 
 // The SQL table construction string for Mobiles.
-const std::string   Mobile::SQL_MOBILES =   "CREATE TABLE mobiles ( action_timer REAL, equipment INTEGER UNIQUE, inventory INTEGER UNIQUE, location INTEGER NOT NULL, name TEXT, "
-    "sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL )";
+const std::string   Mobile::SQL_MOBILES =   "CREATE TABLE mobiles ( action_timer REAL, equipment INTEGER UNIQUE, hp INTEGER NOT NULL, hp_max INTEGER NOT NULL, "
+    "inventory INTEGER UNIQUE, location INTEGER NOT NULL, name TEXT, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL )";
 
 
 // Constructor, sets default values.
-Mobile::Mobile() : m_action_timer(0), m_equipment(std::make_shared<Inventory>()), m_inventory(std::make_shared<Inventory>()), m_location(0) { }
+Mobile::Mobile() : m_action_timer(0), m_equipment(std::make_shared<Inventory>()), m_inventory(std::make_shared<Inventory>()), m_location(0)
+{
+    m_hp[0] = m_hp[1] = 100;
+}
 
 // Returns a pointer to the Movile's equipment.
 const std::shared_ptr<Inventory> Mobile::equ() const { return m_equipment; }
+
+// Retrieves the HP (or maximum HP) of this Mobile.
+int Mobile::hp(bool max) const { return m_hp[max ? 1 : 0]; }
 
 // Returns a pointer to the Mobile's Inventory.
 const std::shared_ptr<Inventory> Mobile::inv() const { return m_inventory; }
@@ -38,6 +44,8 @@ uint32_t Mobile::load(std::shared_ptr<SQLite::Database> save_db, unsigned int sq
     {
         if (!query.isColumnNull("action_timer")) m_action_timer = query.getColumn("action_timer").getDouble();
         if (!query.isColumnNull("equipment")) equipment_id = query.getColumn("equipment").getUInt();
+        m_hp[0] = query.getColumn("hp").getInt();
+        m_hp[1] = query.getColumn("hp_max").getInt();
         if (!query.isColumnNull("inventory")) inventory_id = query.getColumn("inventory").getUInt();
         m_location = query.getColumn("location").getUInt();
         if (!query.isColumnNull("name")) m_name = query.getColumn("name").getString();
@@ -67,6 +75,15 @@ bool Mobile::pass_time(float seconds)
     return true;
 }
 
+// Restores a specified amount of hit points.
+int Mobile::restore_hp(int amount)
+{
+    int missing = m_hp[1] - m_hp[0];
+    if (missing < amount) amount = missing;
+    m_hp[0] += missing;
+    return missing;
+}
+
 // Saves this Mobile.
 uint32_t Mobile::save(std::shared_ptr<SQLite::Database> save_db)
 {
@@ -74,15 +91,24 @@ uint32_t Mobile::save(std::shared_ptr<SQLite::Database> save_db)
     const uint32_t equipment_id = m_equipment->save(save_db);
 
     const uint32_t sql_id = core()->sql_unique_id();
-    SQLite::Statement query(*save_db, "INSERT INTO mobiles ( action_timer, equipment, inventory, location, name, sql_id ) VALUES ( ?, ?, ?, ?, ?, ? )");
+    SQLite::Statement query(*save_db, "INSERT INTO mobiles ( action_timer, equipment, hp, hp_max, inventory, location, name, sql_id ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ? )");
     if (m_action_timer) query.bind(1, m_action_timer);
     if (equipment_id) query.bind(2, equipment_id);
-    if (inventory_id) query.bind(3, inventory_id);
-    query.bind(4, m_location);
-    if (m_name.size()) query.bind(5, m_name);
-    query.bind(6, sql_id);
+    query.bind(3, m_hp[0]);
+    query.bind(4, m_hp[1]);
+    if (inventory_id) query.bind(5, inventory_id);
+    query.bind(6, m_location);
+    if (m_name.size()) query.bind(7, m_name);
+    query.bind(8, sql_id);
     query.exec();
     return sql_id;
+}
+
+// Sets the current (and, optionally, maximum) HP of this Mobile.
+void Mobile::set_hp(int hp, int hp_max)
+{
+    m_hp[0] = hp;
+    if (hp_max) m_hp[1] = hp_max;
 }
 
 // Sets the location of this Mobile with a Room ID.

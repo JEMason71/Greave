@@ -9,6 +9,8 @@
 #include "core/prefs.hpp"
 #include "core/strx.hpp"
 #include "core/terminal.hpp"
+#include "world/player.hpp"
+#include "world/world.hpp"
 
 #ifdef GREAVE_TARGET_WINDOWS
 #include "3rdparty/Tolk/Tolk.h"
@@ -104,9 +106,30 @@ std::string MessageLog::render_message_log(bool accept_blank_input)
         }
 
         // Render the input buffer.
-        std::string input_buf = m_input_buffer;
-        if (input_buf.size() > m_input_window_width) input_buf = input_buf.substr(0, m_input_window_width);
-        core()->terminal()->print(input_buf, m_input_window_x, m_input_window_y, Terminal::Colour::WHITE_BOLD);
+        std::string input_buf = "{W}" + m_input_buffer;
+        if (core()->world())
+        {
+            auto coloured_value_indicator = [](const std::string &name, int current, int max) -> std::string {
+                std::string colour = "{G}", colour_dark = "{g}";
+                float percent = static_cast<float>(current) / static_cast<float>(max);
+                if (percent <= 0.2f)
+                {
+                    colour = "{R}";
+                    colour_dark = "{r}";
+                }
+                else if (percent <= 0.5f)
+                {
+                    colour = "{Y}";
+                    colour_dark = "{y}";
+                }
+                return colour + std::to_string(current) + colour_dark + "/" + colour + std::to_string(max) + colour_dark + name;
+            };
+
+            input_buf = "{W}<" + coloured_value_indicator("hp", core()->world()->player()->hp(), core()->world()->player()->hp(true)) + "{W}> " + input_buf;
+        }
+        const unsigned int input_buf_len = StrX::strlen_colour(input_buf);
+        if (input_buf_len > m_input_window_width) input_buf = input_buf.substr(0, m_input_window_width);
+        core()->terminal()->print(input_buf, m_input_window_x, m_input_window_y);
 
         // Render the scroll bar.
         const int scrollbar_x = prefs->log_padding_left + m_output_window_width;
@@ -121,11 +144,11 @@ std::string MessageLog::render_message_log(bool accept_blank_input)
             core()->terminal()->put(' ', scrollbar_x, i + scrollbar_offset, Terminal::Colour::WHITE_BG);
 
         // Render the cursor on the input buffer.
-        if (input_buf.size() < m_input_window_width)
+        if (input_buf_len < m_input_window_width)
         {
             core()->terminal()->set_background(Terminal::Colour::BLACK_BOLD);
             core()->terminal()->cursor(true);
-            core()->terminal()->move_cursor(m_input_window_x + input_buf.size(), m_input_window_y);
+            core()->terminal()->move_cursor(m_input_window_x + input_buf_len, m_input_window_y);
         }
         else core()->terminal()->cursor(false);
 

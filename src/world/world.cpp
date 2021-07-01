@@ -261,6 +261,10 @@ void World::load_mob_pool()
             if (!mobile_data["name"]) core()->guru()->nonfatal("Missing mobile name: " + mobile_id_str, Guru::ERROR);
             else new_mob->set_name(mobile_data["name"].as<std::string>());
 
+            // The Mobile's hit points.
+            if (!mobile_data["hp"]) core()->guru()->nonfatal("Missing mobile hit points: "+ mobile_id_str, Guru::ERROR);
+            else new_mob->set_hp(mobile_data["hp"].as<int>(), mobile_data["hp"].as<int>());
+
             // Add the Mobile to the mob pool.
             m_mob_pool.insert(std::make_pair(mobile_id, new_mob));
         }
