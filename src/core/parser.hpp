@@ -18,23 +18,31 @@ private:
     enum class ParserCommand : uint16_t { NONE, CLOSE, DIRECTION, DROP, EQUIP, EQUIPMENT, EXITS, GO, HASH, INVENTORY, LOCK, LOOK, NO, OPEN, SAVE, SPAWN_ITEM, SWEAR, TAKE, TELEPORT,
         TIME, UNEQUIP, UNLOCK, WAIT, WEATHER, XYZZY, YES, QUIT };
     enum class SpecialState : uint8_t { NONE, QUIT_CONFIRM, DISAMBIGUATION };
-    enum ItemMatch : uint32_t { NOT_FOUND = UINT_MAX, UNCLEAR = UINT_MAX - 1, VALID = UINT_MAX - 2 };
-    enum Target : uint32_t { NONE = UINT_MAX, ITEM_INV = UINT_MAX - 1, ITEM_EQU = UINT_MAX - 2, ITEM_ROOM = UINT_MAX - 3 };
+    enum ParserTarget : uint32_t { TARGET_NONE = 0, TARGET_EQUIPMENT = 1, TARGET_INVENTORY = 2, TARGET_MOBILE = 4, TARGET_ROOM = 8, TARGET_UNCLEAR = 16 };
 
     struct ParserCommandData
     {
-        bool            any_length;
-        bool            direction_match;
-        ParserCommand   command;
-        std::string     first_word;
-        bool            target_match;
+        bool                        any_length;
+        bool                        direction_match;
+        ParserCommand               command;
+        std::string                 first_word;
+        bool                        target_match;
         std::vector<std::string>    words;
     };
 
-    void        add_command(const std::string &text, ParserCommand cmd);    // Adds a command to the parser.
-    Direction   parse_direction(const std::string &dir) const;  // Parses a string into a Direction enum.
-    uint32_t    parse_item_name(const std::vector<std::string> &input, std::shared_ptr<Inventory> inv); // Attempts to match an item name in the given Inventory.
-    void        parse_pcd(const std::string &first_word, const std::vector<std::string> &words, ParserCommandData pcd, bool confirm);   // Parses a known command.
+    struct ParserSearchResult
+    {
+        int             score;
+        std::string     name;
+        uint32_t        parser_id;
+        uint32_t        target;
+        ParserTarget    type;
+    };
+
+    void                add_command(const std::string &text, ParserCommand cmd);    // Adds a command to the parser.
+    Direction           parse_direction(const std::string &dir) const;  // Parses a string into a Direction enum.
+    ParserSearchResult  parse_target(const std::vector<std::string> &input, ParserTarget target);   // Attempts to match a name to a given target.
+    void                parse_pcd(const std::string &first_word, const std::vector<std::string> &words, ParserCommandData pcd, bool confirm);   // Parses a known command.
 
     std::vector<ParserCommandData>  m_commands;         // The commands the parser can understand.
     std::string                     m_last_input;       // The last raw input from the player.

@@ -3,6 +3,7 @@
 
 #include "3rdparty/SQLiteCpp/SQLiteCpp.h"
 #include "core/core.hpp"
+#include "core/random.hpp"
 #include "core/strx.hpp"
 #include "world/inventory.hpp"
 #include "world/item.hpp"
@@ -13,11 +14,11 @@
 
 // The SQL table construction string for Mobiles.
 const std::string   Mobile::SQL_MOBILES =   "CREATE TABLE mobiles ( action_timer REAL, equipment INTEGER UNIQUE, hp INTEGER NOT NULL, hp_max INTEGER NOT NULL, "
-    "inventory INTEGER UNIQUE, location INTEGER NOT NULL, name TEXT, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL )";
+    "inventory INTEGER UNIQUE, location INTEGER NOT NULL, name TEXT, parser_id INTEGER, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL )";
 
 
 // Constructor, sets default values.
-Mobile::Mobile() : m_action_timer(0), m_equipment(std::make_shared<Inventory>()), m_inventory(std::make_shared<Inventory>()), m_location(0)
+Mobile::Mobile() : m_action_timer(0), m_equipment(std::make_shared<Inventory>()), m_inventory(std::make_shared<Inventory>()), m_location(0), m_parser_id(0)
 {
     m_hp[0] = m_hp[1] = 100;
 }
@@ -49,6 +50,7 @@ uint32_t Mobile::load(std::shared_ptr<SQLite::Database> save_db, unsigned int sq
         if (!query.isColumnNull("inventory")) inventory_id = query.getColumn("inventory").getUInt();
         m_location = query.getColumn("location").getUInt();
         if (!query.isColumnNull("name")) m_name = query.getColumn("name").getString();
+        if (!query.isColumnNull("parser_id")) m_parser_id = query.getColumn("parser_id").getInt();
     }
     else throw std::runtime_error("Could not load mobile data!");
 
@@ -63,6 +65,12 @@ uint32_t Mobile::location() const { return m_location; }
 
 // Retrieves the name of this Mobile.
 std::string Mobile::name() const { return m_name; }
+
+// Generates a new parser ID for this Item.
+void Mobile::new_parser_id() { m_parser_id = core()->rng()->rnd(1, 9999); }
+
+// Retrieves the current ID of this Item, for parser differentiation.
+uint16_t Mobile::parser_id() const { return m_parser_id; }
 
 // Causes time to pass for this Mobile.
 bool Mobile::pass_time(float seconds)
@@ -94,7 +102,8 @@ uint32_t Mobile::save(std::shared_ptr<SQLite::Database> save_db)
     const uint32_t equipment_id = m_equipment->save(save_db);
 
     const uint32_t sql_id = core()->sql_unique_id();
-    SQLite::Statement query(*save_db, "INSERT INTO mobiles ( action_timer, equipment, hp, hp_max, inventory, location, name, sql_id ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ? )");
+    SQLite::Statement query(*save_db, "INSERT INTO mobiles ( action_timer, equipment, hp, hp_max, inventory, location, name, parser_id, sql_id ) "
+        "VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ? )");
     if (m_action_timer) query.bind(1, m_action_timer);
     if (equipment_id) query.bind(2, equipment_id);
     query.bind(3, m_hp[0]);
@@ -102,7 +111,8 @@ uint32_t Mobile::save(std::shared_ptr<SQLite::Database> save_db)
     if (inventory_id) query.bind(5, inventory_id);
     query.bind(6, m_location);
     if (m_name.size()) query.bind(7, m_name);
-    query.bind(8, sql_id);
+    if (m_parser_id) query.bind(8, m_parser_id);
+    query.bind(9, sql_id);
     query.exec();
     return sql_id;
 }

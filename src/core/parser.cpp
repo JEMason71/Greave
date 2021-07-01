@@ -139,45 +139,95 @@ Direction Parser::parse_direction(const std::string &dir) const
     else return Direction::NONE;
 }
 
-// Attempts to match an item name in the given Inventory.
-uint32_t Parser::parse_item_name(const std::vector<std::string> &input, std::shared_ptr<Inventory> inv)
+// Attempts to match a name to a given target.
+Parser::ParserSearchResult Parser::parse_target(const std::vector<std::string> &input, ParserTarget target)
 {
-    if (!input.size() || ! inv->count()) return ItemMatch::NOT_FOUND;   // Don't even *try* with blank inputs, or empty inventories.
+    if (!input.size()) return { 0, "", 0, 0, ParserTarget::TARGET_NONE };  // Don't even *try* with blank inputs.
 
-    const uint32_t inv_size = inv->count();
-    std::vector<unsigned int> item_scores(inv_size);
-    for (unsigned int i = 0; i < inv_size; i++)
+    std::vector<ParserSearchResult> candidates;
+    const std::shared_ptr<World> world = core()->world();
+    const std::shared_ptr<Player> player = world->player();
+    const uint32_t player_location = player->location();
+
+    // Items the player has equipped.
+    const std::shared_ptr<Inventory> equ = player->equ();
+    if ((target & ParserTarget::TARGET_EQUIPMENT) == ParserTarget::TARGET_EQUIPMENT)
     {
-        const std::shared_ptr<Item> item = inv->get(i);
-        if (input.size() == 1 && input.at(0) == StrX::itos(item->parser_id(), 4)) return i; // If the hex ID matches, that's an easy one.
+        for (unsigned int i = 0; i < equ->count(); i++)
+        {
+            const std::shared_ptr<Item> item = equ->get(i);
+            candidates.push_back({0, StrX::str_tolower(StrX::strip_ansi(item->name())), item->parser_id(), i, ParserTarget::TARGET_EQUIPMENT});
+        }
+    }
 
-        // Score each object by matching words in its name.
-        const std::string stripped_name_lowercase = StrX::str_tolower(StrX::strip_ansi(item->name()));
-        std::vector<std::string> name_words = StrX::string_explode(stripped_name_lowercase, " ");
+    // Items the player is carrying.
+    const std::shared_ptr<Inventory> inv = player->inv();
+    if ((target & ParserTarget::TARGET_INVENTORY) == ParserTarget::TARGET_INVENTORY)
+    {
+        for (unsigned int i = 0; i < inv->count(); i++)
+        {
+            const std::shared_ptr<Item> item = inv->get(i);
+            candidates.push_back({0, StrX::str_tolower(StrX::strip_ansi(item->name())), item->parser_id(), i, ParserTarget::TARGET_INVENTORY});
+        }
+    }
+
+    // Items in the room the player is at.
+    const std::shared_ptr<Inventory> room_inv = world->get_room(player_location)->inv();
+    if ((target & ParserTarget::TARGET_ROOM) == ParserTarget::TARGET_ROOM)
+    {
+        for (unsigned int i = 0; i < room_inv->count(); i++)
+        {
+            const std::shared_ptr<Item> item = room_inv->get(i);
+            candidates.push_back({0, StrX::str_tolower(StrX::strip_ansi(item->name())), item->parser_id(), i, ParserTarget::TARGET_ROOM});
+        }
+    }
+
+    // Mobiles in the player's room.
+    for (unsigned int i = 0; i < world->mob_count(); i++)
+    {
+        const std::shared_ptr<Mobile> mob = world->mob(i);
+        if (mob->location() == player_location) candidates.push_back({0, StrX::str_tolower(StrX::strip_ansi(mob->name())), mob->parser_id(), i, ParserTarget::TARGET_MOBILE});
+    }
+
+    // Score each candidate.
+    for (unsigned int i = 0; i < candidates.size(); i++)
+    {
+        // If the parser ID matches the player's input, that's an easy one.
+        if (input.size() == 1 && input.at(0) == StrX::itos(candidates.at(i).parser_id, 4))
+        {
+            candidates.at(i).score = 1000;
+            return candidates.at(i);
+        }
+
+        // Score each target by matching words in its name.
+        std::vector<std::string> name_words = StrX::string_explode(candidates.at(i).name, " ");
         const std::string collapsed_input = StrX::collapse_vector(input);
-        unsigned int score = 0;
-        if (stripped_name_lowercase == collapsed_input) score = 100;
+        if (candidates.at(i).name == collapsed_input) candidates.at(i).score = 100;
         else
         {
             for (unsigned int j = 0; j < input.size(); j++)
                 for (unsigned int k = 0; k < name_words.size(); k++)
-                    if (input.at(j) == name_words.at(k)) score++;
+                    if (input.at(j) == name_words.at(k)) candidates.at(i).score++;
         }
-        item_scores.at(i) = score;
     }
 
     // Determine the highest score.
-    unsigned int highest_score = 0;
-    for (unsigned int i = 0; i < inv_size; i++)
-        if (item_scores.at(i) > highest_score) highest_score = item_scores.at(i);
+    int highest_score = 0;
+    for (unsigned int i = 0; i < candidates.size(); i++)
+        if (candidates.at(i).score > highest_score) highest_score = candidates.at(i).score;
 
     // No matches at all?
-    if (!highest_score) return ItemMatch::NOT_FOUND;
+    if (!highest_score) return { 0, "", 0, 0, ParserTarget::TARGET_NONE };
 
-    // Now loop again, see how many candidates we have.
-    std::vector<uint32_t> candidates;
-    for (unsigned int i = 0; i < inv_size; i++)
-        if (item_scores.at(i) == highest_score) candidates.push_back(i);
+    // Now strip out any candidates that don't match the highest score.
+    for (unsigned int i = 0; i < candidates.size(); i++)
+    {
+        if (candidates.at(i).score < highest_score)
+        {
+            candidates.erase(candidates.begin() + i);
+            i--;
+        }
+    }
 
     // If we just have one, great! That was easy!
     if (candidates.size() == 1) return candidates.at(0);
@@ -186,12 +236,11 @@ uint32_t Parser::parse_item_name(const std::vector<std::string> &input, std::sha
     std::string disambig = "{c}I'm not sure which one you mean! Did you mean ";
     std::vector<std::string> candidate_names;
     for (auto c : candidates)
-        candidate_names.push_back("{C}" + inv->get(c)->name() + " {B}{" + StrX::itos(inv->get(c)->parser_id(), 4) + "}{c}");
+        candidate_names.push_back("{C}" + c.name + " {B}{" + StrX::itos(c.parser_id, 4) + "}{c}");
     disambig += StrX::comma_list(candidate_names) + "?";
     core()->message(disambig);
     m_special_state = SpecialState::DISAMBIGUATION;
-
-    return ItemMatch::UNCLEAR;
+    return { 0, "", 0, 0, ParserTarget::TARGET_UNCLEAR };
 }
 
 // Parses a known command.
@@ -199,7 +248,8 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
 {
     const std::shared_ptr<Mobile> player = core()->world()->player();
     Direction parsed_direction = Direction::NONE;
-    uint32_t target = Target::NONE;
+    uint32_t parsed_target = 0;
+    ParserTarget parsed_target_type = ParserTarget::TARGET_NONE;
 
     // Check if a direction needs to be parsed.
     if (pcd.direction_match)
@@ -215,29 +265,24 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
     // Check if a target needs to be parsed.
     if (pcd.target_match)
     {
-        Target target_type = Target::NONE;
         for (unsigned int i = 0; i < std::min(pcd.words.size(), words.size()); i++)
         {
+            uint32_t target_flags = 0;
             const std::string pcd_word = pcd.words.at(i);
-            if (pcd_word == "<item:i>") target_type = Target::ITEM_INV;
-            else if (pcd_word == "<item:e>") target_type = Target::ITEM_EQU;
-            else if (pcd_word == "<item:r>") target_type = Target::ITEM_ROOM;
-            if (target_type == Target::NONE) continue;
+            if (pcd_word.find("item:i") != std::string::npos) target_flags ^= ParserTarget::TARGET_INVENTORY;
+            if (pcd_word.find("item:e") != std::string::npos) target_flags ^= ParserTarget::TARGET_EQUIPMENT;
+            if (pcd_word.find("item:r") != std::string::npos) target_flags ^= ParserTarget::TARGET_ROOM;
+            if (pcd_word.find("mobile") != std::string::npos) target_flags ^= ParserTarget::TARGET_MOBILE;
+            if (!target_flags) continue;
 
             // Pick out the words used to match the target.
             std::vector<std::string> target_words(words.size() - i);
             std::copy(words.begin() + i, words.end(), target_words.begin());
 
             // Run the target-matching parser.
-            std::shared_ptr<Inventory> inv_target = nullptr;
-            switch (target_type)
-            {
-                case Target::ITEM_EQU: inv_target = player->equ(); break;
-                case Target::ITEM_INV: inv_target = player->inv(); break;
-                case Target::ITEM_ROOM: inv_target = core()->world()->get_room(player->location())->inv(); break;
-                default: throw std::runtime_error("Unknown parser target type.");
-            }
-            target = parse_item_name(target_words, inv_target);
+            ParserSearchResult psr = parse_target(target_words, static_cast<ParserTarget>(target_flags));
+            parsed_target = psr.target;
+            parsed_target_type = psr.type;
         }
     }
 
@@ -250,13 +295,13 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             break;
         case ParserCommand::DROP:
             if (!words.size()) core()->message("{y}Please specify {Y}what you want to drop{y}.");
-            else if (target == ItemMatch::NOT_FOUND) core()->message("{y}You don't seem to be carrying {Y}" + collapsed_words + "{y}.");
-            else if (target <= ItemMatch::VALID) ActionInventory::drop(player, target);
+            else if (parsed_target_type == ParserTarget::TARGET_NONE) core()->message("{y}You don't seem to be carrying {Y}" + collapsed_words + "{y}.");
+            else if (parsed_target_type == ParserTarget::TARGET_INVENTORY) ActionInventory::drop(player, parsed_target);
             break;
         case ParserCommand::EQUIP:
             if (!words.size()) core()->message("{y}Please specify {Y}what you want to equip{y}.");
-            else if (target == ItemMatch::NOT_FOUND) core()->message("{y}You don't seem to be carrying {Y}" + collapsed_words + "{y}.");
-            else if (target <= ItemMatch::VALID) ActionInventory::equip(player, target);
+            else if (parsed_target_type == ParserTarget::TARGET_NONE) core()->message("{y}You don't seem to be carrying {Y}" + collapsed_words + "{y}.");
+            else if (parsed_target_type == ParserTarget::TARGET_INVENTORY) ActionInventory::equip(player, parsed_target);
             break;
         case ParserCommand::EQUIPMENT:
             ActionInventory::equipment(player);
@@ -304,8 +349,8 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             break;
         case ParserCommand::TAKE:
             if (!words.size()) core()->message("{y}Please specify {Y}what you want to take{y}.");
-            else if (target == ItemMatch::NOT_FOUND) core()->message("{y}You don't see {Y}" + collapsed_words + "{y} here.");
-            else if (target <= ItemMatch::VALID) ActionInventory::take(player, target);
+            else if (parsed_target_type == ParserTarget::TARGET_NONE) core()->message("{y}You don't see {Y}" + collapsed_words + "{y} here.");
+            else if (parsed_target_type == ParserTarget::TARGET_ROOM) ActionInventory::take(player, parsed_target);
             break;
         case ParserCommand::TELEPORT:
             if (!words.size()) core()->message("{y}Please specify a {Y}teleport destination{y}.");
@@ -316,8 +361,8 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             break;
         case ParserCommand::UNEQUIP:
             if (!words.size()) core()->message("{y}Please specify {Y}what you want to unequip{y}.");
-            else if (target == ItemMatch::NOT_FOUND) core()->message("{y}You don't seem to be wearing or wielding {Y}" + collapsed_words + "{y}.");
-            else if (target <= ItemMatch::VALID) ActionInventory::unequip(player, target);
+            else if (parsed_target_type == ParserTarget::TARGET_NONE) core()->message("{y}You don't seem to be wearing or wielding {Y}" + collapsed_words + "{y}.");
+            else if (parsed_target_type == ParserTarget::TARGET_EQUIPMENT) ActionInventory::unequip(player, parsed_target);
             break;
         case ParserCommand::WAIT:
             core()->message("Time passes...");
@@ -343,5 +388,5 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             break;
     }
 
-    if (target != ItemMatch::UNCLEAR) m_special_state = SpecialState::NONE;
+    if (parsed_target_type != ParserTarget::TARGET_UNCLEAR) m_special_state = SpecialState::NONE;
 }

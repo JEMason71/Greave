@@ -68,7 +68,23 @@ World::World() : m_player(std::make_shared<Player>()), m_time_weather(std::make_
 }
 
 // Adds a Mobile to the world.
-void World::add_mobile(std::shared_ptr<Mobile> mob) { m_mobiles.push_back(mob); }
+void World::add_mobile(std::shared_ptr<Mobile> mob)
+{
+    bool parser_id_valid;
+    int tries = 0;
+    do
+    {
+        parser_id_valid = true;
+        if (!mob->parser_id()) parser_id_valid = false;
+        else
+        {
+            for (unsigned int i = 0; i < m_mobiles.size(); i++)
+                if (m_mobiles.at(i)->parser_id() == mob->parser_id()) parser_id_valid = false;
+        }
+        if (!parser_id_valid) mob->new_parser_id();
+    } while (!parser_id_valid && ++tries < 100000);
+    m_mobiles.push_back(mob);
+}
 
 // Retrieves a generic description string.
 std::string World::generic_desc(const std::string &id) const
