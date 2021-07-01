@@ -31,6 +31,7 @@ Parser::Parser() : m_special_state(SpecialState::NONE)
     add_command("[inventory|invent|inv|i]", ParserCommand::INVENTORY);
     add_command("lock <dir>", ParserCommand::LOCK);
     add_command("[look|l]", ParserCommand::LOOK);
+    add_command("[look|l] <item:i|item:e|item:r|mobile>", ParserCommand::EXAMINE);
     add_command("no", ParserCommand::NO);
     add_command("[north|n|east|e|south|s|west|w|northeast|ne|northwest|nw|southeast|se|southwest|sw|up|u|down|d]", ParserCommand::DIRECTION);
     add_command("open <dir>", ParserCommand::OPEN);
