@@ -1,24 +1,22 @@
 /*
  * PCG Random Number Generation for C++
  *
- * Copyright 2014 Melissa O'Neill <oneill@pcg-random.org>
+ * Copyright 2014-2017 Melissa O'Neill <oneill@pcg-random.org>,
+ *                     and the PCG Project contributors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * SPDX-License-Identifier: (Apache-2.0 OR MIT)
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * Licensed under the Apache License, Version 2.0 (provided in
+ * LICENSE-APACHE.txt and at http://www.apache.org/licenses/LICENSE-2.0)
+ * or under the MIT license (provided in LICENSE-MIT.txt and at
+ * http://opensource.org/licenses/MIT), at your option. This file may not
+ * be copied, modified, or distributed except according to those terms.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Distributed on an "AS IS" BASIS, WITHOUT WARRANTY OF ANY KIND, either
+ * express or implied.  See your chosen license for details.
  *
  * For additional information about the PCG random number generation scheme,
- * including its license and other licensing options, visit
- *
- *     http://www.pcg-random.org
+ * visit http://www.pcg-random.org/.
  */
 
 /*
@@ -46,7 +44,6 @@
 #include <utility>
 #include <locale>
 #include <iterator>
-#include <utility>
 
 #ifdef __GNUC__
     #include <cxxabi.h>
@@ -77,19 +74,19 @@
  * direct CPU support.
  *
  */
-#if __SIZEOF_INT128__
+#if __SIZEOF_INT128__ && !PCG_FORCE_EMULATED_128BIT_MATH
     namespace pcg_extras {
         typedef __uint128_t pcg128_t;
     }
     #define PCG_128BIT_CONSTANT(high,low) \
-            ((pcg128_t(high) << 64) + low)
+            ((pcg_extras::pcg128_t(high) << 64) + low)
 #else
     #include "pcg_uint128.hpp"
     namespace pcg_extras {
         typedef pcg_extras::uint_x4<uint32_t,uint64_t> pcg128_t;
     }
     #define PCG_128BIT_CONSTANT(high,low) \
-            pcg128_t(high,low)
+            pcg_extras::pcg128_t(high,low)
     #define PCG_EMULATED_128BIT_MATH 1
 #endif
 
@@ -348,6 +345,31 @@ inline uint64_t rotr(uint64_t value, bitcount_t rot)
     return value;
 }
 #endif // __x86_64__
+
+#elif defined(_MSC_VER)
+  // Use MSVC++ bit rotation intrinsics
+
+#pragma intrinsic(_rotr, _rotr64, _rotr8, _rotr16)
+
+inline uint8_t rotr(uint8_t value, bitcount_t rot)
+{
+    return _rotr8(value, rot);
+}
+
+inline uint16_t rotr(uint16_t value, bitcount_t rot)
+{
+    return _rotr16(value, rot);
+}
+
+inline uint32_t rotr(uint32_t value, bitcount_t rot)
+{
+    return _rotr(value, rot);
+}
+
+inline uint64_t rotr(uint64_t value, bitcount_t rot)
+{
+    return _rotr64(value, rot);
+}
 
 #endif // PCG_USE_INLINE_ASM
 
@@ -613,6 +635,8 @@ public:
 //
 // to print out my_foo_type_t (or its concrete type if it is a synonym)
 
+#if __cpp_rtti || __GXX_RTTI
+
 template <typename T>
 struct printable_typename {};
 
@@ -622,7 +646,7 @@ std::ostream& operator<<(std::ostream& out, printable_typename<T>) {
 #ifdef __GNUC__
     int status;
     char* pretty_name =
-        abi::__cxa_demangle(implementation_typename, NULL, NULL, &status);
+        abi::__cxa_demangle(implementation_typename, nullptr, nullptr, &status);
     if (status == 0)
         out << pretty_name;
     free(static_cast<void*>(pretty_name));
@@ -632,6 +656,8 @@ std::ostream& operator<<(std::ostream& out, printable_typename<T>) {
     out << implementation_typename;
     return out;
 }
+
+#endif  // __cpp_rtti || __GXX_RTTI
 
 } // namespace pcg_extras
 

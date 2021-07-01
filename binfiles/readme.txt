@@ -17,7 +17,7 @@ Application icon copyright © 2020 Malcolm Riley.
 https://github.com/malcolmriley/unused-textures
 
 BearLibTerminal copyright © 2013-2017 Cfyz.
-http://foo.wyrd.name/en:bearlibterminal
+https://github.com/cfyzium/bearlibterminal
 
 FreeType copyright © 1996-2002, 2006 David Turner, Robert Wilhelm,
 and Werner Lemberg.
@@ -26,8 +26,8 @@ https://www.freetype.org/
 NanoJpeg copyright © 2009 Martin J. Fiedler.
 http://h4ck3r.net/2009/12/02/mini-jpeg-decoder/
 
-PCG copyright © 2014 Melissa O'Neill.
-http://www.pcg-random.org/
+PCG copyright © 2014-2017 Melissa O'Neill and PCG Project contributors.
+https://github.com/imneme/pcg-cpp
 
 PDCurses maintained by William McBrine.
 https://github.com/wmcbrine/PDCurses
@@ -42,7 +42,7 @@ Roboto Mono Font copyright © 2015 Google Inc.
 https://fonts.google.com/specimen/Roboto+Mono
 
 SQLite by SQLite Consortium.
-https://www.sqlite.org/
+https://github.com/sqlite/sqlite
 
 SQLiteCpp copyright © 2012-2020 Sebastien Rombauts.
 https://github.com/SRombauts/SQLiteCpp
