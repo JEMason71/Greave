@@ -75,6 +75,9 @@ bool Mobile::pass_time(float seconds)
     return true;
 }
 
+// Reduces this Mobile's hit points.
+void Mobile::reduce_hp(int amount) { m_hp[0] -= amount; }
+
 // Restores a specified amount of hit points.
 int Mobile::restore_hp(int amount)
 {

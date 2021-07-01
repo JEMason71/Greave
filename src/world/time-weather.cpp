@@ -167,7 +167,8 @@ TimeWeather::LunarPhase TimeWeather::moon_phase() const
 // Causes time to pass.
 bool TimeWeather::pass_time(float seconds)
 {
-    const std::shared_ptr<Room> room = core()->world()->get_room(core()->world()->player()->location());
+    const std::shared_ptr<Player> player = core()->world()->player();
+    const std::shared_ptr<Room> room = core()->world()->get_room(player->location());
     const bool indoors = room->tag(RoomTag::Indoors);
     const bool can_see_outside = room->tag(RoomTag::CanSeeOutside);
 
@@ -180,14 +181,31 @@ bool TimeWeather::pass_time(float seconds)
         m_subsecond -= seconds_to_add;
     }
 
+    int old_hp = player->hp();
     while (seconds_to_add--)
     {
+        int hp = player->hp();
+        if (!hp) return false;  // Don't pass time if the player is dead.
+
         if (seconds > UNINTERRUPTABLE_TIME)
         {
             // todo: check if the player is in combat, or something else that'll interrupt their actions
         }
 
-        // todo: check player HP/poison/other conditions, and wake them if needed
+        // Wake the player if they are resting, and take damage.
+        if (hp < old_hp)
+        {
+            switch (player->awake())
+            {
+                case Player::Awake::ACTIVE: case Player::Awake::COMA: break;
+                case Player::Awake::WAITING: player->set_awake(Player::Awake::ACTIVE); break;
+                case Player::Awake::RESTING: case Player::Awake::SLEEPING:
+                    core()->message("{Y}You awaken with a start!");
+                    player->set_awake(Player::Awake::ACTIVE);
+                    break;
+            }
+        }
+        old_hp = hp;
 
         // Update the time of day and weather.
         const bool show_weather_messages = (!indoors || can_see_outside);

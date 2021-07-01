@@ -86,22 +86,33 @@ void Parser::add_command(const std::string &text, ParserCommand cmd)
     m_commands.push_back(pcd);
 }
 
+// Tells the player how to confirm a command.
+void Parser::confirm_message()
+{ core()->message("{0}{m}If you are sure you want to do this, repeat your command with a {M}! {m}at the beginning (for example, {M}!" + m_last_input + "{m})."); }
+
 // Parses input from the player!
 void Parser::parse(std::string input)
 {
     if (!input.size()) return;
+    m_last_input = input;
     input = StrX::str_tolower(input);
     std::vector<std::string> words = StrX::string_explode(input, " ");
     if (!words.size()) return;
 
-    const std::string first_word = words.at(0);
+    std::string first_word = words.at(0);
     words.erase(words.begin());
+    bool confirm_command = false;
+    if (first_word.size() > 1 && first_word.at(0) == '!')
+    {
+        first_word = first_word.substr(1);
+        confirm_command = true;
+    }
 
     for (auto pcd : m_commands)
     {
         if (pcd.first_word == first_word && (pcd.target_match || pcd.any_length || pcd.words.size() == words.size()))
         {
-            parse_pcd(first_word, words, pcd);
+            parse_pcd(first_word, words, pcd, confirm_command);
             return;
         }
     }
@@ -184,7 +195,7 @@ uint32_t Parser::parse_item_name(const std::vector<std::string> &input, std::sha
 }
 
 // Parses a known command.
-void Parser::parse_pcd(const std::string &first_word, const std::vector<std::string> &words, ParserCommandData pcd)
+void Parser::parse_pcd(const std::string &first_word, const std::vector<std::string> &words, ParserCommandData pcd, bool confirm)
 {
     const std::shared_ptr<Mobile> player = core()->world()->player();
     Direction parsed_direction = Direction::NONE;
@@ -235,7 +246,7 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
     {
         case ParserCommand::NONE: break;
         case ParserCommand::DIRECTION:
-            ActionTravel::travel(player, parse_direction(first_word));
+            ActionTravel::travel(player, parse_direction(first_word), confirm);
             break;
         case ParserCommand::DROP:
             if (!words.size()) core()->message("{y}Please specify {Y}what you want to drop{y}.");
@@ -255,7 +266,7 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             break;
         case ParserCommand::GO:
             if (parsed_direction == Direction::NONE) core()->message("{y}Please specify a {Y}direction {y}to travel.");
-            else ActionTravel::travel(player, parsed_direction);
+            else ActionTravel::travel(player, parsed_direction, confirm);
             break;
         case ParserCommand::HASH:
             if (!words.size()) core()->message("{y}Please specify a {Y}string to hash{y}.");

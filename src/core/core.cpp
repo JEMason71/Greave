@@ -206,6 +206,9 @@ void Core::message(std::string msg, Show show, Wake wake, bool)
 // Returns a pointer to the MessageLog object.
 const std::shared_ptr<MessageLog> Core::messagelog() const { return m_message_log; }
 
+// Returns a pointer to the Parser object.
+const std::shared_ptr<Parser> Core::parser() const { return m_parser; }
+
 // Returns a pointer to the Prefs object.
 const std::shared_ptr<Prefs> Core::prefs() const { return m_prefs; }
 

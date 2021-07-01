@@ -11,6 +11,7 @@ class Parser
 {
 public:
             Parser();                   // Constructor, sets up the parser.
+    void    confirm_message();          // Tells the player how to confirm a command.
     void    parse(std::string input);   // Parses input from the player!
 
 private:
@@ -33,8 +34,9 @@ private:
     void        add_command(const std::string &text, ParserCommand cmd);    // Adds a command to the parser.
     Direction   parse_direction(const std::string &dir) const;  // Parses a string into a Direction enum.
     uint32_t    parse_item_name(const std::vector<std::string> &input, std::shared_ptr<Inventory> inv); // Attempts to match an item name in the given Inventory.
-    void        parse_pcd(const std::string &first_word, const std::vector<std::string> &words, ParserCommandData pcd); // Parses a known command.
+    void        parse_pcd(const std::string &first_word, const std::vector<std::string> &words, ParserCommandData pcd, bool confirm);   // Parses a known command.
 
     std::vector<ParserCommandData>  m_commands;         // The commands the parser can understand.
+    std::string                     m_last_input;       // The last raw input from the player.
     SpecialState                    m_special_state;    // Special parser states, such as waiting for the player to confirm something.
 };

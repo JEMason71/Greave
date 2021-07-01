@@ -22,10 +22,12 @@ public:
     static std::string  ftos(double num);                           // Converts a float or double to a string.
     static uint32_t     hash(const std::string &str);               // FNV string hash function.
     static uint32_t     htoi(const std::string &hex_str);           // Converts a hex string back to an integer.
+    static std::string  intostr_pretty(int num);                    // Returns a 'pretty' version of a number in string format, such as "12,345".
     static bool         is_number(const std::string &str);          // Checks if a string is a number.
     static std::string  itoh(unsigned int num, uint32_t min_len);   // Converts an integer into a hex string.
     static std::string  itos(unsigned int num, uint32_t min_len);   // Converts an integer to a string, but optionally pads it to a minimum length with leading zeroes.
     static std::string  metadata_to_string(const std::map<std::string, std::string> &metadata); // Converts a metadata map into a string.
+    static std::string  rainbow_text(const std::string &str, const std::string &colours);   // Makes pretty rainbow text!
     static std::string  round_to_two(double num);                   // Calls MathX::round_to_two(), then returns the result as a string.
     static std::string  str_tolower(std::string str);               // Converts a string to lower-case.
     static std::string  str_toupper(std::string str);               // Converts a string to upper-case.

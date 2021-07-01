@@ -22,6 +22,7 @@ public:
     uint32_t            location() const;                           // Retrieves the location of this Mobile, in the form of a Room ID.
     std::string         name() const;                               // Retrieves the name of this Mobile.
     bool                pass_time(float seconds);                   // Causes time to pass for this Mobile.
+    void                reduce_hp(int amount);                      // Reduces this Mobile's hit points.
     int                 restore_hp(int amount);                     // Restores a specified amount of hit points.
     virtual uint32_t    save(std::shared_ptr<SQLite::Database> save_db);    // Saves this Mobile.
     void                set_hp(int hp, int hp_max = 0);             // Sets the current (and, optionally, maximum) HP of this Mobile.

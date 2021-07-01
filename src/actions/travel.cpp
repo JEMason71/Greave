@@ -4,20 +4,38 @@
 #include "actions/doors.hpp"
 #include "actions/look.hpp"
 #include "actions/travel.hpp"
+#include "combat/combat.hpp"
 #include "core/core.hpp"
+#include "core/parser.hpp"
+#include "core/random.hpp"
 #include "core/strx.hpp"
 #include "world/mobile.hpp"
 #include "world/room.hpp"
 #include "world/world.hpp"
 
 
-const float ActionTravel::TRAVEL_TIME_DOUBLE =  120.0f; // The time (in seconds) it takes to travel across a double-length room link.
-const float ActionTravel::TRAVEL_TIME_NORMAL =  30.0f;  // The time (in seconds) it takes to travel across a normal room link.
-const float ActionTravel::TRAVEL_TIME_TRIPLE =  480.0f; // The time (in seconds) it takes to travel across a triple-length room link.
+const int ActionTravel::FALL_1_STOREY_BLEED =       5;      // Intensity for the bleed room scar from a one-storey fall.
+const int ActionTravel::FALL_1_STOREY_MIN_PERC =    20;     // Minimum % damage taken from falling one storey.
+const int ActionTravel::FALL_1_STOREY_RNG_PERC =    50;     // Extra RNG % damage from one-storey fall.
+const int ActionTravel::FALL_2_STOREY_BLEED =       10;
+const int ActionTravel::FALL_2_STOREY_MIN_PERC =    50;
+const int ActionTravel::FALL_2_STOREY_RNG_PERC =    70;
+const int ActionTravel::FALL_3_STOREY_BLEED =       20;
+const int ActionTravel::FALL_3_STOREY_MIN_PERC =    70;
+const int ActionTravel::FALL_3_STOREY_RNG_PERC =    100;
+const int ActionTravel::FALL_4_STOREY_BLEED =       25;
+const int ActionTravel::FALL_4_STOREY_MIN_PERC =    90;
+const int ActionTravel::FALL_4_STOREY_RNG_PERC =    200;
+const int ActionTravel::FALL_5_STOREY_BLEED =       30;
+const int ActionTravel::FALL_5_STOREY_MIN_PERC =    100;
+const int ActionTravel::FALL_5_STOREY_RNG_PERC =    500;
+const float ActionTravel::TRAVEL_TIME_DOUBLE =      120.0f; // The time (in seconds) it takes to travel across a double-length room link.
+const float ActionTravel::TRAVEL_TIME_NORMAL =      30.0f;  // The time (in seconds) it takes to travel across a normal room link.
+const float ActionTravel::TRAVEL_TIME_TRIPLE =      480.0f; // The time (in seconds) it takes to travel across a triple-length room link.
 
 
 // Attempts to move from one Room to another.
-bool ActionTravel::travel(std::shared_ptr<Mobile> mob, Direction dir)
+bool ActionTravel::travel(std::shared_ptr<Mobile> mob, Direction dir, bool confirm)
 {
     const uint32_t mob_loc = mob->location();
     const std::shared_ptr<Room> room = core()->world()->get_room(mob_loc);
@@ -48,6 +66,16 @@ bool ActionTravel::travel(std::shared_ptr<Mobile> mob, Direction dir)
         if (!opened) return false;
     }
 
+    const bool sky = room->link_tag(dir, LinkTag::Sky);
+    const bool sky2 = room->link_tag(dir, LinkTag::Sky2);
+    const bool sky3 = room->link_tag(dir, LinkTag::Sky3);
+    if ((sky || sky2 || sky3) && !confirm)
+    {
+        core()->message("{r}You risk taking damage or even dying from making a jump like that!");
+        core()->parser()->confirm_message();
+        return false;
+    }
+
     float travel_time = TRAVEL_TIME_NORMAL;
     if (room->link_tag(dir, LinkTag::DoubleLength)) travel_time = TRAVEL_TIME_DOUBLE;
     else if (room->link_tag(dir, LinkTag::TripleLength)) travel_time = TRAVEL_TIME_TRIPLE;
@@ -59,7 +87,47 @@ bool ActionTravel::travel(std::shared_ptr<Mobile> mob, Direction dir)
     }
 
     // todo: messages for NPC travel
+    if (sky || sky2 || sky3) core()->message("{C}You take a {U}leap of faith{C}!", Show::ALWAYS, Wake::ALWAYS);
     mob->set_location(room_link);
     if (is_player) ActionLook::look(mob);
+
+    if (sky || sky2 || sky3)
+    {
+        unsigned int min_perc = 0, rng_perc = 0, blood_intensity = 0;
+        if (sky3)
+        {
+            min_perc = FALL_3_STOREY_MIN_PERC;
+            rng_perc = FALL_3_STOREY_RNG_PERC;
+            blood_intensity = FALL_3_STOREY_BLEED;
+        }
+        else if (sky2)
+        {
+            min_perc = FALL_2_STOREY_MIN_PERC;
+            rng_perc = FALL_2_STOREY_RNG_PERC;
+            blood_intensity = FALL_2_STOREY_BLEED;
+        }
+        else
+        {
+            min_perc = FALL_1_STOREY_MIN_PERC;
+            rng_perc = FALL_1_STOREY_RNG_PERC;
+            blood_intensity = FALL_1_STOREY_BLEED;
+        }
+        float damage_perc = static_cast<float>(min_perc + core()->rng()->rnd(rng_perc)) / 100.0f;
+
+        if (damage_perc > 0)
+        {
+            unsigned int hp_damage = std::round(static_cast<float>(mob->hp(true)) * damage_perc);
+            mob->reduce_hp(hp_damage);
+            // todo: NPC damage message here.
+            core()->message("{R}You land badly, and the impact " + Combat::damage_str(hp_damage, mob, false) + " {R}you! {W}<{R}-" + StrX::intostr_pretty(hp_damage) + "{W}>",
+                Show::ALWAYS, Wake::ALWAYS);
+            if (mob->hp() <= 0) core()->message("{0}{M}Your bones are shattered from the impact, death is mercifully quick.");
+        }
+        else
+        {
+            core()->message("{g}Despite the distance fallen, you manage to land safely on your feet.");
+        }
+    }
+
     return true;
 }

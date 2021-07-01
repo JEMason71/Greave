@@ -172,6 +172,36 @@ uint32_t StrX::htoi(const std::string &hex_str)
     return result;
 }
 
+// Returns a 'pretty' version of a number in string format, such as "12,345".
+std::string StrX::intostr_pretty(int num)
+{
+    bool negative = false;
+    if (num < 0)
+    {
+        negative = true;
+        num = 0 - num;
+    }
+    std::string str = std::to_string(num), output;
+
+    // If the number is 3 or less characters long, there's no need for any processing.
+    if (str.length() <= 3) return((negative ? "-" : "") + str);
+
+    do
+    {
+        // Cut the string up, and insert commas where appropriate.
+        output = str.substr(str.length() - 3, 3) + "," + output;
+        str = str.substr(0, str.length() - 3);
+    } while (str.length() > 3);
+
+    // Combine the results.
+    std::string result = str + "," + output;
+
+    // Remove the trailing comma.
+    result = result.substr(0, result.length() - 1);
+
+    return((negative ? "-" : "") + result);
+}
+
 // Checks if a string is a number.
 bool StrX::is_number(const std::string &str)
 {
@@ -209,6 +239,32 @@ std::string StrX::metadata_to_string(const std::map<std::string, std::string> &m
             output += mde.first + ":" + mde.second + " ";
         output.pop_back();
     }
+    return output;
+}
+
+// Makes pretty rainbow text!
+std::string StrX::rainbow_text(const std::string &str, const std::string &colours)
+{
+    std::string output;
+    int position = 0;
+    int direction = 1;
+
+    for (auto letter : str)
+    {
+        output += "{" + std::string(1, colours[position]) + "}" + std::string(1, letter);
+        position += direction;
+        if (position >= static_cast<int>(colours.size()))
+        {
+            position -= 2;
+            direction = -1;
+        }
+        else if (position < 0)
+        {
+            position = 1;
+            direction = 1;
+        }
+    }
+
     return output;
 }
 

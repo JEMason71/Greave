@@ -33,9 +33,9 @@ enum class LinkTag : uint16_t {
     DoubleLength,       // This link is twice as long, so will take extra time to traverse.
     TripleLength,       // This link is three times as long, so will take extra time to traverse.
     Ocean,              // For links that go into the ocean. [CURRENTLY UNUSED]
-    Sky,                // This link leads to a virtual sky room, with the actual linked room below. [CURRENTLY UNUSED]
-    Sky2,               // As above, but the sky room is stacked two rooms high. [CURRENTLY UNUSED]
-    Sky3,               // As above, but three rooms high. [CURRENTLY UNUSED]
+    Sky,                // This link leads to a virtual sky room, with the actual linked room below.
+    Sky2,               // As above, but the sky room is stacked two rooms high.
+    Sky3,               // As above, but three rooms high.
     Incline,            // This link also leads upward. [CURRENTLY UNUSED]
     Decline,            // This link also leads downward. [CURRENTLY UNUSED]
     NoMobRoam,          // NPCs should not roam through this exit. [CURRENTLY UNUSED]

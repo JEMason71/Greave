@@ -32,6 +32,7 @@ public:
     void                                main_loop();        // The main game loop.
     void                                message(std::string msg, Show show = Show::ALWAYS, Wake wake = Wake::NEVER, bool interrupt = false);    // Prints a message.
     const std::shared_ptr<MessageLog>   messagelog() const; // Returns a pointer to the MessageLog object.
+    const std::shared_ptr<Parser>       parser() const;     // Returns a pointer to the Parser object.
     const std::shared_ptr<Random>       rng() const;        // Returns a pointer to the Random object.
     void                                save();             // Saves the game to disk.
     uint32_t                            sql_unique_id();    // Retrieves a new unique SQL ID.

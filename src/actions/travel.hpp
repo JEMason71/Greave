@@ -10,10 +10,25 @@ class Mobile;   // defined in world/mobile.hpp
 class ActionTravel
 {
 public:
-    static bool travel(std::shared_ptr<Mobile> mob, Direction dir); // Attempts to move from one Room to another.
+    static bool travel(std::shared_ptr<Mobile> mob, Direction dir, bool confirm);   // Attempts to move from one Room to another.
 
 private:
-    static const float  TRAVEL_TIME_DOUBLE; // The time (in seconds) it takes to travel across a double-length room link.
-    static const float  TRAVEL_TIME_NORMAL; // The time (in seconds) it takes to travel across a normal room link.
-    static const float  TRAVEL_TIME_TRIPLE; // The time (in seconds) it takes to travel across a triple-length room link.
+    static const int    FALL_1_STOREY_BLEED;        // Intensity for the bleed room scar from a one-storey fall.
+    static const int    FALL_1_STOREY_MIN_PERC;     // Minimum % damage taken from falling one storey.
+    static const int    FALL_1_STOREY_RNG_PERC;     // Extra RNG % damage from one-storey fall.
+    static const int    FALL_2_STOREY_BLEED;
+    static const int    FALL_2_STOREY_MIN_PERC;
+    static const int    FALL_2_STOREY_RNG_PERC;
+    static const int    FALL_3_STOREY_BLEED;
+    static const int    FALL_3_STOREY_MIN_PERC;
+    static const int    FALL_3_STOREY_RNG_PERC;
+    static const int    FALL_4_STOREY_BLEED;
+    static const int    FALL_4_STOREY_MIN_PERC;
+    static const int    FALL_4_STOREY_RNG_PERC;
+    static const int    FALL_5_STOREY_BLEED;
+    static const int    FALL_5_STOREY_MIN_PERC;
+    static const int    FALL_5_STOREY_RNG_PERC;
+    static const float  TRAVEL_TIME_DOUBLE;         // The time (in seconds) it takes to travel across a double-length room link.
+    static const float  TRAVEL_TIME_NORMAL;         // The time (in seconds) it takes to travel across a normal room link.
+    static const float  TRAVEL_TIME_TRIPLE;         // The time (in seconds) it takes to travel across a triple-length room link.
 };
