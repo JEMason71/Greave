@@ -310,7 +310,7 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             break;
         case ParserCommand::WAIT:
             core()->message("Time passes...");
-            core()->world()->time_weather()->pass_time(TimeWeather::HOUR);
+            core()->world()->player()->pass_time(TimeWeather::HOUR);
             break;
         case ParserCommand::WEATHER:
             ActionLook::weather(player);

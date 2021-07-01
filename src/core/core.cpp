@@ -32,7 +32,7 @@
 std::shared_ptr<Core> greave = nullptr;   // The main Core object.
 
 const std::string   Core::GAME_VERSION =    "pre-alpha";    // The game's version number.
-const unsigned int  Core::SAVE_VERSION =    13;             // The version number for saved game files. This should increment when old saves can no longer be loaded.
+const unsigned int  Core::SAVE_VERSION =    14;             // The version number for saved game files. This should increment when old saves can no longer be loaded.
 const unsigned int  Core::TAGS_PERMANENT =  10000;          // The tag number at which tags are considered permanent.
 
 

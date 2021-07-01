@@ -2,19 +2,22 @@
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #include "3rdparty/SQLiteCpp/SQLiteCpp.h"
+#include "core/core.hpp"
 #include "core/strx.hpp"
 #include "world/inventory.hpp"
 #include "world/item.hpp"
 #include "world/mobile.hpp"
+#include "world/time-weather.hpp"
+#include "world/world.hpp"
 
 
 // The SQL table construction string for Mobiles.
-const std::string   Mobile::SQL_MOBILES =   "CREATE TABLE mobiles ( equipment INTEGER UNIQUE, inventory INTEGER UNIQUE, location INTEGER NOT NULL, name TEXT, "
+const std::string   Mobile::SQL_MOBILES =   "CREATE TABLE mobiles ( action_timer REAL, equipment INTEGER UNIQUE, inventory INTEGER UNIQUE, location INTEGER NOT NULL, name TEXT, "
     "sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL )";
 
 
 // Constructor, sets default values.
-Mobile::Mobile() : m_equipment(std::make_shared<Inventory>()), m_inventory(std::make_shared<Inventory>()), m_location(0) { }
+Mobile::Mobile() : m_action_timer(0), m_equipment(std::make_shared<Inventory>()), m_inventory(std::make_shared<Inventory>()), m_location(0) { }
 
 // Returns a pointer to the Movile's equipment.
 const std::shared_ptr<Inventory> Mobile::equ() const { return m_equipment; }
@@ -33,6 +36,7 @@ uint32_t Mobile::load(std::shared_ptr<SQLite::Database> save_db, unsigned int sq
     query.bind(1, sql_id);
     if (query.executeStep())
     {
+        if (!query.isColumnNull("action_timer")) m_action_timer = query.getColumn("action_timer").getDouble();
         if (!query.isColumnNull("equipment")) equipment_id = query.getColumn("equipment").getUInt();
         if (!query.isColumnNull("inventory")) inventory_id = query.getColumn("inventory").getUInt();
         m_location = query.getColumn("location").getUInt();
@@ -52,6 +56,17 @@ uint32_t Mobile::location() const { return m_location; }
 // Retrieves the name of this Mobile.
 std::string Mobile::name() const { return m_name; }
 
+// Causes time to pass for this Mobile.
+bool Mobile::pass_time(float seconds)
+{
+    // For the player, time passes in the world itself.
+    if (is_player()) return core()->world()->time_weather()->pass_time(seconds);
+
+    // For NPCs, we'll just take the time from their action timer.
+    m_action_timer -= seconds;
+    return true;
+}
+
 // Saves this Mobile.
 uint32_t Mobile::save(std::shared_ptr<SQLite::Database> save_db)
 {
@@ -59,12 +74,13 @@ uint32_t Mobile::save(std::shared_ptr<SQLite::Database> save_db)
     const uint32_t equipment_id = m_equipment->save(save_db);
 
     const uint32_t sql_id = core()->sql_unique_id();
-    SQLite::Statement query(*save_db, "INSERT INTO mobiles ( equipment, inventory, location, name, sql_id ) VALUES ( ?, ?, ?, ?, ? )");
-    if (equipment_id) query.bind(1, equipment_id);
-    if (inventory_id) query.bind(2, inventory_id);
-    query.bind(3, m_location);
-    if (m_name.size()) query.bind(4, m_name);
-    query.bind(5, sql_id);
+    SQLite::Statement query(*save_db, "INSERT INTO mobiles ( action_timer, equipment, inventory, location, name, sql_id ) VALUES ( ?, ?, ?, ?, ?, ? )");
+    if (m_action_timer) query.bind(1, m_action_timer);
+    if (equipment_id) query.bind(2, equipment_id);
+    if (inventory_id) query.bind(3, inventory_id);
+    query.bind(4, m_location);
+    if (m_name.size()) query.bind(5, m_name);
+    query.bind(6, sql_id);
     query.exec();
     return sql_id;
 }

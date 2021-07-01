@@ -20,14 +20,16 @@ public:
     virtual uint32_t    load(std::shared_ptr<SQLite::Database> save_db, unsigned int sql_id);   // Loads a Mobile.
     uint32_t            location() const;                           // Retrieves the location of this Mobile, in the form of a Room ID.
     std::string         name() const;                               // Retrieves the name of this Mobile.
+    bool                pass_time(float seconds);                   // Causes time to pass for this Mobile.
     virtual uint32_t    save(std::shared_ptr<SQLite::Database> save_db);    // Saves this Mobile.
     void                set_location(uint32_t room_id);             // Sets the location of this Mobile with a Room ID.
     void                set_location(const std::string &room_id);   // As above, but with a string Room ID.
     void                set_name(const std::string &name);          // Sets the name of this Mobile.
 
 private:
+    float       m_action_timer; // When this timer reaches 0, the Mobile is able to act. Any actions it takes detract from the timer.
     std::shared_ptr<Inventory>  m_equipment;    // The Items currently worn or wielded by this Mobile.
     std::shared_ptr<Inventory>  m_inventory;    // The Items being carried by this Mobile.
-    uint32_t    m_location; // The Room that this Mobile is currently located in.
-    std::string m_name;     // The name of this Mobile.
+    uint32_t    m_location;     // The Room that this Mobile is currently located in.
+    std::string m_name;         // The name of this Mobile.
 };

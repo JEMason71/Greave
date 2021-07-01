@@ -8,7 +8,6 @@
 #include "core/strx.hpp"
 #include "world/mobile.hpp"
 #include "world/room.hpp"
-#include "world/time-weather.hpp"
 #include "world/world.hpp"
 
 
@@ -52,7 +51,7 @@ bool ActionTravel::travel(std::shared_ptr<Mobile> mob, Direction dir)
     float travel_time = TRAVEL_TIME_NORMAL;
     if (room->link_tag(dir, LinkTag::DoubleLength)) travel_time = TRAVEL_TIME_DOUBLE;
     else if (room->link_tag(dir, LinkTag::TripleLength)) travel_time = TRAVEL_TIME_TRIPLE;
-    const bool success = core()->world()->time_weather()->pass_time(travel_time);
+    const bool success = mob->pass_time(travel_time);
     if (!success)
     {
         core()->message("{R}You are interrupted before you are able to leave!");
