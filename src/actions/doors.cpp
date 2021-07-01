@@ -12,6 +12,12 @@
 #include "world/world.hpp"
 
 
+const float ActionDoors::TIME_CLOSE_DOOR =  2.0f;   // The time taken (in seconds) to close a door.
+const float ActionDoors::TIME_LOCK_DOOR =   10.0f;  // The time taken (in seconds) to lock a door.
+const float ActionDoors::TIME_OPEN_DOOR =   3.0f;   // The time taken (in seconds) to open a door.
+const float ActionDoors::TIME_UNLOCK_DOOR = 10.0f;  // The time taken (in seconds) to unlock a door.
+
+
 // Attempts to lock or unlock a door, with optional messages.
 bool ActionDoors::lock_or_unlock(std::shared_ptr<Mobile> mob, Direction dir, bool unlock, bool silent_fail)
 {
@@ -71,6 +77,13 @@ bool ActionDoors::lock_or_unlock(std::shared_ptr<Mobile> mob, Direction dir, boo
     {
         if (is_player) core()->message("{m}(first closing the " + door_name + ")");
         if (!open_or_close(mob, dir, false)) return false;
+    }
+
+    const float time_taken = (unlock ? TIME_UNLOCK_DOOR : TIME_LOCK_DOOR);
+    if (!mob->pass_time(time_taken))
+    {
+        core()->message("{R}You are interrupted while attempting to " + lock_unlock_str + " the " + door_name + "!");
+        return false;
     }
 
     if (is_player) core()->message("{u}You {U}" + lock_unlock_str + " {u}the " + door_name + " " + StrX::dir_to_name(dir, StrX::DirNameType::TO_THE) + " with your {U}" +
@@ -149,6 +162,14 @@ bool ActionDoors::open_or_close(std::shared_ptr<Mobile> mob, Direction dir, bool
     }
 
     const std::string door_name = room->door_name(dir);
+    
+    const float time_taken = (open ? TIME_OPEN_DOOR : TIME_CLOSE_DOOR);
+    if (!mob->pass_time(time_taken))
+    {
+        core()->message("{R}You are interrupted while trying to " + open_close_str + " the " + door_name + "!");
+        return false;
+    }
+
     if (is_player) core()->message("{u}You {U}" + open_close_str + " {u}the " + door_name + " " + StrX::dir_to_name(dir, StrX::DirNameType::TO_THE) + ".");
     // todo: add open/close messages for NPCs, in both source and destination rooms
 
