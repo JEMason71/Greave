@@ -43,7 +43,7 @@ public:
     std::string name(ItemName level = ItemName::BASIC) const;   // Retrieves the name of thie Item.
     void        new_parser_id();                    // Generates a new parser ID for this Item.
     uint16_t    parser_id() const;                  // Retrieves the current ID of this Item, for parser differentiation.
-    uint16_t    power(bool second = false) const;   // Retrieves this Item's power.
+    uint16_t    power(int type = 1) const;          // Retrieves this Item's power.
     void        save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id); // Saves the Item to the save file.
     void        set_description(const std::string &desc);   // Sets this Item's description.
     void        set_equip_slot(EquipSlot es);       // Sets this Item's equipment slot.

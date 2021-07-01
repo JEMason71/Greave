@@ -86,7 +86,7 @@ std::string Item::name(ItemName level) const
     switch (m_type)
     {
         case ItemType::LIGHT: name += " {Y}<gl{W}o{Y}wing>"; break;
-        case ItemType::WEAPON: name += " {w}<{U}" + std::to_string(m_power[0]) + "{c}d{U}" + std::to_string(m_power[1]) + "{w}>"; break;
+        case ItemType::WEAPON: name += " {w}<{U}" + std::to_string(power(1)) + "{c}d{U}" + std::to_string(power(2)) + "{w}>"; break;
         default: break;
     }
 
@@ -101,7 +101,11 @@ void Item::new_parser_id() { m_parser_id = core()->rng()->rnd(1, 9999); }
 uint16_t Item::parser_id() const { return m_parser_id; }
 
 // Retrieves this Item's power.
-uint16_t Item::power(bool second) const { return m_power[second ? 1 : 0]; }
+uint16_t Item::power(int type) const
+{
+    if (type < 1 || type > 2) throw std::runtime_error("Invalid item power slot.");
+    return m_power[type - 1];
+}
 
 // Saves the Item.
 void Item::save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id)
