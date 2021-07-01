@@ -12,20 +12,22 @@
 #include "world/world.hpp"
 
 
-const float ActionInventory::EQUIP_TIME_ABOUT =     20.0f;  // The time taken (in seconds) to equip something about the body, like a cloak.
-const float ActionInventory::EQUIP_TIME_ARMOUR =    180.0f; // The time taken (in seconds) to equip armour worn over the body, like a breastplate.
-const float ActionInventory::EQUIP_TIME_BODY =      300.0f; // The time taken (in seconds) to equip armour worn against the body, like a hauberk.
-const float ActionInventory::EQUIP_TIME_FEET =      30.0f;  // The time taken (in seconds) to equip boots or other things worn on the feet.
-const float ActionInventory::EQUIP_TIME_HANDS =     6.0f;   // The time taken (in seconds) to equip gloves or something else worn on the hands.
-const float ActionInventory::EQUIP_TIME_HEAD =      2.0f;   // The time taken (in seconds) to equip a helmet or so mething else worn on the head.
-const float ActionInventory::EQUIP_TIME_WEAPON =    0.6f;   // The time taken (in seconds) to equip a weapon or something else held in the hand.
-const float ActionInventory::UNEQUIP_TIME_ABOUT =   10.0f;  // The time taken (in seconds) to unequip something about the body, like a cloak.
-const float ActionInventory::UNEQUIP_TIME_ARMOUR =  120.0f; // The time taken (in seconds) to unequip armour worn over the body, like a breastplate.
-const float ActionInventory::UNEQUIP_TIME_BODY =    180.0f; // The time taken (in seconds) to unequip armour worn against the body, like a hauberk.
-const float ActionInventory::UNEQUIP_TIME_FEET =    15.0f;  // The time taken (in seconds) to unequip boots or other things worn on the feet.
-const float ActionInventory::UNEQUIP_TIME_HANDS =   4.0f;   // The time taken (in seconds) to unequip gloves or something else worn on the hands.
-const float ActionInventory::UNEQUIP_TIME_HEAD =    2.0f;   // The time taken (in seconds) to unequip a helmet or so mething else worn on the head.
-const float ActionInventory::UNEQUIP_TIME_WEAPON =  0.5f;   // The time taken (in seconds) to unequip a weapon or something else held in the hand.
+const float ActionInventory::TIME_DROP_ITEM =       1.0f;   // The time taken (in seconds) to drop an item on the ground.
+const float ActionInventory::TIME_EQUIP_ABOUT =     20.0f;  // The time taken (in seconds) to equip something about the body, like a cloak.
+const float ActionInventory::TIME_EQUIP_ARMOUR =    180.0f; // The time taken (in seconds) to equip armour worn over the body, like a breastplate.
+const float ActionInventory::TIME_EQUIP_BODY =      300.0f; // The time taken (in seconds) to equip armour worn against the body, like a hauberk.
+const float ActionInventory::TIME_EQUIP_FEET =      30.0f;  // The time taken (in seconds) to equip boots or other things worn on the feet.
+const float ActionInventory::TIME_EQUIP_HANDS =     6.0f;   // The time taken (in seconds) to equip gloves or something else worn on the hands.
+const float ActionInventory::TIME_EQUIP_HEAD =      2.0f;   // The time taken (in seconds) to equip a helmet or so mething else worn on the head.
+const float ActionInventory::TIME_EQUIP_WEAPON =    0.6f;   // The time taken (in seconds) to equip a weapon or something else held in the hand.
+const float ActionInventory::TIME_GET_ITEM =        5.0f;   // The time taken (in seconds) to pick up an item from the ground.
+const float ActionInventory::TIME_UNEQUIP_ABOUT =   10.0f;  // The time taken (in seconds) to unequip something about the body, like a cloak.
+const float ActionInventory::TIME_UNEQUIP_ARMOUR =  120.0f; // The time taken (in seconds) to unequip armour worn over the body, like a breastplate.
+const float ActionInventory::TIME_UNEQUIP_BODY =    180.0f; // The time taken (in seconds) to unequip armour worn against the body, like a hauberk.
+const float ActionInventory::TIME_UNEQUIP_FEET =    15.0f;  // The time taken (in seconds) to unequip boots or other things worn on the feet.
+const float ActionInventory::TIME_UNEQUIP_HANDS =   4.0f;   // The time taken (in seconds) to unequip gloves or something else worn on the hands.
+const float ActionInventory::TIME_UNEQUIP_HEAD =    2.0f;   // The time taken (in seconds) to unequip a helmet or so mething else worn on the head.
+const float ActionInventory::TIME_UNEQUIP_WEAPON =  0.5f;   // The time taken (in seconds) to unequip a weapon or something else held in the hand.
 
 
 // Checks to see what's being carried.
@@ -50,6 +52,13 @@ void ActionInventory::drop(std::shared_ptr<Mobile> mob, uint32_t item_pos)
 {
     const std::shared_ptr<Item> item = mob->inv()->get(item_pos);
     const std::shared_ptr<Room> room = core()->world()->get_room(mob->location());
+
+    if (!mob->pass_time(TIME_DROP_ITEM))
+    {
+        core()->message("{R}You are interrupted while attempting to drop " + item->name() + "{R}!");
+        return;
+    }
+
     mob->inv()->erase(item_pos);
     room->inv()->add_item(item);
     if (mob->is_player()) core()->message("{u}You drop " + item->name() + " {u}on the ground.");
@@ -133,38 +142,38 @@ bool ActionInventory::equip(std::shared_ptr<Mobile> mob, uint32_t item_pos)
         case EquipSlot::NONE: case EquipSlot::_END: throw std::runtime_error("Attempt to equip item into null slot.");
         case EquipSlot::ABOUT_BODY:
             slot_name = "about %your% body";
-            time_taken = EQUIP_TIME_ABOUT;
+            time_taken = TIME_EQUIP_ABOUT;
             break;
         case EquipSlot::ARMOUR:
             slot_name = "over %your% body";
-            time_taken = EQUIP_TIME_ARMOUR;
+            time_taken = TIME_EQUIP_ARMOUR;
             break;
         case EquipSlot::BODY:
             slot_name = "on %your% body";
-            time_taken = EQUIP_TIME_BODY;
+            time_taken = TIME_EQUIP_BODY;
             break;
         case EquipSlot::FEET:
             slot_name = "on %your% feet";
-            time_taken = EQUIP_TIME_FEET;
+            time_taken = TIME_EQUIP_FEET;
             break;
         case EquipSlot::HAND_MAIN:
             if (two_handed_item) slot_name = "in both hands";
             else slot_name = "in %your% main hand";
             action = "hold";
-            time_taken = EQUIP_TIME_WEAPON;
+            time_taken = TIME_EQUIP_WEAPON;
             break;
         case EquipSlot::HAND_OFF:
             slot_name = "in %your% off-hand";
             action = "hold";
-            time_taken = EQUIP_TIME_WEAPON;
+            time_taken = TIME_EQUIP_WEAPON;
             break;
         case EquipSlot::HANDS:
             slot_name = "on %your% hands";
-            time_taken = EQUIP_TIME_HANDS;
+            time_taken = TIME_EQUIP_HANDS;
             break;
         case EquipSlot::HEAD:
             slot_name = "on %your% head";
-            time_taken = EQUIP_TIME_HEAD;
+            time_taken = TIME_EQUIP_HEAD;
             break;
     }
     if (!time_taken) core()->guru()->nonfatal("Could not determine equip time for " + item->name(), Guru::ERROR);
@@ -227,6 +236,13 @@ void ActionInventory::take(std::shared_ptr<Mobile> mob, uint32_t item_pos)
 {
     const std::shared_ptr<Room> room = core()->world()->get_room(mob->location());
     const std::shared_ptr<Item> item = room->inv()->get(item_pos);
+
+    if (!mob->pass_time(TIME_GET_ITEM))
+    {
+        core()->message("{R}You are interrupted while trying to pick up " + item->name() + "{R}!");
+        return;
+    }
+
     room->inv()->erase(item_pos);
     mob->inv()->add_item(item);
     if (mob->is_player()) core()->message("{u}You pick up " + item->name() + "{u}.");
@@ -260,13 +276,13 @@ bool ActionInventory::unequip(std::shared_ptr<Mobile> mob, uint32_t item_pos)
     switch (slot)
     {
         case EquipSlot::NONE: case EquipSlot::_END: throw std::runtime_error("Invalid equipment slot.");
-        case EquipSlot::ABOUT_BODY: time_taken = UNEQUIP_TIME_ABOUT; break;
-        case EquipSlot::ARMOUR: time_taken = UNEQUIP_TIME_ARMOUR; break;
-        case EquipSlot::BODY: time_taken = UNEQUIP_TIME_BODY; break;
-        case EquipSlot::FEET: time_taken = UNEQUIP_TIME_FEET; break;
-        case EquipSlot::HAND_MAIN: case EquipSlot::HAND_OFF: time_taken = UNEQUIP_TIME_WEAPON; break;
-        case EquipSlot::HANDS: time_taken = UNEQUIP_TIME_HANDS; break;
-        case EquipSlot::HEAD: time_taken = UNEQUIP_TIME_HEAD; break;
+        case EquipSlot::ABOUT_BODY: time_taken = TIME_UNEQUIP_ABOUT; break;
+        case EquipSlot::ARMOUR: time_taken = TIME_UNEQUIP_ARMOUR; break;
+        case EquipSlot::BODY: time_taken = TIME_UNEQUIP_BODY; break;
+        case EquipSlot::FEET: time_taken = TIME_UNEQUIP_FEET; break;
+        case EquipSlot::HAND_MAIN: case EquipSlot::HAND_OFF: time_taken = TIME_UNEQUIP_WEAPON; break;
+        case EquipSlot::HANDS: time_taken = TIME_UNEQUIP_HANDS; break;
+        case EquipSlot::HEAD: time_taken = TIME_UNEQUIP_HEAD; break;
     }
     if (!time_taken) core()->guru()->nonfatal("Could not determine unequip time for " + item->name(), Guru::ERROR);
     const bool success = mob->pass_time(time_taken);

@@ -21,18 +21,20 @@ public:
     static bool unequip(std::shared_ptr<Mobile> mob, EquipSlot slot);       // As above, but specifying an EquipSlot.
 
 private:
-    static const float  EQUIP_TIME_ABOUT;       // The time taken (in seconds) to equip something about the body, like a cloak.
-    static const float  EQUIP_TIME_ARMOUR;      // The time taken (in seconds) to equip armour worn over the body, like a breastplate.
-    static const float  EQUIP_TIME_BODY;        // The time taken (in seconds) to equip armour worn against the body, like a hauberk.
-    static const float  EQUIP_TIME_FEET;        // The time taken (in seconds) to equip boots or other things worn on the feet.
-    static const float  EQUIP_TIME_HANDS;       // The time taken (in seconds) to equip gloves or something else worn on the hands.
-    static const float  EQUIP_TIME_HEAD;        // The time taken (in seconds) to equip a helmet or so mething else worn on the head.
-    static const float  EQUIP_TIME_WEAPON;      // The time taken (in seconds) to equip a weapon or something else held in the hand.
-    static const float  UNEQUIP_TIME_ABOUT;     // The time taken (in seconds) to unequip something about the body, like a cloak.
-    static const float  UNEQUIP_TIME_ARMOUR;    // The time taken (in seconds) to unequip armour worn over the body, like a breastplate.
-    static const float  UNEQUIP_TIME_BODY;      // The time taken (in seconds) to unequip armour worn against the body, like a hauberk.
-    static const float  UNEQUIP_TIME_FEET;      // The time taken (in seconds) to unequip boots or other things worn on the feet.
-    static const float  UNEQUIP_TIME_HANDS;     // The time taken (in seconds) to unequip gloves or something else worn on the hands.
-    static const float  UNEQUIP_TIME_HEAD;      // The time taken (in seconds) to unequip a helmet or so mething else worn on the head.
-    static const float  UNEQUIP_TIME_WEAPON;    // The time taken (in seconds) to unequip a weapon or something else held in the hand.
+    static const float  TIME_DROP_ITEM;         // The time taken (in seconds) to drop an item on the ground.
+    static const float  TIME_EQUIP_ABOUT;       // The time taken (in seconds) to equip something about the body, like a cloak.
+    static const float  TIME_EQUIP_ARMOUR;      // The time taken (in seconds) to equip armour worn over the body, like a breastplate.
+    static const float  TIME_EQUIP_BODY;        // The time taken (in seconds) to equip armour worn against the body, like a hauberk.
+    static const float  TIME_EQUIP_FEET;        // The time taken (in seconds) to equip boots or other things worn on the feet.
+    static const float  TIME_EQUIP_HANDS;       // The time taken (in seconds) to equip gloves or something else worn on the hands.
+    static const float  TIME_EQUIP_HEAD;        // The time taken (in seconds) to equip a helmet or so mething else worn on the head.
+    static const float  TIME_EQUIP_WEAPON;      // The time taken (in seconds) to equip a weapon or something else held in the hand.
+    static const float  TIME_GET_ITEM;          // The time taken (in seconds) to pick up an item from the ground.
+    static const float  TIME_UNEQUIP_ABOUT;     // The time taken (in seconds) to unequip something about the body, like a cloak.
+    static const float  TIME_UNEQUIP_ARMOUR;    // The time taken (in seconds) to unequip armour worn over the body, like a breastplate.
+    static const float  TIME_UNEQUIP_BODY;      // The time taken (in seconds) to unequip armour worn against the body, like a hauberk.
+    static const float  TIME_UNEQUIP_FEET;      // The time taken (in seconds) to unequip boots or other things worn on the feet.
+    static const float  TIME_UNEQUIP_HANDS;     // The time taken (in seconds) to unequip gloves or something else worn on the hands.
+    static const float  TIME_UNEQUIP_HEAD;      // The time taken (in seconds) to unequip a helmet or so mething else worn on the head.
+    static const float  TIME_UNEQUIP_WEAPON;    // The time taken (in seconds) to unequip a weapon or something else held in the hand.
 };
