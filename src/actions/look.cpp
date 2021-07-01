@@ -30,7 +30,44 @@ void ActionLook::examine(std::shared_ptr<Mobile> mob, ParserTarget target_type, 
 // Examines an Item.
 void ActionLook::examine_item(std::shared_ptr<Mobile>, std::shared_ptr<Item> target)
 {
-    core()->message("You are looking at: " + target->name());
+    core()->message("You are looking at: " + target->name(Item::ItemName::INVENTORY));
+    if (target->desc().size()) core()->message("{0}" + target->desc());
+    std::string stat_string;
+    switch (target->type())
+    {
+        case ItemType::ARMOUR:
+        {
+            switch (target->subtype())
+            {
+                case ItemSub::CLOTHING: stat_string = "This is {U}clothing {w}that can be worn. "; break;
+                case ItemSub::HEAVY: stat_string = "This is {U}heavy armour {w}that can be worn. "; break;
+                case ItemSub::LIGHT: stat_string = "This is {U}lightweight armour {w}that can be worn. "; break;
+                case ItemSub::MEDIUM: stat_string = "This is {U}medium armour {w}that can be worn. "; break;
+                default: break;
+            }
+            break;
+        }
+        case ItemType::KEY: stat_string = "This is a {U}key {w}which can unlock certain doors. "; break;
+        case ItemType::LIGHT:
+            stat_string = "This is a {U}light source {w}which can be held. It provides a brightness level of {Y}" + std::to_string(target->power()) + "{w} when used. ";
+            break;
+        case ItemType::NONE: break;
+        case ItemType::WEAPON:
+        {
+            switch (target->subtype())
+            {
+                case ItemSub::MELEE: stat_string = "This is a {U}melee weapon {w}which can be wielded. "; break;
+                default: break;
+            }
+            if (target->tag(ItemTag::TwoHanded)) stat_string += "It is heavy and requires {U}two hands {w}to wield.";
+            break;
+        }
+    }
+    if (stat_string.size())
+    {
+        stat_string.pop_back();
+        core()->message(stat_string);
+    }
 }
 
 // Examines a Mobile.

@@ -2,6 +2,7 @@
 # Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 SKELETON_KEY:   # The skeleton key can open any lock.
+  description: This key appears to have been carved from a small bone.
   metadata: "key:SKELETON"
   name: "{B}Sk{u}elet{B}on K{u}e{B}y"
   type: key

@@ -248,6 +248,9 @@ void World::load_item_pool()
             // The Item's power, if any.
             if (item_data["power"]) new_item->set_power(item_data["power"].as<int>());
 
+            // The Item's description, if any.
+            if (item_data["description"]) new_item->set_description(item_data["description"].as<std::string>());
+
             // Add the new Item to the item pool.
             m_item_pool.insert(std::make_pair(item_id, new_item));
         }

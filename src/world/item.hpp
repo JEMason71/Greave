@@ -35,6 +35,7 @@ public:
                 Item();                             // Constructor, sets default values.
     void        clear_meta(const std::string &key); // Clears a metatag from an Item. Use with caution!
     void        clear_tag(ItemTag the_tag);         // Clears a tag on this Item.
+    std::string desc() const;                       // Retrieves this Item's description.
     EquipSlot   equip_slot() const;                 // Checks what slot this Item equips in, if any.
     static std::shared_ptr<Item> load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id);  // Loads a new Item from the save file.
     std::string meta(const std::string &key) const; // Retrieves Item metadata.
@@ -44,6 +45,7 @@ public:
     uint16_t    parser_id() const;                  // Retrieves the current ID of this Item, for parser differentiation.
     uint16_t    power() const;                      // Retrieves this Item's power.
     void        save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id); // Saves the Item to the save file.
+    void        set_description(const std::string &desc);   // Sets this Item's description.
     void        set_equip_slot(EquipSlot es);       // Sets this Item's equipment slot.
     void        set_meta(const std::string &key, const std::string &value); // Adds Item metadata.
     void        set_name(const std::string &name);  // Sets the name of this Item.
@@ -55,6 +57,7 @@ public:
     ItemType    type() const;                       // Returns the ItemType of this Item.
 
 private:
+    std::string m_description;  // The description of this Item.
     EquipSlot   m_equip_slot;   // The slot this Item is equipped in, if any.
     std::map<std::string, std::string>  m_metadata; // The Item's metadata, if any.
     std::string m_name;         // The name of this Item!
