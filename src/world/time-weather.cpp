@@ -18,7 +18,6 @@ const std::string TimeWeather::SQL_TIME_WEATHER = "CREATE TABLE time_weather ( d
     "time_passed INTEGER NOT NULL, time_passed_subsecond REAL NOT NULL, weather INTEGER NOT NULL )";
 
 const int   TimeWeather::LUNAR_CYCLE_DAYS =     29;     // How many days are in a lunar cycle?
-const float TimeWeather::TIME_GRANULARITY =     0.1f;   // The lower this number, the more fine-grained the accuracy of the passage of time becomes.
 const float TimeWeather::UNINTERRUPTABLE_TIME = 5.0f;   // The maximum amount of time for an action that cannot be interrupted.
 
 
@@ -195,6 +194,7 @@ bool TimeWeather::pass_time(float seconds, bool allow_interrupt)
         }
         const bool show_weather_messages = (!indoors || can_see_outside);
 
+        // Update the time of day and weather.
         TimeOfDay old_time_of_day = time_of_day(true);
         int old_time = m_time;
         bool change_happened = false;
@@ -214,7 +214,6 @@ bool TimeWeather::pass_time(float seconds, bool allow_interrupt)
             trigger_event(current_season(), &weather_msg, !show_weather_messages);
             change_happened = show_weather_messages;
         }
-
         if (change_happened) core()->message(weather_message_colour() + weather_msg.substr(1), Show::WAITING, Wake::NEVER);
     }
 
@@ -246,9 +245,6 @@ std::string TimeWeather::season_str(TimeWeather::Season season) const
         default: throw std::runtime_error("Invalid season specified!");
     }
 }
-
-// Advances time by the smallest possible gradient; useful for loops waiting for something to happen.
-void TimeWeather::tick() { pass_time(TIME_GRANULARITY, false); }
 
 // Returns the current time of day (morning, day, dusk, night).
 TimeWeather::TimeOfDay TimeWeather::time_of_day(bool fine) const

@@ -33,7 +33,6 @@ public:
     bool        pass_time(float seconds, bool allow_interrupt = true);  // Causes time to pass.
     void        save(std::shared_ptr<SQLite::Database> save_db) const;  // Saves the time/weather data to disk.
     std::string season_str(Season season) const;    // Converts a season enum to a string.
-    void        tick();                             // Advances time by the smallest possible gradient; useful for loops waiting for something to happen.
     TimeOfDay   time_of_day(bool fine) const;       // Returns the current time of day (morning, day, dusk, night).
     int         time_of_day_exact() const;          // Returns the exact time of day.
     std::string time_of_day_str(bool fine) const;   // Returns the current time of day as a string.
@@ -44,7 +43,6 @@ public:
 
 private:
     static const int    LUNAR_CYCLE_DAYS;       // How many days are in a lunar cycle?
-    static const float  TIME_GRANULARITY;       // The lower this number, the more fine-grained the accuracy of the passage of time becomes.
     static const float  UNINTERRUPTABLE_TIME;   // The maximum amount of time for an action that cannot be interrupted.
 
     Weather     fix_weather(Weather weather, Season season) const;  // Fixes weather for a specified season, to account for unavailable weather types.
