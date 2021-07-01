@@ -36,7 +36,6 @@ public:
     TimeOfDay   time_of_day(bool fine) const;       // Returns the current time of day (morning, day, dusk, night).
     int         time_of_day_exact() const;          // Returns the exact time of day.
     std::string time_of_day_str(bool fine) const;   // Returns the current time of day as a string.
-    long long   time_passed() const;                // Returns the total amount of time passed in this game.
     std::string weather_desc() const;               // Returns a weather description for the current time/weather, based on the current season.
     std::string weather_message_colour() const;     // Returns a colour to be used for time/weather messages, based on the time of day.
     std::string weather_str(Weather weather) const; // Converts a weather integer to a string.
@@ -52,8 +51,7 @@ private:
     int         m_day;          // The current day of the year.
     int         m_moon;         // The current moon phase.
     int         m_time;         // The time of day.
-    long long   m_time_passed;  // The total amount of time that has passed in this game.
-    float       m_time_passed_subsecond;    // For counting time passed in amounts of time less than a second.
+    float       m_subsecond;    // For counting time passed in amounts of time less than a second.
     Weather     m_weather;      // The current weather.
 
     std::map<std::string, std::string>  m_tw_string_map;        // The time and weather strings from data/weather.yml

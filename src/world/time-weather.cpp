@@ -15,14 +15,14 @@
 
 // SQL table construction string for time and weather data.
 const std::string TimeWeather::SQL_TIME_WEATHER = "CREATE TABLE time_weather ( day INTEGER NOT NULL, moon INTEGER NOT NULL, time INTEGER PRIMARY KEY UNIQUE NOT NULL, "
-    "time_passed INTEGER NOT NULL, time_passed_subsecond REAL NOT NULL, weather INTEGER NOT NULL )";
+    "subsecond REAL NOT NULL, weather INTEGER NOT NULL )";
 
 const int   TimeWeather::LUNAR_CYCLE_DAYS =     29;     // How many days are in a lunar cycle?
 const float TimeWeather::UNINTERRUPTABLE_TIME = 5.0f;   // The maximum amount of time for an action that cannot be interrupted.
 
 
 // Constructor, sets default values.
-TimeWeather::TimeWeather() : m_day(80), m_moon(1), m_time(39660), m_time_passed(0), m_time_passed_subsecond(0), m_weather(Weather::FAIR)
+TimeWeather::TimeWeather() : m_day(80), m_moon(1), m_time(39660), m_subsecond(0), m_weather(Weather::FAIR)
 {
     m_weather_change_map.resize(9);
     const YAML::Node yaml_weather = YAML::LoadFile("data/weather.yml");
@@ -123,8 +123,7 @@ void TimeWeather::load(std::shared_ptr<SQLite::Database> save_db)
         m_day = query.getColumn("day").getInt();
         m_moon = query.getColumn("moon").getInt();
         m_time = query.getColumn("time").getInt();
-        m_time_passed = static_cast<unsigned long long>(query.getColumn("time_passed").getInt64());
-        m_time_passed_subsecond = query.getColumn("time_passed_subsecond").getDouble();
+        m_subsecond = query.getColumn("subsecond").getDouble();
         m_weather = static_cast<Weather>(query.getColumn("weather").getInt());
     }
     else throw std::runtime_error("Could not load time and weather data!");
@@ -172,21 +171,17 @@ bool TimeWeather::pass_time(float seconds)
     const bool indoors = room->tag(RoomTag::Indoors);
     const bool can_see_outside = room->tag(RoomTag::CanSeeOutside);
 
-    // Add to the total time passed count.
-    m_time_passed_subsecond += seconds;
+    // Determine how many seconds to pass.
+    m_subsecond += seconds;
     int seconds_to_add = 0;
-    if (m_time_passed_subsecond >= 1.0f)
+    if (m_subsecond >= 1.0f)
     {
-        seconds_to_add = std::floor(m_time_passed_subsecond);
-        m_time_passed += seconds_to_add;
-        m_time_passed_subsecond -= seconds_to_add;
+        seconds_to_add = std::floor(m_subsecond);
+        m_subsecond -= seconds_to_add;
     }
 
-    //int player_old_hp = World::player()->hp();
-    while (seconds_to_add)
+    while (seconds_to_add--)
     {
-        seconds_to_add--;
-
         if (seconds > UNINTERRUPTABLE_TIME)
         {
             // todo: check if the player is in combat, or something else that'll interrupt their actions
@@ -224,13 +219,12 @@ bool TimeWeather::pass_time(float seconds)
 // Saves the time/weather data to disk.
 void TimeWeather::save(std::shared_ptr<SQLite::Database> save_db) const
 {
-    SQLite::Statement query(*save_db, "INSERT INTO time_weather ( day, moon, time, time_passed, time_passed_subsecond, weather ) VALUES ( ?, ?, ?, ?, ?, ? )");
+    SQLite::Statement query(*save_db, "INSERT INTO time_weather ( day, moon, time, subsecond, weather ) VALUES ( ?, ?, ?, ?, ? )");
     query.bind(1, m_day);
     query.bind(2, m_moon);
     query.bind(3, m_time);
-    query.bind(4, static_cast<long long>(m_time_passed));
-    query.bind(5, m_time_passed_subsecond);
-    query.bind(6, static_cast<int>(m_weather));
+    query.bind(4, m_subsecond);
+    query.bind(5, static_cast<int>(m_weather));
     query.exec();
 }
 
@@ -297,9 +291,6 @@ std::string TimeWeather::time_of_day_str(bool fine) const
         return "NIGHT";
     }
 }
-
-// Returns the total amount of time passed in this game.
-long long TimeWeather::time_passed() const { return m_time_passed; }
 
 void TimeWeather::trigger_event(TimeWeather::Season season, std::string *message_to_append, bool silent)
 {
