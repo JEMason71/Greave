@@ -24,6 +24,7 @@ Parser::Parser() : m_special_state(SpecialState::NONE)
     add_command("drop <item:i>", ParserCommand::DROP);
     add_command("[equipment|equip|eq]", ParserCommand::EQUIPMENT);
     add_command("[equip|eq|wield|hold|wear] <item:i>", ParserCommand::EQUIP);
+    add_command("[examine|exam|ex|x] <item:i|item:e|item:r|mobile>", ParserCommand::EXAMINE);
     add_command("exits", ParserCommand::EXITS);
     add_command("[fuck|shit|piss|bastard] *", ParserCommand::SWEAR);
     add_command("[go|travel|walk|run|move] <dir>", ParserCommand::GO);
@@ -305,6 +306,11 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             break;
         case ParserCommand::EQUIPMENT:
             ActionInventory::equipment(player);
+            break;
+        case ParserCommand::EXAMINE:
+            if (!words.size()) core()->message("{y}Please specify {Y}what you want to examine{y}.");
+            else if (parsed_target_type == ParserTarget::TARGET_NONE) core()->message("{y}You don't see any such {Y}" + collapsed_words + "{y} here.");
+            else if (parsed_target_type != ParserTarget::TARGET_UNCLEAR) ActionLook::examine(player, parsed_target_type, parsed_target);
             break;
         case ParserCommand::EXITS:
             ActionLook::obvious_exits(player, false);

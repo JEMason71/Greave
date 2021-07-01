@@ -3,6 +3,8 @@
 
 #include "actions/look.hpp"
 #include "core/core.hpp"
+#include "core/guru.hpp"
+#include "core/parser.hpp"
 #include "core/strx.hpp"
 #include "world/inventory.hpp"
 #include "world/item.hpp"
@@ -11,6 +13,31 @@
 #include "world/time-weather.hpp"
 #include "world/world.hpp"
 
+
+// Examines an Item or Mobile.
+void ActionLook::examine(std::shared_ptr<Mobile> mob, ParserTarget target_type, uint32_t target)
+{
+    switch (target_type)
+    {
+        case ParserTarget::TARGET_EQUIPMENT: examine_item(mob, mob->equ()->get(target)); break;
+        case ParserTarget::TARGET_INVENTORY: examine_item(mob, mob->inv()->get(target)); break;
+        case ParserTarget::TARGET_MOBILE: examine_mobile(mob, core()->world()->mob(target)); break;
+        case ParserTarget::TARGET_ROOM: examine_item(mob, core()->world()->get_room(mob->location())->inv()->get(target)); break;
+        default: core()->guru()->nonfatal("Invalid examine target.", Guru::ERROR);
+    }
+}
+
+// Examines an Item.
+void ActionLook::examine_item(std::shared_ptr<Mobile>, std::shared_ptr<Item> target)
+{
+    core()->message("You are looking at: " + target->name());
+}
+
+// Examines a Mobile.
+void ActionLook::examine_mobile(std::shared_ptr<Mobile>, std::shared_ptr<Mobile> target)
+{
+    core()->message("You are looking at: " + target->name());
+}
 
 // Take a look around at your surroundings.
 void ActionLook::look(std::shared_ptr<Mobile> mob)

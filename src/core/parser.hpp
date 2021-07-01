@@ -6,6 +6,8 @@
 
 class Inventory;    // defined in world/inventory.hpp
 
+enum ParserTarget : uint8_t { TARGET_NONE = 0, TARGET_EQUIPMENT = 1, TARGET_INVENTORY = 2, TARGET_MOBILE = 4, TARGET_ROOM = 8, TARGET_UNCLEAR = 16 };
+
 
 class Parser
 {
@@ -15,10 +17,9 @@ public:
     void    parse(std::string input);   // Parses input from the player!
 
 private:
-    enum class ParserCommand : uint16_t { NONE, CLOSE, DIRECTION, DROP, EQUIP, EQUIPMENT, EXITS, GO, HASH, INVENTORY, LOCK, LOOK, NO, OPEN, SAVE, SPAWN_ITEM, SWEAR, TAKE, TELEPORT,
-        TIME, UNEQUIP, UNLOCK, WAIT, WEATHER, XYZZY, YES, QUIT };
+    enum class ParserCommand : uint16_t { NONE, CLOSE, DIRECTION, DROP, EQUIP, EQUIPMENT, EXAMINE, EXITS, GO, HASH, INVENTORY, LOCK, LOOK, NO, OPEN, SAVE, SPAWN_ITEM, SWEAR, TAKE,
+        TELEPORT, TIME, UNEQUIP, UNLOCK, WAIT, WEATHER, XYZZY, YES, QUIT };
     enum class SpecialState : uint8_t { NONE, QUIT_CONFIRM, DISAMBIGUATION };
-    enum ParserTarget : uint32_t { TARGET_NONE = 0, TARGET_EQUIPMENT = 1, TARGET_INVENTORY = 2, TARGET_MOBILE = 4, TARGET_ROOM = 8, TARGET_UNCLEAR = 16 };
 
     struct ParserCommandData
     {
