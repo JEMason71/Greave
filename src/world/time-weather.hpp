@@ -30,7 +30,7 @@ public:
     void        load(std::shared_ptr<SQLite::Database> save_db);    // Loads the time/weather data from disk.
     std::string month_name() const;                 // Returns the name of the current month.
     LunarPhase  moon_phase() const;                 // Gets the current lunar phase.
-    bool        pass_time(float seconds, bool allow_interrupt = false); // Causes time to pass.
+    bool        pass_time(float seconds, bool allow_interrupt = true);  // Causes time to pass.
     void        save(std::shared_ptr<SQLite::Database> save_db) const;  // Saves the time/weather data to disk.
     std::string season_str(Season season) const;    // Converts a season enum to a string.
     void        tick();                             // Advances time by the smallest possible gradient; useful for loops waiting for something to happen.
@@ -43,8 +43,9 @@ public:
     std::string weather_str(Weather weather) const; // Converts a weather integer to a string.
 
 private:
-    static const int            LUNAR_CYCLE_DAYS;   // How many days are in a lunar cycle?
-    static const float          TIME_GRANULARITY;   // The lower this number, the more fine-grained the accuracy of the passage of time becomes.
+    static const int    LUNAR_CYCLE_DAYS;       // How many days are in a lunar cycle?
+    static const float  TIME_GRANULARITY;       // The lower this number, the more fine-grained the accuracy of the passage of time becomes.
+    static const float  UNINTERRUPTABLE_TIME;   // The maximum amount of time for an action that cannot be interrupted.
 
     Weather     fix_weather(Weather weather, Season season) const;  // Fixes weather for a specified season, to account for unavailable weather types.
     void        trigger_event(Season season, std::string *message_to_append, bool silent);  // Triggers a time-change event.

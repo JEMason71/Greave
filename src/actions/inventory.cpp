@@ -172,7 +172,7 @@ bool ActionInventory::equip(std::shared_ptr<Mobile> mob, uint32_t item_pos)
     // todo: messages for NPCs equipping gear
     StrX::find_and_replace(slot_name, "%your%", "your");
 
-    const bool success = core()->world()->time_weather()->pass_time(time_taken, time_taken >= 1.0f);
+    const bool success = core()->world()->time_weather()->pass_time(time_taken);
     if (!success)
     {
         // todo: messages for NPCs aborting gear equipment
@@ -271,7 +271,7 @@ bool ActionInventory::unequip(std::shared_ptr<Mobile> mob, uint32_t item_pos)
         case EquipSlot::HEAD: time_taken = UNEQUIP_TIME_HEAD; break;
     }
     if (!time_taken) core()->guru()->nonfatal("Could not determine unequip time for " + item->name(), Guru::ERROR);
-    const bool success = core()->world()->time_weather()->pass_time(time_taken, time_taken >= 1.0f);
+    const bool success = core()->world()->time_weather()->pass_time(time_taken);
     if (!success)
     {
         // todo: messages for NPCs aborting gear removal

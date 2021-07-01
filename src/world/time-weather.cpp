@@ -17,8 +17,9 @@
 const std::string TimeWeather::SQL_TIME_WEATHER = "CREATE TABLE time_weather ( day INTEGER NOT NULL, moon INTEGER NOT NULL, time INTEGER PRIMARY KEY UNIQUE NOT NULL, "
     "time_passed INTEGER NOT NULL, time_passed_subsecond REAL NOT NULL, weather INTEGER NOT NULL )";
 
-const int TimeWeather::LUNAR_CYCLE_DAYS =   29;     // How many days are in a lunar cycle?
-const float TimeWeather::TIME_GRANULARITY = 0.1f;   // The lower this number, the more fine-grained the accuracy of the passage of time becomes.
+const int   TimeWeather::LUNAR_CYCLE_DAYS =     29;     // How many days are in a lunar cycle?
+const float TimeWeather::TIME_GRANULARITY =     0.1f;   // The lower this number, the more fine-grained the accuracy of the passage of time becomes.
+const float TimeWeather::UNINTERRUPTABLE_TIME = 5.0f;   // The maximum amount of time for an action that cannot be interrupted.
 
 
 // Constructor, sets default values.
@@ -187,7 +188,7 @@ bool TimeWeather::pass_time(float seconds, bool allow_interrupt)
     {
         seconds_to_add--;
         //if (World::player()->game_over()) return false;
-        if (allow_interrupt)
+        if (allow_interrupt && seconds > UNINTERRUPTABLE_TIME)
         {
             //if (World::player()->hp() < player_old_hp) return false;
             //player_old_hp = World::player()->hp();  // Because HP might go *up* in the meantime.
@@ -247,7 +248,7 @@ std::string TimeWeather::season_str(TimeWeather::Season season) const
 }
 
 // Advances time by the smallest possible gradient; useful for loops waiting for something to happen.
-void TimeWeather::tick() { pass_time(TIME_GRANULARITY); }
+void TimeWeather::tick() { pass_time(TIME_GRANULARITY, false); }
 
 // Returns the current time of day (morning, day, dusk, night).
 TimeWeather::TimeOfDay TimeWeather::time_of_day(bool fine) const
