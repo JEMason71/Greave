@@ -14,6 +14,7 @@ enum class ItemSub : uint16_t;          // defined in world/item.hpp
 enum class ItemTag : uint16_t;          // defined in world/item.hpp
 enum class ItemType : uint16_t;         // defined in world/item.hpp
 enum class LinkTag : uint16_t;          // defined in world/room.hpp
+enum class MobileTag : uint16_t;        // defined in world/mobile.hpp
 enum class RoomTag : uint16_t;          // defined in world/room.hpp
 enum class Security : uint8_t;          // defined in world/room.hpp
 namespace SQLite { class Database; }    // defined in 3rdparty/SQLiteCpp/Database.h
@@ -50,6 +51,7 @@ private:
     static const std::map<std::string, ItemType>    ITEM_TYPE_MAP;      // Lookup table for converting ItemType text names into enums.
     static const std::map<std::string, uint8_t>     LIGHT_LEVEL_MAP;    // Lookup table for converting textual light levels (e.g. "bright") to integer values.
     static const std::map<std::string, LinkTag>     LINK_TAG_MAP;       // Lookup table for converting LinkTag text names into enums.
+    static const std::map<std::string, MobileTag>   MOBILE_TAG_MAP;     // Lookup table for converting MobileTag text names into enums.
     static const std::map<std::string, RoomTag>     ROOM_TAG_MAP;       // Lookup table for converting RoomTag text names into enums.
     static const std::map<std::string, Security>    SECURITY_MAP;       // Lookup table for converting textual room security (e.g. "anarchy") to enum values.
 

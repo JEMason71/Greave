@@ -44,6 +44,9 @@ const std::map<std::string, LinkTag>    World::LINK_TAG_MAP = { { "autoclose", L
     { "openable", LinkTag::Openable }, { "permalock", LinkTag::Permalock }, { "sky", LinkTag::Sky}, { "sky2", LinkTag::Sky2 }, { "sky3", LinkTag::Sky3 },
     { "triplelength", LinkTag::TripleLength }, { "window", LinkTag::Window } };
 
+// Lookup table for converting MobileTag text names into enums.
+const std::map<std::string, MobileTag>  World::MOBILE_TAG_MAP = { };
+
 // Lookup table for converting RoomTag text names into enums.
 const std::map<std::string, RoomTag>    World::ROOM_TAG_MAP = { { "canseeoutside", RoomTag::CanSeeOutside }, { "churchaltar", RoomTag::ChurchAltar }, { "digok", RoomTag::DigOK },
     { "gamepoker", RoomTag::GamePoker }, { "gameslots", RoomTag::GameSlots }, { "gross", RoomTag::Gross }, { "heatedinterior", RoomTag::HeatedInterior },
@@ -338,6 +341,19 @@ void World::load_mob_pool()
             // The Mobile's species.
             if (!mobile_data["species"]) core()->guru()->nonfatal("Missing species: " + mobile_id_str, Guru::CRITICAL);
             else new_mob->set_species(mobile_data["species"].as<std::string>());
+
+            // The Mobile's tags, if any.
+            if (mobile_data["tags"])
+            {
+                if (!mobile_data["tags"].IsSequence()) core()->guru()->nonfatal("{r}Malformed mobile tags: " + mobile_id_str, Guru::ERROR);
+                else for (auto tag : mobile_data["tags"])
+                {
+                    const std::string tag_str = StrX::str_tolower(tag.as<std::string>());
+                    const auto tag_it = MOBILE_TAG_MAP.find(tag_str);
+                    if (tag_it == MOBILE_TAG_MAP.end()) core()->guru()->nonfatal("Unrecognized mobile tag (" + tag_str + "): " + mobile_id_str, Guru::ERROR);
+                    else new_mob->set_tag(tag_it->second);
+                }
+            }
 
             // Add the Mobile to the mob pool.
             m_mob_pool.insert(std::make_pair(mobile_id, new_mob));
