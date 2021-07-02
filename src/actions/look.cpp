@@ -56,7 +56,7 @@ void ActionLook::examine_item(std::shared_ptr<Mobile>, std::shared_ptr<Item> tar
                 case EquipSlot::HEAD: slot = "on your head"; break;
                 default: break;
             }
-            stat_string += " {U}" + slot + "{w}. ";
+            stat_string += " {U}" + slot + "{w}. It has an armour value of {U}" + std::to_string(target->power()) + "{w}. ";
             break;
         }
         case ItemType::KEY: stat_string = "This is a {U}key {w}which can unlock certain doors. "; break;
@@ -64,7 +64,9 @@ void ActionLook::examine_item(std::shared_ptr<Mobile>, std::shared_ptr<Item> tar
             stat_string = "This is a {U}light source {w}which can be held. It provides a brightness level of {Y}" + std::to_string(target->power()) + "{w} when used. ";
             break;
         case ItemType::NONE: break;
-        case ItemType::SHIELD: stat_string = "This is a {U}shield {w}which can be wielded. "; break;
+        case ItemType::SHIELD:
+            stat_string = "This is a {U}shield {w}which can be wielded. It has an armour value of {U}" + std::to_string(target->power()) + "{w}. ";
+            break;
         case ItemType::WEAPON:
         {
             switch (target->subtype())

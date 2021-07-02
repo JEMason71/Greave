@@ -120,6 +120,7 @@ std::string Item::name(int flags) const
         std::string core_stats_str, full_stats_str;
         switch (m_type)
         {
+            case ItemType::ARMOUR: case ItemType::SHIELD: full_stats_str += " {c}[{U}" + std::to_string(power()) + "{c}]"; break;
             case ItemType::LIGHT: core_stats_str += " {Y}<gl{W}o{Y}wing>"; break;
             case ItemType::WEAPON: full_stats_str += " {c}<{U}" + std::to_string(power()) + "{c}/{U}" + StrX::ftos(speed(), true) + "{c}>"; break;
             default: break;
