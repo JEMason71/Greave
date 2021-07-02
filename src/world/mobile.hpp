@@ -10,6 +10,8 @@ namespace SQLite { class Database; }    // defined in 3rdparty/SQLiteCpp/Databas
 
 
 enum class MobileTag : uint16_t {
+    PluralName = 1, // This Mobile's name is a plural (e.g. "pack of rats").
+    ProperNoun,     // This Mobile's name is a proper noun (e.g. Smaug).
 };
 
 struct BodyPart
@@ -22,6 +24,7 @@ struct BodyPart
 class Mobile
 {
 public:
+    static const int            NAME_FLAG_THE, NAME_FLAG_CAPITALIZE_FIRST, NAME_FLAG_POSSESSIVE, NAME_FLAG_PLURAL, NAME_FLAG_A; // Flags for the name() function.
     static const std::string    SQL_MOBILES;        // The SQL table construction string for Mobiles.
 
                         Mobile();                                   // Constructor, sets default values.
@@ -34,7 +37,7 @@ public:
     virtual bool        is_player() const;                          // Returns true if this Mobile is a Player, false if not.
     virtual uint32_t    load(std::shared_ptr<SQLite::Database> save_db, unsigned int sql_id);   // Loads a Mobile.
     uint32_t            location() const;                           // Retrieves the location of this Mobile, in the form of a Room ID.
-    std::string         name() const;                               // Retrieves the name of this Mobile.
+    std::string         name(int flags = 0) const;                  // Retrieves the name of this Mobile.
     void                new_parser_id();                            // Generates a new parser ID for this Mobile.
     uint16_t            parser_id() const;                          // Retrieves the current ID of this Mobile, for parser differentiation.
     bool                pass_time(float seconds);                   // Causes time to pass for this Mobile.

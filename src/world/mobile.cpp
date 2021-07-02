@@ -12,6 +12,13 @@
 #include "world/world.hpp"
 
 
+// Flags for the name() function.
+const int Mobile::NAME_FLAG_A =                 1;  // Precede the Mobile's name with 'a' or 'an', unless the name is a proper noun.
+const int Mobile::NAME_FLAG_CAPITALIZE_FIRST =  2;  // Capitalize the first letter of the Mobile's name (including the "The") if set.
+const int Mobile::NAME_FLAG_PLURAL =            4;  // Return a plural of the Mobile's name (e.g. apple -> apples).
+const int Mobile::NAME_FLAG_POSSESSIVE =        8;  // Change the Mobile's name to a possessive noun (e.g. goblin -> goblin's).
+const int Mobile::NAME_FLAG_THE =               16; // Precede the Mobile's name with 'the', unless the name is a proper noun.
+
 // The SQL table construction string for Mobiles.
 const std::string   Mobile::SQL_MOBILES =   "CREATE TABLE mobiles ( action_timer REAL, equipment INTEGER UNIQUE, hp INTEGER NOT NULL, hp_max INTEGER NOT NULL, "
     "inventory INTEGER UNIQUE, location INTEGER NOT NULL, name TEXT, parser_id INTEGER, species TEXT NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, tags TEXT )";
@@ -99,7 +106,31 @@ uint32_t Mobile::load(std::shared_ptr<SQLite::Database> save_db, unsigned int sq
 uint32_t Mobile::location() const { return m_location; }
 
 // Retrieves the name of this Mobile.
-std::string Mobile::name() const { return m_name; }
+std::string Mobile::name(int flags) const
+{
+    if (!m_name.size()) return "";
+    const bool a = ((flags & Mobile::NAME_FLAG_A) == Mobile::NAME_FLAG_A);
+    const bool the = ((flags & Mobile::NAME_FLAG_THE) == Mobile::NAME_FLAG_THE);
+    const bool capitalize_first = ((flags & Mobile::NAME_FLAG_CAPITALIZE_FIRST) == Mobile::NAME_FLAG_CAPITALIZE_FIRST);
+    const bool possessive = ((flags & Mobile::NAME_FLAG_POSSESSIVE) == Mobile::NAME_FLAG_POSSESSIVE);
+    const bool plural = ((flags & Mobile::NAME_FLAG_PLURAL) == Mobile::NAME_FLAG_PLURAL);
+
+    std::string ret = m_name;
+    if (the && !tag(MobileTag::ProperNoun)) ret = "the " + m_name;
+    else if (a && !tag(MobileTag::ProperNoun))
+    {
+        if (StrX::is_vowel(m_name.at(0))) ret = "an " + m_name;
+        else ret = "a " + m_name;
+    }
+    if (capitalize_first && ret[0] >= 'a' && ret[0] <= 'z') ret[0] -= 32;
+    if (possessive)
+    {
+        if (ret.back() == 's') ret += "'";
+        else ret += "'s";
+    }
+    else if (plural && ret.back() != 's' && !tag(MobileTag::PluralName)) ret += "s";
+    return ret;
+}
 
 // Generates a new parser ID for this Item.
 void Mobile::new_parser_id() { m_parser_id = core()->rng()->rnd(1, 9999); }

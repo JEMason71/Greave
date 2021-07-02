@@ -211,6 +211,13 @@ bool StrX::is_number(const std::string &str)
     return std::all_of(str.begin() + begin, str.end(), ::isdigit);
 }
 
+// Checks if a character is a vowel.
+bool StrX::is_vowel(char ch)
+{
+    if (ch >= 'A' && ch <= 'Z') ch += 32;
+    return (ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u');
+}
+
 // Converts an integer into a hex string.
 std::string StrX::itoh(uint32_t num, unsigned int min_len)
 {
