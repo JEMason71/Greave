@@ -10,14 +10,11 @@
 
 // The SQL table construction string for saving items.
 const std::string Item::SQL_ITEMS = "CREATE TABLE items ( description TEXT, equip_slot INTEGER, metadata TEXT, name TEXT NOT NULL, owner_id INTEGER NOT NULL, "
-    "parser_id INTEGER NOT NULL, power INTEGER, power2 INTEGER, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, subtype INTEGER, tags TEXT, type INTEGER )";
+    "parser_id INTEGER NOT NULL, power INTEGER, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, subtype INTEGER, tags TEXT, type INTEGER )";
 
 
 // Constructor, sets default values.
-Item::Item() : m_equip_slot(EquipSlot::NONE), m_parser_id(0), m_type(ItemType::NONE), m_type_sub(ItemSub::NONE)
-{
-    m_power[0] = m_power[1] = 0;
-}
+Item::Item() : m_equip_slot(EquipSlot::NONE), m_parser_id(0), m_power(0), m_type(ItemType::NONE), m_type_sub(ItemSub::NONE) { }
 
 // Clears a metatag from an Item. Use with caution!
 void Item::clear_meta(const std::string &key) { m_metadata.erase(key); }
@@ -46,20 +43,17 @@ std::shared_ptr<Item> Item::load(std::shared_ptr<SQLite::Database> save_db, uint
     {
         ItemType new_type = ItemType::NONE;
         ItemSub new_subtype = ItemSub::NONE;
-        uint16_t power = 0, power2 = 0;
 
         if (!query.getColumn("description").isNull()) new_item->set_description(query.getColumn("description").getString());
         if (!query.getColumn("equip_slot").isNull()) new_item->set_equip_slot(static_cast<EquipSlot>(query.getColumn("equip_slot").getInt()));
         if (!query.getColumn("metadata").isNull()) StrX::string_to_metadata(query.getColumn("metadata").getString(), new_item->m_metadata);
         new_item->set_name(query.getColumn("name").getString());
         new_item->m_parser_id = query.getColumn("parser_id").getUInt();
-        if (!query.getColumn("power").isNull()) power = query.getColumn("power").getInt();
-        if (!query.getColumn("power2").isNull()) power2 = query.getColumn("power2").getInt();
+        if (!query.getColumn("power").isNull()) new_item->m_power = query.getColumn("power").getInt();
         if (!query.isColumnNull("subtype")) new_subtype = static_cast<ItemSub>(query.getColumn("subtype").getInt());
         if (!query.getColumn("tags").isNull()) StrX::string_to_tags(query.getColumn("tags").getString(), new_item->m_tags);
         if (!query.isColumnNull("type")) new_type = static_cast<ItemType>(query.getColumn("type").getInt());
 
-        new_item->set_power(power, power2);
         new_item->set_type(new_type, new_subtype);
     }
     else throw std::runtime_error("Could not retrieve data for item ID " + std::to_string(sql_id));
@@ -81,16 +75,21 @@ std::map<std::string, std::string>* Item::meta_raw() { return &m_metadata; }
 std::string Item::name(ItemName level) const
 {
     if (level == ItemName::BASIC) return m_name;
-    std::string name = m_name;
+    std::string name = m_name + " ";
+    std::string inv_stats, room_stats;
 
     switch (m_type)
     {
-        case ItemType::LIGHT: name += " {Y}<gl{W}o{Y}wing>"; break;
-        case ItemType::WEAPON: name += " {w}<{U}" + std::to_string(power(1)) + "{c}d{U}" + std::to_string(power(2)) + "{w}>"; break;
+        case ItemType::LIGHT: room_stats += "{Y}<gl{W}o{Y}wing> "; break;
+        case ItemType::WEAPON: inv_stats += "{w}<{U}" + std::to_string(power()) + "{w}> "; break;
         default: break;
     }
+    inv_stats += "{B}{" + StrX::itos(m_parser_id, 4) + "} ";
 
-    if (level == ItemName::INVENTORY) name += " {B}{" + StrX::itos(m_parser_id, 4) + "}";
+    if (level == ItemName::INVENTORY && inv_stats.size()) name += inv_stats;
+    name += room_stats;
+    name.pop_back();
+
     return name;
 }
 
@@ -101,29 +100,24 @@ void Item::new_parser_id() { m_parser_id = core()->rng()->rnd(1, 9999); }
 uint16_t Item::parser_id() const { return m_parser_id; }
 
 // Retrieves this Item's power.
-uint16_t Item::power(int type) const
-{
-    if (type < 1 || type > 2) throw std::runtime_error("Invalid item power slot.");
-    return m_power[type - 1];
-}
+uint16_t Item::power() const { return m_power; }
 
 // Saves the Item.
 void Item::save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id)
 {
-    SQLite::Statement query(*save_db, "INSERT INTO items ( description, equip_slot, metadata, name, owner_id, parser_id, power, power2, sql_id, subtype, tags, type ) "
-        "VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
+    SQLite::Statement query(*save_db, "INSERT INTO items ( description, equip_slot, metadata, name, owner_id, parser_id, power, sql_id, subtype, tags, type ) "
+        "VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
     if (m_description.size()) query.bind(1, m_description);
     if (m_equip_slot != EquipSlot::NONE) query.bind(2, static_cast<int>(m_equip_slot));
     if (m_metadata.size()) query.bind(3, StrX::metadata_to_string(m_metadata));
     query.bind(4, m_name);
     query.bind(5, owner_id);
     query.bind(6, m_parser_id);
-    if (m_power[0]) query.bind(7, m_power[0]);
-    if (m_power[1]) query.bind(8, m_power[1]);
-    query.bind(9, core()->sql_unique_id());
-    if (m_type_sub != ItemSub::NONE) query.bind(10, static_cast<int>(m_type_sub));
-    if (m_tags.size()) query.bind(11, StrX::tags_to_string(m_tags));
-    if (m_type != ItemType::NONE) query.bind(12, static_cast<int>(m_type));
+    if (m_power) query.bind(7, m_power);
+    query.bind(8, core()->sql_unique_id());
+    if (m_type_sub != ItemSub::NONE) query.bind(9, static_cast<int>(m_type_sub));
+    if (m_tags.size()) query.bind(10, StrX::tags_to_string(m_tags));
+    if (m_type != ItemType::NONE) query.bind(11, static_cast<int>(m_type));
     query.exec();
 }
 
@@ -144,11 +138,7 @@ void Item::set_meta(const std::string &key, const std::string &value)
 void Item::set_name(const std::string &name) { m_name = name; }
 
 // Sets the power of this Item.
-void Item::set_power(uint16_t power, uint16_t power_second)
-{
-    m_power[0] = power;
-    if (power_second != UINT16_MAX) m_power[1] = power_second;
-}
+void Item::set_power(uint16_t power) { m_power = power; }
 
 // Sets a tag on this Item.
 void Item::set_tag(ItemTag the_tag)

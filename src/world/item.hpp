@@ -43,13 +43,13 @@ public:
     std::string name(ItemName level = ItemName::BASIC) const;   // Retrieves the name of thie Item.
     void        new_parser_id();                    // Generates a new parser ID for this Item.
     uint16_t    parser_id() const;                  // Retrieves the current ID of this Item, for parser differentiation.
-    uint16_t    power(int type = 1) const;          // Retrieves this Item's power.
+    uint16_t    power() const;                      // Retrieves this Item's power.
     void        save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id); // Saves the Item to the save file.
     void        set_description(const std::string &desc);   // Sets this Item's description.
     void        set_equip_slot(EquipSlot es);       // Sets this Item's equipment slot.
     void        set_meta(const std::string &key, const std::string &value); // Adds Item metadata.
     void        set_name(const std::string &name);  // Sets the name of this Item.
-    void        set_power(uint16_t power, uint16_t power_second = UINT16_MAX);  // Sets the power of this Item.
+    void        set_power(uint16_t power);          // Sets the power of this Item.
     void        set_tag(ItemTag the_tag);           // Sets a tag on this Item.
     void        set_type(ItemType type, ItemSub sub = ItemSub::NONE);   // Sets the type of this Item.
     ItemSub     subtype() const;                    // Returns the ItemSub (sub-type) of this Item.
@@ -62,7 +62,7 @@ private:
     std::map<std::string, std::string>  m_metadata; // The Item's metadata, if any.
     std::string m_name;         // The name of this Item!
     uint16_t    m_parser_id;    // The semi-unique ID of this Item, for parser differentiation.
-    uint16_t    m_power[2];     // The power of this Item, if any.
+    uint16_t    m_power;        // The power of this Item, if any.
     std::set<ItemTag>   m_tags; // Any and all ItemTags on this Item.
     ItemType    m_type;         // The primary type of this Item.
     ItemSub     m_type_sub;     // The subtype of this Item, if any.

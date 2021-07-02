@@ -246,17 +246,7 @@ void World::load_item_pool()
             }
 
             // The Item's power, if any.
-            if (item_data["power"])
-            {
-                if (item_data["power"].IsSequence())
-                {
-                    const unsigned int power_size = item_data["power"].size();
-                    if (power_size < 1 || power_size > 2) throw std::runtime_error("Item power data malformed: " + item_id_str);
-                    if (power_size == 2) new_item->set_power(item_data["power"][0].as<int>(), item_data["power"][1].as<int>());
-                    else new_item->set_power(item_data["power"][0].as<int>());
-                }
-                else new_item->set_power(item_data["power"].as<int>());
-            }
+            if (item_data["power"]) new_item->set_power(item_data["power"].as<int>());
 
             // The Item's description, if any.
             if (item_data["description"]) new_item->set_description(item_data["description"].as<std::string>());

@@ -4,6 +4,6 @@
 KNIGHTLY_SWORD:
   description: A simple, straight steel blade about three feet long, double-edged with a cruciform hilt.
   name: knightly sword
-  power: [ 1, 8 ]
+  power: 6
   slot: held
   type: [ weapon, melee ]

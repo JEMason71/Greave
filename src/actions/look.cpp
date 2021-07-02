@@ -72,7 +72,7 @@ void ActionLook::examine_item(std::shared_ptr<Mobile>, std::shared_ptr<Item> tar
                 default: break;
             }
             if (target->tag(ItemTag::TwoHanded)) stat_string += "It is heavy and requires {U}two hands {w}to wield. ";
-            stat_string += "It has a damage value of {U}" + std::to_string(target->power(1)) + "{c}d{U}" + std::to_string(target->power(2)) + "{w}. ";
+            stat_string += "It has a damage value of {U}" + std::to_string(target->power()) + "{w}. ";
             break;
         }
     }
