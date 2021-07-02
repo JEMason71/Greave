@@ -11,7 +11,7 @@ const std::string   Player::SQL_PLAYER = "CREATE TABLE player ( awake INTEGER NO
 
 
 // Constructor, sets default values.
-Player::Player() : m_awake(Awake::ACTIVE) { }
+Player::Player() : m_awake(Awake::ACTIVE) { set_species("humanoid"); }
 
 // Checks the consciousness level of this Mobile.
 Player::Awake Player::awake() const { return m_awake; }

@@ -4,3 +4,4 @@
 TEST_GOBLIN:
   hp: 20
   name: test goblin
+  species: humanoid

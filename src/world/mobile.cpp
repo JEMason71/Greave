@@ -14,7 +14,7 @@
 
 // The SQL table construction string for Mobiles.
 const std::string   Mobile::SQL_MOBILES =   "CREATE TABLE mobiles ( action_timer REAL, equipment INTEGER UNIQUE, hp INTEGER NOT NULL, hp_max INTEGER NOT NULL, "
-    "inventory INTEGER UNIQUE, location INTEGER NOT NULL, name TEXT, parser_id INTEGER, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL )";
+    "inventory INTEGER UNIQUE, location INTEGER NOT NULL, name TEXT, parser_id INTEGER, species TEXT NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL )";
 
 
 // Constructor, sets default values.
@@ -51,6 +51,7 @@ uint32_t Mobile::load(std::shared_ptr<SQLite::Database> save_db, unsigned int sq
         m_location = query.getColumn("location").getUInt();
         if (!query.isColumnNull("name")) m_name = query.getColumn("name").getString();
         if (!query.isColumnNull("parser_id")) m_parser_id = query.getColumn("parser_id").getInt();
+        m_species = query.getColumn("species").getString();
     }
     else throw std::runtime_error("Could not load mobile data!");
 
@@ -102,8 +103,8 @@ uint32_t Mobile::save(std::shared_ptr<SQLite::Database> save_db)
     const uint32_t equipment_id = m_equipment->save(save_db);
 
     const uint32_t sql_id = core()->sql_unique_id();
-    SQLite::Statement query(*save_db, "INSERT INTO mobiles ( action_timer, equipment, hp, hp_max, inventory, location, name, parser_id, sql_id ) "
-        "VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ? )");
+    SQLite::Statement query(*save_db, "INSERT INTO mobiles ( action_timer, equipment, hp, hp_max, inventory, location, name, parser_id, species, sql_id ) "
+        "VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
     if (m_action_timer) query.bind(1, m_action_timer);
     if (equipment_id) query.bind(2, equipment_id);
     query.bind(3, m_hp[0]);
@@ -112,7 +113,8 @@ uint32_t Mobile::save(std::shared_ptr<SQLite::Database> save_db)
     query.bind(6, m_location);
     if (m_name.size()) query.bind(7, m_name);
     if (m_parser_id) query.bind(8, m_parser_id);
-    query.bind(9, sql_id);
+    query.bind(9, m_species);
+    query.bind(10, sql_id);
     query.exec();
     return sql_id;
 }
@@ -136,3 +138,9 @@ void Mobile::set_location(const std::string &room_id)
 
 // Sets the name of this Mobile.
 void Mobile::set_name(const std::string &name) { m_name = name; }
+
+// Sets the species of this Mobile.
+void Mobile::set_species(const std::string &species) { m_species = species; }
+
+// Checks the species of this Mobile.
+std::string Mobile::species() const { return m_species; }
