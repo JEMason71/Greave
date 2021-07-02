@@ -17,16 +17,17 @@ const int Item::NAME_FLAG_FULL_STATS =          16;     // Displays some basic s
 const int Item::NAME_FLAG_NO_COLOUR =           32;     // Strips colour out of an Item's name.
 const int Item::NAME_FLAG_NO_COUNT =            64;     // Ignore the stack size on this item.
 const int Item::NAME_FLAG_PLURAL =              128;    // Return a plural of the Item's name (e.g. apple -> apples).
-const int Item::NAME_FLAG_THE =                 256;    // Precede the Item's name with 'the', unless the name is a proper noun.
+const int Item::NAME_FLAG_RARE =                256;    // Include the Item's rarity value in its name.
+const int Item::NAME_FLAG_THE =                 512;    // Precede the Item's name with 'the', unless the name is a proper noun.
 
 // The SQL table construction string for saving items.
 const std::string Item::SQL_ITEMS = "CREATE TABLE items ( description TEXT, equip_slot INTEGER, metadata TEXT, name TEXT NOT NULL, owner_id INTEGER NOT NULL, "
-    "parser_id INTEGER NOT NULL, plural_name TEXT, power INTEGER, speed REAL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, subtype INTEGER, tags TEXT, type INTEGER, "
-    "value INTEGER )";
+    "parser_id INTEGER NOT NULL, plural_name TEXT, power INTEGER, rare INTEGER NOT NULL, speed REAL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, subtype INTEGER, tags TEXT, "
+    "type INTEGER, value INTEGER )";
 
 
 // Constructor, sets default values.
-Item::Item() : m_equip_slot(EquipSlot::NONE), m_parser_id(0), m_power(0), m_speed(0), m_type(ItemType::NONE), m_type_sub(ItemSub::NONE), m_value(0) { }
+Item::Item() : m_equip_slot(EquipSlot::NONE), m_parser_id(0), m_power(0), m_rarity(1), m_speed(0), m_type(ItemType::NONE), m_type_sub(ItemSub::NONE), m_value(0) { }
 
 // Returns the armour damage reduction value of this Item, if any.
 float Item::armour(int bonus_power) const
@@ -98,6 +99,7 @@ std::shared_ptr<Item> Item::load(std::shared_ptr<SQLite::Database> save_db, uint
         new_item->m_parser_id = query.getColumn("parser_id").getUInt();
         if (!query.getColumn("plural_name").isNull()) new_item->m_plural_name = query.getColumn("plural_name").getString();
         if (!query.getColumn("power").isNull()) new_item->m_power = query.getColumn("power").getInt();
+        new_item->m_rarity = query.getColumn("rare").getInt();
         if (!query.getColumn("speed").isNull()) new_item->m_speed = query.getColumn("speed").getDouble();
         if (!query.isColumnNull("subtype")) new_subtype = static_cast<ItemSub>(query.getColumn("subtype").getInt());
         if (!query.getColumn("tags").isNull()) StrX::string_to_tags(query.getColumn("tags").getString(), new_item->m_tags);
@@ -141,6 +143,7 @@ std::string Item::name(int flags) const
     const bool id = full_stats || ((flags & Item::NAME_FLAG_ID) == Item::NAME_FLAG_ID);
     const bool plural = (((flags & Item::NAME_FLAG_PLURAL) == Item::NAME_FLAG_PLURAL)); //|| (m_stack > 1 && !no_count));
     const bool the = ((flags & Item::NAME_FLAG_THE) == Item::NAME_FLAG_THE);
+    const bool rarity = ((flags & Item::NAME_FLAG_RARE) == Item::NAME_FLAG_RARE);
 
     bool using_plural_name = false;
     std::string ret = m_name;
@@ -174,6 +177,20 @@ std::string Item::name(int flags) const
         if (core_stats && core_stats_str.size()) ret += core_stats_str;
         if (full_stats && full_stats_str.size()) ret += full_stats_str;
     }
+    if (rarity)
+    {
+        std::string colour_a = "{w}", colour_b = "{w}";
+        switch (m_rarity)
+        {
+            case 4: case 5: case 6: colour_a = "{U}"; colour_b = "{C}"; break;
+            case 7: case 8: colour_a = "{g}"; colour_b = "{G}"; break;
+            case 9: colour_a = "{m}"; colour_b = "{M}"; break;
+            case 10: colour_a = "{y}"; colour_b = "{Y}"; break;
+            case 11: colour_a = "{r}"; colour_b = "{R}"; break;
+        }
+        if (m_rarity == 12) ret += " {M}[" + StrX::rainbow_text("RARE-12", "mB") + "{M}]";
+        else ret += " " + colour_a + "[" + colour_b + "RARE-" + std::to_string(m_rarity) + colour_a + "]";
+    }
     if (id) ret += " {B}{" + StrX::itos(m_parser_id, 4) + "}";
     if (no_colour) ret = StrX::strip_ansi(ret);
     return ret;
@@ -188,11 +205,14 @@ uint16_t Item::parser_id() const { return m_parser_id; }
 // Retrieves this Item's power.
 uint16_t Item::power() const { return m_power; }
 
+// Retrieves this Item's rarity.
+uint8_t Item::rare() const { return m_rarity; }
+
 // Saves the Item.
 void Item::save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id)
 {
-    SQLite::Statement query(*save_db, "INSERT INTO items ( description, equip_slot, metadata, name, owner_id, parser_id, plural_name, power, speed, sql_id, subtype, tags, type, "
-        "value ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
+    SQLite::Statement query(*save_db, "INSERT INTO items ( description, equip_slot, metadata, name, owner_id, parser_id, plural_name, power, rare, speed, sql_id, subtype, tags, "
+        "type, value ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
     if (m_description.size()) query.bind(1, m_description);
     if (m_equip_slot != EquipSlot::NONE) query.bind(2, static_cast<int>(m_equip_slot));
     if (m_metadata.size()) query.bind(3, StrX::metadata_to_string(m_metadata));
@@ -201,12 +221,13 @@ void Item::save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id)
     query.bind(6, m_parser_id);
     if (m_plural_name.size()) query.bind(7, m_plural_name);
     if (m_power) query.bind(8, m_power);
-    if (m_speed) query.bind(9, m_speed);
-    query.bind(10, core()->sql_unique_id());
-    if (m_type_sub != ItemSub::NONE) query.bind(11, static_cast<int>(m_type_sub));
-    if (m_tags.size()) query.bind(12, StrX::tags_to_string(m_tags));
-    if (m_type != ItemType::NONE) query.bind(13, static_cast<int>(m_type));
-    if (m_value) query.bind(14, m_value);
+    query.bind(9, m_rarity);
+    if (m_speed) query.bind(10, m_speed);
+    query.bind(11, core()->sql_unique_id());
+    if (m_type_sub != ItemSub::NONE) query.bind(12, static_cast<int>(m_type_sub));
+    if (m_tags.size()) query.bind(13, StrX::tags_to_string(m_tags));
+    if (m_type != ItemType::NONE) query.bind(14, static_cast<int>(m_type));
+    if (m_value) query.bind(15, m_value);
     query.exec();
 }
 
@@ -235,6 +256,9 @@ void Item::set_name(const std::string &name, const std::string &plural_name)
 
 // Sets the power of this Item.
 void Item::set_power(uint16_t power) { m_power = power; }
+
+// Sets this Item's rarity.
+void Item::set_rare(uint8_t rarity) { m_rarity = rarity; }
 
 // Sets the speed of this Item.
 void Item::set_speed(float speed) { m_speed = speed; }

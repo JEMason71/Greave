@@ -5,6 +5,7 @@ ARMOUR_CLOTH:
   description: This tunic is thick and heavy, offering a little more defense than plain clothing.
   name: thick cloth tunic
   power: 3
+  rare: 2
   slot: body
   type: [ armour, light ]
   value: 40s

@@ -30,7 +30,7 @@ void ActionLook::examine(std::shared_ptr<Mobile> mob, ParserTarget target_type, 
 // Examines an Item.
 void ActionLook::examine_item(std::shared_ptr<Mobile>, std::shared_ptr<Item> target)
 {
-    core()->message("You are looking at: " + target->name(Item::NAME_FLAG_FULL_STATS | Item::NAME_FLAG_ID));
+    core()->message("You are looking at: " + target->name(Item::NAME_FLAG_FULL_STATS | Item::NAME_FLAG_ID | Item::NAME_FLAG_RARE));
     if (target->desc().size()) core()->message("{0}" + target->desc());
     std::string stat_string;
     switch (target->type())

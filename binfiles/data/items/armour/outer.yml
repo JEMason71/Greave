@@ -5,6 +5,7 @@ ARMOUR_HIDE:
   description: Rough-looking yet rugged and strong, tough animal hides are sewn to a tunic and reinforced with thick leather strips.
   name: [ hide armour, suits of hide armour ]
   power: 8
+  rare: 2
   slot: armour
   type: [ armour, light ]
   value: 1g 20s

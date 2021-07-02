@@ -4,6 +4,7 @@
 TORCH:
   name: torch
   power: 3
+  rare: 1
   slot: held
   tags: [ PreferOffHand]
   type: light

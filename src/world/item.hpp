@@ -37,7 +37,7 @@ class Item
 public:
                         // Flags for the name() function.
     static const int    NAME_FLAG_A, NAME_FLAG_CAPITALIZE_FIRST, NAME_FLAG_CORE_STATS, NAME_FLAG_ID, NAME_FLAG_FULL_STATS, NAME_FLAG_NO_COLOUR, NAME_FLAG_NO_COUNT, NAME_FLAG_PLURAL,
-        NAME_FLAG_THE;
+        NAME_FLAG_RARE, NAME_FLAG_THE;
     static const std::string    SQL_ITEMS;  // The SQL table construction string for saving items.
 
                 Item();                             // Constructor, sets default values.
@@ -56,6 +56,7 @@ public:
     void        new_parser_id();                    // Generates a new parser ID for this Item.
     uint16_t    parser_id() const;                  // Retrieves the current ID of this Item, for parser differentiation.
     uint16_t    power() const;                      // Retrieves this Item's power.
+    uint8_t     rare() const;                       // Retrieves this Item's rarity.
     void        save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id); // Saves the Item to the save file.
     void        set_description(const std::string &desc);   // Sets this Item's description.
     void        set_equip_slot(EquipSlot es);       // Sets this Item's equipment slot.
@@ -63,6 +64,7 @@ public:
     void        set_meta(const std::string &key, int value);    // As above, but with an integer value.
     void        set_name(const std::string &name, const std::string &plural_name = ""); // Sets the name of this Item.
     void        set_power(uint16_t power);          // Sets the power of this Item.
+    void        set_rare(uint8_t rarity);           // Sets this Item's rarity.
     void        set_speed(float speed);             // Sets the speed of this Item.
     void        set_tag(ItemTag the_tag);           // Sets a tag on this Item.
     void        set_type(ItemType type, ItemSub sub = ItemSub::NONE);   // Sets the type of this Item.
@@ -83,6 +85,7 @@ private:
     uint16_t    m_parser_id;        // The semi-unique ID of this Item, for parser differentiation.
     std::string m_plural_name;      // The custom plural name of this Item, if any.
     uint16_t    m_power;            // The power of this Item, if any.
+    uint8_t     m_rarity;           // The rarity of this Item.
     float       m_speed;            // The speed of this Item, if any.
     std::set<ItemTag>   m_tags;     // Any and all ItemTags on this Item.
     ItemType    m_type;             // The primary type of this Item.

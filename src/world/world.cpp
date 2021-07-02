@@ -359,6 +359,10 @@ void World::load_item_pool()
             }
             new_item->set_value(item_value);
 
+            // The Item's rarity.
+            if (!item_data["rare"]) core()->guru()->nonfatal("Missing rarity for item " + item_id_str, Guru::WARN);
+            else new_item->set_rare(item_data["rare"].as<int>());
+
             // Add the new Item to the item pool.
             m_item_pool.insert(std::make_pair(item_id, new_item));
         }
