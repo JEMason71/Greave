@@ -224,7 +224,10 @@ void ActionInventory::equipment(std::shared_ptr<Mobile> mob)
                 if (item->tag(ItemTag::TwoHanded) || (item->tag(ItemTag::HandAndAHalf) && !equ->get(EquipSlot::HAND_OFF))) slot_name = "in both hands";
                 else slot_name = "in main hand";
                 break;
-            case EquipSlot::HAND_OFF: slot_name = "in off-hand"; break;
+            case EquipSlot::HAND_OFF:
+                if (item->tag(ItemTag::HandAndAHalf) && !equ->get(EquipSlot::HAND_MAIN)) slot_name = "in both hands";
+                else slot_name = "in off-hand";
+                break;
             case EquipSlot::HANDS: slot_name = "on hands"; break;
             case EquipSlot::HEAD: slot_name = "on head"; break;
         }
