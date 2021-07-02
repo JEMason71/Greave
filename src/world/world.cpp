@@ -64,6 +64,7 @@ World::World() : m_player(std::make_shared<Player>()), m_time_weather(std::make_
     load_room_pool();
     load_item_pool();
     load_mob_pool();
+    load_anatomy_pool();
     load_generic_descs();
 }
 
@@ -96,6 +97,13 @@ std::string World::generic_desc(const std::string &id) const
         return "-";
     }
     return it->second;
+}
+
+// Retrieves a copy of the anatomy data for a given species.
+std::vector<std::shared_ptr<BodyPart>> World::get_anatomy(const std::string &id)
+{
+    if (m_anatomy_pool.count(id) == 0) throw std::runtime_error("Could not find species ID: " + id);
+    return m_anatomy_pool.at(id);
 }
 
 // Retrieves a specified Item by ID.
@@ -149,6 +157,45 @@ void World::load(std::shared_ptr<SQLite::Database> save_db)
         auto new_mob = std::make_shared<Mobile>();
         new_mob->load(save_db, query.getColumn("sql_id").getUInt());
         add_mobile(new_mob);
+    }
+}
+
+// Loads the anatomy YAML data into memory.
+void World::load_anatomy_pool()
+{
+    const YAML::Node yaml_anatomies = YAML::LoadFile("data/anatomy.yml");
+    for (auto a : yaml_anatomies)
+    {
+        // First, determine the species ID.
+        const std::string species_id = a.first.as<std::string>();
+
+        std::vector<std::shared_ptr<BodyPart>> anatomy_vec;
+
+        // Cycle over the body parts.
+        for (auto bp : a.second)
+        {
+            auto new_bp = std::make_shared<BodyPart>();
+            if (!bp.second.IsSequence() || bp.second.size() != 2)
+            {
+                core()->guru()->nonfatal("Anatomy data incorrect for " + species_id, Guru::CRITICAL);
+                continue;
+            }
+            new_bp->name = bp.first.as<std::string>();
+            new_bp->hit_chance = bp.second[0].as<int>();
+            const std::string target = bp.second[1].as<std::string>();
+            if (target == "body") new_bp->slot = EquipSlot::BODY;
+            else if (target == "head") new_bp->slot = EquipSlot::HEAD;
+            else if (target == "feet") new_bp->slot = EquipSlot::FEET;
+            else if (target == "hands") new_bp->slot = EquipSlot::HANDS;
+            else
+            {
+                core()->guru()->nonfatal("Could not determine body part armour target for " + species_id + ": " + target, Guru::CRITICAL);
+                continue;
+            }
+            anatomy_vec.push_back(new_bp);
+        }
+
+        m_anatomy_pool.insert(std::pair<std::string, std::vector<std::shared_ptr<BodyPart>>>(species_id, anatomy_vec));
     }
 }
 

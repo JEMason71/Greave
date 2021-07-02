@@ -4,9 +4,17 @@
 #pragma once
 #include "core/greave.hpp"
 
-class Inventory;    // defined in world/inventory.hpp
+class Inventory;                        // defined in world/inventory.hpp
+enum class EquipSlot : uint8_t;         // defined in world/item.hpp
 namespace SQLite { class Database; }    // defined in 3rdparty/SQLiteCpp/Database.h
 
+
+struct BodyPart
+{
+    uint8_t     hit_chance; // The hit chance for this body part.
+    std::string name;       // The name of this body part.
+    EquipSlot   slot;       // The EquipSlot associated with this body part.
+};
 
 class Mobile
 {

@@ -17,6 +17,7 @@ enum class LinkTag : uint16_t;          // defined in world/room.hpp
 enum class RoomTag : uint16_t;          // defined in world/room.hpp
 enum class Security : uint8_t;          // defined in world/room.hpp
 namespace SQLite { class Database; }    // defined in 3rdparty/SQLiteCpp/Database.h
+struct BodyPart;                        // defined in world/mobile.hpp
 
 
 class World
@@ -25,6 +26,7 @@ public:
                     World();                                                    // Constructor, loads the room YAML data.
     void            add_mobile(std::shared_ptr<Mobile> mob);                    // Adds a Mobile to the world.
     std::string     generic_desc(const std::string &id) const;                  // Retrieves a generic description string.
+    std::vector<std::shared_ptr<BodyPart>>  get_anatomy(const std::string &id); // Retrieves a copy of the anatomy data for a given species.
     const std::shared_ptr<Item>     get_item(const std::string &item_id) const; // Retrieves a specified Item by ID.
     const std::shared_ptr<Mobile>   get_mob(const std::string &mob_id) const;   // Retrieves a specified Mobile by ID.
     const std::shared_ptr<Room>     get_room(uint32_t room_id) const;           // Retrieves a specified Room by ID.
@@ -51,6 +53,7 @@ private:
     static const std::map<std::string, RoomTag>     ROOM_TAG_MAP;       // Lookup table for converting RoomTag text names into enums.
     static const std::map<std::string, Security>    SECURITY_MAP;       // Lookup table for converting textual room security (e.g. "anarchy") to enum values.
 
+    std::map<std::string, std::vector<std::shared_ptr<BodyPart>>>   m_anatomy_pool; // The anatomy pool, containing body part data for Mobiles.
     std::map<std::string, std::string>          m_generic_descs;    // Generic descriptions for items and rooms, where multiple share a description.
     std::map<uint32_t, std::shared_ptr<Item>>   m_item_pool;        // All the Item templates in the game.
     std::map<uint32_t, std::shared_ptr<Mobile>> m_mob_pool;         // All the Mobile templates in the game.
@@ -59,6 +62,7 @@ private:
     std::map<uint32_t, std::shared_ptr<Room>>   m_room_pool;        // All the Room templates in the game.
     std::shared_ptr<TimeWeather>                m_time_weather;     // The World's TimeWeather object, for tracking... well, the time and weather.
 
+    void    load_anatomy_pool();    // Loads the anatomy YAML data into memory.
     void    load_generic_descs();   // Loads the generic descriptions YAML data into memory.
     void    load_item_pool();       // Loads the Item YAML data into memory.
     void    load_mob_pool();        // Loads the Mobile YAML data into memory.

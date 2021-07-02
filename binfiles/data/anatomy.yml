@@ -1,0 +1,128 @@
+# data/anatomy.yml -- Body part definitions for various creature types.
+# Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+
+# Any number of body parts can be specified here, they should be listed in order of hit % chance, with the highest at the top.
+# Hit % is rolled from 1-100, and first checks if the rolled number is equal to or above the highest entry. If not, it checks
+# the next entry down in the list and so on, meaning the last entry on the list should alwayas be 1.
+
+# The name of the body part is specified on the left. In braces, we have the hit % chance, and the actual armour piece that
+# this body part translates to (as all mobiles have armour slots for body, head, hands and feet, regardless of their real
+# anatomy). Multiple body parts can translate to the same armour location.
+
+# The translation point does not necessarily have to make logical sense (e.g. a dog's tail counting as its hands armour).
+# The important thing is, for the most part, the body armour should be the part getting hit the most often. Think of body,
+# feet, hands and head armour as simply being one major, and three minor armoured pieces.
+
+badger:
+  body: [ 27, body ]
+  head: [ 12, head ]
+  leg: [ 7, feet ]
+  tail: [ 2, feet ]
+  paw: [ 1, hands ]
+
+bear:
+  torso: [ 51, body ]
+  leg: [ 11, feet ]
+  head: [ 5, head ]
+  paw: [ 1, hands ]
+
+bigcat:
+  body: [ 41, body ]
+  leg: [ 21, body ]
+  head: [ 6, head ]
+  tail: [ 3, feet ]
+  paw: [ 1, hands ]
+
+boar:
+  body: [ 37, body ]
+  head: [ 12, head ]
+  leg: [ 2, feet ]
+  hoof: [ 1, hands ]
+
+cat:
+  body: [ 61, body ]
+  leg: [ 21, feet ]
+  head: [ 6, head ]
+  paw: [ 3, hands ]
+  tail: [ 1, feet ]
+
+centipede:
+  body: [ 71, body ]
+  legs: [ 21, feet ]
+  head: [ 1, head ]
+
+deer:
+  body: [ 17, body ]
+  head: [ 7, head ]
+  leg: [ 2, feet ]
+  hoof: [ 1, hands ]
+
+dog:
+  body: [ 41, body ]
+  head: [ 21, head ]
+  leg: [ 6, feet ]
+  tail: [ 1, hands ]
+
+giant_rat:
+  body: [ 41, body ]
+  head: [ 21, head ]
+  tail: [ 11, feet ]
+  leg: [ 2, hands ]
+  paw: [ 1, hands ]
+
+giant_spider:
+  abdomen: [ 61, body ]
+  leg: [ 29, feet ]
+  thorax: [ 13, body ]
+  head: [ 1, head ]
+
+humanoid:
+  body: [ 51, body ]
+  leg: [ 11, body ]
+  head: [ 5, head ]
+  foot: [ 2, feet ]
+  hand: [ 1, hands ]
+
+hyena:
+  body: [ 43, body ]
+  leg: [ 23, feet ]
+  head: [ 8, head ]
+  tail: [ 3, feet ]
+  paw: [ 1, hands ]
+
+jaba:
+  body: [ 51, body ]
+  head: [ 27, head ]
+  tail: [ 12, feet ]
+  leg: [ 2, feet ]
+  paw: [ 1, hands ]
+
+nurth:
+  torso: [ 51, body ]
+  leg: [ 11, feet ]
+  head: [ 5, head ]
+  paw: [ 1, hands ]
+
+papio:
+  body: [ 51, body ]
+  leg: [ 16, feet ]
+  head: [ 6, head ]
+  tail: [ 3, hands ]
+  paw: [ 1, hands ]
+
+snake:
+  body: [ 16, body ]
+  head: [ 1, head ]
+
+wasp:
+  abdomen: [ 51, body ]
+  thorax: [ 36, body ]
+  wing: [ 21, hands ]
+  head: [ 11, head ]
+  leg: [ 1, feet ]
+
+wolf:
+  body: [ 41, body ]
+  head: [ 21, head ]
+  leg: [ 6, feet ]
+  tail: [ 1, hands ]
