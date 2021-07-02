@@ -44,7 +44,7 @@ void ActionInventory::check_inventory(std::shared_ptr<Mobile> mob)
 
     core()->message("{G}You are carrying:");
     for (unsigned int i = 0; i < inv_size; i++)
-        core()->message("{0}" + inventory->get(i)->name(Item::ItemName::INVENTORY));
+        core()->message("{0}" + inventory->get(i)->name(Item::NAME_FLAG_FULL_STATS | Item::NAME_FLAG_ID));
 }
 
 // Drops an item on the ground.
@@ -231,7 +231,7 @@ void ActionInventory::equipment(std::shared_ptr<Mobile> mob)
             case EquipSlot::HANDS: slot_name = "on hands"; break;
             case EquipSlot::HEAD: slot_name = "on head"; break;
         }
-        core()->message("{0}" + item->name(Item::ItemName::INVENTORY) + " {B}(" + slot_name + ")");
+        core()->message("{0}" + item->name(Item::NAME_FLAG_FULL_STATS | Item::NAME_FLAG_ID) + " {B}(" + slot_name + ")");
     }
 }
 

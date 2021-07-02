@@ -8,6 +8,16 @@
 #include "world/item.hpp"
 
 
+const int Item::NAME_FLAG_A =                   1;      // Much like NAME_FLAG_THE, but using 'a' or 'an' instead of 'the'.
+const int Item::NAME_FLAG_CAPITALIZE_FIRST =    2;      // Capitalize the first letter of the Item's name (including the "The") if set.
+const int Item::NAME_FLAG_CORE_STATS =          4;      // Displays core stats on Item names, such as if an Item is glowing.
+const int Item::NAME_FLAG_ID =                  8;      // Displays an item's ID number, such as {1234}.
+const int Item::NAME_FLAG_FULL_STATS =          16;     // Displays some basic stats next to an item's name.
+const int Item::NAME_FLAG_NO_COLOUR =           32;     // Strips colour out of an Item's name.
+const int Item::NAME_FLAG_NO_COUNT =            64;     // Ignore the stack size on this item.
+const int Item::NAME_FLAG_PLURAL =              128;    // Return a plural of the Item's name (e.g. apple -> apples).
+const int Item::NAME_FLAG_THE =                 256;    // Precede the Item's name with 'the', unless the name is a proper noun.
+
 // The SQL table construction string for saving items.
 const std::string Item::SQL_ITEMS = "CREATE TABLE items ( description TEXT, equip_slot INTEGER, metadata TEXT, name TEXT NOT NULL, owner_id INTEGER NOT NULL, "
     "parser_id INTEGER NOT NULL, power INTEGER, speed REAL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, subtype INTEGER, tags TEXT, type INTEGER )";
@@ -73,26 +83,54 @@ std::string Item::meta(const std::string &key) const
 std::map<std::string, std::string>* Item::meta_raw() { return &m_metadata; }
 
 // Retrieves the name of thie Item.
-std::string Item::name(ItemName level) const
+std::string Item::name(int flags) const
 {
-    if (level == ItemName::BASIC) return m_name;
-    std::string name = m_name + " ";
-    std::string inv_stats, room_stats;
+    const bool no_count = ((flags & Item::NAME_FLAG_NO_COUNT) == Item::NAME_FLAG_NO_COUNT);
+    const bool a = (((flags & Item::NAME_FLAG_A) == Item::NAME_FLAG_A) && no_count); //(m_stack == 1 || no_count));
+    const bool capitalize_first = ((flags & Item::NAME_FLAG_CAPITALIZE_FIRST) == Item::NAME_FLAG_CAPITALIZE_FIRST);
+    const bool no_colour = ((flags & Item::NAME_FLAG_NO_COLOUR) == Item::NAME_FLAG_NO_COLOUR);
+    const bool full_stats = ((flags & Item::NAME_FLAG_FULL_STATS) == Item::NAME_FLAG_FULL_STATS);
+    const bool core_stats = full_stats || ((flags & Item::NAME_FLAG_CORE_STATS) == Item::NAME_FLAG_CORE_STATS);
+    const bool id = full_stats || ((flags & Item::NAME_FLAG_ID) == Item::NAME_FLAG_ID);
+    const bool plural = (((flags & Item::NAME_FLAG_PLURAL) == Item::NAME_FLAG_PLURAL)); //|| (m_stack > 1 && !no_count));
+    const bool the = ((flags & Item::NAME_FLAG_THE) == Item::NAME_FLAG_THE);
 
-    switch (m_type)
+    bool using_plural_name = false;
+    std::string ret = m_name;
+    /*
+    if (plural && m_plural_name.size())
     {
-        case ItemType::LIGHT: room_stats += "{Y}<gl{W}o{Y}wing> "; break;
-        case ItemType::WEAPON:
-            inv_stats += "{c}<{U}" + std::to_string(power()) + "{c}/{U}" + StrX::ftos(speed(), true) + "{c}> "; break;
-        default: break;
+        ret = m_plural_name;
+        using_plural_name = true;
     }
-    inv_stats += "{B}{" + StrX::itos(m_parser_id, 4) + "} ";
+    */
 
-    if (level == ItemName::INVENTORY && inv_stats.size()) name += inv_stats;
-    name += room_stats;
-    name.pop_back();
+    //if (m_stack > 1 && !no_count) ret = StrX::number_to_word(m_stack) + " " + name(NAME_FLAG_PLURAL | NAME_FLAG_NO_COUNT);
 
-    return name;
+    if (the && !tag(ItemTag::ProperNoun)) ret = "the " + ret;
+    else if (a && !tag(ItemTag::PluralName) && !tag(ItemTag::NoA) && !tag(ItemTag::ProperNoun))
+    {
+        if (StrX::is_vowel(ret[0])) ret = "an " + ret;
+        else ret = "a " + ret;
+    }
+    if (capitalize_first && ret[0] >= 'a' && ret[0] <= 'z') ret[0] -= 32;
+    if (plural && !using_plural_name && ret.back() != 's') ret += "s";
+
+    if (core_stats || full_stats)
+    {
+        std::string core_stats_str, full_stats_str;
+        switch (m_type)
+        {
+            case ItemType::LIGHT: core_stats_str += " {Y}<gl{W}o{Y}wing>"; break;
+            case ItemType::WEAPON: full_stats_str += " {c}<{U}" + std::to_string(power()) + "{c}/{U}" + StrX::ftos(speed(), true) + "{c}>"; break;
+            default: break;
+        }
+        if (core_stats && core_stats_str.size()) ret += core_stats_str;
+        if (full_stats && full_stats_str.size()) ret += full_stats_str;
+    }
+    if (id) ret += " {B}{" + StrX::itos(m_parser_id, 4) + "}";
+    if (no_colour) ret = StrX::strip_ansi(ret);
+    return ret;
 }
 
 // Generates a new parser ID for this Item.

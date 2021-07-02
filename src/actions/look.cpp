@@ -30,7 +30,7 @@ void ActionLook::examine(std::shared_ptr<Mobile> mob, ParserTarget target_type, 
 // Examines an Item.
 void ActionLook::examine_item(std::shared_ptr<Mobile>, std::shared_ptr<Item> target)
 {
-    core()->message("You are looking at: " + target->name(Item::ItemName::INVENTORY));
+    core()->message("You are looking at: " + target->name(Item::NAME_FLAG_FULL_STATS | Item::NAME_FLAG_ID));
     if (target->desc().size()) core()->message("{0}" + target->desc());
     std::string stat_string;
     switch (target->type())
@@ -116,7 +116,7 @@ void ActionLook::look(std::shared_ptr<Mobile> mob)
     {
         std::vector<std::string> items_nearby;
         for (unsigned int i = 0; i < room->inv()->count(); i++)
-            items_nearby.push_back(room->inv()->get(i)->name(Item::ItemName::ROOM) + "{w}");
+            items_nearby.push_back(room->inv()->get(i)->name(Item::NAME_FLAG_CORE_STATS) + "{w}");
         core()->message("{0}{g}```Items: {w}" + StrX::comma_list(items_nearby, StrX::CL_FLAG_USE_AND));
     }
 

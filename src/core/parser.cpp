@@ -158,7 +158,7 @@ Parser::ParserSearchResult Parser::parse_target(const std::vector<std::string> &
         for (unsigned int i = 0; i < equ->count(); i++)
         {
             const std::shared_ptr<Item> item = equ->get(i);
-            candidates.push_back({0, StrX::str_tolower(StrX::strip_ansi(item->name())), item->parser_id(), i, ParserTarget::TARGET_EQUIPMENT});
+            candidates.push_back({0, StrX::str_tolower(item->name(Item::NAME_FLAG_NO_COLOUR)), item->parser_id(), i, ParserTarget::TARGET_EQUIPMENT});
         }
     }
 
@@ -169,7 +169,7 @@ Parser::ParserSearchResult Parser::parse_target(const std::vector<std::string> &
         for (unsigned int i = 0; i < inv->count(); i++)
         {
             const std::shared_ptr<Item> item = inv->get(i);
-            candidates.push_back({0, StrX::str_tolower(StrX::strip_ansi(item->name())), item->parser_id(), i, ParserTarget::TARGET_INVENTORY});
+            candidates.push_back({0, StrX::str_tolower(item->name(Item::NAME_FLAG_NO_COLOUR)), item->parser_id(), i, ParserTarget::TARGET_INVENTORY});
         }
     }
 
@@ -180,7 +180,7 @@ Parser::ParserSearchResult Parser::parse_target(const std::vector<std::string> &
         for (unsigned int i = 0; i < room_inv->count(); i++)
         {
             const std::shared_ptr<Item> item = room_inv->get(i);
-            candidates.push_back({0, StrX::str_tolower(StrX::strip_ansi(item->name())), item->parser_id(), i, ParserTarget::TARGET_ROOM});
+            candidates.push_back({0, StrX::str_tolower(item->name(Item::NAME_FLAG_NO_COLOUR)), item->parser_id(), i, ParserTarget::TARGET_ROOM});
         }
     }
 

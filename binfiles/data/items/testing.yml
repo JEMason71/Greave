@@ -4,6 +4,7 @@
 BOOTS:
   name: boots
   slot: feet
+  tags: [ PluralName ]
   type: [ armour, clothing ]
 
 BREASTPLATE:
@@ -19,6 +20,7 @@ CLOAK:
 GLOVES:
   name: gloves
   slot: hands
+  tags: [ PluralName ]
   type: [ armour, clothing ]
 
 HELMET:

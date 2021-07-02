@@ -19,20 +19,22 @@ enum class ItemSub : uint16_t { NONE,
     };
 
 enum class ItemTag : uint16_t {
-    // Unlike RoomTags, there's no over/under 10,000 special rule for ItemTags. Items are saved in their entirety.
-    TwoHanded = 1,  // This Item requires two hands to wield.
-    HandAndAHalf,   // Hand-and-a-half weapons can be wielded in either one or both hands.
-    PreferOffHand,  // When equipped, this Item prefers to be held in the off-hand.
-    OffHandOnly,    // This item can ONLY be equipped in the off-hand.
+    HandAndAHalf = 1,   // Hand-and-a-half weapons can be wielded in either one or both hands.
+    NoA,                // This Item's name should not be prefaced with 'a' (e.g. 'plate mail armour' instead of 'a plate mail armour').
+    OffHandOnly,        // This item can ONLY be equipped in the off-hand.
+    PluralName,         // This Item's name is a plural (e.g. "boots").
+    PreferOffHand,      // When equipped, this Item prefers to be held in the off-hand.
+    ProperNoun,         // This Item's name is a proper noun (e.g. Foehammer).
+    TwoHanded,          // This Item requires two hands to wield.
 };
 
 class Item
 {
 public:
+                        // Flags for the name() function.
+    static const int    NAME_FLAG_A, NAME_FLAG_CAPITALIZE_FIRST, NAME_FLAG_CORE_STATS, NAME_FLAG_ID, NAME_FLAG_FULL_STATS, NAME_FLAG_NO_COLOUR, NAME_FLAG_NO_COUNT, NAME_FLAG_PLURAL,
+        NAME_FLAG_THE;
     static const std::string    SQL_ITEMS;  // The SQL table construction string for saving items.
-
-    // The ItemName enum is used for name() below, to determine the amount of extra details to show on an item's name.
-    enum class ItemName : uint8_t { BASIC, INVENTORY, ROOM };
 
                 Item();                             // Constructor, sets default values.
     void        clear_meta(const std::string &key); // Clears a metatag from an Item. Use with caution!
@@ -42,7 +44,7 @@ public:
     static std::shared_ptr<Item> load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id);  // Loads a new Item from the save file.
     std::string meta(const std::string &key) const; // Retrieves Item metadata.
     std::map<std::string, std::string>* meta_raw(); // Accesses the metadata map directly. Use with caution!
-    std::string name(ItemName level = ItemName::BASIC) const;   // Retrieves the name of thie Item.
+    std::string name(int flags = 0) const;          // Retrieves the name of thie Item.
     void        new_parser_id();                    // Generates a new parser ID for this Item.
     uint16_t    parser_id() const;                  // Retrieves the current ID of this Item, for parser differentiation.
     uint16_t    power() const;                      // Retrieves this Item's power.
