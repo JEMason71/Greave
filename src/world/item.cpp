@@ -21,11 +21,12 @@ const int Item::NAME_FLAG_THE =                 256;    // Precede the Item's na
 
 // The SQL table construction string for saving items.
 const std::string Item::SQL_ITEMS = "CREATE TABLE items ( description TEXT, equip_slot INTEGER, metadata TEXT, name TEXT NOT NULL, owner_id INTEGER NOT NULL, "
-    "parser_id INTEGER NOT NULL, plural_name TEXT, power INTEGER, speed REAL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, subtype INTEGER, tags TEXT, type INTEGER )";
+    "parser_id INTEGER NOT NULL, plural_name TEXT, power INTEGER, speed REAL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, subtype INTEGER, tags TEXT, type INTEGER, "
+    "value INTEGER )";
 
 
 // Constructor, sets default values.
-Item::Item() : m_equip_slot(EquipSlot::NONE), m_parser_id(0), m_power(0), m_speed(0), m_type(ItemType::NONE), m_type_sub(ItemSub::NONE) { }
+Item::Item() : m_equip_slot(EquipSlot::NONE), m_parser_id(0), m_power(0), m_speed(0), m_type(ItemType::NONE), m_type_sub(ItemSub::NONE), m_value(0) { }
 
 // Returns the armour damage reduction value of this Item, if any.
 float Item::armour(int bonus_power) const
@@ -101,6 +102,7 @@ std::shared_ptr<Item> Item::load(std::shared_ptr<SQLite::Database> save_db, uint
         if (!query.isColumnNull("subtype")) new_subtype = static_cast<ItemSub>(query.getColumn("subtype").getInt());
         if (!query.getColumn("tags").isNull()) StrX::string_to_tags(query.getColumn("tags").getString(), new_item->m_tags);
         if (!query.isColumnNull("type")) new_type = static_cast<ItemType>(query.getColumn("type").getInt());
+        if (!query.isColumnNull("value")) new_item->m_value = query.getColumn("value").getUInt();
 
         new_item->set_type(new_type, new_subtype);
     }
@@ -189,8 +191,8 @@ uint16_t Item::power() const { return m_power; }
 // Saves the Item.
 void Item::save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id)
 {
-    SQLite::Statement query(*save_db, "INSERT INTO items ( description, equip_slot, metadata, name, owner_id, parser_id, plural_name, power, speed, sql_id, subtype, tags, type ) "
-        "VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
+    SQLite::Statement query(*save_db, "INSERT INTO items ( description, equip_slot, metadata, name, owner_id, parser_id, plural_name, power, speed, sql_id, subtype, tags, type, "
+        "value ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
     if (m_description.size()) query.bind(1, m_description);
     if (m_equip_slot != EquipSlot::NONE) query.bind(2, static_cast<int>(m_equip_slot));
     if (m_metadata.size()) query.bind(3, StrX::metadata_to_string(m_metadata));
@@ -204,6 +206,7 @@ void Item::save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id)
     if (m_type_sub != ItemSub::NONE) query.bind(11, static_cast<int>(m_type_sub));
     if (m_tags.size()) query.bind(12, StrX::tags_to_string(m_tags));
     if (m_type != ItemType::NONE) query.bind(13, static_cast<int>(m_type));
+    if (m_value) query.bind(14, m_value);
     query.exec();
 }
 
@@ -250,6 +253,9 @@ void Item::set_type(ItemType type, ItemSub sub)
     m_type_sub = sub;
 }
 
+// Sets this Item's value.
+void Item::set_value(uint32_t val) { m_value = val; }
+
 // Retrieves the speed of this Item.
 float Item::speed() const { return m_speed; }
 
@@ -261,3 +267,6 @@ bool Item::tag(ItemTag the_tag) const { return (m_tags.count(the_tag) > 0); }
 
 // Returns the ItemType of this Item.
 ItemType Item::type() const { return m_type; }
+
+// The Item's value in money.
+uint32_t Item::value() const { return m_value; }

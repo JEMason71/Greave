@@ -332,6 +332,33 @@ void World::load_item_pool()
             // The Item's speed, if any.
             if (item_data["speed"]) new_item->set_speed(item_data["speed"].as<float>());
 
+            // The Item's value.
+            unsigned int item_value = 0;
+            if (!item_data["value"]) core()->guru()->nonfatal("Missing value for item " + item_id_str, Guru::WARN);
+            else
+            {
+                const std::string value_str = item_data["value"].as<std::string>();
+                if (value_str.size() && value_str != "0" && value_str != "-")
+                {
+                    std::vector<std::string> coins_split = StrX::string_explode(value_str, " ");
+                    while (coins_split.size())
+                    {
+                        const std::string coin_str = coins_split.at(0);
+                        coins_split.erase(coins_split.begin());
+                        if (coin_str.size() < 2) throw std::runtime_error("Malformed item value string on " + item_id);
+                        const char currency = coin_str[coin_str.size() - 1];
+                        unsigned int currency_amount = std::stoi(coin_str.substr(0, coin_str.size() - 1));
+                        if (currency == 'c') item_value += currency_amount;
+                        else if (currency == 's') item_value += currency_amount * 10;
+                        else if (currency == 'g') item_value += currency_amount * 1000;
+                        else if (currency == 'm') item_value += currency_amount * 1000000;
+                        else throw std::runtime_error("Malformed item value string on " + item_id);
+                    }
+                    if (!item_value) throw std::runtime_error("Null coin value on " + item_id);
+                }
+            }
+            new_item->set_value(item_value);
+
             // Add the new Item to the item pool.
             m_item_pool.insert(std::make_pair(item_id, new_item));
         }

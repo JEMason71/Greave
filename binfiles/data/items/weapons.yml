@@ -11,3 +11,4 @@ KNIGHTLY_SWORD:
   speed: 1.0
   tags: [ HandAndAHalf ]
   type: [ weapon, melee ]
+  value: 1g 10s

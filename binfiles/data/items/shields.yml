@@ -7,3 +7,4 @@ BUCKLER:
   slot: held
   type: [ shield, light ]
   tags: [ OffHandOnly ]
+  value: 30s

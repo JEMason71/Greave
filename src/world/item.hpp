@@ -66,23 +66,26 @@ public:
     void        set_speed(float speed);             // Sets the speed of this Item.
     void        set_tag(ItemTag the_tag);           // Sets a tag on this Item.
     void        set_type(ItemType type, ItemSub sub = ItemSub::NONE);   // Sets the type of this Item.
+    void        set_value(uint32_t val);            // Sets this Item's value.
     float       speed() const;                      // Retrieves the speed of this Item.
     ItemSub     subtype() const;                    // Returns the ItemSub (sub-type) of this Item.
     bool        tag(ItemTag the_tag) const;         // Checks if a tag is set on this Item.
     ItemType    type() const;                       // Returns the ItemType of this Item.
+    uint32_t    value() const;                      // The Item's value in money.
 
 private:
     int         meta_int(std::string key) const;    // Retrieves metadata, in int format.
 
-    std::string m_description;  // The description of this Item.
-    EquipSlot   m_equip_slot;   // The slot this Item is equipped in, if any.
+    std::string m_description;      // The description of this Item.
+    EquipSlot   m_equip_slot;       // The slot this Item is equipped in, if any.
     std::map<std::string, std::string>  m_metadata; // The Item's metadata, if any.
-    std::string m_name;         // The name of this Item!
-    uint16_t    m_parser_id;    // The semi-unique ID of this Item, for parser differentiation.
-    std::string m_plural_name;  // The custom plural name of this Item, if any.
-    uint16_t    m_power;        // The power of this Item, if any.
-    float       m_speed;        // The speed of this Item, if any.
-    std::set<ItemTag>   m_tags; // Any and all ItemTags on this Item.
-    ItemType    m_type;         // The primary type of this Item.
-    ItemSub     m_type_sub;     // The subtype of this Item, if any.
+    std::string m_name;             // The name of this Item!
+    uint16_t    m_parser_id;        // The semi-unique ID of this Item, for parser differentiation.
+    std::string m_plural_name;      // The custom plural name of this Item, if any.
+    uint16_t    m_power;            // The power of this Item, if any.
+    float       m_speed;            // The speed of this Item, if any.
+    std::set<ItemTag>   m_tags;     // Any and all ItemTags on this Item.
+    ItemType    m_type;             // The primary type of this Item.
+    ItemSub     m_type_sub;         // The subtype of this Item, if any.
+    uint32_t    m_value;            // The value of this Item, if any.
 };

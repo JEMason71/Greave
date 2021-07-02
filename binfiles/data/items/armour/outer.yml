@@ -7,3 +7,4 @@ ARMOUR_HIDE:
   power: 8
   slot: armour
   type: [ armour, light ]
+  value: 1g 20s

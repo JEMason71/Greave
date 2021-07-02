@@ -6,3 +6,4 @@ SKELETON_KEY:   # The skeleton key can open any lock.
   metadata: "key:SKELETON"
   name: "{B}Sk{u}elet{B}on K{u}e{B}y"
   type: key
+  value: 0

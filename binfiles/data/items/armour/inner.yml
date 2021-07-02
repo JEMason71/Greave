@@ -7,3 +7,4 @@ ARMOUR_CLOTH:
   power: 3
   slot: body
   type: [ armour, light ]
+  value: 40s

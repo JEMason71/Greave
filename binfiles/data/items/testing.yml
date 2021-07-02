@@ -1,36 +1,10 @@
 # items/testing.yml -- Temporary testing items for developing the inventory system. Will be removed later.
 # Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-BOOTS:
-  name: boots
-  slot: feet
-  tags: [ PluralName ]
-  type: [ armour, clothing ]
-
-CLOAK:
-  name: cloak
-  slot: about
-  type: [ armour, clothing ]
-
-GLOVES:
-  name: gloves
-  slot: hands
-  tags: [ PluralName ]
-  type: [ armour, clothing ]
-
-HELMET:
-  name: helmet
-  slot: head
-  type: [ armour, medium ]
-
-MAIL_HAUBERK:
-  name: mail hauberk
-  slot: body
-  type: [ armour, medium ]
-
 TORCH:
   name: torch
   power: 3
   slot: held
   tags: [ PreferOffHand]
   type: light
+  value: 0
