@@ -10,7 +10,7 @@ namespace SQLite { class Database; }    // defined in 3rdparty/SQLiteCpp/Databas
 enum class EquipSlot : uint8_t { NONE, HAND_MAIN, HAND_OFF, BODY, ARMOUR, ABOUT_BODY, HEAD, HANDS, FEET, _END };
 
 // ItemType is the primary type of Item (e.g. weapon, food, etc.)
-enum class ItemType : uint16_t { NONE, ARMOUR, KEY, LIGHT, WEAPON };
+enum class ItemType : uint16_t { NONE, ARMOUR, KEY, LIGHT, SHIELD, WEAPON };
 
 // ItemSub is for sub-types of items, e.g. a tool could sub-classify itself here.
 enum class ItemSub : uint16_t { NONE,
@@ -22,6 +22,7 @@ enum class ItemTag : uint16_t {
     // Unlike RoomTags, there's no over/under 10,000 special rule for ItemTags. Items are saved in their entirety.
     TwoHanded = 1,  // This Item requires two hands to wield.
     PreferOffHand,  // When equipped, this Item prefers to be held in the off-hand.
+    OffHandOnly,    // This item can ONLY be equipped in the off-hand.
 };
 
 class Item

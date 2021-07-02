@@ -64,6 +64,7 @@ void ActionLook::examine_item(std::shared_ptr<Mobile>, std::shared_ptr<Item> tar
             stat_string = "This is a {U}light source {w}which can be held. It provides a brightness level of {Y}" + std::to_string(target->power()) + "{w} when used. ";
             break;
         case ItemType::NONE: break;
+        case ItemType::SHIELD: stat_string = "This is a {U}shield {w}which can be wielded. "; break;
         case ItemType::WEAPON:
         {
             switch (target->subtype())

@@ -77,6 +77,7 @@ bool ActionInventory::equip(std::shared_ptr<Mobile> mob, uint32_t item_pos)
     const bool two_handed_equipped = main_used && equ->get(EquipSlot::HAND_MAIN)->tag(ItemTag::TwoHanded);
     const bool two_handed_item = item->tag(ItemTag::TwoHanded);
     const bool prefer_off_hand = item->tag(ItemTag::PreferOffHand);
+    const bool off_hand_only = item->tag(ItemTag::OffHandOnly);
 
     // Determine which slot to use for held items, since they may go in either hand.
     if (slot == EquipSlot::HAND_MAIN || slot == EquipSlot::HAND_OFF)
@@ -89,7 +90,7 @@ bool ActionInventory::equip(std::shared_ptr<Mobile> mob, uint32_t item_pos)
             slot = EquipSlot::HAND_MAIN;
         }
         // Normal one-handed equipping.
-        else if (!prefer_off_hand)
+        else if (!prefer_off_hand && !off_hand_only)
         {
             // First, check if the main hand is free.
             if (!main_used) slot = EquipSlot::HAND_MAIN;
@@ -110,9 +111,9 @@ bool ActionInventory::equip(std::shared_ptr<Mobile> mob, uint32_t item_pos)
         else
         {
             if (!two_handed_equipped && !off_used) slot = EquipSlot::HAND_OFF;
-            else if (!main_used) slot = EquipSlot::HAND_MAIN;
+            else if (!main_used && !off_hand_only) slot = EquipSlot::HAND_MAIN;
             else if (!two_handed_equipped && unequip(mob, EquipSlot::HAND_OFF)) slot = EquipSlot::HAND_OFF;
-            else if (unequip(mob, EquipSlot::HAND_MAIN)) slot = EquipSlot::HAND_MAIN;
+            else if (!off_hand_only && unequip(mob, EquipSlot::HAND_MAIN)) slot = EquipSlot::HAND_MAIN;
             else return false;
         }
 
