@@ -1,0 +1,32 @@
+# data/items/armour/head.yml -- Helmets and other things you can wear on your head.
+# Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+
+CAP_LEATHER:
+  description: A simple helmet of toughened leather, hard leather panels riveted atop for more protection.
+  name: leather cap
+  power: 5
+  rare: 2
+  slot: head
+  type: [ armour, light ]
+  value: 20s
+  weight: 90
+
+COIF_MAIL:
+  description: Linked rings of mail designed to cover the head and shoulders, while leaving the face uncovered.
+  name: mail coif
+  power: 9
+  rare: 4
+  slot: head
+  type: [ armour, medium ]
+  value: 1g 50s
+  weight: 760
+
+CERVELLIERE_STEEL:
+  description: This simple helmet consists of a steel skull-cap with a leather chin strap.
+  name: steel cervelliere
+  power: 10
+  rare: 2
+  slot: head
+  type: [ armour, heavy ]
+  value: 90s
+  weight: 410
