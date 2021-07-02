@@ -91,8 +91,8 @@ void ActionLook::examine_item(std::shared_ptr<Mobile>, std::shared_ptr<Item> tar
                 case DamageType::RENDING: damage_type_str = "randing"; break;
                 default: core()->guru()->nonfatal("Unable to determine item damage type: " + target->name(), Guru::ERROR);
             }
-            stat_string += "It has a damage value of {U}" + std::to_string(target->power()) + " " + damage_type_str + "{w}, and a speed of {U}" +
-                StrX::ftos(target->speed(), true) + "{w}. ";
+            stat_string += "It has a damage value of {U}" + std::to_string(target->power()) + " " + damage_type_str + "{w}, a speed of {U}" +
+                StrX::ftos(target->speed(), true) + "{w}, and a critical hit chance of {U}" + std::to_string(target->crit()) + "%{w}. ";
             break;
         }
     }

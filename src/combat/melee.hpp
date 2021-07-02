@@ -16,6 +16,7 @@ public:
 private:
     static const float  BASE_HIT_CHANCE_MELEE;                  // The base hit chance in melee combat.
     static const float  DUAL_WIELD_HIT_CHANCE_MULTIPLIER;       // The multiplier to accuracy% for dual-wielding.
+    static const float  SINGLE_WIELD_CRIT_CHANCE_MULTIPLIER;    // The multiplier to crit% for single-wielding.
     static const float  SINGLE_WIELD_HIT_CHANCE_MULTIPLIER;     // The multiplier to accuracy% for single-wielding.
     static const float  SWORD_AND_BOARD_HIT_CHANCE_MULTIPLIER;  // The multiplier to accuracy% for wielding 1h+shield or 1h+extra.
     static const float  WEAPON_DAMAGE_MODIFIER_HAAH_2H;         // The damage modifier for wielding a hand-and-a-half weapon in two hands.

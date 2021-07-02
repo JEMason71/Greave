@@ -14,6 +14,7 @@
 
 const float Melee::BASE_HIT_CHANCE_MELEE =                  75.0f;  // The base hit chance in melee combat.
 const float Melee::DUAL_WIELD_HIT_CHANCE_MULTIPLIER =       0.9f;   // The multiplier to accuracy% for dual-wielding.
+const float Melee::SINGLE_WIELD_CRIT_CHANCE_MULTIPLIER =    1.1f;   // The multiplier to crit% for single-wielding.
 const float Melee::SINGLE_WIELD_HIT_CHANCE_MULTIPLIER =     1.2f;   // The multiplier to accuracy% for single-wielding.
 const float Melee::SWORD_AND_BOARD_HIT_CHANCE_MULTIPLIER =  1.1f;   // The multiplier to accuracy% for wielding 1h+shield or 1h+extra.
 const float Melee::WEAPON_DAMAGE_MODIFIER_HAAH_2H =         1.8f;   // The damage modifier for wielding a hand-and-a-half weapon in two hands.
@@ -123,6 +124,14 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
         if (wield_type_attacker == WieldType::HAND_AND_A_HALF_2H) damage *= WEAPON_DAMAGE_MODIFIER_HAAH_2H;
 
         bool critical_hit = false, bleed = false, poison = false;
+        float crit_chance = weapon_ptr->crit();
+        if (wield_type_attacker == WieldType::SINGLE_WIELD) crit_chance *= SINGLE_WIELD_CRIT_CHANCE_MULTIPLIER;
+        if (crit_chance >= 100.0f || core()->rng()->frnd(100) <= crit_chance)
+        {
+            critical_hit = true;
+            bleed = true;
+            damage *= 3;
+        }
 
         float damage_blocked = 0;
         if (def_location_hit_es == EquipSlot::BODY)

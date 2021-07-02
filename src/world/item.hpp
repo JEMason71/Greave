@@ -44,6 +44,7 @@ public:
     float       armour(int bonus_power = 0) const;  // Returns the armour damage reduction value of this Item, if any.
     void        clear_meta(const std::string &key); // Clears a metatag from an Item. Use with caution!
     void        clear_tag(ItemTag the_tag);         // Clears a tag on this Item.
+    int         crit() const;                       // Retrieves this Item's critical power, if any.
     DamageType  damage_type() const;                // Retrieves this Item's damage type, if any.
     std::string damage_type_string() const;         // Returns a string indicator of this Item's damage type (e.g. edged = E)
     std::string desc() const;                       // Retrieves this Item's description.
@@ -59,6 +60,7 @@ public:
     void        set_description(const std::string &desc);   // Sets this Item's description.
     void        set_equip_slot(EquipSlot es);       // Sets this Item's equipment slot.
     void        set_meta(const std::string &key, const std::string &value); // Adds Item metadata.
+    void        set_meta(const std::string &key, int value);    // As above, but with an integer value.
     void        set_name(const std::string &name, const std::string &plural_name = ""); // Sets the name of this Item.
     void        set_power(uint16_t power);          // Sets the power of this Item.
     void        set_speed(float speed);             // Sets the speed of this Item.

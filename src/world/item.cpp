@@ -44,6 +44,9 @@ void Item::clear_tag(ItemTag the_tag)
     m_tags.erase(the_tag);
 }
 
+// Retrieves this Item's critical power, if any.
+int Item::crit() const { return meta_int("crit"); }
+
 // Retrieves this Item's damage type, if any.
 DamageType Item::damage_type() const { return static_cast<DamageType>(meta_int("damage_type")); }
 
@@ -216,6 +219,9 @@ void Item::set_meta(const std::string &key, const std::string &value)
 	if (m_metadata.find(key) == m_metadata.end()) m_metadata.insert(std::pair<std::string, std::string>(key, value));
 	else m_metadata.at(key) = value;
 }
+
+// As above, but with an integer value.
+void Item::set_meta(const std::string &key, int value) { set_meta(key, std::to_string(value)); }
 
 // Sets the name of this Item.
 void Item::set_name(const std::string &name, const std::string &plural_name)

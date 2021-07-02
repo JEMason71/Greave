@@ -308,8 +308,11 @@ void World::load_item_pool()
                 const std::string damage_type = item_data["damage_type"].as<std::string>();
                 const auto type_it = DAMAGE_TYPE_MAP.find(damage_type);
                 if (type_it == DAMAGE_TYPE_MAP.end()) core()->guru()->nonfatal("Unrecognized damage type (" + damage_type + "): " + item_id_str, Guru::ERROR);
-                else new_item->set_meta("damage_type", std::to_string(static_cast<int>(type_it->second)));
+                else new_item->set_meta("damage_type", static_cast<int>(type_it->second));
             }
+
+            // The Item's critical power, if any.
+            if (item_data["crit"]) new_item->set_meta("crit", item_data["crit"].as<int>());
 
             // The Item's EquipSlot, if any.
             if (item_data["slot"])

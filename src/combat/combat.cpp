@@ -57,7 +57,7 @@ float Combat::apply_damage_modifiers(float damage, std::shared_ptr<Item> weapon,
 std::string Combat::damage_number_str(int damage, int blocked, bool crit, bool bleed, bool poison)
 {
     std::string dmg_str;
-    if (crit) dmg_str = "{w}[{m}*{M}"; else dmg_str = "{w}[{R}-";
+    if (crit) dmg_str = "{w}[{m}*{M}-"; else dmg_str = "{w}[{R}-";
     dmg_str += StrX::intostr_pretty(damage);
     if (bleed && !crit) dmg_str += "B";
     if (poison && !crit) dmg_str += "P";
