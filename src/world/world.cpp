@@ -26,8 +26,8 @@ const std::map<std::string, ItemSub>    World::ITEM_SUBTYPE_MAP = { { "clothing"
     { "medium", ItemSub::MEDIUM }, { "melee", ItemSub::MELEE }, { "none", ItemSub::NONE } };
 
 // Lookup table for converting ItemTag text names into enums.
-const std::map<std::string, ItemTag>    World::ITEM_TAG_MAP = { { "preferoffhand", ItemTag::PreferOffHand }, { "offhandonly", ItemTag::OffHandOnly },
-    { "twohanded", ItemTag::TwoHanded } };
+const std::map<std::string, ItemTag>    World::ITEM_TAG_MAP = { { "handandahalf", ItemTag::HandAndAHalf }, { "offhandonly", ItemTag::OffHandOnly },
+    { "preferoffhand", ItemTag::PreferOffHand }, { "twohanded", ItemTag::TwoHanded } };
 
 // Lookup table for converting ItemType text names into enums.
 const std::map<std::string, ItemType>   World::ITEM_TYPE_MAP = { { "armour", ItemType::ARMOUR }, { "key", ItemType::KEY }, { "light", ItemType::LIGHT },

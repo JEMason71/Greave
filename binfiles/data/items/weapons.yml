@@ -7,4 +7,5 @@ KNIGHTLY_SWORD:
   power: 6
   slot: held
   speed: 1.0
+  tags: [ HandAndAHalf ]
   type: [ weapon, melee ]

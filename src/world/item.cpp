@@ -82,7 +82,8 @@ std::string Item::name(ItemName level) const
     switch (m_type)
     {
         case ItemType::LIGHT: room_stats += "{Y}<gl{W}o{Y}wing> "; break;
-        case ItemType::WEAPON: inv_stats += "{c}<{U}" + std::to_string(power()) + "{c}/{U}" + StrX::ftos(speed(), true) + "{c}> "; break;
+        case ItemType::WEAPON:
+            inv_stats += "{c}<{U}" + std::to_string(power()) + "{c}/{U}" + StrX::ftos(speed(), true) + "{c}> "; break;
         default: break;
     }
     inv_stats += "{B}{" + StrX::itos(m_parser_id, 4) + "} ";

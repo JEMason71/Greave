@@ -21,6 +21,7 @@ enum class ItemSub : uint16_t { NONE,
 enum class ItemTag : uint16_t {
     // Unlike RoomTags, there's no over/under 10,000 special rule for ItemTags. Items are saved in their entirety.
     TwoHanded = 1,  // This Item requires two hands to wield.
+    HandAndAHalf,   // Hand-and-a-half weapons can be wielded in either one or both hands.
     PreferOffHand,  // When equipped, this Item prefers to be held in the off-hand.
     OffHandOnly,    // This item can ONLY be equipped in the off-hand.
 };

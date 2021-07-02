@@ -158,7 +158,7 @@ bool ActionInventory::equip(std::shared_ptr<Mobile> mob, uint32_t item_pos)
             time_taken = TIME_EQUIP_FEET;
             break;
         case EquipSlot::HAND_MAIN:
-            if (two_handed_item) slot_name = "in both hands";
+            if (two_handed_item || (item->tag(ItemTag::HandAndAHalf) && !mob->equ()->get(EquipSlot::HAND_OFF))) slot_name = "in both hands";
             else slot_name = "in %your% main hand";
             action = "hold";
             time_taken = TIME_EQUIP_WEAPON;
@@ -221,7 +221,7 @@ void ActionInventory::equipment(std::shared_ptr<Mobile> mob)
             case EquipSlot::BODY: slot_name = "on body"; break;
             case EquipSlot::FEET: slot_name = "on feet"; break;
             case EquipSlot::HAND_MAIN:
-                if (item->tag(ItemTag::TwoHanded)) slot_name = "in both hands";
+                if (item->tag(ItemTag::TwoHanded) || (item->tag(ItemTag::HandAndAHalf) && !equ->get(EquipSlot::HAND_OFF))) slot_name = "in both hands";
                 else slot_name = "in main hand";
                 break;
             case EquipSlot::HAND_OFF: slot_name = "in off-hand"; break;
