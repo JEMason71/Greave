@@ -327,7 +327,8 @@ void World::load_item_pool()
             if (item_data["power"]) new_item->set_power(item_data["power"].as<int>());
 
             // The Item's description, if any.
-            if (item_data["description"]) new_item->set_description(item_data["description"].as<std::string>());
+            if (!item_data["description"]) core()->guru()->nonfatal("Missing description for item " + item_id_str, Guru::WARN);
+            else new_item->set_description(item_data["description"].as<std::string>());
 
             // The Item's speed, if any.
             if (item_data["speed"]) new_item->set_speed(item_data["speed"].as<float>());

@@ -1,6 +1,16 @@
 # data/items/armour/inner.yml -- Armour worn close against the body, such as a gambeson or tunic.
 # Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
+ARMOUR_CHAIN_MAIL:
+  description: A long shirt of linked mail worn over a light leather jerkin.
+  name: chain mail hauberk
+  power: 8
+  rare: 4
+  slot: body
+  type: [ armour, medium ]
+  value: 6g
+  weight: 2200
+
 ARMOUR_CLOTH:
   description: This tunic is thick and heavy, offering a little more defense than plain clothing.
   name: thick cloth tunic
@@ -10,3 +20,13 @@ ARMOUR_CLOTH:
   type: [ armour, light ]
   value: 40s
   weight: 640
+
+ARMOUR_PADDED:
+  description: This thick, quilted cloth armour is rugged and sturdy.
+  name: padded gambeson
+  power: 5
+  rare: 2
+  slot: body
+  type: [ armour, light ]
+  value: 90s
+  weight: 750
