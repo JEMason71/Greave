@@ -37,4 +37,6 @@ private:
     static const float  TIME_UNEQUIP_HANDS;     // The time taken (in seconds) to unequip gloves or something else worn on the hands.
     static const float  TIME_UNEQUIP_HEAD;      // The time taken (in seconds) to unequip a helmet or so mething else worn on the head.
     static const float  TIME_UNEQUIP_WEAPON;    // The time taken (in seconds) to unequip a weapon or something else held in the hand.
+
+    static void weight_and_money(std::shared_ptr<Mobile> mob);  // Shows the total carry weight and currency the Mobile is carrying.
 };

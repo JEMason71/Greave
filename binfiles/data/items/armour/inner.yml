@@ -9,3 +9,4 @@ ARMOUR_CLOTH:
   slot: body
   type: [ armour, light ]
   value: 40s
+  weight: 640

@@ -363,6 +363,10 @@ void World::load_item_pool()
             if (!item_data["rare"]) core()->guru()->nonfatal("Missing rarity for item " + item_id_str, Guru::WARN);
             else new_item->set_rare(item_data["rare"].as<int>());
 
+            // The Item's weight.
+            if (!item_data["weight"]) core()->guru()->nonfatal("Missing weight for item " + item_id_str, Guru::ERROR);
+            else new_item->set_weight(item_data["weight"].as<uint32_t>());
+
             // Add the new Item to the item pool.
             m_item_pool.insert(std::make_pair(item_id, new_item));
         }

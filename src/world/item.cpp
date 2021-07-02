@@ -23,7 +23,7 @@ const int Item::NAME_FLAG_THE =                 512;    // Precede the Item's na
 // The SQL table construction string for saving items.
 const std::string Item::SQL_ITEMS = "CREATE TABLE items ( description TEXT, equip_slot INTEGER, metadata TEXT, name TEXT NOT NULL, owner_id INTEGER NOT NULL, "
     "parser_id INTEGER NOT NULL, plural_name TEXT, power INTEGER, rare INTEGER NOT NULL, speed REAL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, subtype INTEGER, tags TEXT, "
-    "type INTEGER, value INTEGER )";
+    "type INTEGER, value INTEGER, weight INTEGER NOT NULL )";
 
 
 // Constructor, sets default values.
@@ -105,6 +105,7 @@ std::shared_ptr<Item> Item::load(std::shared_ptr<SQLite::Database> save_db, uint
         if (!query.getColumn("tags").isNull()) StrX::string_to_tags(query.getColumn("tags").getString(), new_item->m_tags);
         if (!query.isColumnNull("type")) new_type = static_cast<ItemType>(query.getColumn("type").getInt());
         if (!query.isColumnNull("value")) new_item->m_value = query.getColumn("value").getUInt();
+        new_item->m_weight = query.getColumn("weight").getUInt();
 
         new_item->set_type(new_type, new_subtype);
     }
@@ -212,7 +213,7 @@ uint8_t Item::rare() const { return m_rarity; }
 void Item::save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id)
 {
     SQLite::Statement query(*save_db, "INSERT INTO items ( description, equip_slot, metadata, name, owner_id, parser_id, plural_name, power, rare, speed, sql_id, subtype, tags, "
-        "type, value ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
+        "type, value, weight ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
     if (m_description.size()) query.bind(1, m_description);
     if (m_equip_slot != EquipSlot::NONE) query.bind(2, static_cast<int>(m_equip_slot));
     if (m_metadata.size()) query.bind(3, StrX::metadata_to_string(m_metadata));
@@ -228,6 +229,7 @@ void Item::save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id)
     if (m_tags.size()) query.bind(13, StrX::tags_to_string(m_tags));
     if (m_type != ItemType::NONE) query.bind(14, static_cast<int>(m_type));
     if (m_value) query.bind(15, m_value);
+    query.bind(16, m_weight);
     query.exec();
 }
 
@@ -280,6 +282,9 @@ void Item::set_type(ItemType type, ItemSub sub)
 // Sets this Item's value.
 void Item::set_value(uint32_t val) { m_value = val; }
 
+// Sets this Item's weight.
+void Item::set_weight(uint32_t pacs) { m_weight = pacs; }
+
 // Retrieves the speed of this Item.
 float Item::speed() const { return m_speed; }
 
@@ -294,3 +299,6 @@ ItemType Item::type() const { return m_type; }
 
 // The Item's value in money.
 uint32_t Item::value() const { return m_value; }
+
+// The Item's weight, in pacs.
+uint32_t Item::weight() const { return m_weight; }

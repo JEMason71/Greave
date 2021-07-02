@@ -45,6 +45,8 @@ void ActionInventory::check_inventory(std::shared_ptr<Mobile> mob)
     core()->message("{G}You are carrying:");
     for (unsigned int i = 0; i < inv_size; i++)
         core()->message("{0}" + inventory->get(i)->name(Item::NAME_FLAG_FULL_STATS | Item::NAME_FLAG_ID));
+
+    weight_and_money(mob);
 }
 
 // Drops an item on the ground.
@@ -233,6 +235,8 @@ void ActionInventory::equipment(std::shared_ptr<Mobile> mob)
         }
         core()->message("{0}" + item->name(Item::NAME_FLAG_FULL_STATS | Item::NAME_FLAG_ID) + " {B}(" + slot_name + ")");
     }
+
+    weight_and_money(mob);
 }
 
 // Takes an item from the ground.
@@ -240,6 +244,13 @@ void ActionInventory::take(std::shared_ptr<Mobile> mob, uint32_t item_pos)
 {
     const std::shared_ptr<Room> room = core()->world()->get_room(mob->location());
     const std::shared_ptr<Item> item = room->inv()->get(item_pos);
+
+    if (mob->carry_weight() + item->weight() > mob->max_carry())
+    {
+        // todo: add message for NPCs unable to pick up an item
+        core()->message("{y}You can't carry that much!");
+        return;
+    }
 
     if (!mob->pass_time(TIME_GET_ITEM))
     {
@@ -309,4 +320,10 @@ bool ActionInventory::unequip(std::shared_ptr<Mobile> mob, EquipSlot slot)
     for (unsigned int i = 0; i < inv->count(); i++)
         if (inv->get(i)->equip_slot() == slot) return unequip(mob, i);
     return false;
+}
+
+// Shows the total carry weight and currency the Mobile is carrying.
+void ActionInventory::weight_and_money(std::shared_ptr<Mobile> mob)
+{
+    core()->message("{0}{c}Total weight: {C}" + StrX::intostr_pretty(mob->carry_weight()) + "{c}/{C}" + StrX::intostr_pretty(mob->max_carry()) + " {c}pacs.");
 }

@@ -69,11 +69,13 @@ public:
     void        set_tag(ItemTag the_tag);           // Sets a tag on this Item.
     void        set_type(ItemType type, ItemSub sub = ItemSub::NONE);   // Sets the type of this Item.
     void        set_value(uint32_t val);            // Sets this Item's value.
+    void        set_weight(uint32_t pacs);          // Sets this Item's weight.
     float       speed() const;                      // Retrieves the speed of this Item.
     ItemSub     subtype() const;                    // Returns the ItemSub (sub-type) of this Item.
     bool        tag(ItemTag the_tag) const;         // Checks if a tag is set on this Item.
     ItemType    type() const;                       // Returns the ItemType of this Item.
     uint32_t    value() const;                      // The Item's value in money.
+    uint32_t    weight() const;                     // The Item's weight, in pacs.
 
 private:
     int         meta_int(std::string key) const;    // Retrieves metadata, in int format.
@@ -91,4 +93,5 @@ private:
     ItemType    m_type;             // The primary type of this Item.
     ItemSub     m_type_sub;         // The subtype of this Item, if any.
     uint32_t    m_value;            // The value of this Item, if any.
+    uint32_t    m_weight;           // The weight of this Item.
 };

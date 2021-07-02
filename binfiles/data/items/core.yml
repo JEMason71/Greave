@@ -8,3 +8,4 @@ UNARMED_ATTACK:
   speed: 1.0
   type: [ weapon, unarmed ]
   value: 0
+  weight: 0

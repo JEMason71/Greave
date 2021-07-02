@@ -8,3 +8,4 @@ SKELETON_KEY:   # The skeleton key can open any lock.
   rare: 12
   type: key
   value: 0
+  weight: 20

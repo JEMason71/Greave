@@ -9,3 +9,4 @@ TORCH:
   tags: [ PreferOffHand]
   type: light
   value: 0
+  weight: 0

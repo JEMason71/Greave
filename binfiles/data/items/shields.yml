@@ -9,3 +9,4 @@ BUCKLER:
   type: [ shield, light ]
   tags: [ OffHandOnly ]
   value: 30s
+  weight: 220

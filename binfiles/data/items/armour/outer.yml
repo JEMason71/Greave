@@ -9,3 +9,4 @@ ARMOUR_HIDE:
   slot: armour
   type: [ armour, light ]
   value: 1g 20s
+  weight: 1300

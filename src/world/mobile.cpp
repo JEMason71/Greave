@@ -12,6 +12,8 @@
 #include "world/world.hpp"
 
 
+const uint32_t Mobile::BASE_CARRY_WEIGHT =      30000;  // The maximum amount of weight a Mobile can carry, before modifiers.
+
 // Flags for the name() function.
 const int Mobile::NAME_FLAG_A =                 1;  // Precede the Mobile's name with 'a' or 'an', unless the name is a proper noun.
 const int Mobile::NAME_FLAG_CAPITALIZE_FIRST =  2;  // Capitalize the first letter of the Mobile's name (including the "The") if set.
@@ -52,6 +54,17 @@ float Mobile::attack_speed() const
     }
 
     return speed;
+}
+
+// Checks how much weight this Mobile is carrying.
+uint32_t Mobile::carry_weight() const
+{
+    uint32_t total_weight = 0;
+    for (unsigned int i = 0; i < m_inventory->count(); i++)
+        total_weight += m_inventory->get(i)->weight();
+    for (unsigned int i = 0; i < m_equipment->count(); i++)
+        total_weight += m_equipment->get(i)->weight();
+    return total_weight;
 }
 
 // Clears a MobileTag from this Mobile.
@@ -106,7 +119,7 @@ bool Mobile::is_dead() const { return m_hp[0] <= 0; }
 bool Mobile::is_player() const { return false; }
 
 // Loads a Mobile.
-uint32_t Mobile::load(std::shared_ptr<SQLite::Database> save_db, unsigned int sql_id)
+uint32_t Mobile::load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id)
 {
     uint32_t inventory_id = 0, equipment_id = 0;
     SQLite::Statement query(*save_db, "SELECT * FROM mobiles WHERE sql_id = ?");
@@ -135,6 +148,9 @@ uint32_t Mobile::load(std::shared_ptr<SQLite::Database> save_db, unsigned int sq
 
 // Retrieves the location of this Mobile, in the form of a Room ID.
 uint32_t Mobile::location() const { return m_location; }
+
+// The maximum weight this Mobile can carry.
+uint32_t Mobile::max_carry() const { return BASE_CARRY_WEIGHT; }
 
 // Retrieves the name of this Mobile.
 std::string Mobile::name(int flags) const

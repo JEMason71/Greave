@@ -4,6 +4,7 @@
 #include "actions/look.hpp"
 #include "core/core.hpp"
 #include "core/guru.hpp"
+#include "core/mathx.hpp"
 #include "core/parser.hpp"
 #include "core/strx.hpp"
 #include "world/inventory.hpp"
@@ -96,10 +97,12 @@ void ActionLook::examine_item(std::shared_ptr<Mobile>, std::shared_ptr<Item> tar
             break;
         }
     }
+    uint32_t weight = MathX::fuzz(target->weight());
+    stat_string += "{w}It weighs around {U}" + StrX::intostr_pretty(weight) + (weight == 1 ? " pac{w}. " : " pacs{w}. ");
     if (stat_string.size())
     {
         stat_string.pop_back();
-        core()->message(stat_string);
+        core()->message("{0}" + stat_string);
     }
 }
 

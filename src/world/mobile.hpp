@@ -33,6 +33,7 @@ public:
 
                         Mobile();                                   // Constructor, sets default values.
     float               attack_speed() const;                       // Returns the number of seconds needed for this Mobile to make an attack.
+    uint32_t            carry_weight() const;                       // Checks how much weight this Mobile is carrying.
     void                clear_tag(MobileTag the_tag);               // Clears an MobileTag from this Mobile.
     const std::shared_ptr<Inventory>    equ() const;                // Returns a pointer to the Movile's equipment.
     const std::vector<std::shared_ptr<BodyPart>>& get_anatomy() const;  // Retrieves the anatomy vector for this Mobile.
@@ -42,8 +43,9 @@ public:
     const std::shared_ptr<Inventory>    inv() const;                // Returns a pointer to the Mobile's Inventory.
     bool                is_dead() const;                            // Checks if this Mobile is dead.
     virtual bool        is_player() const;                          // Returns true if this Mobile is a Player, false if not.
-    virtual uint32_t    load(std::shared_ptr<SQLite::Database> save_db, unsigned int sql_id);   // Loads a Mobile.
+    virtual uint32_t    load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id);   // Loads a Mobile.
     uint32_t            location() const;                           // Retrieves the location of this Mobile, in the form of a Room ID.
+    uint32_t            max_carry() const;                          // The maximum weight this Mobile can carry.
     std::string         name(int flags = 0) const;                  // Retrieves the name of this Mobile.
     void                new_parser_id();                            // Generates a new parser ID for this Mobile.
     uint16_t            parser_id() const;                          // Retrieves the current ID of this Mobile, for parser differentiation.
@@ -61,6 +63,8 @@ public:
     bool                tag(MobileTag the_tag) const;               // Checks if a MobileTag is set on this Mobile.
 
 private:
+    static const uint32_t   BASE_CARRY_WEIGHT;  // The maximum amount of weight a Mobile can carry, before modifiers.
+
     float               m_action_timer; // When this timer reaches 0, the Mobile is able to act. Any actions it takes detract from the timer.
     std::shared_ptr<Inventory>  m_equipment;    // The Items currently worn or wielded by this Mobile.
     Gender              m_gender;       // The gender of this Mobile.
