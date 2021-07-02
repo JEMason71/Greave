@@ -27,7 +27,7 @@ public:
                     World();                                                    // Constructor, loads the room YAML data.
     void            add_mobile(std::shared_ptr<Mobile> mob);                    // Adds a Mobile to the world.
     std::string     generic_desc(const std::string &id) const;                  // Retrieves a generic description string.
-    std::vector<std::shared_ptr<BodyPart>>  get_anatomy(const std::string &id); // Retrieves a copy of the anatomy data for a given species.
+    const std::vector<std::shared_ptr<BodyPart>>& get_anatomy(const std::string &id) const; // Retrieves a copy of the anatomy data for a given species.
     const std::shared_ptr<Item>     get_item(const std::string &item_id) const; // Retrieves a specified Item by ID.
     const std::shared_ptr<Mobile>   get_mob(const std::string &mob_id) const;   // Retrieves a specified Mobile by ID.
     const std::shared_ptr<Room>     get_room(uint32_t room_id) const;           // Retrieves a specified Room by ID.

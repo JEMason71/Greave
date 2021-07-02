@@ -51,6 +51,7 @@ set(GREAVE_CPPS
   actions/look.cpp
   actions/travel.cpp
   combat/combat.cpp
+  combat/melee.cpp
   core/core.cpp
   core/filex.cpp
   core/guru.cpp

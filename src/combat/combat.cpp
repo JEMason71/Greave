@@ -2,9 +2,26 @@
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #include "combat/combat.hpp"
+#include "core/random.hpp"
 #include "core/strx.hpp"
+#include "world/inventory.hpp"
+#include "world/item.hpp"
 #include "world/mobile.hpp"
 
+
+// Generates a standard-format damage number string.
+std::string Combat::damage_number_str(int damage, int blocked, bool crit, bool bleed, bool poison)
+{
+    std::string dmg_str;
+    if (crit) dmg_str = "{w}[{m}*{M}"; else dmg_str = "{w}[{R}-";
+    dmg_str += StrX::intostr_pretty(damage);
+    if (bleed && !crit) dmg_str += "B";
+    if (poison && !crit) dmg_str += "P";
+    if (crit) dmg_str += "{m}*";
+    dmg_str += "{w}]";
+    if (blocked > 0) dmg_str += " {w}<{U}" + StrX::intostr_pretty(blocked) + "{w} blocked>";
+    return dmg_str;
+}
 
 // Returns an appropriate damage string.
 std::string Combat::damage_str(unsigned int damage, std::shared_ptr<Mobile> def, bool heat)
@@ -72,4 +89,108 @@ std::string Combat::damage_str(unsigned int damage, std::shared_ptr<Mobile> def,
         else if (percentage >= 1) return "{y}bruises";
         else return "{w}tickles";
     }
+}
+
+// Determines type of weapons wielded by a Mobile.
+void Combat::determine_wield_type(std::shared_ptr<Mobile> mob, WieldType* wield_type, bool* can_main_melee, bool* can_off_melee)
+{
+    std::shared_ptr<Item> main_hand = mob->equ()->get(EquipSlot::HAND_MAIN);
+    std::shared_ptr<Item> off_hand = mob->equ()->get(EquipSlot::HAND_OFF);
+    *can_main_melee = (main_hand && main_hand->type() == ItemType::WEAPON && main_hand->subtype() == ItemSub::MELEE);
+    *can_off_melee = (off_hand && off_hand->type() == ItemType::WEAPON && off_hand->subtype() == ItemSub::MELEE);
+    const bool off_shield = (off_hand && off_hand->type() == ItemType::SHIELD);
+
+    // If both hands are empty, it's a melee attack.
+    if (!main_hand && !off_hand)
+    {
+        *wield_type = WieldType::UNARMED;
+        *can_main_melee = true;
+        *can_off_melee = true;
+    }
+
+    // Dual-wielding is an easy one to detect. One melee weapon in each hand.
+    else if (*can_main_melee && *can_off_melee) *wield_type = WieldType::DUAL_WIELD;
+
+    // Good old sword and board: melee weapon in one hand, shield in the other.
+    else if (*can_main_melee && off_shield) *wield_type = WieldType::ONE_HAND_PLUS_SHIELD;
+
+    // Two-handers can only be equipped in the main hand.
+    else if (*can_main_melee && main_hand->tag(ItemTag::TwoHanded)) *wield_type = WieldType::TWO_HAND;
+
+    // Single-wielding a one-handed weapon isn't the best choice, but it can be done.
+    else if ((*can_main_melee && !off_hand) || (*can_off_melee && !main_hand))
+    {
+        // Check if we're using a hand-and-a-half weapon with the other hand free, or just a regular one-hander on its own.
+        if ((*can_main_melee && main_hand->tag(ItemTag::HandAndAHalf)) || (*can_off_melee && off_hand->tag(ItemTag::HandAndAHalf))) *wield_type = WieldType::HAND_AND_A_HALF_2H;
+        else *wield_type = WieldType::SINGLE_WIELD;
+    }
+
+    // We've already checked for sword-and-board above, so the only option left if one hand is holding a weapon is that the other hand is holding something
+    // non-combat related. Yay for the process of elimination!
+    else if (*can_main_melee || *can_off_melee) *wield_type = WieldType::ONE_HAND_PLUS_EXTRA;
+
+    // Now we're getting into the silly options, but gotta cover every base. Is the Mobile wielding a shield in one hand, and nothing in the other?
+    // As ridiculous as that is for a loadout, punching while holding a shield should be allowed.
+    else if (off_shield && !main_hand) *wield_type = WieldType::UNARMED_PLUS_SHIELD;
+
+    // If either hand is now free, by process of elimination, it must be an unarmed attack with a non-combat item in the other hand.
+    else if (!main_hand || !off_hand)
+    {
+        *wield_type = WieldType::UNARMED;
+        if (main_hand) *can_main_melee = true;
+        if (off_hand) *can_off_melee = true;
+    }
+
+    // The only other possible configurations, through process of elimination, is shield+misc:
+    else if (off_shield) *wield_type = WieldType::SHIELD_ONLY;
+
+    // ...or the final option, which is the only thing that remains now, both hands occupied by non-combat items:
+    else *wield_type = WieldType::NONE;
+}
+
+// Picks a random hit location, returns an EquipSlot and the name of the anatomy part that was hit.
+void Combat::pick_hit_location(std::shared_ptr<Mobile> mob, EquipSlot* slot, std::string* slot_name)
+{
+    const auto body_parts = mob->get_anatomy();
+    const int bp_roll = core()->rng()->rnd(100);
+    *slot = EquipSlot::NONE;
+    for (unsigned int i = 0; i < body_parts.size(); i++)
+    {
+        if (bp_roll < body_parts.at(i)->hit_chance) continue;
+        *slot = body_parts.at(i)->slot;
+        *slot_name = body_parts.at(i)->name;
+        break;
+    }
+    if (*slot == EquipSlot::NONE) throw std::runtime_error("Could not determine body hit location for " + mob->name());
+}
+
+// Returns a threshold string, if a damage threshold has been passed.
+std::string Combat::threshold_str(std::shared_ptr<Mobile> defender, int damage, const std::string& good_colour, const std::string& bad_colour)
+{
+    const bool is_player = defender->is_player();
+    const bool alive = !defender->tag(MobileTag::Unliving);
+    const bool plural = defender->tag(MobileTag::PluralName) || is_player;
+    const std::string name = (is_player ? " You " : (plural ? " They " : " " + StrX::capitalize_first_letter(defender->he_she()) + " "));
+
+    const float old_perc = defender->hp() / static_cast<float>(defender->hp(true));
+    float new_perc = (defender->hp() - damage) / static_cast<float>(defender->hp(true));
+    if (defender->hp() <= damage) new_perc = 0;
+
+    if (old_perc >= 0.99f && new_perc >= 0.95f) return bad_colour + name + (alive ? (plural ? "barely notice." : "barely notices.") :
+        (plural ? "are barely scratched." : "is barely scratched."));
+    if (old_perc >= 0.99f && new_perc >= 0.95f) return bad_colour + name + (alive ? (plural ? "barely notice." : "barely notices.") :
+        (plural ? "are barely scratched." : "is barely scratched."));
+    if (old_perc >= 0.95f && new_perc >= 0.90f) return bad_colour + name + (alive ? (plural ? "shrug it off." : "shrugs it off.") :
+        (plural ? "are hardly damaged." : "is hardly damaged."));
+    if (old_perc >= 0.9f && new_perc == 0.0f) return good_colour + name + (plural ? "are utterly annihilated!" : "is utterly annihilated!");
+    if (old_perc >= 0.9f && new_perc <= 0.2f) return good_colour + name + (plural ? "almost collapse!" : "almost collapses!");
+    if (old_perc >= 0.9f && new_perc <= 0.4f) return good_colour + name + (plural ? "reel from the blow!" : "reels from the blow!");
+    if (!new_perc) return "";
+    if (old_perc > 0.1f && new_perc <= 0.1f) return good_colour + name + (alive ? (plural ? "are very close to death!" : "is very close to death!") :
+        (plural ? "are very close to collapse!" : "is very close to collapse!"));
+    if (old_perc > 0.2f && new_perc <= 0.2f) return good_colour + name + (alive ? (plural ? "look badly injured!" : "looks badly injured!") :
+        (plural ? "look badly damaged!" : "looks badly damaged!"));
+    if (old_perc > 0.5f && new_perc <= 0.5f) return good_colour + name + (alive ? (plural ? "have a few cuts and bruises." : "has a few cuts and bruises.") :
+        (plural ? "have a few scratches and dents." : "has a few scratches and dents."));
+    return "";
 }

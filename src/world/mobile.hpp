@@ -14,6 +14,7 @@ enum class Gender : uint8_t { FEMALE, MALE, IT, THEY };
 enum class MobileTag : uint16_t {
     PluralName = 1, // This Mobile's name is a plural (e.g. "pack of rats").
     ProperNoun,     // This Mobile's name is a proper noun (e.g. Smaug).
+    Unliving,       // This Mobile is a construct or other unliving entity.
 };
 
 struct BodyPart
@@ -34,6 +35,7 @@ public:
     float               attack_speed() const;                       // Returns the number of seconds needed for this Mobile to make an attack.
     void                clear_tag(MobileTag the_tag);               // Clears an MobileTag from this Mobile.
     const std::shared_ptr<Inventory>    equ() const;                // Returns a pointer to the Movile's equipment.
+    const std::vector<std::shared_ptr<BodyPart>>& get_anatomy() const;  // Retrieves the anatomy vector for this Mobile.
     std::string         he_she() const;                             // Returns a gender string (he/she/it/they/etc.)
     std::string         his_her() const;                            // Returns a gender string (his/her/its/their/etc.)
     int                 hp(bool max = false) const;                 // Retrieves the HP (or maximum HP) of this Mobile.

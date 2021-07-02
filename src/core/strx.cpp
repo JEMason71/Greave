@@ -15,6 +15,13 @@
 const int StrX::CL_FLAG_USE_AND = 1, StrX::CL_FLAG_SQL_MODE = 2;    // comma_list() flags
 
 
+// Capitalizes the first letter of a string.
+std::string StrX::capitalize_first_letter(std::string str)
+{
+    if (str.size() && str[0] >= 'a' && str[0] <= 'z') str[0] -= 32;
+    return str;
+}
+
 // Simple function to collapse a string vector into words.
 std::string StrX::collapse_vector(std::vector<std::string> vec)
 {
@@ -247,6 +254,14 @@ std::string StrX::metadata_to_string(const std::map<std::string, std::string> &m
         output.pop_back();
     }
     return output;
+}
+
+// Makes a string into a possessive noun (e.g. orc = orc's, platypus = platypus')
+std::string StrX::possessive_string(const std::string &str)
+{
+    if (!str.size()) return "";
+    if (str[str.size() - 1] == 's' || str[str.size() - 1] == 'S') return str + "'";
+    else return str + "'s";
 }
 
 // Makes pretty rainbow text!

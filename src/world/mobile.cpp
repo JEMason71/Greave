@@ -64,6 +64,9 @@ void Mobile::clear_tag(MobileTag the_tag)
 // Returns a pointer to the Movile's equipment.
 const std::shared_ptr<Inventory> Mobile::equ() const { return m_equipment; }
 
+// Retrieves the anatomy vector for this Mobile.
+const std::vector<std::shared_ptr<BodyPart>>& Mobile::get_anatomy() const { return core()->world()->get_anatomy(m_species); }
+
 // Returns a gender string (he/she/it/they/etc.)
 std::string Mobile::he_she() const
 {

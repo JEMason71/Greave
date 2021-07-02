@@ -6,6 +6,7 @@
 #include "actions/inventory.hpp"
 #include "actions/look.hpp"
 #include "actions/travel.hpp"
+#include "combat/melee.hpp"
 #include "core/core.hpp"
 #include "core/parser.hpp"
 #include "core/strx.hpp"
@@ -20,6 +21,7 @@
 // Constructor, sets up the parser.
 Parser::Parser() : m_special_state(SpecialState::NONE)
 {
+    add_command("[attack|kill|k] <mobile>", ParserCommand::ATTACK);
     add_command("close <dir>", ParserCommand::CLOSE);
     add_command("drop <item:i>", ParserCommand::DROP);
     add_command("[equipment|equip|eq]", ParserCommand::EQUIPMENT);
@@ -292,6 +294,11 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
     switch (pcd.command)
     {
         case ParserCommand::NONE: break;
+        case ParserCommand::ATTACK:
+            if (!words.size()) core()->message("{y}Please specify {Y}what you want to attack{y}.");
+            else if (parsed_target_type == ParserTarget::TARGET_NONE) core()->message("{y}You don't see any such {Y}" + collapsed_words + " {y}here.");
+            else if (parsed_target_type == ParserTarget::TARGET_MOBILE) Melee::attack(player, core()->world()->mob(parsed_target));
+            break;
         case ParserCommand::DIRECTION:
             ActionTravel::travel(player, parse_direction(first_word), confirm);
             break;

@@ -45,7 +45,8 @@ const std::map<std::string, LinkTag>    World::LINK_TAG_MAP = { { "autoclose", L
     { "triplelength", LinkTag::TripleLength }, { "window", LinkTag::Window } };
 
 // Lookup table for converting MobileTag text names into enums.
-const std::map<std::string, MobileTag>  World::MOBILE_TAG_MAP = { };
+const std::map<std::string, MobileTag>  World::MOBILE_TAG_MAP = { { "pluralname", MobileTag::PluralName }, { "propernoun", MobileTag::ProperNoun },
+    { "unliving", MobileTag::Unliving } };
 
 // Lookup table for converting RoomTag text names into enums.
 const std::map<std::string, RoomTag>    World::ROOM_TAG_MAP = { { "canseeoutside", RoomTag::CanSeeOutside }, { "churchaltar", RoomTag::ChurchAltar }, { "digok", RoomTag::DigOK },
@@ -104,7 +105,7 @@ std::string World::generic_desc(const std::string &id) const
 }
 
 // Retrieves a copy of the anatomy data for a given species.
-std::vector<std::shared_ptr<BodyPart>> World::get_anatomy(const std::string &id)
+const std::vector<std::shared_ptr<BodyPart>>& World::get_anatomy(const std::string &id) const
 {
     if (m_anatomy_pool.count(id) == 0) throw std::runtime_error("Could not find species ID: " + id);
     return m_anatomy_pool.at(id);
