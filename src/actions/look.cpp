@@ -75,7 +75,24 @@ void ActionLook::examine_item(std::shared_ptr<Mobile>, std::shared_ptr<Item> tar
                 default: break;
             }
             if (target->tag(ItemTag::TwoHanded)) stat_string += "It is heavy and requires {U}two hands {w}to wield. ";
-            stat_string += "It has a damage value of {U}" + std::to_string(target->power()) + "{w}, and a speed of {U}" + StrX::ftos(target->speed(), true) + "{w}. ";
+            std::string damage_type_str;
+            switch (target->damage_type())
+            {
+                case DamageType::ACID: damage_type_str = "acid"; break;
+                case DamageType::BALLISTIC: damage_type_str = "ballistic"; break;
+                case DamageType::CRUSHING: damage_type_str = "crushing"; break;
+                case DamageType::EDGED: damage_type_str = "edged"; break;
+                case DamageType::ENERGY: damage_type_str = "energy"; break;
+                case DamageType::EXPLOSIVE: damage_type_str = "explosive"; break;
+                case DamageType::KINETIC: damage_type_str = "kinetic"; break;
+                case DamageType::PIERCING: damage_type_str = "piercing"; break;
+                case DamageType::PLASMA: damage_type_str = "plasma"; break;
+                case DamageType::POISON: damage_type_str = "poison"; break;
+                case DamageType::RENDING: damage_type_str = "randing"; break;
+                default: core()->guru()->nonfatal("Unable to determine item damage type: " + target->name(), Guru::ERROR);
+            }
+            stat_string += "It has a damage value of {U}" + std::to_string(target->power()) + " " + damage_type_str + "{w}, and a speed of {U}" +
+                StrX::ftos(target->speed(), true) + "{w}. ";
             break;
         }
     }

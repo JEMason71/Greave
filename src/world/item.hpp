@@ -6,6 +6,10 @@
 
 namespace SQLite { class Database; }    // defined in 3rdparty/SQLiteCpp/Database.h
 
+
+// Weapon damage types.
+enum class DamageType : int8_t { ACID, BALLISTIC, CRUSHING, EDGED, ENERGY, EXPLOSIVE, KINETIC, PIERCING, PLASMA, POISON, RENDING, NONE = -1 };
+
 // The slot that an item is equipped in.
 enum class EquipSlot : uint8_t { NONE, HAND_MAIN, HAND_OFF, BODY, ARMOUR, ABOUT_BODY, HEAD, HANDS, FEET, _END };
 
@@ -39,6 +43,8 @@ public:
                 Item();                             // Constructor, sets default values.
     void        clear_meta(const std::string &key); // Clears a metatag from an Item. Use with caution!
     void        clear_tag(ItemTag the_tag);         // Clears a tag on this Item.
+    DamageType  damage_type() const;                // Retrieves this Item's damage type, if any.
+    std::string damage_type_string() const;         // Returns a string indicator of this Item's damage type (e.g. edged = E)
     std::string desc() const;                       // Retrieves this Item's description.
     EquipSlot   equip_slot() const;                 // Checks what slot this Item equips in, if any.
     static std::shared_ptr<Item> load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id);  // Loads a new Item from the save file.
@@ -63,6 +69,8 @@ public:
     ItemType    type() const;                       // Returns the ItemType of this Item.
 
 private:
+    int         meta_int(std::string key) const;    // Retrieves metadata, in int format.
+
     std::string m_description;  // The description of this Item.
     EquipSlot   m_equip_slot;   // The slot this Item is equipped in, if any.
     std::map<std::string, std::string>  m_metadata; // The Item's metadata, if any.

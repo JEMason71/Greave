@@ -9,6 +9,50 @@
 #include "world/mobile.hpp"
 
 
+// Weapon type damage modifiers to unarmoured, light, medium and heavy armour targets.
+const float	Combat::DAMAGE_MODIFIER_ACID[4] =       { 1.8f, 1.3f, 1.2f, 1.0f };
+const float Combat::DAMAGE_MODIFIER_BALLISTIC[4] =  { 1.3f, 1.3f, 1.2f, 1.0f };
+const float Combat::DAMAGE_MODIFIER_CRUSHING[4] =   { 1.0f, 1.0f, 1.0f, 1.2f };
+const float Combat::DAMAGE_MODIFIER_EDGED[4] =      { 1.5f, 1.3f, 1.2f, 1.0f };
+const float Combat::DAMAGE_MODIFIER_EXPLOSIVE[4] =  { 1.1f, 1.1f, 1.1f, 1.5f };
+const float Combat::DAMAGE_MODIFIER_ENERGY[4] =     { 1.1f, 1.0f, 1.0f, 1.2f };
+const float Combat::DAMAGE_MODIFIER_KINETIC[4] =    { 1.0f, 1.0f, 1.0f, 1.2f };
+const float Combat::DAMAGE_MODIFIER_PIERCING[4] =   { 1.2f, 1.2f, 1.2f, 1.0f };
+const float Combat::DAMAGE_MODIFIER_PLASMA[4] =     { 1.5f, 1.2f, 1.0f, 1.2f };
+const float Combat::DAMAGE_MODIFIER_POISON[4] =     { 1.8f, 1.2f, 1.0f, 0.8f };
+const float Combat::DAMAGE_MODIFIER_RENDING[4] =    { 1.5f, 1.3f, 1.1f, 1.1f };
+
+const std::map<DamageType, const float*>    Combat::DAMAGE_TYPE_MAP = { { DamageType::ACID, DAMAGE_MODIFIER_ACID }, { DamageType::BALLISTIC, DAMAGE_MODIFIER_BALLISTIC },
+    { DamageType::CRUSHING, DAMAGE_MODIFIER_CRUSHING }, { DamageType::EDGED, DAMAGE_MODIFIER_EDGED }, { DamageType::ENERGY, DAMAGE_MODIFIER_ENERGY },
+    { DamageType::KINETIC, DAMAGE_MODIFIER_KINETIC }, { DamageType::PIERCING, DAMAGE_MODIFIER_PIERCING }, { DamageType::PLASMA, DAMAGE_MODIFIER_PLASMA },
+    { DamageType::POISON, DAMAGE_MODIFIER_POISON },  { DamageType::RENDING, DAMAGE_MODIFIER_RENDING }, { DamageType::EXPLOSIVE, DAMAGE_MODIFIER_EXPLOSIVE } };
+
+
+// Applies damage modifiers based on weapon type.
+float Combat::apply_damage_modifiers(float damage, std::shared_ptr<Item> weapon, std::shared_ptr<Mobile> defender, EquipSlot slot)
+{
+    if (!damage || !weapon || !defender) return damage;
+    const DamageType dt = weapon->damage_type();
+    if (DAMAGE_TYPE_MAP.find(dt) == DAMAGE_TYPE_MAP.end())
+        throw std::runtime_error("Unknown damage type: " + std::to_string(static_cast<int>(dt)));
+    const float *damage_modifier = DAMAGE_TYPE_MAP.at(dt);
+
+    int armour_type = 0;    // 0 = unarmoured, 1 = light armour, 2 = medium armour, 3 = heavy armour.
+    std::shared_ptr<Item> armour = defender->equ()->get(slot);
+    if (armour && armour->type() == ItemType::ARMOUR)
+    {
+        switch (armour->subtype())
+        {
+            case ItemSub::LIGHT: armour_type = 1; break;
+            case ItemSub::MEDIUM: armour_type = 2; break;
+            case ItemSub::HEAVY: armour_type = 3; break;
+            default: break;
+        }
+    }
+    if (!armour_type) return damage;
+    else return damage * damage_modifier[armour_type];
+}
+
 // Generates a standard-format damage number string.
 std::string Combat::damage_number_str(int damage, int blocked, bool crit, bool bleed, bool poison)
 {

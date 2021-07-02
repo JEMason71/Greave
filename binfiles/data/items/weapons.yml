@@ -2,6 +2,7 @@
 # Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 KNIGHTLY_SWORD:
+  damage_type: edged
   description: A simple, straight steel blade about three feet long, double-edged with a cruciform hilt.
   name: knightly sword
   power: 6

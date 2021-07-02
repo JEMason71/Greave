@@ -3,6 +3,7 @@
 
 #include "3rdparty/SQLiteCpp/SQLiteCpp.h"
 #include "core/core.hpp"
+#include "core/guru.hpp"
 #include "core/random.hpp"
 #include "core/strx.hpp"
 #include "world/item.hpp"
@@ -34,6 +35,31 @@ void Item::clear_tag(ItemTag the_tag)
 {
     if (!(m_tags.count(the_tag) > 0)) return;
     m_tags.erase(the_tag);
+}
+
+// Retrieves this Item's damage type, if any.
+DamageType Item::damage_type() const { return static_cast<DamageType>(meta_int("damage_type")); }
+
+// Returns a string indicator of this Item's damage type (e.g. edged = E)
+std::string Item::damage_type_string() const
+{
+    switch (damage_type())
+    {
+        case DamageType::ACID: return "Ac";
+        case DamageType::BALLISTIC: return "B";
+        case DamageType::CRUSHING: return "C";
+        case DamageType::EDGED: return "E";
+        case DamageType::ENERGY: return "En";
+        case DamageType::EXPLOSIVE: return "Ex";
+        case DamageType::KINETIC: return "K";
+        case DamageType::PIERCING: return "P";
+        case DamageType::PLASMA: return "Pm";
+        case DamageType::POISON: return "Ps";
+        case DamageType::RENDING: return "R";
+        default:
+            core()->guru()->nonfatal("Unable to determine item damage type: " + name(), Guru::ERROR);
+            return "";
+    }
 }
 
 // Retrieves this Item's description.
@@ -80,6 +106,14 @@ std::string Item::meta(const std::string &key) const
     else return m_metadata.at(key);
 }
 
+// Retrieves metadata, in int format.
+int Item::meta_int(std::string key) const
+{
+    const std::string key_str = meta(key);
+    if (!key_str.size()) return 0;
+    else return std::stoi(key_str);
+}
+
 // Accesses the metadata map directly. Use with caution!
 std::map<std::string, std::string>* Item::meta_raw() { return &m_metadata; }
 
@@ -122,7 +156,7 @@ std::string Item::name(int flags) const
         {
             case ItemType::ARMOUR: case ItemType::SHIELD: full_stats_str += " {c}[{U}" + std::to_string(power()) + "{c}]"; break;
             case ItemType::LIGHT: core_stats_str += " {Y}<gl{W}o{Y}wing>"; break;
-            case ItemType::WEAPON: full_stats_str += " {c}<{U}" + std::to_string(power()) + "{c}/{U}" + StrX::ftos(speed(), true) + "{c}>"; break;
+            case ItemType::WEAPON: full_stats_str += " {c}<{U}" + std::to_string(power()) + "{c}" + damage_type_string() + "/{U}" + StrX::ftos(speed(), true) + "{c}>"; break;
             default: break;
         }
         if (core_stats && core_stats_str.size()) ret += core_stats_str;

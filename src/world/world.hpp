@@ -9,6 +9,7 @@ class Mobile;                           // defined in world/mobile.hpp
 class Player;                           // defined in world/player.hpp
 class Room;                             // defined in world/room.hpp
 class TimeWeather;                      // defined in world/time-weather.hpp
+enum class DamageType : int8_t;         // defined in world/item.hpp
 enum class EquipSlot : uint8_t;         // defined in world/item.hpp
 enum class ItemSub : uint16_t;          // defined in world/item.hpp
 enum class ItemTag : uint16_t;          // defined in world/item.hpp
@@ -45,6 +46,7 @@ public:
     const std::shared_ptr<TimeWeather> time_weather() const;                    // Gets a pointer to the TimeWeather object.
 
 private:
+    static const std::map<std::string, DamageType>  DAMAGE_TYPE_MAP;    // Lookup table for converting DamageType text names into enums.
     static const std::map<std::string, EquipSlot>   EQUIP_SLOT_MAP;     // Lookup table for converting EquipSlot text names into enums.
     static const std::map<std::string, ItemSub>     ITEM_SUBTYPE_MAP;   // Lookup table for converting ItemSub text names into enums.
     static const std::map<std::string, ItemTag>     ITEM_TAG_MAP;       // Lookup table for converting ItemTag text names into enums.

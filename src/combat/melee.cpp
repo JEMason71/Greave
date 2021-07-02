@@ -126,6 +126,7 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
 
         std::shared_ptr<Item> armour_piece_hit = defender->equ()->get(def_location_hit_es);
         float damage_blocked = 0;
+        damage_blocked = apply_damage_modifiers(damage_blocked, weapon_ptr, defender, def_location_hit_es);
 
         if (damage > 1) damage = std::round(damage);
         else if (damage > 0) damage = 1;

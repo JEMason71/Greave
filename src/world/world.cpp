@@ -17,6 +17,11 @@
 #include "world/world.hpp"
 
 
+// Lookup table for converting DamageType text names into enums.
+const std::map<std::string, DamageType> World::DAMAGE_TYPE_MAP = { { "acid", DamageType::ACID }, { "ballistic", DamageType::BALLISTIC }, { "crushing", DamageType::CRUSHING },
+    { "edged", DamageType::EDGED }, { "explosive", DamageType::EXPLOSIVE }, { "energy", DamageType::ENERGY }, { "kinetic", DamageType::KINETIC },
+    { "piercing", DamageType::PIERCING }, { "plasma", DamageType::PLASMA }, { "poison", DamageType::POISON }, { "rending", DamageType::RENDING } };
+
 // Lookup table for converting EquipSlot text names into enums.
 const std::map<std::string, EquipSlot>  World::EQUIP_SLOT_MAP = { { "about", EquipSlot::ABOUT_BODY }, { "armour", EquipSlot::ARMOUR }, { "body", EquipSlot::BODY },
     { "feet", EquipSlot::FEET }, { "hands", EquipSlot::HANDS }, { "head", EquipSlot::HEAD }, { "held", EquipSlot::HAND_MAIN } };
@@ -297,6 +302,15 @@ void World::load_item_pool()
             // The Item's metadata, if any.
             if (item_data["metadata"]) StrX::string_to_metadata(item_data["metadata"].as<std::string>(), *new_item->meta_raw());
 
+            // The Item's damage type, if any.
+            if (item_data["damage_type"])
+            {
+                const std::string damage_type = item_data["damage_type"].as<std::string>();
+                const auto type_it = DAMAGE_TYPE_MAP.find(damage_type);
+                if (type_it == DAMAGE_TYPE_MAP.end()) core()->guru()->nonfatal("Unrecognized damage type (" + damage_type + "): " + item_id_str, Guru::ERROR);
+                else new_item->set_meta("damage_type", std::to_string(static_cast<int>(type_it->second)));
+            }
+
             // The Item's EquipSlot, if any.
             if (item_data["slot"])
             {
@@ -558,6 +572,7 @@ void World::new_game()
     m_player->set_location("OUTSIDE_QUEENS_GATE");
     auto new_mob = get_mob("TEST_GOBLIN");
     new_mob->set_location("OUTSIDE_QUEENS_GATE");
+    new_mob->equ()->add_item(get_item("ARMOUR_HIDE"));
     add_mobile(new_mob);
     ActionLook::look(m_player);
 }
