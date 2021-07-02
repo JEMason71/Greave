@@ -185,7 +185,7 @@ bool TimeWeather::pass_time(float seconds)
     while (seconds_to_add--)
     {
         int hp = player->hp();
-        if (!hp) return false;  // Don't pass time if the player is dead.
+        if (player->is_dead()) return false;    // Don't pass time if the player is dead.
 
         if (seconds > UNINTERRUPTABLE_TIME)
         {

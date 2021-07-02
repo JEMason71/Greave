@@ -23,6 +23,29 @@ Mobile::Mobile() : m_action_timer(0), m_equipment(std::make_shared<Inventory>())
     m_hp[0] = m_hp[1] = 100;
 }
 
+// Returns the number of seconds needed for this Mobile to make an attack.
+float Mobile::attack_speed() const
+{
+    auto main_hand = m_equipment->get(EquipSlot::HAND_MAIN);
+    auto off_hand = m_equipment->get(EquipSlot::HAND_OFF);
+    const bool main_can_attack = (main_hand && main_hand->type() == ItemType::WEAPON && main_hand->subtype() == ItemSub::MELEE);
+    const bool off_can_attack = (off_hand && off_hand->type() == ItemType::WEAPON && off_hand->subtype() == ItemSub::MELEE);
+
+    // Attack speed is the slowest of the equipped weapons.
+    float speed = 0.0f;
+    if (main_can_attack) speed = main_hand->speed();
+    if (off_can_attack && off_hand->speed() > speed) speed = off_hand->speed();
+    if (!main_can_attack && !off_can_attack) speed = 1.0f;
+
+    if (!speed)
+    {
+        speed = 1.0f;
+        throw std::runtime_error("Cannot determine attack speed for " + name() + "!");
+    }
+
+    return speed;
+}
+
 // Returns a pointer to the Movile's equipment.
 const std::shared_ptr<Inventory> Mobile::equ() const { return m_equipment; }
 
@@ -31,6 +54,9 @@ int Mobile::hp(bool max) const { return m_hp[max ? 1 : 0]; }
 
 // Returns a pointer to the Mobile's Inventory.
 const std::shared_ptr<Inventory> Mobile::inv() const { return m_inventory; }
+
+// Checks if this Mobile is dead.
+bool Mobile::is_dead() const { return m_hp[0] <= 0; }
 
 // Returns true if this Mobile is a Player, false if not.
 bool Mobile::is_player() const { return false; }
