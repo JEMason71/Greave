@@ -50,8 +50,10 @@ public:
     void        set_meta(const std::string &key, const std::string &value); // Adds Item metadata.
     void        set_name(const std::string &name);  // Sets the name of this Item.
     void        set_power(uint16_t power);          // Sets the power of this Item.
+    void        set_speed(float speed);             // Sets the speed of this Item.
     void        set_tag(ItemTag the_tag);           // Sets a tag on this Item.
     void        set_type(ItemType type, ItemSub sub = ItemSub::NONE);   // Sets the type of this Item.
+    float       speed() const;                      // Retrieves the speed of this Item.
     ItemSub     subtype() const;                    // Returns the ItemSub (sub-type) of this Item.
     bool        tag(ItemTag the_tag) const;         // Checks if a tag is set on this Item.
     ItemType    type() const;                       // Returns the ItemType of this Item.
@@ -63,6 +65,7 @@ private:
     std::string m_name;         // The name of this Item!
     uint16_t    m_parser_id;    // The semi-unique ID of this Item, for parser differentiation.
     uint16_t    m_power;        // The power of this Item, if any.
+    float       m_speed;        // The speed of this Item, if any.
     std::set<ItemTag>   m_tags; // Any and all ItemTags on this Item.
     ItemType    m_type;         // The primary type of this Item.
     ItemSub     m_type_sub;     // The subtype of this Item, if any.

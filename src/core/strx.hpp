@@ -19,7 +19,7 @@ public:
     static std::string  dir_to_name(Direction dir, DirNameType dnt = DirNameType::NORMAL);  // Converts a direction enum into a string.
     static std::string  dir_to_name(uint8_t dir, DirNameType dnt = DirNameType::NORMAL);    // As above, but with an integer instead of an enum.
     static bool         find_and_replace(std::string &input, const std::string &to_find, const std::string &to_replace);    // Find and replace one string with another.
-    static std::string  ftos(double num);                           // Converts a float or double to a string.
+    static std::string  ftos(double num, bool force_decimal = false);   // Converts a float or double to a string.
     static uint32_t     hash(const std::string &str);               // FNV string hash function.
     static uint32_t     htoi(const std::string &hex_str);           // Converts a hex string back to an integer.
     static std::string  intostr_pretty(int num);                    // Returns a 'pretty' version of a number in string format, such as "12,345".

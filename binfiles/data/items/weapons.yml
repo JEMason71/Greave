@@ -6,4 +6,5 @@ KNIGHTLY_SWORD:
   name: knightly sword
   power: 6
   slot: held
+  speed: 1.0
   type: [ weapon, melee ]

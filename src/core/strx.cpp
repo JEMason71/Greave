@@ -145,11 +145,11 @@ bool StrX::find_and_replace(std::string &input, const std::string &to_find, cons
 }
 
 // Converts a float or double to a string.
-std::string StrX::ftos(double num)
+std::string StrX::ftos(double num, bool force_decimal)
 {
     std::stringstream ss;
     ss << num;
-    return ss.str();
+    return ss.str() + (force_decimal && (static_cast<int>(num) == num) ? ".0" : "");
 }
 
 // FNV string hash function.

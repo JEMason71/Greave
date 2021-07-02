@@ -251,6 +251,9 @@ void World::load_item_pool()
             // The Item's description, if any.
             if (item_data["description"]) new_item->set_description(item_data["description"].as<std::string>());
 
+            // The Item's speed, if any.
+            if (item_data["speed"]) new_item->set_speed(item_data["speed"].as<float>());
+
             // Add the new Item to the item pool.
             m_item_pool.insert(std::make_pair(item_id, new_item));
         }
