@@ -1,0 +1,8 @@
+# items/core.yml -- Items used by the game engine itself. Not necessarily actual items.
+# Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+
+UNARMED_ATTACK:
+  name: meaty fist
+  power: 3
+  speed: 1.0
+  type: [ weapon, unarmed ]
