@@ -14,7 +14,7 @@
 
 // The SQL table construction string for Mobiles.
 const std::string   Mobile::SQL_MOBILES =   "CREATE TABLE mobiles ( action_timer REAL, equipment INTEGER UNIQUE, hp INTEGER NOT NULL, hp_max INTEGER NOT NULL, "
-    "inventory INTEGER UNIQUE, location INTEGER NOT NULL, name TEXT, parser_id INTEGER, species TEXT NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL )";
+    "inventory INTEGER UNIQUE, location INTEGER NOT NULL, name TEXT, parser_id INTEGER, species TEXT NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, tags TEXT )";
 
 
 // Constructor, sets default values.
@@ -44,6 +44,13 @@ float Mobile::attack_speed() const
     }
 
     return speed;
+}
+
+// Clears a MobileTag from this Mobile.
+void Mobile::clear_tag(MobileTag the_tag)
+{
+    if (!(m_tags.count(the_tag) > 0)) return;
+    m_tags.erase(the_tag);
 }
 
 // Returns a pointer to the Movile's equipment.
@@ -78,6 +85,7 @@ uint32_t Mobile::load(std::shared_ptr<SQLite::Database> save_db, unsigned int sq
         if (!query.isColumnNull("name")) m_name = query.getColumn("name").getString();
         if (!query.isColumnNull("parser_id")) m_parser_id = query.getColumn("parser_id").getInt();
         m_species = query.getColumn("species").getString();
+        if (!query.isColumnNull("tags")) StrX::string_to_tags(query.getColumn("tags").getString(), m_tags);
     }
     else throw std::runtime_error("Could not load mobile data!");
 
@@ -129,8 +137,8 @@ uint32_t Mobile::save(std::shared_ptr<SQLite::Database> save_db)
     const uint32_t equipment_id = m_equipment->save(save_db);
 
     const uint32_t sql_id = core()->sql_unique_id();
-    SQLite::Statement query(*save_db, "INSERT INTO mobiles ( action_timer, equipment, hp, hp_max, inventory, location, name, parser_id, species, sql_id ) "
-        "VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
+    SQLite::Statement query(*save_db, "INSERT INTO mobiles ( action_timer, equipment, hp, hp_max, inventory, location, name, parser_id, species, sql_id, tags ) "
+        "VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
     if (m_action_timer) query.bind(1, m_action_timer);
     if (equipment_id) query.bind(2, equipment_id);
     query.bind(3, m_hp[0]);
@@ -141,6 +149,8 @@ uint32_t Mobile::save(std::shared_ptr<SQLite::Database> save_db)
     if (m_parser_id) query.bind(8, m_parser_id);
     query.bind(9, m_species);
     query.bind(10, sql_id);
+    const std::string tags = StrX::tags_to_string(m_tags);
+    if (tags.size()) query.bind(11, tags);
     query.exec();
     return sql_id;
 }
@@ -168,5 +178,15 @@ void Mobile::set_name(const std::string &name) { m_name = name; }
 // Sets the species of this Mobile.
 void Mobile::set_species(const std::string &species) { m_species = species; }
 
+// Sets a MobileTag on this Mobile.
+void Mobile::set_tag(MobileTag the_tag)
+{
+    if (m_tags.count(the_tag) > 0) return;
+    m_tags.insert(the_tag);
+}
+
 // Checks the species of this Mobile.
 std::string Mobile::species() const { return m_species; }
+
+// Checks if a MobileTag is set on this Mobile.
+bool Mobile::tag(MobileTag the_tag) const { return (m_tags.count(the_tag) > 0); }

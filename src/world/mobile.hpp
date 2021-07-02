@@ -9,6 +9,9 @@ enum class EquipSlot : uint8_t;         // defined in world/item.hpp
 namespace SQLite { class Database; }    // defined in 3rdparty/SQLiteCpp/Database.h
 
 
+enum class MobileTag : uint16_t {
+};
+
 struct BodyPart
 {
     uint8_t     hit_chance; // The hit chance for this body part.
@@ -23,6 +26,7 @@ public:
 
                         Mobile();                                   // Constructor, sets default values.
     float               attack_speed() const;                       // Returns the number of seconds needed for this Mobile to make an attack.
+    void                clear_tag(MobileTag the_tag);               // Clears an MobileTag from this Mobile.
     const std::shared_ptr<Inventory>    equ() const;                // Returns a pointer to the Movile's equipment.
     int                 hp(bool max = false) const;                 // Retrieves the HP (or maximum HP) of this Mobile.
     const std::shared_ptr<Inventory>    inv() const;                // Returns a pointer to the Mobile's Inventory.
@@ -42,15 +46,18 @@ public:
     void                set_location(const std::string &room_id);   // As above, but with a string Room ID.
     void                set_name(const std::string &name);          // Sets the name of this Mobile.
     void                set_species(const std::string &species);    // Sets the species of this Mobile.
+    void                set_tag(MobileTag the_tag);                 // Sets a MobileTag on this Mobile.
     std::string         species() const;                            // Checks the species of this Mobile.
+    bool                tag(MobileTag the_tag) const;               // Checks if a MobileTag is set on this Mobile.
 
 private:
-    float       m_action_timer; // When this timer reaches 0, the Mobile is able to act. Any actions it takes detract from the timer.
+    float               m_action_timer; // When this timer reaches 0, the Mobile is able to act. Any actions it takes detract from the timer.
     std::shared_ptr<Inventory>  m_equipment;    // The Items currently worn or wielded by this Mobile.
-    int         m_hp[2];        // The current and maxmum hit points of this Mobile.
+    int                 m_hp[2];        // The current and maxmum hit points of this Mobile.
     std::shared_ptr<Inventory>  m_inventory;    // The Items being carried by this Mobile.
-    uint32_t    m_location;     // The Room that this Mobile is currently located in.
-    std::string m_name;         // The name of this Mobile.
-    uint16_t    m_parser_id;    // The semi-unique ID of this Mobile, for parser differentiation.
-    std::string m_species;      // Ths species type of this Mobile.
+    uint32_t            m_location;     // The Room that this Mobile is currently located in.
+    std::string         m_name;         // The name of this Mobile.
+    uint16_t            m_parser_id;    // The semi-unique ID of this Mobile, for parser differentiation.
+    std::string         m_species;      // Ths species type of this Mobile.
+    std::set<MobileTag> m_tags;         // Any and all tags on this Mobile.
 };
