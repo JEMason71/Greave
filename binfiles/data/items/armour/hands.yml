@@ -1,0 +1,35 @@
+# data/items/armour/hands.yml -- Gloves, gauntlets, and other things you can wear on your hands.
+# Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+
+GAUNTLETS_LEATHER:
+  description: They're not terribly flexible, but the tough leather plates on these gauntlets will keep your hands safe.
+  name: [ tough leather gauntlets, pairs of tough leather gauntlets ]
+  power: 3
+  rare: 2
+  slot: hands
+  tags: [ PluralName ]
+  type: [ armour, light ]
+  value: 15s
+  weight: 30
+
+GAUNTLETS_LEATHER_PLATED:
+  description: Heavy leather gauntlets with overlapping iron plates sewn on.
+  name: [ plated leather gauntlets, pairs of plated leather gauntlets ]
+  power: 5
+  rare: 3
+  slot: hands
+  tags: [ PluralName ]
+  type: [ armour, medium ]
+  value: 1g
+  weight: 90
+
+GLOVES_MAIL:
+  description: A heavy pair of leather gauntlets, half-covered in a layer of chainmail.
+  name: [ mail gloves, pairs of mail gloves ]
+  power: 6
+  rare: 4
+  slot: hands
+  tags: [ PluralName ]
+  type: [ armour, heavy ]
+  value: 4g
+  weight: 60
