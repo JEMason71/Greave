@@ -243,7 +243,16 @@ void World::load_item_pool()
 
             // The Item's name.
             if (!item_data["name"]) throw std::runtime_error("Missing item name: " + item_id_str);
-            new_item->set_name(item_data["name"].as<std::string>());
+            std::string item_name, item_name_plural;
+            if (item_data["name"].IsSequence())
+            {
+                const unsigned int seq_size = item_data["name"].size();
+                if (seq_size < 1 || seq_size > 2) throw std::runtime_error("Item name data malforned: " + item_id_str);
+                item_name = item_data["name"][0].as<std::string>();
+                if (seq_size == 2) item_name_plural = item_data["name"][1].as<std::string>();
+            }
+            else item_name = item_data["name"].as<std::string>();
+            new_item->set_name(item_name, item_name_plural);
 
             // The Item's type and subtype.
             if (!item_data["type"]) throw std::runtime_error("Missing item type: " + item_id_str);

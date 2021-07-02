@@ -7,11 +7,6 @@ BOOTS:
   tags: [ PluralName ]
   type: [ armour, clothing ]
 
-BREASTPLATE:
-  name: breastplate
-  slot: armour
-  type: [ armour, heavy ]
-
 CLOAK:
   name: cloak
   slot: about
@@ -27,11 +22,6 @@ HELMET:
   name: helmet
   slot: head
   type: [ armour, medium ]
-
-LEATHER_CUIRASS:
-  name: leather cuirass
-  slot: armour
-  type: [ armour, light ]
 
 MAIL_HAUBERK:
   name: mail hauberk

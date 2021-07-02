@@ -52,7 +52,7 @@ public:
     void        set_description(const std::string &desc);   // Sets this Item's description.
     void        set_equip_slot(EquipSlot es);       // Sets this Item's equipment slot.
     void        set_meta(const std::string &key, const std::string &value); // Adds Item metadata.
-    void        set_name(const std::string &name);  // Sets the name of this Item.
+    void        set_name(const std::string &name, const std::string &plural_name = ""); // Sets the name of this Item.
     void        set_power(uint16_t power);          // Sets the power of this Item.
     void        set_speed(float speed);             // Sets the speed of this Item.
     void        set_tag(ItemTag the_tag);           // Sets a tag on this Item.
@@ -68,6 +68,7 @@ private:
     std::map<std::string, std::string>  m_metadata; // The Item's metadata, if any.
     std::string m_name;         // The name of this Item!
     uint16_t    m_parser_id;    // The semi-unique ID of this Item, for parser differentiation.
+    std::string m_plural_name;  // The custom plural name of this Item, if any.
     uint16_t    m_power;        // The power of this Item, if any.
     float       m_speed;        // The speed of this Item, if any.
     std::set<ItemTag>   m_tags; // Any and all ItemTags on this Item.

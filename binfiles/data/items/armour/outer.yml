@@ -1,0 +1,8 @@
+# data/items/armour/outer.yml -- Armour that can be worn on the outer layer, atop a gambeson or hauberk.
+# Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+
+ARMOUR_HIDE:
+  description: Rough-looking yet rugged and strong, tough animal hides are sewn to a tunic and reinforced with thick leather strips.
+  name: [ hide armour, suits of hide armour ]
+  slot: armour
+  type: [ armour, light ]
