@@ -10,7 +10,6 @@ KNIGHTLY_SWORD:
   rare: 3
   slot: held
   speed: 1.0
-  tags: [ HandAndAHalf ]
   type: [ weapon, melee ]
   value: 1g 10s
   weight: 240
