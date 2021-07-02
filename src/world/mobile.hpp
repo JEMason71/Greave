@@ -24,7 +24,8 @@ struct BodyPart
 class Mobile
 {
 public:
-    static const int            NAME_FLAG_THE, NAME_FLAG_CAPITALIZE_FIRST, NAME_FLAG_POSSESSIVE, NAME_FLAG_PLURAL, NAME_FLAG_A; // Flags for the name() function.
+                                // Flags for the name() function.
+    static const int            NAME_FLAG_A, NAME_FLAG_CAPITALIZE_FIRST, NAME_FLAG_NO_COLOUR, NAME_FLAG_PLURAL, NAME_FLAG_POSSESSIVE, NAME_FLAG_THE;
     static const std::string    SQL_MOBILES;        // The SQL table construction string for Mobiles.
 
                         Mobile();                                   // Constructor, sets default values.

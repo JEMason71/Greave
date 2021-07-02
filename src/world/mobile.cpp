@@ -15,9 +15,10 @@
 // Flags for the name() function.
 const int Mobile::NAME_FLAG_A =                 1;  // Precede the Mobile's name with 'a' or 'an', unless the name is a proper noun.
 const int Mobile::NAME_FLAG_CAPITALIZE_FIRST =  2;  // Capitalize the first letter of the Mobile's name (including the "The") if set.
-const int Mobile::NAME_FLAG_PLURAL =            4;  // Return a plural of the Mobile's name (e.g. apple -> apples).
-const int Mobile::NAME_FLAG_POSSESSIVE =        8;  // Change the Mobile's name to a possessive noun (e.g. goblin -> goblin's).
-const int Mobile::NAME_FLAG_THE =               16; // Precede the Mobile's name with 'the', unless the name is a proper noun.
+const int Mobile::NAME_FLAG_NO_COLOUR =         4;  // Strip colour codes from the name.
+const int Mobile::NAME_FLAG_PLURAL =            8;  // Return a plural of the Mobile's name (e.g. apple -> apples).
+const int Mobile::NAME_FLAG_POSSESSIVE =        16; // Change the Mobile's name to a possessive noun (e.g. goblin -> goblin's).
+const int Mobile::NAME_FLAG_THE =               32; // Precede the Mobile's name with 'the', unless the name is a proper noun.
 
 // The SQL table construction string for Mobiles.
 const std::string   Mobile::SQL_MOBILES =   "CREATE TABLE mobiles ( action_timer REAL, equipment INTEGER UNIQUE, hp INTEGER NOT NULL, hp_max INTEGER NOT NULL, "
@@ -114,6 +115,7 @@ std::string Mobile::name(int flags) const
     const bool capitalize_first = ((flags & Mobile::NAME_FLAG_CAPITALIZE_FIRST) == Mobile::NAME_FLAG_CAPITALIZE_FIRST);
     const bool possessive = ((flags & Mobile::NAME_FLAG_POSSESSIVE) == Mobile::NAME_FLAG_POSSESSIVE);
     const bool plural = ((flags & Mobile::NAME_FLAG_PLURAL) == Mobile::NAME_FLAG_PLURAL);
+    const bool no_colour = ((flags & Mobile::NAME_FLAG_NO_COLOUR) == Mobile::NAME_FLAG_NO_COLOUR);
 
     std::string ret = m_name;
     if (the && !tag(MobileTag::ProperNoun)) ret = "the " + m_name;
@@ -129,6 +131,7 @@ std::string Mobile::name(int flags) const
         else ret += "'s";
     }
     else if (plural && ret.back() != 's' && !tag(MobileTag::PluralName)) ret += "s";
+    if (no_colour) ret = StrX::strip_ansi(ret);
     return ret;
 }
 

@@ -188,7 +188,7 @@ Parser::ParserSearchResult Parser::parse_target(const std::vector<std::string> &
     for (unsigned int i = 0; i < world->mob_count(); i++)
     {
         const std::shared_ptr<Mobile> mob = world->mob(i);
-        if (mob->location() == player_location) candidates.push_back({0, StrX::str_tolower(StrX::strip_ansi(mob->name())), mob->parser_id(), i, ParserTarget::TARGET_MOBILE});
+        if (mob->location() == player_location) candidates.push_back({0, StrX::str_tolower(mob->name(Item::NAME_FLAG_NO_COLOUR)), mob->parser_id(), i, ParserTarget::TARGET_MOBILE});
     }
 
     // Score each candidate.
