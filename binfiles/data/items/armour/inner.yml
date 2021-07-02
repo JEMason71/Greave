@@ -1,0 +1,9 @@
+# data/items/armour/inner.yml -- Armour worn close against the body, such as a gambeson or tunic.
+# Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+
+ARMOUR_CLOTH:
+  description: This tunic is thick and heavy, offering a little more defense than plain clothing.
+  name: thick cloth tunic
+  power: 3
+  slot: body
+  type: [ armour, light ]

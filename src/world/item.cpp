@@ -27,6 +27,13 @@ const std::string Item::SQL_ITEMS = "CREATE TABLE items ( description TEXT, equi
 // Constructor, sets default values.
 Item::Item() : m_equip_slot(EquipSlot::NONE), m_parser_id(0), m_power(0), m_speed(0), m_type(ItemType::NONE), m_type_sub(ItemSub::NONE) { }
 
+// Returns the armour damage reduction value of this Item, if any.
+float Item::armour(int bonus_power) const
+{
+    if ((m_type != ItemType::ARMOUR && m_type != ItemType::SHIELD) || !m_power) return 0;
+    return std::pow(m_power + bonus_power + 4, 1.2) / 100.0f;
+}
+
 // Clears a metatag from an Item. Use with caution!
 void Item::clear_meta(const std::string &key) { m_metadata.erase(key); }
 

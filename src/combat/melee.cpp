@@ -124,9 +124,23 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
 
         bool critical_hit = false, bleed = false, poison = false;
 
-        std::shared_ptr<Item> armour_piece_hit = defender->equ()->get(def_location_hit_es);
         float damage_blocked = 0;
-        damage_blocked = apply_damage_modifiers(damage_blocked, weapon_ptr, defender, def_location_hit_es);
+        if (def_location_hit_es == EquipSlot::BODY)
+        {
+            const std::shared_ptr<Item> body_armour = defender->equ()->get(EquipSlot::BODY);
+            const std::shared_ptr<Item> outer_armour = defender->equ()->get(EquipSlot::ARMOUR);
+            const EquipSlot outer_layer = (outer_armour ? EquipSlot::ARMOUR : EquipSlot::BODY);
+            if (body_armour && outer_armour) damage_blocked = damage * body_armour->armour(outer_armour->power());
+            else if (body_armour) damage_blocked = damage * body_armour->armour();
+            else if (outer_armour) damage_blocked = damage * outer_armour->armour();
+            damage_blocked = apply_damage_modifiers(damage_blocked, weapon_ptr, defender, outer_layer);
+        }
+        else
+        {
+            const std::shared_ptr<Item> armour_piece_hit = defender->equ()->get(def_location_hit_es);
+            if (armour_piece_hit) damage_blocked = damage * armour_piece_hit->armour();
+            damage_blocked = apply_damage_modifiers(damage_blocked, weapon_ptr, defender, def_location_hit_es);
+        }
 
         if (damage > 1) damage = std::round(damage);
         else if (damage > 0) damage = 1;

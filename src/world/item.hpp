@@ -41,6 +41,7 @@ public:
     static const std::string    SQL_ITEMS;  // The SQL table construction string for saving items.
 
                 Item();                             // Constructor, sets default values.
+    float       armour(int bonus_power = 0) const;  // Returns the armour damage reduction value of this Item, if any.
     void        clear_meta(const std::string &key); // Clears a metatag from an Item. Use with caution!
     void        clear_tag(ItemTag the_tag);         // Clears a tag on this Item.
     DamageType  damage_type() const;                // Retrieves this Item's damage type, if any.

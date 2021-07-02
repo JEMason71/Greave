@@ -573,6 +573,7 @@ void World::new_game()
     auto new_mob = get_mob("TEST_GOBLIN");
     new_mob->set_location("OUTSIDE_QUEENS_GATE");
     new_mob->equ()->add_item(get_item("ARMOUR_HIDE"));
+    new_mob->equ()->add_item(get_item("ARMOUR_CLOTH"));
     add_mobile(new_mob);
     ActionLook::look(m_player);
 }

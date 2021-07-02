@@ -63,7 +63,7 @@ std::string Combat::damage_number_str(int damage, int blocked, bool crit, bool b
     if (poison && !crit) dmg_str += "P";
     if (crit) dmg_str += "{m}*";
     dmg_str += "{w}]";
-    if (blocked > 0) dmg_str += " {w}<{U}" + StrX::intostr_pretty(blocked) + "{w} blocked>";
+    if (blocked > 0) dmg_str += " {w}<{U}" + StrX::intostr_pretty(blocked) + "{w}>";
     return dmg_str;
 }
 
