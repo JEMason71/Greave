@@ -1,0 +1,35 @@
+# data/items/armour/feet.yml -- Boots and other things you can wear on your feet.
+# Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+
+BOOTS_LEATHER:
+  description: Less flexible than ordinary boots, but tougher to withstand more punishment.
+  name: [ leather boots, pairs of leather boots ]
+  power: 6
+  rare: 2
+  slot: feet
+  tags: [ PluralName ]
+  type: [ armour, light ]
+  value: 40s
+  weight: 130
+
+BOOTS_LEATHER_HIGH:
+  description: This tall pair of tough leather boots aren't too comfortable to wear, but they'll protect your legs.
+  name: [ tough leather high boots, pairs of tough leather high boots ]
+  power: 8
+  rare: 2
+  slot: feet
+  tags: [ PluralName ]
+  type: [ armour, medium ]
+  value: 60s
+  weight: 170
+
+BOOTS_LEATHER_PLATED:
+  description: Heavy leather boots with iron plates covering the shins.
+  name: [ plated leather boots, pairs of plated leather boots ]
+  power: 12
+  rare: 3
+  slot: feet
+  tags: [ PluralName ]
+  type: [ armour, heavy ]
+  value: 1g 20s
+  weight: 170
