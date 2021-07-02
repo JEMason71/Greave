@@ -24,7 +24,7 @@ const std::string Item::SQL_ITEMS = "CREATE TABLE items ( description TEXT, equi
 
 
 // Constructor, sets default values.
-Item::Item() : m_equip_slot(EquipSlot::NONE), m_parser_id(0), m_power(0), m_type(ItemType::NONE), m_type_sub(ItemSub::NONE) { }
+Item::Item() : m_equip_slot(EquipSlot::NONE), m_parser_id(0), m_power(0), m_speed(0), m_type(ItemType::NONE), m_type_sub(ItemSub::NONE) { }
 
 // Clears a metatag from an Item. Use with caution!
 void Item::clear_meta(const std::string &key) { m_metadata.erase(key); }
