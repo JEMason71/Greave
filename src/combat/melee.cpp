@@ -12,6 +12,7 @@
 #include "world/world.hpp"
 
 
+const float Melee::BASE_BLOCK_CHANCE_MELEE =                20.0f;  // The base block chance in melee combat.
 const float Melee::BASE_HIT_CHANCE_MELEE =                  75.0f;  // The base hit chance in melee combat.
 const float Melee::BASE_PARRY_CHANCE =                      10.0f;  // The base parry chance in melee combat.
 const float Melee::DUAL_WIELD_HIT_CHANCE_MULTIPLIER =       0.9f;   // The multiplier to accuracy% for dual-wielding.
@@ -105,7 +106,7 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
 
     if (defender->tag(MobileTag::CannotDodge)) to_hit = 100;
     else to_hit *= defender->dodge_mod();
-    
+
     bool evaded = false, blocked = false, parried = false;
     if (core()->rng()->frnd(100) <= to_hit)  // Evasion failed; the target was hit.
     {
@@ -114,6 +115,14 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
         {
             float parry_chance = BASE_PARRY_CHANCE * defender->parry_mod();
             if (core()->rng()->frnd(100) <= parry_chance) parried = true;
+        }
+
+        // If evasion and parry both fail, we can try to block. Parrying is better than blocking (parrying negates damage entirely) so there's no reason to run a block check
+        // after a successful parry.
+        if (!parried && can_block)
+        {
+            const float block_chance = BASE_BLOCK_CHANCE_MELEE;// * defender->block_mod();
+            if (core()->rng()->frnd(100) <= block_chance) blocked = true;
         }
     }
     else evaded = true;
@@ -171,6 +180,11 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
             if (armour_piece_hit) damage_blocked = damage * armour_piece_hit->armour();
             damage_blocked = apply_damage_modifiers(damage_blocked, weapon_ptr, defender, def_location_hit_es);
         }
+        if (blocked)
+        {
+            const std::shared_ptr<Item> shield_item = defender->equ()->get(EquipSlot::HAND_OFF);
+            if (shield_item) damage_blocked += damage * shield_item->armour();
+        }
 
         if (damage > 1) damage = std::round(damage);
         else if (damage > 0) damage = 1;
@@ -186,6 +200,39 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
                 (attacker_is_player ? "{y}" : "{U}")));
             std::string damage_colour = (attacker_is_player ? (damage > 0.0f ? "{G}" : "{y}") : (defender_is_player ? (damage > 0.0f ? "{R}" : "{Y}") : "{U}"));
             std::string absorb_str, block_str, death_str;
+            if (damage_blocked)
+            {
+                std::shared_ptr<Item> armour_piece_hit = defender->equ()->get(blocked ? EquipSlot::HAND_OFF : def_location_hit_es);
+                if (def_location_hit_es == EquipSlot::BODY && !blocked && defender->equ()->get(EquipSlot::ARMOUR))
+                    armour_piece_hit = defender->equ()->get(EquipSlot::ARMOUR);
+                std::string lessens_str, lessens_plural_str, lessening_str;
+                if (damage < 1.0f)
+                {
+                    lessens_str = "absorbs";
+                    lessens_plural_str = "absorb";
+                    lessening_str = "absorbing";
+                }
+                else switch (core()->rng()->rnd(10))
+                {
+                    case 1: lessens_str = "mitigates"; lessens_plural_str = "mitigate"; lessening_str = "mitigating"; break;
+                    case 2: lessens_str = "diminishes"; lessens_plural_str = "diminish"; lessening_str = "diminishing"; break;
+                    case 3: lessens_str = "alleviates"; lessens_plural_str = "alleviate"; lessening_str = "alleviating"; break;
+                    case 4: lessens_str = "deadens"; lessens_plural_str = "deaden"; lessening_str = "deadening"; break;
+                    case 5: lessens_str = "dampens"; lessens_plural_str = "dampen"; lessening_str = "dampening"; break;
+                    case 6: lessens_str = "dulls"; lessens_plural_str = "dull"; lessening_str = "dulling"; break;
+                    case 7: lessens_str = "lessens"; lessens_plural_str = "lessen"; lessening_str = "lessening"; break;
+                    case 8: lessens_str = "withstands"; lessens_plural_str = "withstand"; lessening_str = "withstanding"; break;
+                    case 9: lessens_str = "endures"; lessens_plural_str = "endure"; lessening_str = "enduring"; break;
+                    case 10: lessens_str = "takes"; lessens_plural_str = "take"; lessening_str = "taking"; break;
+                }
+                if (armour_piece_hit->tag(ItemTag::PluralName)) lessens_str = lessens_plural_str;
+                if (blocked)
+                {
+                    const std::string blocks_str = (defender_is_player ? "block" : "blocks");
+                    block_str = "{U}" + defender_name_c + " " + blocks_str + " with " + defender_your_string + " " + armour_piece_hit->name() + ", " + lessening_str + " the blow. ";
+                }
+                else absorb_str = " {U}" + defender_your_string_c + " " + armour_piece_hit->name() + " " + lessens_str + " the blow.";
+            }
 
             if (damage >= defender->hp())
             {

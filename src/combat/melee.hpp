@@ -14,6 +14,7 @@ public:
     static bool attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mobile> defender); // A basic attack, no special moves being used.
 
 private:
+    static const float  BASE_BLOCK_CHANCE_MELEE;                // The base block chance in melee combat.
     static const float  BASE_HIT_CHANCE_MELEE;                  // The base hit chance in melee combat.
     static const float  BASE_PARRY_CHANCE;                      // The base parry chance in melee combat.
     static const float  DUAL_WIELD_HIT_CHANCE_MULTIPLIER;       // The multiplier to accuracy% for dual-wielding.
