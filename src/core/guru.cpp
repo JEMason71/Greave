@@ -185,10 +185,10 @@ void Guru::nonfatal(std::string error, int type)
 
     switch(type)
     {
-        case Guru::INFO: error = "{b}Info: " + error; break;
-        case Guru::WARN: error = "{y}Warning: " + error; break;
-        case Guru::ERROR: error = "{r}Error: " + error; break;
-        case Guru::CRITICAL: error = "{r}Critical Error: " + error; break;
+        case Guru::INFO: error = "{U}Info: " + error; break;
+        case Guru::WARN: error = "{Y}Warning: " + error; break;
+        case Guru::ERROR: error = "{R}Error: " + error; break;
+        case Guru::CRITICAL: error = "{M}Critical Error: " + error; break;
     }
     core()->message(error);
     if (m_cache_nonfatal) m_nonfatal_cache.push_back(error);
