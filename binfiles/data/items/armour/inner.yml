@@ -2,7 +2,7 @@
 # Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 ARMOUR_CHAIN_MAIL:
-  description: A long shirt of linked mail worn over a light leather jerkin.
+  desc: A long shirt of linked mail worn over a light leather jerkin.
   dodge_mod: -12
   name: chain mail hauberk
   power: 8
@@ -13,7 +13,7 @@ ARMOUR_CHAIN_MAIL:
   weight: 2200
 
 ARMOUR_CLOTH:
-  description: This tunic is thick and heavy, offering a little more defense than plain clothing.
+  desc: This tunic is thick and heavy, offering a little more defense than plain clothing.
   name: thick cloth tunic
   power: 3
   rare: 2
@@ -23,7 +23,7 @@ ARMOUR_CLOTH:
   weight: 640
 
 ARMOUR_PADDED:
-  description: This thick, quilted cloth armour is rugged and sturdy.
+  desc: This thick, quilted cloth armour is rugged and sturdy.
   dodge_mod: -2
   name: padded gambeson
   power: 5

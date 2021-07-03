@@ -2,7 +2,7 @@
 # Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 ARMOUR_BANDED_MAIL:
-  description: This heavy armour consists of overlapping bands of steel forming semi-rigid armour plates, with chain mail protecting your arms and legs.
+  desc: This heavy armour consists of overlapping bands of steel forming semi-rigid armour plates, with chain mail protecting your arms and legs.
   dodge_mod: -35
   name: [ banded mail armour, suits of banded mail armour ]
   power: 20
@@ -13,7 +13,7 @@ ARMOUR_BANDED_MAIL:
   weight: 4800
 
 ARMOUR_BRIGANDINE:
-  description: Large, square metal plates are securely attached to a tough leather tunic.
+  desc: Large, square metal plates are securely attached to a tough leather tunic.
   dodge_mod: -10
   name: [ brigandine armour, suits of brigandine armour ]
   power: 9
@@ -24,7 +24,7 @@ ARMOUR_BRIGANDINE:
   weight: 2600
 
 ARMOUR_FULL_PLATE:
-  description: A heavy steel breastplate and jointed armour pieces with a chain hauberk beneath offers maximum protection at the cost of mobility.
+  desc: A heavy steel breastplate and jointed armour pieces with a chain hauberk beneath offers maximum protection at the cost of mobility.
   dodge_mod: -40
   name: [ full plate armour, suits of full plate armour ]
   power: 22
@@ -36,7 +36,7 @@ ARMOUR_FULL_PLATE:
   weight: 5500
 
 ARMOUR_HIDE:
-  description: Rough-looking yet rugged and strong, tough animal hides are sewn to a tunic and reinforced with thick leather strips.
+  desc: Rough-looking yet rugged and strong, tough animal hides are sewn to a tunic and reinforced with thick leather strips.
   dodge_mod: -6
   name: [ hide armour, suits of hide armour ]
   power: 8
@@ -47,7 +47,7 @@ ARMOUR_HIDE:
   weight: 1300
 
 ARMOUR_LAMELLAR:
-  description: Rectangular metal plates overlap on this thick leather armour, giving both protection and decent mobility.
+  desc: Rectangular metal plates overlap on this thick leather armour, giving both protection and decent mobility.
   dodge_mod: -21
   name: [ steel lamellar armour, suits of steel lamellar armour ]
   power: 15
@@ -58,7 +58,7 @@ ARMOUR_LAMELLAR:
   weight: 3500
 
 ARMOUR_LEATHER:
-  description: Tough yet flexible overlapping leather plates provide decent protection without sacrificing mobility.
+  desc: Tough yet flexible overlapping leather plates provide decent protection without sacrificing mobility.
   dodge_mod: -13
   name: hard leather cuirass
   power: 11
@@ -69,7 +69,7 @@ ARMOUR_LEATHER:
   weight: 940
 
 ARMOUR_RING_MAIL:
-  description: A heavy belted leather jacket with rows of large iron rings sewn on for extra protection.
+  desc: A heavy belted leather jacket with rows of large iron rings sewn on for extra protection.
   dodge_mod: -18
   name: ring mail jacket
   power: 12
@@ -80,7 +80,7 @@ ARMOUR_RING_MAIL:
   weight: 3100
 
 ARMOUR_SCALE_MAIL:
-  description: This armour consists of many small, overlapping metal scales, resembling that of a serpent or dragon.
+  desc: This armour consists of many small, overlapping metal scales, resembling that of a serpent or dragon.
   dodge_mod: -22
   name: [ scale mail armour, suits of scale mail armour ]
   power: 16
@@ -91,7 +91,7 @@ ARMOUR_SCALE_MAIL:
   weight: 3600
 
 ARMOUR_SPLINT_MAIL:
-  description: Thick, vertical metal plates are attached to a mail hauberk beneath, giving two layers of protection.
+  desc: Thick, vertical metal plates are attached to a mail hauberk beneath, giving two layers of protection.
   dodge_mod: -29
   name: [ splint mail armour, suits of splint mail armour ]
   power: 18

@@ -4,7 +4,7 @@
 KNIGHTLY_SWORD:
   crit: 10
   damage_type: edged
-  description: A simple, straight steel blade about three feet long, double-edged with a cruciform hilt.
+  desc: A simple, straight steel blade about three feet long, double-edged with a cruciform hilt.
   name: knightly sword
   power: 6
   rare: 3

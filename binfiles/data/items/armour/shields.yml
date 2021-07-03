@@ -3,7 +3,7 @@
 
 BUCKLER:
   block_mod: 3
-  description: A small, round wooden shield about 18 inches in diameter with a convex metal boss in the centre.
+  desc: A small, round wooden shield about 18 inches in diameter with a convex metal boss in the centre.
   name: buckler
   power: 8
   rare: 2
@@ -15,7 +15,7 @@ BUCKLER:
 
 SHIELD_KITE:
   block_mod: -3
-  description: A large metal shield, shaped a little like an elongated triangle.
+  desc: A large metal shield, shaped a little like an elongated triangle.
   name: kite shield
   power: 19
   rare: 4
@@ -27,7 +27,7 @@ SHIELD_KITE:
 
 SHIELD_TOWER:
   block_mod: -7
-  description: More or less a curved sheet of metal with a handle, you could hide much of your body behind this massive shield.
+  desc: More or less a curved sheet of metal with a handle, you could hide much of your body behind this massive shield.
   name: tower shield
   power: 26
   rare: 3
@@ -39,7 +39,7 @@ SHIELD_TOWER:
 
 SHIELD_WOOD:
   block_mod: 1
-  description: A sturdy, medium-sized wooden shield banded with iron.
+  desc: A sturdy, medium-sized wooden shield banded with iron.
   name: wooden shield
   power: 13
   rare: 2
