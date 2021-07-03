@@ -144,6 +144,12 @@ void ActionLook::look(std::shared_ptr<Mobile> mob)
     // Room name, description, and obvious exits.
     core()->message("{G}" + room->name());
     core()->message("{0}```" + room->desc());
+
+    // Show any scar effects on the room.
+    const std::string scar_desc = room->scar_desc();
+    if (scar_desc.size()) core()->message("{0}```" + scar_desc);
+
+    // Show the obvious exits.
     obvious_exits(mob, true);
 
     // Items nearby.

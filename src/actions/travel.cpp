@@ -121,6 +121,7 @@ bool ActionTravel::travel(std::shared_ptr<Mobile> mob, Direction dir, bool confi
             // todo: NPC damage message here.
             core()->message("{R}You land badly, and the impact " + Combat::damage_str(hp_damage, mob, false) + " {R}you! {W}<{R}-" + StrX::intostr_pretty(hp_damage) + "{W}>",
                 Show::ALWAYS, Wake::ALWAYS);
+            core()->world()->get_room(mob->location())->add_scar(ScarType::BLOOD, blood_intensity);
             if (mob->hp() <= 0) core()->message("{0}{M}Your bones are shattered from the impact, death is mercifully quick.");
         }
         else

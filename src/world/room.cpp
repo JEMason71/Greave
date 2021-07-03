@@ -19,8 +19,53 @@ const uint32_t  Room::FALSE_ROOM =      3399618268; // Hashed value for FALSE_RO
 const uint8_t   Room::LIGHT_VISIBLE =   3;          // Any light level below this is considered too dark to see.
 const uint32_t  Room::UNFINISHED =      1909878064; // Hashed value for UNFINISHED, which is used to mark room exits as unfinished and to be completed later.
 
+// The descriptions for different types of room scars.
+const std::vector<std::vector<std::string>> Room::ROOM_SCAR_DESCS = {
+    // Room scar type 0: blood.
+    { "There are a few drops of blood on the ground nearby.",
+      "There is a large splash of blood on the ground nearby.",
+      "There are a few splashes of blood here and there.",
+      "Splashes of blood coat the floor and nearby surfaces." },
+
+    // Room scar type 1: burns.
+    { "There are a few small burn marks here and there.",
+      "There are a few scorch marks from fire nearby.",
+      "The ground nearby is scorched and charred.",
+      "The ground and nearby surfaces are badly charred and scorched." },
+
+    // Room scar type 2: debris.
+    { "There are a few worthless pieces of metal and debris scattered about.",
+      "A few pieces of metal and other mechanical debris are strewn around.",
+      "Pieces of scorched metal and other mechanical debris are strewn around.",
+      "Large chunks of twisted metal and other mechanical debris are strewn all around." },
+
+    // Room scar type 3: dirt.
+    { "Some of the dirt nearby has been moved into an uneven mound.",
+      "Several mounds of dirt are visible, the dirt recently unsettled.",
+      "Someone has been busy, the dirt nearby churned up and uneven.",
+      "The dirt has been dug up and moved around repeatedly, as if someone has been digging many holes here." },
+
+    // Room scar type 4: vomit.
+    { "There are some bits of half-digested food on the ground.",
+      "Someone appears to have violently vomited nearby.",
+      "Several splashes of vomit mar the ground.",
+      "The area reeks of vomit, which appears to be splattered everywhere nearby." },
+
+    // Room scar type 5: campfires.
+    { "Some ashes and remains of a campfire litter the ground.",
+      "The fading remains of a campfire burn nearby, casting flickering lights.",
+      "A crackling campfire burns nearby, warming the area.",
+      "A bright, crackling campfire burns cheerfully nearby, warming the area." },
+
+    // Room scar type 6: water.
+    { "A few drops of water glisten on the ground.",
+      "A little water has been splashed around nearby.",
+      "Someone seems to have splashed a lot of water around nearby.",
+      "A great deal of water has been splashed around nearby, getting everything wet." }
+};
+
 // The SQL table construction string for the saved rooms.
-const std::string   Room::SQL_ROOMS =   "CREATE TABLE rooms ( sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, id INTEGER UNIQUE NOT NULL, tags TEXT, link_tags TEXT, "
+const std::string   Room::SQL_ROOMS =   "CREATE TABLE rooms ( sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, id INTEGER UNIQUE NOT NULL, scars TEXT, tags TEXT, link_tags TEXT, "
     "inventory INTEGER UNIQUE )";
 
 
@@ -31,6 +76,32 @@ Room::Room(std::string new_id) : m_inventory(std::make_shared<Inventory>()), m_l
 
     for (unsigned int e = 0; e < ROOM_LINKS_MAX; e++)
         m_links[e] = 0;
+}
+
+// Adds a scar to this room.
+void Room::add_scar(ScarType type, int intensity)
+{
+    if (tag(RoomTag::WaterShallow) || tag(RoomTag::WaterDeep)) return;
+    int pos = -1;
+    for (unsigned int i = 0; i < m_scar_type.size(); i++)
+    {
+        if (m_scar_type.at(i) == type)
+        {
+            pos = i;
+            break;
+        }
+    }
+
+    unsigned int total_intensity = intensity;
+    if (pos > -1) total_intensity += m_scar_intensity.at(pos);
+    if (total_intensity > 250) total_intensity = 250;
+
+    if (pos > -1) m_scar_intensity.at(pos) = total_intensity;
+    else
+    {
+        m_scar_type.push_back(type);
+        m_scar_intensity.push_back(total_intensity);
+    }
 }
 
 // Clears a tag on this Room.
@@ -197,6 +268,45 @@ bool Room::link_tag(uint8_t id, LinkTag the_tag) const
 // As above, but with a Direction enum.
 bool Room::link_tag(Direction dir, LinkTag the_tag) const { return link_tag(static_cast<uint8_t>(dir), the_tag); }
 
+// Loads the Room and anything it contains.
+void Room::load(std::shared_ptr<SQLite::Database> save_db)
+{
+    uint32_t inventory_id = 0;
+    SQLite::Statement query(*save_db, "SELECT * FROM rooms WHERE id = ?");
+    query.bind(1, m_id);
+    if (query.executeStep())
+    {
+        inventory_id = query.getColumn("inventory").getUInt();
+        if (!query.isColumnNull("link_tags"))
+        {
+            const std::string link_tags_str = query.getColumn("link_tags").getString();
+            std::vector<std::string> split_links = StrX::string_explode(link_tags_str, ",");
+            if (split_links.size() != ROOM_LINKS_MAX) throw std::runtime_error("Malformed room link tags data.");
+            for (unsigned int e = 0; e < ROOM_LINKS_MAX; e++)
+            {
+                if (!split_links.at(e).size()) continue;
+                std::vector<std::string> split_tags = StrX::string_explode(split_links.at(e), " ");
+                for (auto tag : split_tags)
+                    m_tags_link[e].insert(static_cast<LinkTag>(StrX::htoi(tag)));
+            }
+        }
+        if (!query.isColumnNull("scars"))
+        {
+            std::string scar_str = query.getColumn("scars").getString();
+            std::vector<std::string> scar_pairs = StrX::string_explode(scar_str, ",");
+            for (unsigned int i = 0; i < scar_pairs.size(); i++)
+            {
+                std::vector<std::string> pair_explode = StrX::string_explode(scar_pairs.at(i), ";");
+                if (pair_explode.size() != 2) throw std::runtime_error("Malformed room scars data.");
+                m_scar_type.push_back(static_cast<ScarType>(StrX::htoi(pair_explode.at(0))));
+                m_scar_intensity.push_back(StrX::htoi(pair_explode.at(1)));
+            }
+        }
+        if (!query.isColumnNull("tags")) StrX::string_to_tags(query.getColumn("tags").getString(), m_tags);
+    }
+    if (inventory_id) m_inventory->load(save_db, inventory_id);
+}
+
 // Returns the Room's full or short name.
 std::string Room::name(bool short_name) const { return (short_name ? m_name_short : m_name); }
 
@@ -213,42 +323,43 @@ void Room::save(std::shared_ptr<SQLite::Database> save_db)
         if (e < ROOM_LINKS_MAX - 1) link_tags += ",";
     }
 
-    if (!tags.size() && link_tags == ",,,,,,,,,") return;
+    if (!tags.size() && link_tags == ",,,,,,,,," && !m_scar_type.size()) return;
 
-    SQLite::Statement room_query(*save_db, "INSERT INTO rooms (sql_id, id, tags, link_tags, inventory) VALUES (?, ?, ?, ?, ?)");
-    room_query.bind(1, core()->sql_unique_id());
-    room_query.bind(2, m_id);
-    if (tags.size()) room_query.bind(3, tags);
-    if (link_tags != ",,,,,,,,,") room_query.bind(4, link_tags);
-    if (inventory_id) room_query.bind(5, inventory_id);
+    SQLite::Statement room_query(*save_db, "INSERT INTO rooms (id, inventory, link_tags, scars, sql_id, tags) VALUES (?, ?, ?, ?, ?, ?)");
+    room_query.bind(1, m_id);
+    if (inventory_id) room_query.bind(2, inventory_id);
+    if (link_tags != ",,,,,,,,,") room_query.bind(3, link_tags);
+    if (m_scar_type.size())
+    {
+        std::string scar_str;
+        for (unsigned int i = 0; i < m_scar_type.size(); i++)
+        {
+            scar_str += StrX::itoh(static_cast<int>(m_scar_type.at(i)), 1) + ";" + StrX::itoh(m_scar_intensity.at(i), 1);
+            if (i < m_scar_type.size() - 1) scar_str += ",";
+        }
+        room_query.bind(4, scar_str);
+    }
+    room_query.bind(5, core()->sql_unique_id());
+    if (tags.size()) room_query.bind(6, tags);
     room_query.exec();
 }
 
-// Loads the Room and anything it contains.
-void Room::load(std::shared_ptr<SQLite::Database> save_db)
+// Returns the description of any room scars present.
+std::string Room::scar_desc() const
 {
-    uint32_t inventory_id = 0;
-    SQLite::Statement query(*save_db, "SELECT * FROM rooms WHERE id = ?");
-    query.bind(1, m_id);
-    if (query.executeStep())
+    std::string scars;
+    for (unsigned int i = 0; i < m_scar_type.size(); i++)
     {
-        if (!query.getColumn("tags").isNull()) StrX::string_to_tags(query.getColumn("tags").getString(), m_tags);
-        if (!query.getColumn("link_tags").isNull())
-        {
-            const std::string link_tags_str = query.getColumn("link_tags").getString();
-            std::vector<std::string> split_links = StrX::string_explode(link_tags_str, ",");
-            if (split_links.size() != ROOM_LINKS_MAX) throw std::runtime_error("Malformed room link tags data.");
-            for (unsigned int e = 0; e < ROOM_LINKS_MAX; e++)
-            {
-                if (!split_links.at(e).size()) continue;
-                std::vector<std::string> split_tags = StrX::string_explode(split_links.at(e), " ");
-                for (auto tag : split_tags)
-                    m_tags_link[e].insert(static_cast<LinkTag>(StrX::htoi(tag)));
-            }
-        }
-        inventory_id = query.getColumn("inventory").getUInt();
+        const int intensity = m_scar_intensity.at(i);
+        uint32_t vec_pos = 0;
+        if (intensity >= 20) vec_pos =  3;
+        else if (intensity >= 10) vec_pos = 2;
+        else if (intensity >= 5) vec_pos = 1;
+        scars += ROOM_SCAR_DESCS.at(static_cast<uint32_t>(m_scar_type.at(i))).at(vec_pos) + " ";
     }
-    if (inventory_id) m_inventory->load(save_db, inventory_id);
+    if (tag(RoomTag::PermaCampfire) && !tag(RoomTag::HideCampfireScar)) scars += ROOM_SCAR_DESCS.at(static_cast<uint32_t>(ScarType::CAMPFIRE)).at(3) + " ";
+    if (scars.size()) scars.pop_back();
+    return scars;
 }
 
 // Sets this Room's base light level.
