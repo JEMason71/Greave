@@ -50,8 +50,8 @@ const std::map<std::string, LinkTag>    World::LINK_TAG_MAP = { { "autoclose", L
     { "triplelength", LinkTag::TripleLength }, { "window", LinkTag::Window } };
 
 // Lookup table for converting MobileTag text names into enums.
-const std::map<std::string, MobileTag>  World::MOBILE_TAG_MAP = { { "cannotdodge", MobileTag::CannotDodge }, { "cannotparry", MobileTag::CannotParry },
-    { "pluralname", MobileTag::PluralName }, { "propernoun", MobileTag::ProperNoun }, { "unliving", MobileTag::Unliving } };
+const std::map<std::string, MobileTag>  World::MOBILE_TAG_MAP = { { "cannotblock", MobileTag::CannotBlock }, { "cannotdodge", MobileTag::CannotDodge },
+    { "cannotparry", MobileTag::CannotParry }, { "pluralname", MobileTag::PluralName }, { "propernoun", MobileTag::ProperNoun }, { "unliving", MobileTag::Unliving } };
 
 // Lookup table for converting RoomTag text names into enums.
 const std::map<std::string, RoomTag>    World::ROOM_TAG_MAP = { { "canseeoutside", RoomTag::CanSeeOutside }, { "churchaltar", RoomTag::ChurchAltar }, { "digok", RoomTag::DigOK },

@@ -100,7 +100,7 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
 
     // Check if the defender can attempt to block or parry.
     bool can_block = (wield_type_defender == WieldType::ONE_HAND_PLUS_SHIELD || wield_type_defender == WieldType::SHIELD_ONLY ||
-        wield_type_defender == WieldType::UNARMED_PLUS_SHIELD);// && !defender->tag(MobileTag::CannotBlock);
+        wield_type_defender == WieldType::UNARMED_PLUS_SHIELD) && !defender->tag(MobileTag::CannotBlock);
     bool can_parry = wield_type_defender != WieldType::UNARMED && wield_type_defender != WieldType::SHIELD_ONLY && wield_type_defender != WieldType::UNARMED_PLUS_SHIELD &&
         defender_melee && !defender->tag(MobileTag::CannotParry);
 

@@ -18,6 +18,7 @@ enum class MobileTag : uint16_t { None = 0,
     ProperNoun,     // This Mobile's name is a proper noun (e.g. Smaug).
 
     // Tags that affect the Mobile's abilities or stats in combat.
+    CannotBlock,    // This Mobile is unable to block attacks.
     CannotDodge,    // This Mobile is unable to dodge attacks.
     CannotParry,    // This Mobbile is unable to parry melee attacks.
 
