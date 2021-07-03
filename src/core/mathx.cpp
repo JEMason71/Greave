@@ -56,7 +56,8 @@ uint32_t MathX::fuzz(uint32_t num)
 uint32_t MathX::mixup(uint32_t num, int variance)
 {
     if (!num) return num;
-    const int64_t variance_value = num / variance;
+    int64_t variance_value = num / variance;
+    if (variance_value < 1) variance_value = 1;
     int64_t result = static_cast<int64_t>(num) + core()->rng()->rnd(variance_value * 2) - variance_value;
     if (result < 1) result = 1;
     return result;
