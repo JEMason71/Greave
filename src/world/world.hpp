@@ -56,6 +56,9 @@ private:
     static const std::map<std::string, MobileTag>   MOBILE_TAG_MAP;     // Lookup table for converting MobileTag text names into enums.
     static const std::map<std::string, RoomTag>     ROOM_TAG_MAP;       // Lookup table for converting RoomTag text names into enums.
     static const std::map<std::string, Security>    SECURITY_MAP;       // Lookup table for converting textual room security (e.g. "anarchy") to enum values.
+    static const std::set<std::string>              VALID_YAML_KEYS_AREAS;  // A list of all valid keys in area YAML files.
+    static const std::set<std::string>              VALID_YAML_KEYS_ITEMS;  // A list of all valid keys in item YAML files.
+    static const std::set<std::string>              VALID_YAML_KEYS_MOBS;   // A list of all valid keys in mobile YAML files.
 
     std::map<std::string, std::vector<std::shared_ptr<BodyPart>>>   m_anatomy_pool; // The anatomy pool, containing body part data for Mobiles.
     std::map<std::string, std::string>          m_generic_descs;    // Generic descriptions for items and rooms, where multiple share a description.

@@ -67,6 +67,16 @@ const std::map<std::string, RoomTag>    World::ROOM_TAG_MAP = { { "canseeoutside
 const std::map<std::string, Security>   World::SECURITY_MAP = { { "anarchy", Security::ANARCHY }, { "low", Security::LOW }, { "high", Security::HIGH },
     { "sanctuary", Security::SANCTUARY }, { "inaccessible", Security::INACCESSIBLE } };
 
+// A list of all valid keys in area YAML files.
+const std::set<std::string>     World::VALID_YAML_KEYS_AREAS = { "desc", "exits", "light", "name", "security", "tags" };
+
+// A list of all valid keys in item YAML files.
+const std::set<std::string>     World::VALID_YAML_KEYS_ITEMS = { "block_mod", "crit", "damage_type", "desc", "dodge_mod", "metadata", "name", "parry_mod", "power", "rare", "slot",
+    "speed", "tags", "type", "value", "weight" };
+
+// A list of all valid keys in mobile YAML files.
+const std::set<std::string>     World::VALID_YAML_KEYS_MOBS = { "hp", "name", "species" };
+
 
 // Constructor, loads the room YAML data.
 World::World() : m_player(std::make_shared<Player>()), m_time_weather(std::make_shared<TimeWeather>())
@@ -243,6 +253,14 @@ void World::load_item_pool()
             const uint32_t item_id = StrX::hash(item_id_str);
             const auto new_item(std::make_shared<Item>());
 
+            // Verify all keys in this file.
+            for (auto key_value : item_data)
+            {
+                const std::string key = key_value.first.as<std::string>();
+                if (VALID_YAML_KEYS_ITEMS.find(key) == VALID_YAML_KEYS_ITEMS.end())
+                    core()->guru()->nonfatal("Invalid key in item YAML data (" + key + "): " + item_id_str, Guru::WARN);
+            }
+
             // Check to make sure there are no hash collisions.
             if (m_item_pool.find(item_id) != m_item_pool.end()) throw std::runtime_error("Item ID hash conflict: " + item_id_str);
 
@@ -400,6 +418,14 @@ void World::load_mob_pool()
             const uint32_t mobile_id = StrX::hash(mobile_id_str);
             const auto new_mob(std::make_shared<Mobile>());
 
+            // Verify all keys in this file.
+            for (auto key_value : mobile_data)
+            {
+                const std::string key = key_value.first.as<std::string>();
+                if (VALID_YAML_KEYS_MOBS.find(key) == VALID_YAML_KEYS_MOBS.end())
+                    core()->guru()->nonfatal("Invalid key in mobile YAML data (" + key + "): " + mobile_id_str, Guru::WARN);
+            }
+
             // Check to make sure there are no hash collisions.
             if (m_mob_pool.find(mobile_id) != m_mob_pool.end()) throw std::runtime_error("Mobile ID hash conflict: " + mobile_id_str);
 
@@ -448,6 +474,14 @@ void World::load_room_pool()
             // Create a new Room object, and set its unique ID.
             const std::string room_id = room.first.as<std::string>();
             const auto new_room(std::make_shared<Room>(room_id));
+
+            // Verify all keys in this file.
+            for (auto key_value : room_data)
+            {
+                const std::string key = key_value.first.as<std::string>();
+                if (VALID_YAML_KEYS_AREAS.find(key) == VALID_YAML_KEYS_AREAS.end())
+                    core()->guru()->nonfatal("Invalid key in room YAML data (" + key + "): " + room_id, Guru::WARN);
+            }
 
             // Check to make sure there are no hash collisions.
             if (m_room_pool.find(new_room->id()) != m_room_pool.end()) throw std::runtime_error("Room ID hash conflict: " + room_id);
