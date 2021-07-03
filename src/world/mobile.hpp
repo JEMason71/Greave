@@ -19,6 +19,7 @@ enum class MobileTag : uint16_t { None = 0,
 
     // Tags that affect the Mobile's abilities or stats in combat.
     CannotDodge,    // This Mobile is unable to dodge attacks.
+    CannotParry,    // This Mobbile is unable to parry melee attacks.
 
     // Tags that determine the Mobile's general state of being.
     Unliving,       // This Mobile is a construct or other unliving entity.

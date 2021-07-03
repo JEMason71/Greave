@@ -101,7 +101,7 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
     bool can_block = (wield_type_defender == WieldType::ONE_HAND_PLUS_SHIELD || wield_type_defender == WieldType::SHIELD_ONLY ||
         wield_type_defender == WieldType::UNARMED_PLUS_SHIELD);// && !defender->tag(MobileTag::CannotBlock);
     bool can_parry = wield_type_defender != WieldType::UNARMED && wield_type_defender != WieldType::SHIELD_ONLY && wield_type_defender != WieldType::UNARMED_PLUS_SHIELD &&
-        defender_melee;// && !defender->tag(MobileTag::CannotParry);
+        defender_melee && !defender->tag(MobileTag::CannotParry);
 
     if (defender->tag(MobileTag::CannotDodge)) to_hit = 100;
     else to_hit *= defender->dodge_mod();
