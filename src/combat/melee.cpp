@@ -121,7 +121,7 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
         // after a successful parry.
         if (!parried && can_block)
         {
-            const float block_chance = BASE_BLOCK_CHANCE_MELEE;// * defender->block_mod();
+            const float block_chance = BASE_BLOCK_CHANCE_MELEE * defender->block_mod();
             if (core()->rng()->frnd(100) <= block_chance) blocked = true;
         }
     }

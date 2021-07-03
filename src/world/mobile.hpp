@@ -42,6 +42,7 @@ public:
 
                         Mobile();                                   // Constructor, sets default values.
     float               attack_speed() const;                       // Returns the number of seconds needed for this Mobile to make an attack.
+    float               block_mod() const;                          // Returns the modified chance to block for this Mobile, based on equipped gear.
     uint32_t            carry_weight() const;                       // Checks how much weight this Mobile is carrying.
     void                clear_tag(MobileTag the_tag);               // Clears an MobileTag from this Mobile.
     float               dodge_mod() const;                          // Returns the modified chance to dodge for this Mobile, based on equipped gear.

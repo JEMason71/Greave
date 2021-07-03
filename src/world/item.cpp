@@ -36,6 +36,9 @@ float Item::armour(int bonus_power) const
     return std::pow(m_power + bonus_power + 4, 1.2) / 100.0f;
 }
 
+// Returns the block modifier% for this Item, if any.
+int Item::block_mod() const { return meta_int("block_mod"); }
+
 // Clears a metatag from an Item. Use with caution!
 void Item::clear_meta(const std::string &key) { m_metadata.erase(key); }
 

@@ -311,6 +311,9 @@ void World::load_item_pool()
                 else new_item->set_meta("damage_type", static_cast<int>(type_it->second));
             }
 
+            // The item's block% modifier, if a ny.
+            if (item_data["block_mod"]) new_item->set_meta("block_mod", item_data["block_mod"].as<int>());
+
             // The item's dodge% modifier, if any.
             if (item_data["dodge_mod"]) new_item->set_meta("dodge_mod", item_data["dodge_mod"].as<int>());
 

@@ -56,6 +56,15 @@ float Mobile::attack_speed() const
     return speed;
 }
 
+// Returns the modified chance to block for this Mobile, based on equipped gear.
+float Mobile::block_mod() const
+{
+    float mod_perc = 100.0f;
+    for (unsigned int i = 0; i < m_equipment->count(); i++)
+        mod_perc += m_equipment->get(i)->block_mod();
+    return mod_perc / 100.0f;
+}
+
 // Checks how much weight this Mobile is carrying.
 uint32_t Mobile::carry_weight() const
 {

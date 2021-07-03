@@ -2,6 +2,7 @@
 # Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 BUCKLER:
+  block_mod: 3
   description: A small, round wooden shield about 18 inches in diameter with a convex metal boss in the centre.
   name: buckler
   power: 8
@@ -13,6 +14,7 @@ BUCKLER:
   weight: 220
 
 SHIELD_KITE:
+  block_mod: -3
   description: A large metal shield, shaped a little like an elongated triangle.
   name: kite shield
   power: 19
@@ -24,6 +26,7 @@ SHIELD_KITE:
   weight: 2900
 
 SHIELD_TOWER:
+  block_mod: -7
   description: More or less a curved sheet of metal with a handle, you could hide much of your body behind this massive shield.
   name: tower shield
   power: 26
@@ -35,6 +38,7 @@ SHIELD_TOWER:
   weight: 4600
 
 SHIELD_WOOD:
+  block_mod: 1
   description: A sturdy, medium-sized wooden shield banded with iron.
   name: wooden shield
   power: 13

@@ -42,6 +42,7 @@ public:
 
                 Item();                             // Constructor, sets default values.
     float       armour(int bonus_power = 0) const;  // Returns the armour damage reduction value of this Item, if any.
+    int         block_mod() const;                  // Returns the block modifier% for this Item, if any.
     void        clear_meta(const std::string &key); // Clears a metatag from an Item. Use with caution!
     void        clear_tag(ItemTag the_tag);         // Clears a tag on this Item.
     int         crit() const;                       // Retrieves this Item's critical power, if any.

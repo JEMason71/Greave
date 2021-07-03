@@ -106,6 +106,10 @@ void ActionLook::examine_item(std::shared_ptr<Mobile>, std::shared_ptr<Item> tar
     if (parry_mod > 0) stat_string += "It {G}boosts your chance to parry {w}by {G}" + std::to_string(parry_mod) + "%{w}. ";
     else if (parry_mod < 0) stat_string += "It {Y}reduces your chance to parry {w}by {R}" + std::to_string(-parry_mod) + "%{w}. ";
 
+    const int block_mod = target->block_mod();
+    if (block_mod > 0) stat_string += "It {G}boosts your chance to shield-block {w}by {G}" + std::to_string(block_mod) + "%{w}. ";
+    else if (block_mod < 0) stat_string += "It {Y}reduces your chance to shield-block {w}by {R}" + std::to_string(-block_mod) + "%{w}. ";
+
     uint32_t weight = MathX::fuzz(target->weight());
     stat_string += "{w}It weighs around {U}" + StrX::intostr_pretty(weight) + (weight == 1 ? " pac{w}. " : " pacs{w}. ");
     if (stat_string.size())

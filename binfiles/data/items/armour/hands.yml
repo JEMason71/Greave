@@ -2,6 +2,7 @@
 # Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 GAUNTLETS_LEATHER:
+  block_mod: -1
   description: They're not terribly flexible, but the tough leather plates on these gauntlets will keep your hands safe.
   name: [ tough leather gauntlets, pairs of tough leather gauntlets ]
   parry_mod: -2
@@ -14,6 +15,7 @@ GAUNTLETS_LEATHER:
   weight: 30
 
 GAUNTLETS_LEATHER_PLATED:
+  block_mod: -1
   description: Heavy leather gauntlets with overlapping iron plates sewn on.
   name: [ plated leather gauntlets, pairs of plated leather gauntlets ]
   parry_mod: -3
@@ -26,6 +28,7 @@ GAUNTLETS_LEATHER_PLATED:
   weight: 90
 
 GLOVES_MAIL:
+  block_mod: -2
   description: A heavy pair of leather gauntlets, half-covered in a layer of chainmail.
   name: [ mail gloves, pairs of mail gloves ]
   parry_mod: -3
