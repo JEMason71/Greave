@@ -69,7 +69,6 @@ public:
     void        set_meta(const std::string &key, int value);            // As above, but with an integer value.
     void        set_meta(const std::string &key, float value);          // As above again, but this time for floats.
     void        set_name(const std::string &name);  // Sets the name of this Item.
-    void        set_power(uint16_t power);          // Sets the power of this Item.
     void        set_rare(uint8_t rarity);           // Sets this Item's rarity.
     void        set_tag(ItemTag the_tag);           // Sets a tag on this Item.
     void        set_type(ItemType type, ItemSub sub = ItemSub::NONE);   // Sets the type of this Item.
@@ -87,7 +86,6 @@ private:
     std::map<std::string, std::string>  m_metadata; // The Item's metadata, if any.
     std::string m_name;             // The name of this Item!
     uint16_t    m_parser_id;        // The semi-unique ID of this Item, for parser differentiation.
-    uint16_t    m_power;            // The power of this Item, if any.
     uint8_t     m_rarity;           // The rarity of this Item.
     std::set<ItemTag>   m_tags;     // Any and all ItemTags on this Item.
     ItemType    m_type;             // The primary type of this Item.

@@ -357,7 +357,7 @@ void World::load_item_pool()
             }
 
             // The Item's power, if any.
-            if (item_data["power"]) new_item->set_power(item_data["power"].as<int>());
+            if (item_data["power"]) new_item->set_meta("power", item_data["power"].as<int>());
 
             // The Item's description, if any.
             if (!item_data["desc"]) core()->guru()->nonfatal("Missing description for item " + item_id_str, Guru::WARN);
