@@ -13,6 +13,7 @@
 
 
 const float Melee::BASE_HIT_CHANCE_MELEE =                  75.0f;  // The base hit chance in melee combat.
+const float Melee::BASE_PARRY_CHANCE =                      10.0f;  // The base parry chance in melee combat.
 const float Melee::DUAL_WIELD_HIT_CHANCE_MULTIPLIER =       0.9f;   // The multiplier to accuracy% for dual-wielding.
 const float Melee::SINGLE_WIELD_CRIT_CHANCE_MULTIPLIER =    1.1f;   // The multiplier to crit% for single-wielding.
 const float Melee::SINGLE_WIELD_HIT_CHANCE_MULTIPLIER =     1.2f;   // The multiplier to accuracy% for single-wielding.
@@ -95,13 +96,25 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
         default: break;
     }
     float to_hit = BASE_HIT_CHANCE_MELEE * hit_multiplier;
+
+    // Check if the defender can attempt to block or parry.
+    bool can_block = (wield_type_defender == WieldType::ONE_HAND_PLUS_SHIELD || wield_type_defender == WieldType::SHIELD_ONLY ||
+        wield_type_defender == WieldType::UNARMED_PLUS_SHIELD);// && !defender->tag(MobileTag::CannotBlock);
+    bool can_parry = wield_type_defender != WieldType::UNARMED && wield_type_defender != WieldType::SHIELD_ONLY && wield_type_defender != WieldType::UNARMED_PLUS_SHIELD &&
+        defender_melee;// && !defender->tag(MobileTag::CannotParry);
+
     if (defender->tag(MobileTag::CannotDodge)) to_hit = 100;
     else to_hit *= defender->dodge_mod();
     
-    bool evaded = false, blocked = false;
+    bool evaded = false, blocked = false, parried = false;
     if (core()->rng()->frnd(100) <= to_hit)  // Evasion failed; the target was hit.
     {
-        // parry and block code goes here.
+        // Now to check if the defender can successfully parry this attack.
+        if (can_parry)
+        {
+            float parry_chance = BASE_PARRY_CHANCE;// * defender->parry_mod();
+            if (core()->rng()->frnd(100) <= parry_chance) parried = true;
+        }
     }
     else evaded = true;
 
@@ -110,11 +123,17 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
     std::string def_location_hit_str;
     pick_hit_location(defender, &def_location_hit_es, &def_location_hit_str);
 
-    //if (parried || evaded)
-    if (evaded)
+    if (parried || evaded)
     {
-        //if (parried) { }
-        //else
+        if (parried)
+        {
+            if (player_can_see_attacker || player_can_see_defender)
+            {
+                if (defender_is_player) core()->message("{G}You parry the " + attacker_your_string + " " + weapon_name + "!");
+                else core()->message((attacker_is_player ? "{Y}" : "{U}") + attacker_your_string_c + " " + weapon_name + " is parried by " + defender_name + ".");
+            }
+        }
+        else
         {
             if (player_can_see_attacker || player_can_see_defender)
                 core()->message((attacker_is_player ? "{Y}" : (defender_is_player ? "{U}" : "{U}")) + attacker_your_string_c + " " + weapon_name + " misses " + defender_name + ".");

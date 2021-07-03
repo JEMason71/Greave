@@ -616,6 +616,8 @@ void World::new_game()
     new_mob->set_location("OUTSIDE_QUEENS_GATE");
     new_mob->equ()->add_item(get_item("ARMOUR_HIDE"));
     new_mob->equ()->add_item(get_item("ARMOUR_CLOTH"));
+    new_mob->equ()->add_item(get_item("KNIGHTLY_SWORD"));
+    new_mob->equ()->add_item(get_item("BUCKLER"));
     add_mobile(new_mob);
     ActionLook::look(m_player);
 }

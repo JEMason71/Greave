@@ -15,6 +15,7 @@ public:
 
 private:
     static const float  BASE_HIT_CHANCE_MELEE;                  // The base hit chance in melee combat.
+    static const float  BASE_PARRY_CHANCE;                      // The base parry chance in melee combat.
     static const float  DUAL_WIELD_HIT_CHANCE_MULTIPLIER;       // The multiplier to accuracy% for dual-wielding.
     static const float  SINGLE_WIELD_CRIT_CHANCE_MULTIPLIER;    // The multiplier to crit% for single-wielding.
     static const float  SINGLE_WIELD_HIT_CHANCE_MULTIPLIER;     // The multiplier to accuracy% for single-wielding.
