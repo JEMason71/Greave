@@ -21,13 +21,12 @@ const int Item::NAME_FLAG_RARE =                256;    // Include the Item's ra
 const int Item::NAME_FLAG_THE =                 512;    // Precede the Item's name with 'the', unless the name is a proper noun.
 
 // The SQL table construction string for saving items.
-const std::string Item::SQL_ITEMS = "CREATE TABLE items ( description TEXT, equip_slot INTEGER, metadata TEXT, name TEXT NOT NULL, owner_id INTEGER NOT NULL, "
-    "parser_id INTEGER NOT NULL, power INTEGER, rare INTEGER NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, subtype INTEGER, tags TEXT, type INTEGER, "
-    "value INTEGER, weight INTEGER NOT NULL )";
+const std::string Item::SQL_ITEMS = "CREATE TABLE items ( description TEXT, metadata TEXT, name TEXT NOT NULL, owner_id INTEGER NOT NULL, parser_id INTEGER NOT NULL, "
+    "power INTEGER, rare INTEGER NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, subtype INTEGER, tags TEXT, type INTEGER, value INTEGER, weight INTEGER NOT NULL )";
 
 
 // Constructor, sets default values.
-Item::Item() : m_equip_slot(EquipSlot::NONE), m_parser_id(0), m_power(0), m_rarity(1), m_type(ItemType::NONE), m_type_sub(ItemSub::NONE), m_value(0) { }
+Item::Item() : m_parser_id(0), m_power(0), m_rarity(1), m_type(ItemType::NONE), m_type_sub(ItemSub::NONE), m_value(0) { }
 
 // Returns the armour damage reduction value of this Item, if any.
 float Item::armour(int bonus_power) const
@@ -84,7 +83,7 @@ std::string Item::desc() const { return m_description; }
 int Item::dodge_mod() const { return meta_int("dodge_mod"); }
 
 // Checks what slot this Item equips in, if any.
-EquipSlot Item::equip_slot() const { return m_equip_slot; }
+EquipSlot Item::equip_slot() const { return static_cast<EquipSlot>(meta_int("slot")); }
 
 // Loads a new Item from the save file.
 std::shared_ptr<Item> Item::load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id)
@@ -99,7 +98,6 @@ std::shared_ptr<Item> Item::load(std::shared_ptr<SQLite::Database> save_db, uint
         ItemSub new_subtype = ItemSub::NONE;
 
         if (!query.getColumn("description").isNull()) new_item->set_description(query.getColumn("description").getString());
-        if (!query.getColumn("equip_slot").isNull()) new_item->set_equip_slot(static_cast<EquipSlot>(query.getColumn("equip_slot").getInt()));
         if (!query.getColumn("metadata").isNull()) StrX::string_to_metadata(query.getColumn("metadata").getString(), new_item->m_metadata);
         new_item->set_name(query.getColumn("name").getString());
         new_item->m_parser_id = query.getColumn("parser_id").getUInt();
@@ -229,22 +227,21 @@ uint8_t Item::rare() const { return m_rarity; }
 // Saves the Item.
 void Item::save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id)
 {
-    SQLite::Statement query(*save_db, "INSERT INTO items ( description, equip_slot, metadata, name, owner_id, parser_id,power, rare, sql_id, subtype, tags, type, value, weight ) "
-        "VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
+    SQLite::Statement query(*save_db, "INSERT INTO items ( description, metadata, name, owner_id, parser_id,power, rare, sql_id, subtype, tags, type, value, weight ) "
+        "VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
     if (m_description.size()) query.bind(1, m_description);
-    if (m_equip_slot != EquipSlot::NONE) query.bind(2, static_cast<int>(m_equip_slot));
-    if (m_metadata.size()) query.bind(3, StrX::metadata_to_string(m_metadata));
-    query.bind(4, m_name);
-    query.bind(5, owner_id);
-    query.bind(6, m_parser_id);
-    if (m_power) query.bind(7, m_power);
-    query.bind(8, m_rarity);
-    query.bind(9, core()->sql_unique_id());
-    if (m_type_sub != ItemSub::NONE) query.bind(10, static_cast<int>(m_type_sub));
-    if (m_tags.size()) query.bind(11, StrX::tags_to_string(m_tags));
-    if (m_type != ItemType::NONE) query.bind(12, static_cast<int>(m_type));
-    if (m_value) query.bind(13, m_value);
-    query.bind(14, m_weight);
+    if (m_metadata.size()) query.bind(2, StrX::metadata_to_string(m_metadata));
+    query.bind(3, m_name);
+    query.bind(4, owner_id);
+    query.bind(5, m_parser_id);
+    if (m_power) query.bind(6, m_power);
+    query.bind(7, m_rarity);
+    query.bind(8, core()->sql_unique_id());
+    if (m_type_sub != ItemSub::NONE) query.bind(9, static_cast<int>(m_type_sub));
+    if (m_tags.size()) query.bind(10, StrX::tags_to_string(m_tags));
+    if (m_type != ItemType::NONE) query.bind(11, static_cast<int>(m_type));
+    if (m_value) query.bind(12, m_value);
+    query.bind(13, m_weight);
     query.exec();
 }
 
@@ -252,7 +249,7 @@ void Item::save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id)
 void Item::set_description(const std::string &desc) { m_description = desc; }
 
 // Sets this Item's equipment slot.
-void Item::set_equip_slot(EquipSlot es) { m_equip_slot = es; }
+void Item::set_equip_slot(EquipSlot es) { set_meta("slot", static_cast<int>(es)); }
 
 // Adds Item metadata.
 void Item::set_meta(const std::string &key, std::string value)

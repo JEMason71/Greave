@@ -84,13 +84,11 @@ public:
 
 private:
     std::string m_description;      // The description of this Item.
-    EquipSlot   m_equip_slot;       // The slot this Item is equipped in, if any.
     std::map<std::string, std::string>  m_metadata; // The Item's metadata, if any.
     std::string m_name;             // The name of this Item!
     uint16_t    m_parser_id;        // The semi-unique ID of this Item, for parser differentiation.
     uint16_t    m_power;            // The power of this Item, if any.
     uint8_t     m_rarity;           // The rarity of this Item.
-    float       m_speed;            // The speed of this Item, if any.
     std::set<ItemTag>   m_tags;     // Any and all ItemTags on this Item.
     ItemType    m_type;             // The primary type of this Item.
     ItemSub     m_type_sub;         // The subtype of this Item, if any.

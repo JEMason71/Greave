@@ -348,8 +348,12 @@ void World::load_item_pool()
                 const std::string slot_str = item_data["slot"].as<std::string>();
                 const auto slot_it = EQUIP_SLOT_MAP.find(slot_str);
                 if (slot_it == EQUIP_SLOT_MAP.end()) core()->guru()->nonfatal("Unrecognized equipment slot (" + slot_str + "): " + item_id_str, Guru::ERROR);
-                else new_item->set_equip_slot(slot_it->second);
-                if (new_item->type() == ItemType::SHIELD && new_item->equip_slot() == EquipSlot::HAND_MAIN) new_item->set_equip_slot(EquipSlot::HAND_OFF);
+                else
+                {
+                    EquipSlot chosen_slot = slot_it->second;
+                    if (new_item->type() == ItemType::SHIELD && new_item->equip_slot() == EquipSlot::HAND_MAIN) chosen_slot = EquipSlot::HAND_OFF;
+                    new_item->set_meta("slot", static_cast<int>(chosen_slot));
+                }
             }
 
             // The Item's power, if any.
