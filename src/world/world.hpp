@@ -30,7 +30,7 @@ public:
     void            add_mobile(std::shared_ptr<Mobile> mob);                    // Adds a Mobile to the world.
     std::string     generic_desc(const std::string &id) const;                  // Retrieves a generic description string.
     const std::vector<std::shared_ptr<BodyPart>>& get_anatomy(const std::string &id) const; // Retrieves a copy of the anatomy data for a given species.
-    const std::shared_ptr<Item>     get_item(const std::string &item_id) const; // Retrieves a specified Item by ID.
+    const std::shared_ptr<Item>     get_item(const std::string &item_id, int stack_size = 0) const; // Retrieves a specified Item by ID.
     std::shared_ptr<List>           get_list(const std::string &list_id) const; // Retrieves a specified List by ID.
     const std::shared_ptr<Mobile>   get_mob(const std::string &mob_id) const;   // Retrieves a specified Mobile by ID.
     const std::shared_ptr<Room>     get_room(uint32_t room_id) const;           // Retrieves a specified Room by ID.
@@ -66,6 +66,7 @@ private:
     std::map<std::string, std::string>              m_generic_descs;    // Generic descriptions for items and rooms, where multiple share a description.
     std::map<uint32_t, std::shared_ptr<Item>>       m_item_pool;        // All the Item templates in the game.
     std::map<std::string, std::shared_ptr<List>>    m_list_pool;        // List data from lists.yml
+    std::map<uint32_t, std::string>                 m_mob_gear;         // Equipment lists for gearing up Mobiles.
     std::map<uint32_t, std::shared_ptr<Mobile>>     m_mob_pool;         // All the Mobile templates in the game.
     std::vector<std::shared_ptr<Mobile>>            m_mobiles;          // All the Mobiles currently active in the game.
     std::shared_ptr<Player>                         m_player;           // The player character.

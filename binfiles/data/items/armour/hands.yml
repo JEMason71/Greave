@@ -1,6 +1,19 @@
 # data/items/armour/hands.yml -- Gloves, gauntlets, and other things you can wear on your hands.
 # Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
+BRACERS_FUR_SMALL:
+  block_mod: -1
+  desc: Primitive bracers fashioned from the pelt of a beast.
+  name: [ fur bracers, pairs of fur bracers ]
+  parry_mod: -1
+  power: 1
+  rare: 1
+  slot: hands
+  tags: [ PluralName ]
+  type: [ armour, light ]
+  value: 3c
+  weight: 20
+
 GAUNTLETS_LEATHER:
   block_mod: -1
   desc: They're not terribly flexible, but the tough leather plates on these gauntlets will keep your hands safe.

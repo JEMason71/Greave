@@ -76,7 +76,7 @@ const std::set<std::string>     World::VALID_YAML_KEYS_ITEMS = { "block_mod", "c
     "speed", "tags", "type", "value", "weight" };
 
 // A list of all valid keys in mobile YAML files.
-const std::set<std::string>     World::VALID_YAML_KEYS_MOBS = { "hp", "name", "species" };
+const std::set<std::string>     World::VALID_YAML_KEYS_MOBS = { "gear", "hp", "name", "species" };
 
 
 // Constructor, loads the room YAML data.
@@ -129,7 +129,7 @@ const std::vector<std::shared_ptr<BodyPart>>& World::get_anatomy(const std::stri
 }
 
 // Retrieves a specified Item by ID.
-const std::shared_ptr<Item> World::get_item(const std::string &item_id) const
+const std::shared_ptr<Item> World::get_item(const std::string &item_id, int) const
 {
     if (!item_id.size()) throw std::runtime_error("Blank item ID requested.");
     const auto it = m_item_pool.find(StrX::hash(item_id));
@@ -148,9 +148,32 @@ std::shared_ptr<List> World::get_list(const std::string &list_id) const
 const std::shared_ptr<Mobile> World::get_mob(const std::string &mob_id) const
 {
     if (!mob_id.size()) throw std::runtime_error("Blank mobile ID requested.");
-    const auto it = m_mob_pool.find(StrX::hash(mob_id));
+    const uint32_t id_hash = StrX::hash(mob_id);
+    const auto it = m_mob_pool.find(id_hash);
     if (it == m_mob_pool.end()) throw std::runtime_error("Invalid mobile ID requested: " + mob_id);
-    return std::make_shared<Mobile>(*it->second);
+    auto new_mob = std::make_shared<Mobile>(*it->second);
+
+    // If this Mobile has a gear list, equip it now.
+    const std::string gear_list_str = m_mob_gear.at(id_hash);
+    if (gear_list_str.size())
+    {
+        auto gear_list = get_list(gear_list_str);
+        for (unsigned int i = 0; i < gear_list->size(); i++)
+        {
+            std::string gear_str = gear_list->at(i).str;
+            if (gear_str == "-" || !gear_str.size()) continue;
+            else if (gear_str[0] == '+')
+            {
+                auto sublist = get_list(gear_str.substr(1));
+                gear_list->merge_with(sublist);
+                continue;
+            }
+            const auto new_item = get_item(gear_str, gear_list->at(i).count);
+            new_mob->equ()->add_item(new_item);
+        }
+    }
+
+    return new_mob;
 }
 
 // Retrieves a specified Room by ID.
@@ -416,31 +439,35 @@ void World::load_item_pool()
 // Loads the List YAML data into memory.
 void World::load_lists()
 {
-    const YAML::Node yaml_lists = YAML::LoadFile("data/lists.yml");
-    for (auto list : yaml_lists)
+    const std::vector<std::string> list_files = FileX::files_in_dir("data/lists", true);
+    for (auto list_file : list_files)
     {
-        // First, determine the List's ID.
-        const std::string list_id = list.first.as<std::string>();
-
-        // Get the rest of the data.
-        const YAML::Node yaml_list = list.second;
-        if (!yaml_list.IsSequence()) throw std::runtime_error("Invalid list data for list " + list_id);
-
-        auto new_list = std::make_shared<List>();
-        for (auto le : yaml_list)
+        const YAML::Node yaml_lists= YAML::LoadFile("data/lists/" + list_file);
+        for (auto list : yaml_lists)
         {
-            ListEntry new_list_entry;
-            if (le.IsSequence())
+            // First, determine the List's ID.
+            const std::string list_id = list.first.as<std::string>();
+
+            // Get the rest of the data.
+            const YAML::Node yaml_list = list.second;
+            if (!yaml_list.IsSequence()) throw std::runtime_error("Invalid list data for list " + list_id);
+
+            auto new_list = std::make_shared<List>();
+            for (auto le : yaml_list)
             {
-                if (le.size() < 1 || le.size() > 2) throw std::runtime_error("Invalid list data for list " + list_id);
-                new_list_entry.str = le[0].as<std::string>();
-                if (le.size() == 2) new_list_entry.count = le[1].as<int>();
+                ListEntry new_list_entry;
+                if (le.IsSequence())
+                {
+                    if (le.size() < 1 || le.size() > 2) throw std::runtime_error("Invalid list data for list " + list_id);
+                    new_list_entry.str = le[0].as<std::string>();
+                    if (le.size() == 2) new_list_entry.count = le[1].as<int>();
+                }
+                else new_list_entry.str = le.as<std::string>();
+                if (new_list_entry.str.size() && new_list_entry.str[0] == '#') new_list_entry.count = 0;    // If the string begins with #, it's treated as a link to another list.
+                new_list->push_back(new_list_entry);
             }
-            else new_list_entry.str = le.as<std::string>();
-            if (new_list_entry.str.size() && new_list_entry.str[0] == '#') new_list_entry.count = 0;    // If the string begins with #, it's treated as a link to another list.
-            new_list->push_back(new_list_entry);
+            m_list_pool.insert(std::pair<std::string, std::shared_ptr<List>>(list_id, new_list));
         }
-        m_list_pool.insert(std::pair<std::string, std::shared_ptr<List>>(list_id, new_list));
     }
 }
 
@@ -496,8 +523,13 @@ void World::load_mob_pool()
                 }
             }
 
+            // The Mobile's gear list.
+            std::string gear_list;
+            if (mobile_data["gear"]) gear_list = mobile_data["gear"].as<std::string>();
+
             // Add the Mobile to the mob pool.
             m_mob_pool.insert(std::make_pair(mobile_id, new_mob));
+            m_mob_gear.insert(std::make_pair(mobile_id, gear_list));
         }
     }
 }
@@ -695,15 +727,8 @@ void World::load_room_pool()
 void World::new_game()
 {
     m_player->set_location("OUTSIDE_QUEENS_GATE");
-    auto new_mob = get_mob("TEST_GOBLIN");
+    auto new_mob = get_mob("GOBLIN_SCOUT");
     new_mob->set_location("OUTSIDE_QUEENS_GATE");
-    new_mob->equ()->add_item(get_item("ARMOUR_HIDE"));
-    new_mob->equ()->add_item(get_item("ARMOUR_CLOTH"));
-    new_mob->equ()->add_item(get_item("KNIGHTLY_SWORD"));
-    new_mob->equ()->add_item(get_item("BUCKLER"));
-    new_mob->equ()->add_item(get_item("GAUNTLETS_LEATHER"));
-    new_mob->equ()->add_item(get_item("BOOTS_LEATHER"));
-    new_mob->equ()->add_item(get_item("CAP_LEATHER"));
     add_mobile(new_mob);
     ActionLook::look(m_player);
 }

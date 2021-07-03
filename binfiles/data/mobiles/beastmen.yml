@@ -1,0 +1,8 @@
+# data/mobiles/beastmen.yml -- The beastmen category encompasses hostile, low-intelligence, humanoid monsters such as goblins, orcs, gnolls, etc.
+# Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+
+GOBLIN_SCOUT:
+  gear: GEAR_GOBLIN_SCOUT
+  hp: 70
+  name: goblin scout
+  species: humanoid

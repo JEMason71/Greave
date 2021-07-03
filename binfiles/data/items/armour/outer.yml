@@ -46,6 +46,17 @@ ARMOUR_HIDE:
   value: 1g 20s
   weight: 1300
 
+ARMOUR_HIDE_BARBARIC_SMALL:
+  desc: Pieces of animal hide and fur have been roughly stitched together to form this primitive armour.
+  dodge_mod: -5
+  name: [ barbaric hide armour, suits of barbaric hide armour ]
+  power: 5
+  rare: 1
+  slot: armour
+  type: [ armour, light ]
+  value: 8c
+  weight: 410
+
 ARMOUR_LAMELLAR:
   desc: Rectangular metal plates overlap on this thick leather armour, giving both protection and decent mobility.
   dodge_mod: -21

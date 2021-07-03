@@ -36,3 +36,15 @@ BOOTS_LEATHER_PLATED:
   type: [ armour, heavy ]
   value: 1g 20s
   weight: 170
+
+GREAVES_FUR_SMALL:
+  desc: Held in place by leather straps, these ragged pieces of matted beast fur provide some protection for the shins.
+  dodge_mod: -3
+  name: [ fur greaves, pairs of fur greaves ]
+  power: 3
+  rare: 1
+  slot: feet
+  tags: [ PluralName ]
+  type: [ armour, light ]
+  value: 4c
+  weight: 40
