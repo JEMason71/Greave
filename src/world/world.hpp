@@ -31,7 +31,7 @@ public:
     std::string     generic_desc(const std::string &id) const;                  // Retrieves a generic description string.
     const std::vector<std::shared_ptr<BodyPart>>& get_anatomy(const std::string &id) const; // Retrieves a copy of the anatomy data for a given species.
     const std::shared_ptr<Item>     get_item(const std::string &item_id) const; // Retrieves a specified Item by ID.
-    List            get_list(const std::string &list_id) const;                 // Retrieves a specified List by ID.
+    std::shared_ptr<List>           get_list(const std::string &list_id) const; // Retrieves a specified List by ID.
     const std::shared_ptr<Mobile>   get_mob(const std::string &mob_id) const;   // Retrieves a specified Mobile by ID.
     const std::shared_ptr<Room>     get_room(uint32_t room_id) const;           // Retrieves a specified Room by ID.
     const std::shared_ptr<Room>     get_room(const std::string &room_id) const; // As above, but with a Room ID string.
@@ -63,14 +63,14 @@ private:
     static const std::set<std::string>              VALID_YAML_KEYS_MOBS;   // A list of all valid keys in mobile YAML files.
 
     std::map<std::string, std::vector<std::shared_ptr<BodyPart>>>   m_anatomy_pool; // The anatomy pool, containing body part data for Mobiles.
-    std::map<std::string, std::string>          m_generic_descs;    // Generic descriptions for items and rooms, where multiple share a description.
-    std::map<uint32_t, std::shared_ptr<Item>>   m_item_pool;        // All the Item templates in the game.
-    std::map<std::string, List>                 m_list_pool;        // List data from lists.yml
-    std::map<uint32_t, std::shared_ptr<Mobile>> m_mob_pool;         // All the Mobile templates in the game.
-    std::vector<std::shared_ptr<Mobile>>        m_mobiles;          // All the Mobiles currently active in the game.
-    std::shared_ptr<Player>                     m_player;           // The player character.
-    std::map<uint32_t, std::shared_ptr<Room>>   m_room_pool;        // All the Room templates in the game.
-    std::shared_ptr<TimeWeather>                m_time_weather;     // The World's TimeWeather object, for tracking... well, the time and weather.
+    std::map<std::string, std::string>              m_generic_descs;    // Generic descriptions for items and rooms, where multiple share a description.
+    std::map<uint32_t, std::shared_ptr<Item>>       m_item_pool;        // All the Item templates in the game.
+    std::map<std::string, std::shared_ptr<List>>    m_list_pool;        // List data from lists.yml
+    std::map<uint32_t, std::shared_ptr<Mobile>>     m_mob_pool;         // All the Mobile templates in the game.
+    std::vector<std::shared_ptr<Mobile>>            m_mobiles;          // All the Mobiles currently active in the game.
+    std::shared_ptr<Player>                         m_player;           // The player character.
+    std::map<uint32_t, std::shared_ptr<Room>>       m_room_pool;        // All the Room templates in the game.
+    std::shared_ptr<TimeWeather>                    m_time_weather;     // The World's TimeWeather object, for tracking... well, the time and weather.
 
     void    load_anatomy_pool();    // Loads the anatomy YAML data into memory.
     void    load_generic_descs();   // Loads the generic descriptions YAML data into memory.
