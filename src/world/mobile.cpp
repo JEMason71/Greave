@@ -74,6 +74,15 @@ void Mobile::clear_tag(MobileTag the_tag)
     m_tags.erase(the_tag);
 }
 
+// Returns the modified chance to dodge for this Mobile, based on equipped gear.
+float Mobile::dodge_mod() const
+{
+    float mod_perc = 100.0f;
+    for (unsigned int i = 0; i < m_equipment->count(); i++)
+        mod_perc += m_equipment->get(i)->dodge_mod();
+    return mod_perc / 100.0f;
+}
+
 // Returns a pointer to the Movile's equipment.
 const std::shared_ptr<Inventory> Mobile::equ() const { return m_equipment; }
 

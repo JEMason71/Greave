@@ -3,6 +3,7 @@
 
 ARMOUR_BANDED_MAIL:
   description: This heavy armour consists of overlapping bands of steel forming semi-rigid armour plates, with chain mail protecting your arms and legs.
+  dodge_mod: -35
   name: [ banded mail armour, suits of banded mail armour ]
   power: 20
   rare: 5
@@ -13,6 +14,7 @@ ARMOUR_BANDED_MAIL:
 
 ARMOUR_BRIGANDINE:
   description: Large, square metal plates are securely attached to a tough leather tunic.
+  dodge_mod: -10
   name: [ brigandine armour, suits of brigandine armour ]
   power: 9
   rare: 3
@@ -23,6 +25,7 @@ ARMOUR_BRIGANDINE:
 
 ARMOUR_FULL_PLATE:
   description: A heavy steel breastplate and jointed armour pieces with a chain hauberk beneath offers maximum protection at the cost of mobility.
+  dodge_mod: -40
   name: [ full plate armour, suits of full plate armour ]
   power: 22
   rare: 6
@@ -34,6 +37,7 @@ ARMOUR_FULL_PLATE:
 
 ARMOUR_HIDE:
   description: Rough-looking yet rugged and strong, tough animal hides are sewn to a tunic and reinforced with thick leather strips.
+  dodge_mod: -6
   name: [ hide armour, suits of hide armour ]
   power: 8
   rare: 2
@@ -44,6 +48,7 @@ ARMOUR_HIDE:
 
 ARMOUR_LAMELLAR:
   description: Rectangular metal plates overlap on this thick leather armour, giving both protection and decent mobility.
+  dodge_mod: -21
   name: [ steel lamellar armour, suits of steel lamellar armour ]
   power: 15
   rare: 3
@@ -54,6 +59,7 @@ ARMOUR_LAMELLAR:
 
 ARMOUR_LEATHER:
   description: Tough yet flexible overlapping leather plates provide decent protection without sacrificing mobility.
+  dodge_mod: -13
   name: hard leather cuirass
   power: 11
   rare: 3
@@ -64,6 +70,7 @@ ARMOUR_LEATHER:
 
 ARMOUR_RING_MAIL:
   description: A heavy belted leather jacket with rows of large iron rings sewn on for extra protection.
+  dodge_mail: -18
   name: ring mail jacket
   power: 12
   rare: 2
@@ -74,6 +81,7 @@ ARMOUR_RING_MAIL:
 
 ARMOUR_SCALE_MAIL:
   description: This armour consists of many small, overlapping metal scales, resembling that of a serpent or dragon.
+  dodge_mod: -22
   name: [ scale mail armour, suits of scale mail armour ]
   power: 16
   rare: 3
@@ -84,6 +92,7 @@ ARMOUR_SCALE_MAIL:
 
 ARMOUR_SPLINT_MAIL:
   description: Thick, vertical metal plates are attached to a mail hauberk beneath, giving two layers of protection.
+  dodge_mod: -29
   name: [ splint mail armour, suits of splint mail armour ]
   power: 18
   rare: 3

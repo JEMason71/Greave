@@ -77,6 +77,9 @@ std::string Item::damage_type_string() const
 // Retrieves this Item's description.
 std::string Item::desc() const { return m_description; }
 
+// Returns the dodge modifier% for this Item, if any.
+int Item::dodge_mod() const { return meta_int("dodge_mod"); }
+
 // Checks what slot this Item equips in, if any.
 EquipSlot Item::equip_slot() const { return m_equip_slot; }
 

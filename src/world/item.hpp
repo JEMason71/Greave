@@ -48,6 +48,7 @@ public:
     DamageType  damage_type() const;                // Retrieves this Item's damage type, if any.
     std::string damage_type_string() const;         // Returns a string indicator of this Item's damage type (e.g. edged = E)
     std::string desc() const;                       // Retrieves this Item's description.
+    int         dodge_mod() const;                  // Returns the dodge modifier% for this Item, if any.
     EquipSlot   equip_slot() const;                 // Checks what slot this Item equips in, if any.
     static std::shared_ptr<Item> load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id);  // Loads a new Item from the save file.
     std::string meta(const std::string &key) const; // Retrieves Item metadata.

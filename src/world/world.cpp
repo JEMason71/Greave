@@ -311,6 +311,9 @@ void World::load_item_pool()
                 else new_item->set_meta("damage_type", static_cast<int>(type_it->second));
             }
 
+            // The item's dodge% modifier, if any.
+            if (item_data["dodge_mod"]) new_item->set_meta("dodge_mod", item_data["dodge_mod"].as<int>());
+
             // The Item's critical power, if any.
             if (item_data["crit"]) new_item->set_meta("crit", item_data["crit"].as<int>());
 

@@ -3,6 +3,7 @@
 
 BOOTS_LEATHER:
   description: Less flexible than ordinary boots, but tougher to withstand more punishment.
+  dodge_mod: -3
   name: [ leather boots, pairs of leather boots ]
   power: 6
   rare: 2
@@ -14,6 +15,7 @@ BOOTS_LEATHER:
 
 BOOTS_LEATHER_HIGH:
   description: This tall pair of tough leather boots aren't too comfortable to wear, but they'll protect your legs.
+  dodge_mod: -4
   name: [ tough leather high boots, pairs of tough leather high boots ]
   power: 8
   rare: 2
@@ -25,6 +27,7 @@ BOOTS_LEATHER_HIGH:
 
 BOOTS_LEATHER_PLATED:
   description: Heavy leather boots with iron plates covering the shins.
+  dodge_mod: -6
   name: [ plated leather boots, pairs of plated leather boots ]
   power: 12
   rare: 3

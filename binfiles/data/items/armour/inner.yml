@@ -3,6 +3,7 @@
 
 ARMOUR_CHAIN_MAIL:
   description: A long shirt of linked mail worn over a light leather jerkin.
+  dodge_mod: -12
   name: chain mail hauberk
   power: 8
   rare: 4
@@ -23,6 +24,7 @@ ARMOUR_CLOTH:
 
 ARMOUR_PADDED:
   description: This thick, quilted cloth armour is rugged and sturdy.
+  dodge_mod: -2
   name: padded gambeson
   power: 5
   rare: 2

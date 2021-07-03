@@ -35,6 +35,7 @@ public:
     float               attack_speed() const;                       // Returns the number of seconds needed for this Mobile to make an attack.
     uint32_t            carry_weight() const;                       // Checks how much weight this Mobile is carrying.
     void                clear_tag(MobileTag the_tag);               // Clears an MobileTag from this Mobile.
+    float               dodge_mod() const;                          // Returns the modified chance to dodge for this Mobile, based on equipped gear.
     const std::shared_ptr<Inventory>    equ() const;                // Returns a pointer to the Movile's equipment.
     const std::vector<std::shared_ptr<BodyPart>>& get_anatomy() const;  // Retrieves the anatomy vector for this Mobile.
     std::string         he_she() const;                             // Returns a gender string (he/she/it/they/etc.)
