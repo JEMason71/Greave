@@ -55,6 +55,7 @@ set(GREAVE_CPPS
   core/core.cpp
   core/filex.cpp
   core/guru.cpp
+  core/list.cpp
   core/mathx.cpp
   core/message.cpp
   core/parser.cpp

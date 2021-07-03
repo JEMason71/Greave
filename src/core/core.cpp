@@ -6,6 +6,7 @@
 #include "core/core.hpp"
 #include "core/filex.hpp"
 #include "core/guru.hpp"
+#include "core/list.hpp"
 #include "core/message.hpp"
 #include "core/parser.hpp"
 #include "core/prefs.hpp"

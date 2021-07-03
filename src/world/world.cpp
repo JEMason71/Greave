@@ -7,6 +7,7 @@
 #include "core/core.hpp"
 #include "core/filex.hpp"
 #include "core/guru.hpp"
+#include "core/list.hpp"
 #include "core/message.hpp"
 #include "core/strx.hpp"
 #include "world/inventory.hpp"
@@ -86,6 +87,7 @@ World::World() : m_player(std::make_shared<Player>()), m_time_weather(std::make_
     load_mob_pool();
     load_anatomy_pool();
     load_generic_descs();
+    load_lists();
 }
 
 // Adds a Mobile to the world.
@@ -133,6 +135,13 @@ const std::shared_ptr<Item> World::get_item(const std::string &item_id) const
     const auto it = m_item_pool.find(StrX::hash(item_id));
     if (it == m_item_pool.end()) throw std::runtime_error("Invalid item ID requested: " + item_id);
     return std::make_shared<Item>(*it->second);
+}
+
+// Retrieves a specified List by ID.
+List World::get_list(const std::string &list_id) const
+{
+    if (m_list_pool.count(list_id) == 0) throw std::runtime_error("Could not find list ID: " + list_id);
+    return m_list_pool.at(list_id);
 }
 
 // Retrieves a specified Mobile by ID.
@@ -401,6 +410,42 @@ void World::load_item_pool()
             // Add the new Item to the item pool.
             m_item_pool.insert(std::make_pair(item_id, new_item));
         }
+    }
+}
+
+// Loads the List YAML data into memory.
+void World::load_lists()
+{
+    const YAML::Node yaml_lists = YAML::LoadFile("data/lists.yml");
+    for (auto list : yaml_lists)
+    {
+        // First, determine the List's ID.
+        const std::string list_id = list.first.as<std::string>();
+
+        // Get the rest of the data.
+        const YAML::Node yaml_list = list.second;
+        if (!yaml_list.IsSequence()) throw std::runtime_error("Invalid list data for list " + list_id);
+
+        List new_list;
+        for (auto le : yaml_list)
+        {
+            ListEntry new_list_entry;
+            if (le.IsSequence())
+            {
+                if (le.size() < 1 || le.size() > 3) throw std::runtime_error("Invalid list data for list " + list_id);
+                new_list_entry.str = le[0].as<std::string>();
+                if (le.size() >= 2) new_list_entry.level = le[1].as<int>();
+                if (le.size() == 3) new_list_entry.count = le[2].as<int>();
+            }
+            else new_list_entry.str = le.as<std::string>();
+            if (new_list_entry.str.size() && new_list_entry.str[0] == '#')    // If the string begins with #, it's treated as a link to another list.
+            {
+                new_list_entry.level = 0;
+                new_list_entry.count = 0;
+            }
+            new_list.push_back(new_list_entry);
+        }
+        m_list_pool.insert(std::pair<std::string, List>(list_id, new_list));
     }
 }
 
