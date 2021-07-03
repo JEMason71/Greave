@@ -95,7 +95,8 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
         default: break;
     }
     float to_hit = BASE_HIT_CHANCE_MELEE * hit_multiplier;
-    to_hit *= defender->dodge_mod();
+    if (defender->tag(MobileTag::CannotDodge)) to_hit = 100;
+    else to_hit *= defender->dodge_mod();
     
     bool evaded = false, blocked = false;
     if (core()->rng()->frnd(100) <= to_hit)  // Evasion failed; the target was hit.

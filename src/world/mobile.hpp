@@ -11,9 +11,16 @@ namespace SQLite { class Database; }    // defined in 3rdparty/SQLiteCpp/Databas
 
 enum class Gender : uint8_t { FEMALE, MALE, IT, THEY };
 
-enum class MobileTag : uint16_t {
-    PluralName = 1, // This Mobile's name is a plural (e.g. "pack of rats").
+enum class MobileTag : uint16_t { None = 0,
+
+    // Tags that affect the Mobile's name.
+    PluralName,     // This Mobile's name is a plural (e.g. "pack of rats").
     ProperNoun,     // This Mobile's name is a proper noun (e.g. Smaug).
+
+    // Tags that affect the Mobile's abilities or stats in combat.
+    CannotDodge,    // This Mobile is unable to dodge attacks.
+
+    // Tags that determine the Mobile's general state of being.
     Unliving,       // This Mobile is a construct or other unliving entity.
 };
 
