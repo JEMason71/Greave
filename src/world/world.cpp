@@ -192,7 +192,7 @@ const std::shared_ptr<Room> World::get_room(const std::string &room_id) const
 }
 
 // Checks if a specified item ID exists.
-bool World::item_exists(const std::string &str) const { return m_item_pool.find(StrX::hash(str)) != m_item_pool.end(); }
+bool World::item_exists(const std::string &str) const { return m_item_pool.count(StrX::hash(str)); }
 
 // Loads the World and all things within it.
 void World::load(std::shared_ptr<SQLite::Database> save_db)
@@ -723,13 +723,13 @@ void World::load_room_pool()
     }
 }
 
+// Checks if a specified mobile ID exists.
+bool World::mob_exists(const std::string &str) const { return m_mob_pool.count(StrX::hash(str)); }
+
 // Sets up for a new game.
 void World::new_game()
 {
     m_player->set_location("OUTSIDE_QUEENS_GATE");
-    auto new_mob = get_mob("GOBLIN_SCOUT");
-    new_mob->set_location("OUTSIDE_QUEENS_GATE");
-    add_mobile(new_mob);
     ActionLook::look(m_player);
 }
 
@@ -765,7 +765,7 @@ void World::remove_mobile(std::shared_ptr<Mobile> mob)
 }
 
 // Checks if a specified room ID exists.
-bool World::room_exists(const std::string &str) const { return m_room_pool.find(StrX::hash(str)) != m_room_pool.end(); }
+bool World::room_exists(const std::string &str) const { return m_room_pool.count(StrX::hash(str)); }
 
 // Saves the World and all things within it.
 void World::save(std::shared_ptr<SQLite::Database> save_db)

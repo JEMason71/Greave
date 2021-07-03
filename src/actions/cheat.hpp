@@ -5,9 +5,10 @@
 #include "core/greave.hpp"
 
 
-class ActionsCheat
+class ActionCheat
 {
 public:
     static void spawn_item(std::string item);   // Attempts to spawn an item.
+    static void spawn_mobile(std::string mob);  // Attempts to spawn a mobile.
     static void teleport(std::string dest);     // Attemtps to teleport to another room.
 };

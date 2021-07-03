@@ -39,6 +39,7 @@ public:
     void            load(std::shared_ptr<SQLite::Database> save_db);            // Loads the World and all things within it.
     const std::shared_ptr<Mobile>   mob(uint32_t vec_pos) const;                // Retrieves a Mobile by vector position.
     unsigned int    mob_count() const;                                          // Returns the number of Mobiles currently active.
+    bool            mob_exists(const std::string &str) const;                   // Checks if a specified mobile ID exists.
     void            new_game();                                                 // Sets up for a new game.
     const std::shared_ptr<Player>   player() const;                             // Retrieves a pointer to the Player object.
     void            purge_mobs();                                               // Purges null entries from the active Mobiles. Only call this from the main loop, for safety.

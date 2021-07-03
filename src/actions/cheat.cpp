@@ -11,7 +11,7 @@
 
 
 // Attempts to spawn an item.
-void ActionsCheat::spawn_item(std::string item)
+void ActionCheat::spawn_item(std::string item)
 {
     item = StrX::str_toupper(item);
     if (core()->world()->item_exists(item))
@@ -23,8 +23,22 @@ void ActionsCheat::spawn_item(std::string item)
     else core()->message("{R}" + item + " {y}is not a valid item ID.");
 }
 
+// Attempts to spawn a mobile.
+void ActionCheat::spawn_mobile(std::string mob)
+{
+    mob = StrX::str_toupper(mob);
+    if (core()->world()->mob_exists(mob))
+    {
+        auto new_mob = core()->world()->get_mob(mob);
+        core()->message("{C}You use the power of {R}w{Y}i{G}s{U}h{C}f{M}u{R}l {Y}t{G}h{U}i{C}n{M}k{R}i{Y}n{G}g {C}to summon " + new_mob->name() + " {C}into the world!");
+        new_mob->set_location(core()->world()->player()->location());
+        core()->world()->add_mobile(new_mob);
+    }
+    else core()->message("{R}" + mob + " {y}is not a valid mobile ID.");
+}
+
 // Attemtps to teleport to another room.
-void ActionsCheat::teleport(std::string dest)
+void ActionCheat::teleport(std::string dest)
 {
     dest = StrX::str_toupper(dest);
     if (core()->world()->room_exists(dest))

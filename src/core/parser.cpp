@@ -49,6 +49,7 @@ Parser::Parser() : m_special_state(SpecialState::NONE)
     add_command("yes", ParserCommand::YES);
     add_command("#hash <txt>", ParserCommand::HASH);
     add_command("[#spawnitem|#si] <txt>", ParserCommand::SPAWN_ITEM);
+    add_command("[#spawnmobile|#spawnmob|#sm] <txt>", ParserCommand::SPAWN_MOBILE);
     add_command("#tp <txt>", ParserCommand::TELEPORT);
 }
 
@@ -356,7 +357,11 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             break;
         case ParserCommand::SPAWN_ITEM:
             if (!words.size()) core()->message("{y}Please specify an {Y}item ID{y}.");
-            else ActionsCheat::spawn_item(collapsed_words);
+            else ActionCheat::spawn_item(collapsed_words);
+            break;
+        case ParserCommand::SPAWN_MOBILE:
+            if (!words.size()) core()->message("{y}Please specify a {Y}mobile ID{Y}.");
+            else ActionCheat::spawn_mobile(collapsed_words);
             break;
         case ParserCommand::SWEAR:
             core()->message("{y}Real adventurers do not use such language.");
@@ -368,7 +373,7 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             break;
         case ParserCommand::TELEPORT:
             if (!words.size()) core()->message("{y}Please specify a {Y}teleport destination{y}.");
-            else ActionsCheat::teleport(collapsed_words);
+            else ActionCheat::teleport(collapsed_words);
             break;
         case ParserCommand::TIME:
             ActionLook::time(player);
