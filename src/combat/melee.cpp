@@ -3,6 +3,7 @@
 
 #include "combat/melee.hpp"
 #include "core/core.hpp"
+#include "core/mathx.hpp"
 #include "core/random.hpp"
 #include "core/strx.hpp"
 #include "world/inventory.hpp"
@@ -12,8 +13,11 @@
 #include "world/world.hpp"
 
 
+const float Melee::BASE_ABSORPTION_VARIANCE =               4;      // The variance in weapon damage soaked by armour (lower number = more variance).
 const float Melee::BASE_BLOCK_CHANCE_MELEE =                20.0f;  // The base block chance in melee combat.
+const float Melee::BASE_DAMAGE_VARIANCE =                   3;      // The variance in weapon damage (lower number = more variance).
 const float Melee::BASE_HIT_CHANCE_MELEE =                  75.0f;  // The base hit chance in melee combat.
+const float Melee::BASE_MELEE_DAMAGE_MULTIPLIER =           1.2f;   // The base damage multiplier for melee weapons.
 const float Melee::BASE_PARRY_CHANCE =                      10.0f;  // The base parry chance in melee combat.
 const float Melee::DUAL_WIELD_HIT_CHANCE_MULTIPLIER =       0.9f;   // The multiplier to accuracy% for dual-wielding.
 const float Melee::SINGLE_WIELD_CRIT_CHANCE_MULTIPLIER =    1.1f;   // The multiplier to crit% for single-wielding.
@@ -150,7 +154,7 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
     }
     else
     {
-        float damage = weapon_ptr->power();
+        float damage = weapon_ptr->power() * BASE_MELEE_DAMAGE_MULTIPLIER;
         if (wield_type_attacker == WieldType::HAND_AND_A_HALF_2H) damage *= WEAPON_DAMAGE_MODIFIER_HAAH_2H;
 
         bool critical_hit = false, bleed = false, poison = false;
@@ -186,9 +190,9 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
             if (shield_item) damage_blocked += damage * shield_item->armour();
         }
 
-        if (damage > 1) damage = std::round(damage);
+        if (damage > 1) damage = MathX::mixup(std::round(damage), BASE_DAMAGE_VARIANCE);
         else if (damage > 0) damage = 1;
-        if (damage_blocked > 1) damage_blocked = std::round(damage_blocked);
+        if (damage_blocked > 1) damage_blocked = MathX::mixup(std::round(damage_blocked), BASE_ABSORPTION_VARIANCE);
         else if (damage_blocked > 0) damage_blocked = 1;
         if (damage_blocked >= damage) damage_blocked = damage;
         damage -= damage_blocked;

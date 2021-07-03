@@ -1,7 +1,9 @@
 // core/mathx.cpp -- Various utility functions that deal with math and number-related things.
 // Copyright (c) 2009-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
+#include "core/core.hpp"
 #include "core/mathx.hpp"
+#include "core/random.hpp"
 
 
 // Inverts a Direction enum (north becomes south, etc.)
@@ -48,6 +50,16 @@ uint32_t MathX::fuzz(uint32_t num)
     if (num >= 50) { num = std::round(num / 10.0f); return num * 10; }
     if (num >= 25) return num + static_cast<uint32_t>(abs((static_cast<int>(num) % 5) - 5));
     return num;
+}
+
+// Mixes up an integer a little. High variance values (e.g. 10) mix up a little, low (e.g. 2) mix up a lot.
+uint32_t MathX::mixup(uint32_t num, int variance)
+{
+    if (!num) return num;
+    const int64_t variance_value = num / variance;
+    int64_t result = static_cast<int64_t>(num) + core()->rng()->rnd(variance_value * 2) - variance_value;
+    if (result < 1) result = 1;
+    return result;
 }
 
 // Rounds a float to two decimal places.

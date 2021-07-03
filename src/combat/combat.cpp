@@ -119,19 +119,19 @@ std::string Combat::damage_str(unsigned int damage, std::shared_ptr<Mobile> def,
     else if (percentage >= 20) return "{Y}scars";
     else if (heat)
     {
-        if (percentage >= 15) return "{y}scorches";
-        else if (percentage >= 10) return "{y}chars";
+        if (percentage >= 15) return "{Y}scorches";
+        else if (percentage >= 10) return "{Y}chars";
         else if (percentage >= 5) return "{y}sears";
         else if (percentage >= 1) return "{y}scalds";
-        else return "{w}singes";
+        else return "{y}singes";
     }
     else
     {
-        if (percentage >= 15) return "{y}nicks";
-        else if (percentage >= 10) return "{y}grazes";
+        if (percentage >= 15) return "{Y}nicks";
+        else if (percentage >= 10) return "{Y}grazes";
         else if (percentage >= 5) return "{y}scratches";
         else if (percentage >= 1) return "{y}bruises";
-        else return "{w}tickles";
+        else return "{y}tickles";
     }
 }
 
