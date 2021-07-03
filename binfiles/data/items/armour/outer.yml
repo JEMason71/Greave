@@ -70,7 +70,7 @@ ARMOUR_LEATHER:
 
 ARMOUR_RING_MAIL:
   description: A heavy belted leather jacket with rows of large iron rings sewn on for extra protection.
-  dodge_mail: -18
+  dodge_mod: -18
   name: ring mail jacket
   power: 12
   rare: 2
