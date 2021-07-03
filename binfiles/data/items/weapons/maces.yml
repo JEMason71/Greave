@@ -1,0 +1,28 @@
+# data/items/weapons/maces.yml -- Maces, clubs, mauls, and other heavy, blunt crushing weapons.
+# Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+
+MACE:
+  crit: 2
+  damage_type: crushing
+  desc: Simple yet brutally effective, a sturdy wooden haft topped with a flanged iron head.
+  name: flanged mace
+  power: 15
+  rare: 3
+  slot: held
+  speed: 1.0
+  type: [ weapon, melee ]
+  value: 40s
+  weight: 420
+
+MACE_GOBLIN:
+  crit: 3
+  damage_type: crushing
+  desc: A leather-wrapped wooden handle topped with a crudely-forged, rusting iron head.
+  name: goblin mace
+  power: 12
+  rare: 1
+  slot: held
+  speed: 1.0
+  type: [ weapon, melee ]
+  value: 6c
+  weight: 340
