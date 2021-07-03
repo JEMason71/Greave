@@ -53,6 +53,8 @@ public:
     EquipSlot   equip_slot() const;                 // Checks what slot this Item equips in, if any.
     static std::shared_ptr<Item> load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id);  // Loads a new Item from the save file.
     std::string meta(const std::string &key) const; // Retrieves Item metadata.
+    float       meta_float(const std::string &key) const;   // Retrieves metadata, in float format.
+    int         meta_int(const std::string &key) const;     // Retrieves metadata, in int format.
     std::map<std::string, std::string>* meta_raw(); // Accesses the metadata map directly. Use with caution!
     std::string name(int flags = 0) const;          // Retrieves the name of thie Item.
     void        new_parser_id();                    // Generates a new parser ID for this Item.
@@ -65,10 +67,10 @@ public:
     void        set_equip_slot(EquipSlot es);       // Sets this Item's equipment slot.
     void        set_meta(const std::string &key, std::string value);    // Adds Item metadata.
     void        set_meta(const std::string &key, int value);            // As above, but with an integer value.
+    void        set_meta(const std::string &key, float value);          // As above again, but this time for floats.
     void        set_name(const std::string &name);  // Sets the name of this Item.
     void        set_power(uint16_t power);          // Sets the power of this Item.
     void        set_rare(uint8_t rarity);           // Sets this Item's rarity.
-    void        set_speed(float speed);             // Sets the speed of this Item.
     void        set_tag(ItemTag the_tag);           // Sets a tag on this Item.
     void        set_type(ItemType type, ItemSub sub = ItemSub::NONE);   // Sets the type of this Item.
     void        set_value(uint32_t val);            // Sets this Item's value.
@@ -81,8 +83,6 @@ public:
     uint32_t    weight() const;                     // The Item's weight, in pacs.
 
 private:
-    int         meta_int(std::string key) const;    // Retrieves metadata, in int format.
-
     std::string m_description;      // The description of this Item.
     EquipSlot   m_equip_slot;       // The slot this Item is equipped in, if any.
     std::map<std::string, std::string>  m_metadata; // The Item's metadata, if any.

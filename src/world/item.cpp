@@ -22,12 +22,12 @@ const int Item::NAME_FLAG_THE =                 512;    // Precede the Item's na
 
 // The SQL table construction string for saving items.
 const std::string Item::SQL_ITEMS = "CREATE TABLE items ( description TEXT, equip_slot INTEGER, metadata TEXT, name TEXT NOT NULL, owner_id INTEGER NOT NULL, "
-    "parser_id INTEGER NOT NULL, power INTEGER, rare INTEGER NOT NULL, speed REAL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, subtype INTEGER, tags TEXT, type INTEGER, "
+    "parser_id INTEGER NOT NULL, power INTEGER, rare INTEGER NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, subtype INTEGER, tags TEXT, type INTEGER, "
     "value INTEGER, weight INTEGER NOT NULL )";
 
 
 // Constructor, sets default values.
-Item::Item() : m_equip_slot(EquipSlot::NONE), m_parser_id(0), m_power(0), m_rarity(1), m_speed(0), m_type(ItemType::NONE), m_type_sub(ItemSub::NONE), m_value(0) { }
+Item::Item() : m_equip_slot(EquipSlot::NONE), m_parser_id(0), m_power(0), m_rarity(1), m_type(ItemType::NONE), m_type_sub(ItemSub::NONE), m_value(0) { }
 
 // Returns the armour damage reduction value of this Item, if any.
 float Item::armour(int bonus_power) const
@@ -105,7 +105,6 @@ std::shared_ptr<Item> Item::load(std::shared_ptr<SQLite::Database> save_db, uint
         new_item->m_parser_id = query.getColumn("parser_id").getUInt();
         if (!query.getColumn("power").isNull()) new_item->m_power = query.getColumn("power").getInt();
         new_item->m_rarity = query.getColumn("rare").getInt();
-        if (!query.getColumn("speed").isNull()) new_item->m_speed = query.getColumn("speed").getDouble();
         if (!query.isColumnNull("subtype")) new_subtype = static_cast<ItemSub>(query.getColumn("subtype").getInt());
         if (!query.getColumn("tags").isNull()) StrX::string_to_tags(query.getColumn("tags").getString(), new_item->m_tags);
         if (!query.isColumnNull("type")) new_type = static_cast<ItemType>(query.getColumn("type").getInt());
@@ -128,8 +127,16 @@ std::string Item::meta(const std::string &key) const
     return result;
 }
 
+// Retrieves metadata, in float format.
+float Item::meta_float(const std::string &key) const
+{
+    const std::string key_str = meta(key);
+    if (!key_str.size()) return 0.0f;
+    else return std::stof(key_str);
+}
+
 // Retrieves metadata, in int format.
-int Item::meta_int(std::string key) const
+int Item::meta_int(const std::string &key) const
 {
     const std::string key_str = meta(key);
     if (!key_str.size()) return 0;
@@ -222,8 +229,8 @@ uint8_t Item::rare() const { return m_rarity; }
 // Saves the Item.
 void Item::save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id)
 {
-    SQLite::Statement query(*save_db, "INSERT INTO items ( description, equip_slot, metadata, name, owner_id, parser_id,power, rare, speed, sql_id, subtype, tags, type, value, "
-        "weight ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
+    SQLite::Statement query(*save_db, "INSERT INTO items ( description, equip_slot, metadata, name, owner_id, parser_id,power, rare, sql_id, subtype, tags, type, value, weight ) "
+        "VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
     if (m_description.size()) query.bind(1, m_description);
     if (m_equip_slot != EquipSlot::NONE) query.bind(2, static_cast<int>(m_equip_slot));
     if (m_metadata.size()) query.bind(3, StrX::metadata_to_string(m_metadata));
@@ -232,13 +239,12 @@ void Item::save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id)
     query.bind(6, m_parser_id);
     if (m_power) query.bind(7, m_power);
     query.bind(8, m_rarity);
-    if (m_speed) query.bind(9, m_speed);
-    query.bind(10, core()->sql_unique_id());
-    if (m_type_sub != ItemSub::NONE) query.bind(11, static_cast<int>(m_type_sub));
-    if (m_tags.size()) query.bind(12, StrX::tags_to_string(m_tags));
-    if (m_type != ItemType::NONE) query.bind(13, static_cast<int>(m_type));
-    if (m_value) query.bind(14, m_value);
-    query.bind(15, m_weight);
+    query.bind(9, core()->sql_unique_id());
+    if (m_type_sub != ItemSub::NONE) query.bind(10, static_cast<int>(m_type_sub));
+    if (m_tags.size()) query.bind(11, StrX::tags_to_string(m_tags));
+    if (m_type != ItemType::NONE) query.bind(12, static_cast<int>(m_type));
+    if (m_value) query.bind(13, m_value);
+    query.bind(14, m_weight);
     query.exec();
 }
 
@@ -259,6 +265,9 @@ void Item::set_meta(const std::string &key, std::string value)
 // As above, but with an integer value.
 void Item::set_meta(const std::string &key, int value) { set_meta(key, std::to_string(value)); }
 
+// As above again, but this time for floats.
+void Item::set_meta(const std::string &key, float value) { set_meta(key, StrX::ftos(value, 1)); }
+
 // Sets the name of this Item.
 void Item::set_name(const std::string &name) { m_name = name; }
 
@@ -267,9 +276,6 @@ void Item::set_power(uint16_t power) { m_power = power; }
 
 // Sets this Item's rarity.
 void Item::set_rare(uint8_t rarity) { m_rarity = rarity; }
-
-// Sets the speed of this Item.
-void Item::set_speed(float speed) { m_speed = speed; }
 
 // Sets a tag on this Item.
 void Item::set_tag(ItemTag the_tag)
@@ -292,7 +298,7 @@ void Item::set_value(uint32_t val) { m_value = val; }
 void Item::set_weight(uint32_t pacs) { m_weight = pacs; }
 
 // Retrieves the speed of this Item.
-float Item::speed() const { return m_speed; }
+float Item::speed() const { return meta_float("speed"); }
 
 // Returns the ItemSub (sub-type) of this Item.
 ItemSub Item::subtype() const { return m_type_sub; }

@@ -339,6 +339,9 @@ void World::load_item_pool()
             // The Item's critical power, if any.
             if (item_data["crit"]) new_item->set_meta("crit", item_data["crit"].as<int>());
 
+            // The Item's speed, if any.
+            if (item_data["speed"]) new_item->set_meta("speed", item_data["speed"].as<float>());
+
             // The Item's EquipSlot, if any.
             if (item_data["slot"])
             {
@@ -355,9 +358,6 @@ void World::load_item_pool()
             // The Item's description, if any.
             if (!item_data["desc"]) core()->guru()->nonfatal("Missing description for item " + item_id_str, Guru::WARN);
             else new_item->set_description(item_data["desc"].as<std::string>());
-
-            // The Item's speed, if any.
-            if (item_data["speed"]) new_item->set_speed(item_data["speed"].as<float>());
 
             // The Item's value.
             unsigned int item_value = 0;
