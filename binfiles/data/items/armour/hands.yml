@@ -4,6 +4,7 @@
 GAUNTLETS_LEATHER:
   description: They're not terribly flexible, but the tough leather plates on these gauntlets will keep your hands safe.
   name: [ tough leather gauntlets, pairs of tough leather gauntlets ]
+  parry_mod: -2
   power: 3
   rare: 2
   slot: hands
@@ -15,6 +16,7 @@ GAUNTLETS_LEATHER:
 GAUNTLETS_LEATHER_PLATED:
   description: Heavy leather gauntlets with overlapping iron plates sewn on.
   name: [ plated leather gauntlets, pairs of plated leather gauntlets ]
+  parry_mod: -3
   power: 5
   rare: 3
   slot: hands
@@ -26,6 +28,7 @@ GAUNTLETS_LEATHER_PLATED:
 GLOVES_MAIL:
   description: A heavy pair of leather gauntlets, half-covered in a layer of chainmail.
   name: [ mail gloves, pairs of mail gloves ]
+  parry_mod: -3
   power: 6
   rare: 4
   slot: hands

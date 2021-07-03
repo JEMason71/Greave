@@ -203,6 +203,9 @@ std::string Item::name(int flags) const
 // Generates a new parser ID for this Item.
 void Item::new_parser_id() { m_parser_id = core()->rng()->rnd(1, 9999); }
 
+// Returns the parry% modifier of this Item, if any.
+int Item::parry_mod() const { return meta_int("parry_mod"); }
+
 // Retrieves the current ID of this Item, for parser differentiation.
 uint16_t Item::parser_id() const { return m_parser_id; }
 

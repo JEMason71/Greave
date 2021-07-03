@@ -112,7 +112,7 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
         // Now to check if the defender can successfully parry this attack.
         if (can_parry)
         {
-            float parry_chance = BASE_PARRY_CHANCE;// * defender->parry_mod();
+            float parry_chance = BASE_PARRY_CHANCE * defender->parry_mod();
             if (core()->rng()->frnd(100) <= parry_chance) parried = true;
         }
     }

@@ -55,6 +55,7 @@ public:
     std::map<std::string, std::string>* meta_raw(); // Accesses the metadata map directly. Use with caution!
     std::string name(int flags = 0) const;          // Retrieves the name of thie Item.
     void        new_parser_id();                    // Generates a new parser ID for this Item.
+    int         parry_mod() const;                  // Returns the parry% modifier of this Item, if any.
     uint16_t    parser_id() const;                  // Retrieves the current ID of this Item, for parser differentiation.
     uint16_t    power() const;                      // Retrieves this Item's power.
     uint8_t     rare() const;                       // Retrieves this Item's rarity.

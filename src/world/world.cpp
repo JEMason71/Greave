@@ -314,6 +314,9 @@ void World::load_item_pool()
             // The item's dodge% modifier, if any.
             if (item_data["dodge_mod"]) new_item->set_meta("dodge_mod", item_data["dodge_mod"].as<int>());
 
+            // The item's parry% modifier, if any.
+            if (item_data["parry_mod"]) new_item->set_meta("parry_mod", item_data["parry_mod"].as<int>());
+
             // The Item's critical power, if any.
             if (item_data["crit"]) new_item->set_meta("crit", item_data["crit"].as<int>());
 
@@ -618,6 +621,9 @@ void World::new_game()
     new_mob->equ()->add_item(get_item("ARMOUR_CLOTH"));
     new_mob->equ()->add_item(get_item("KNIGHTLY_SWORD"));
     new_mob->equ()->add_item(get_item("BUCKLER"));
+    new_mob->equ()->add_item(get_item("GAUNTLETS_LEATHER"));
+    new_mob->equ()->add_item(get_item("BOOTS_LEATHER"));
+    new_mob->equ()->add_item(get_item("CAP_LEATHER"));
     add_mobile(new_mob);
     ActionLook::look(m_player);
 }

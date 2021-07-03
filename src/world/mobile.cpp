@@ -193,6 +193,15 @@ std::string Mobile::name(int flags) const
 // Generates a new parser ID for this Item.
 void Mobile::new_parser_id() { m_parser_id = core()->rng()->rnd(1, 9999); }
 
+// Returns the modified chance to parry for this Mobile, based on equipped gear.
+float Mobile::parry_mod() const
+{
+    float mod_perc = 100.0f;
+    for (unsigned int i = 0; i < m_equipment->count(); i++)
+        mod_perc += m_equipment->get(i)->parry_mod();
+    return mod_perc / 100.0f;
+}
+
 // Retrieves the current ID of this Item, for parser differentiation.
 uint16_t Mobile::parser_id() const { return m_parser_id; }
 

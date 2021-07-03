@@ -57,6 +57,7 @@ public:
     uint32_t            max_carry() const;                          // The maximum weight this Mobile can carry.
     std::string         name(int flags = 0) const;                  // Retrieves the name of this Mobile.
     void                new_parser_id();                            // Generates a new parser ID for this Mobile.
+    float               parry_mod() const;                          // Returns the modified chance to parry for this Mobile, based on equipped gear.
     uint16_t            parser_id() const;                          // Retrieves the current ID of this Mobile, for parser differentiation.
     bool                pass_time(float seconds);                   // Causes time to pass for this Mobile.
     void                reduce_hp(int amount);                      // Reduces this Mobile's hit points.
