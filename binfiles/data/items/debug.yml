@@ -1,4 +1,4 @@
-# items/debug.yml -- Items intended for debugging/testing and development, but can also be used for cheating.
+# data/items/debug.yml -- Items intended for debugging/testing and development, but can also be used for cheating.
 # Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 SKELETON_KEY:   # The skeleton key can open any lock.

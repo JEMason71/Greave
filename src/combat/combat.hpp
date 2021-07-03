@@ -19,8 +19,8 @@ protected:
     enum class WieldType : uint8_t { NONE, UNARMED, ONE_HAND_PLUS_EXTRA, TWO_HAND, DUAL_WIELD, HAND_AND_A_HALF_2H, SINGLE_WIELD, ONE_HAND_PLUS_SHIELD, SHIELD_ONLY,
         UNARMED_PLUS_SHIELD };
 
-	// Weapon type damage modifiers to unarmoured, light, medium and heavy armour targets.
-	static const float DAMAGE_MODIFIER_ACID[4], DAMAGE_MODIFIER_BALLISTIC[4], DAMAGE_MODIFIER_CRUSHING[4], DAMAGE_MODIFIER_EDGED[4], DAMAGE_MODIFIER_EXPLOSIVE[4],
+    // Weapon type damage modifiers to unarmoured, light, medium and heavy armour targets.
+    static const float DAMAGE_MODIFIER_ACID[4], DAMAGE_MODIFIER_BALLISTIC[4], DAMAGE_MODIFIER_CRUSHING[4], DAMAGE_MODIFIER_EDGED[4], DAMAGE_MODIFIER_EXPLOSIVE[4],
         DAMAGE_MODIFIER_ENERGY[4], DAMAGE_MODIFIER_KINETIC[4], DAMAGE_MODIFIER_PIERCING[4], DAMAGE_MODIFIER_PLASMA[4], DAMAGE_MODIFIER_POISON[4], DAMAGE_MODIFIER_RENDING[4];
     static const std::map<DamageType, const float*> DAMAGE_TYPE_MAP;
 

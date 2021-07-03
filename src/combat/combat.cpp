@@ -10,7 +10,7 @@
 
 
 // Weapon type damage modifiers to unarmoured, light, medium and heavy armour targets.
-const float	Combat::DAMAGE_MODIFIER_ACID[4] =       { 1.8f, 1.3f, 1.2f, 1.0f };
+const float Combat::DAMAGE_MODIFIER_ACID[4] =       { 1.8f, 1.3f, 1.2f, 1.0f };
 const float Combat::DAMAGE_MODIFIER_BALLISTIC[4] =  { 1.3f, 1.3f, 1.2f, 1.0f };
 const float Combat::DAMAGE_MODIFIER_CRUSHING[4] =   { 1.0f, 1.0f, 1.0f, 1.2f };
 const float Combat::DAMAGE_MODIFIER_EDGED[4] =      { 1.5f, 1.3f, 1.2f, 1.0f };

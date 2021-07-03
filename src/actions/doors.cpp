@@ -162,7 +162,7 @@ bool ActionDoors::open_or_close(std::shared_ptr<Mobile> mob, Direction dir, bool
     }
 
     const std::string door_name = room->door_name(dir);
-    
+
     const float time_taken = (open ? TIME_OPEN_DOOR : TIME_CLOSE_DOOR);
     if (!mob->pass_time(time_taken))
     {

@@ -36,34 +36,34 @@ std::string StrX::collapse_vector(std::vector<std::string> vec)
 
 std::string StrX::comma_list(std::vector<std::string> vec, unsigned int flags)
 {
-	const bool use_and = ((flags & CL_FLAG_USE_AND) == CL_FLAG_USE_AND);
-	const bool sql_mode = ((flags & CL_FLAG_SQL_MODE) == CL_FLAG_SQL_MODE);
-	if (!vec.size())
-	{
-		core()->guru()->nonfatal("Empty vector provided to comma_list!", Guru::WARN);
-		return "";
-	}
-	if (vec.size() == 1) return vec.at(0);
-	std::string plus = " and ";
-	if (!use_and)
-	{
-		if (sql_mode) plus = ", ";
-		else plus = " or ";
-	}
-	else if (vec.size() == 2) return vec.at(0) + plus + vec.at(1);
+    const bool use_and = ((flags & CL_FLAG_USE_AND) == CL_FLAG_USE_AND);
+    const bool sql_mode = ((flags & CL_FLAG_SQL_MODE) == CL_FLAG_SQL_MODE);
+    if (!vec.size())
+    {
+        core()->guru()->nonfatal("Empty vector provided to comma_list!", Guru::WARN);
+        return "";
+    }
+    if (vec.size() == 1) return vec.at(0);
+    std::string plus = " and ";
+    if (!use_and)
+    {
+        if (sql_mode) plus = ", ";
+        else plus = " or ";
+    }
+    else if (vec.size() == 2) return vec.at(0) + plus + vec.at(1);
 
-	std::string str;
-	for (unsigned int i = 0; i < vec.size(); i++)
-	{
-		str += vec.at(i);
-		if (i < vec.size() - 1)
-		{
-			if (i == vec.size() - 2) str += plus;
-			else str += ", ";
-		}
-	}
+    std::string str;
+    for (unsigned int i = 0; i < vec.size(); i++)
+    {
+        str += vec.at(i);
+        if (i < vec.size() - 1)
+        {
+            if (i == vec.size() - 2) str += plus;
+            else str += ", ";
+        }
+    }
 
-	return str;
+    return str;
 }
 
 // Counts all the colour tags in a string.
@@ -129,7 +129,7 @@ std::string StrX::dir_to_name(Direction dir, DirNameType dnt)
         default:
             throw std::runtime_error("Invalid direction enum: " + std::to_string(static_cast<int>(dir)));
             return "";
-	}
+    }
 }
 
 // As above, but with an integer instead of an enum.

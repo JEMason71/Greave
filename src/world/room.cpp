@@ -108,8 +108,8 @@ void Room::add_scar(ScarType type, int intensity)
 void Room::clear_link_tag(uint8_t id, LinkTag the_tag)
 {
     if (id >= ROOM_LINKS_MAX) throw std::runtime_error("Invalid direction specified when clearing room link tag.");
-	if (!(m_tags_link[id].count(the_tag) > 0)) return;
-	m_tags_link[id].erase(the_tag);
+    if (!(m_tags_link[id].count(the_tag) > 0)) return;
+    m_tags_link[id].erase(the_tag);
 }
 
 // As above, but with a Direction enum.
@@ -189,8 +189,8 @@ bool Room::key_can_unlock(std::shared_ptr<Item> key, Direction dir)
     if (fake_link(dir) || link_tag(dir, LinkTag::Permalock) || !link_tag(dir, LinkTag::Lockable) || key->type() != ItemType::KEY) return false;
 
     // Get the key's metadata. If none, it can't open anything.
-	const std::string key_meta = key->meta("key");
-	if (!key_meta.size()) return false;
+    const std::string key_meta = key->meta("key");
+    if (!key_meta.size()) return false;
 
     const uint32_t link_id = link(dir);
     const std::shared_ptr<Room> dest_room = core()->world()->get_room(link_id);

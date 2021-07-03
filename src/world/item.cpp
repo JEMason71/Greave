@@ -251,8 +251,8 @@ void Item::set_equip_slot(EquipSlot es) { m_equip_slot = es; }
 // Adds Item metadata.
 void Item::set_meta(const std::string &key, const std::string &value)
 {
-	if (m_metadata.find(key) == m_metadata.end()) m_metadata.insert(std::pair<std::string, std::string>(key, value));
-	else m_metadata.at(key) = value;
+    if (m_metadata.find(key) == m_metadata.end()) m_metadata.insert(std::pair<std::string, std::string>(key, value));
+    else m_metadata.at(key) = value;
 }
 
 // As above, but with an integer value.

@@ -1,4 +1,4 @@
-# items/weapons.yml -- Any and all weapons, or items that can be wielded as weapons, go here.
+# data/items/weapons.yml -- Any and all weapons, or items that can be wielded as weapons, go here.
 # Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 KNIGHTLY_SWORD:

@@ -259,7 +259,7 @@ void Core::title()
     message("{U}Welcome to {G}Greave {U}" + GAME_VERSION +
         ", copyright (c) 2020-2021 Raine \"Gravecat\" Simmons. This game is free and open-source, released under the Gnu AGPL 3.0 license.");
 #ifdef GREAVE_TOLK
-	if (Tolk_DetectScreenReader()) message("{U}If you are using a screen reader, pressing the {C}tab key {U}will repeat the text after your last input.");
+    if (Tolk_DetectScreenReader()) message("{U}If you are using a screen reader, pressing the {C}tab key {U}will repeat the text after your last input.");
 #endif
 
     std::vector<bool> save_exists;
