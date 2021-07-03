@@ -264,19 +264,6 @@ void World::load_item_pool()
             // Check to make sure there are no hash collisions.
             if (m_item_pool.find(item_id) != m_item_pool.end()) throw std::runtime_error("Item ID hash conflict: " + item_id_str);
 
-            // The Item's name.
-            if (!item_data["name"]) throw std::runtime_error("Missing item name: " + item_id_str);
-            std::string item_name, item_name_plural;
-            if (item_data["name"].IsSequence())
-            {
-                const unsigned int seq_size = item_data["name"].size();
-                if (seq_size < 1 || seq_size > 2) throw std::runtime_error("Item name data malforned: " + item_id_str);
-                item_name = item_data["name"][0].as<std::string>();
-                if (seq_size == 2) item_name_plural = item_data["name"][1].as<std::string>();
-            }
-            else item_name = item_data["name"].as<std::string>();
-            new_item->set_name(item_name, item_name_plural);
-
             // The Item's type and subtype.
             if (!item_data["type"]) throw std::runtime_error("Missing item type: " + item_id_str);
             std::string item_type_str, item_subtype_str;
@@ -319,6 +306,17 @@ void World::load_item_pool()
 
             // The Item's metadata, if any.
             if (item_data["metadata"]) StrX::string_to_metadata(item_data["metadata"].as<std::string>(), *new_item->meta_raw());
+
+            // The Item's name.
+            if (!item_data["name"]) throw std::runtime_error("Missing item name: " + item_id_str);
+            if (item_data["name"].IsSequence())
+            {
+                const unsigned int seq_size = item_data["name"].size();
+                if (seq_size < 1 || seq_size > 2) throw std::runtime_error("Item name data malforned: " + item_id_str);
+                new_item->set_name(item_data["name"][0].as<std::string>());
+                if (seq_size == 2) new_item->set_meta("plural_name", item_data["name"][1].as<std::string>());
+            }
+            else new_item->set_name(item_data["name"].as<std::string>());
 
             // The Item's damage type, if any.
             if (item_data["damage_type"])
