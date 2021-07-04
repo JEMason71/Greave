@@ -17,4 +17,5 @@ private:
     static const uint32_t   TRAVEL_CHANCE;  // 1 in X chance of traveling to another room.
 
     static void tick_mob(std::shared_ptr<Mobile> mob, uint32_t vec_pos);    // Processes AI for a specific active Mobile.
+    static bool travel_randomly(std::shared_ptr<Mobile> mob, bool allow_dangerous_exits);   // Sends the Mobile in a random direction.
 };

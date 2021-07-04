@@ -44,32 +44,27 @@ void AI::tick_mob(std::shared_ptr<Mobile> mob, uint32_t)
     }
     if (attack_target)
     {
-        Melee::attack(mob, attack_target);
+        if (mob->tag(MobileTag::Coward))
+        {
+            // Attempt a safe travel; if it fails, panic and attempt a more dangerous exit.
+            if (location == player_location) core()->message("{U}" + mob->name(Mobile::NAME_FLAG_THE) + " {U}flees in a blind panic!", Show::ACTIVE, Wake::NEVER);
+            if (!travel_randomly(mob, true))
+            {
+                mob->pass_time(600);
+                if (location == player_location) core()->message("{0}{u}... But " + mob->he_she() + " can't get away!", Show::ACTIVE, Wake::NEVER);
+            }
+        }
+        else Melee::attack(mob, attack_target);
         return;
     }
 
-    if (rng->rnd(AGGRO_CHANCE) == 1 && location == player_location)
+    if (mob->tag(MobileTag::AggroOnSight) && rng->rnd(AGGRO_CHANCE) == 1 && location == player_location)
     {
         Melee::attack(mob, core()->world()->player());
         return;
     }
 
-    if (rng->rnd(TRAVEL_CHANCE) == 1)
-    {
-        std::vector<uint8_t> viable_exits;
-        for (unsigned int i = 0; i < Room::ROOM_LINKS_MAX; i++)
-        {
-            if (room->fake_link(i)) continue;
-            if (room->dangerous_link(i)) continue;
-            if (room->link_tag(i, LinkTag::Locked)) continue;
-            viable_exits.push_back(i);
-        }
-        if (viable_exits.size())
-        {
-            ActionTravel::travel(mob, static_cast<Direction>(viable_exits.at(rng->rnd(0, viable_exits.size() - 1))), true);
-            return;
-        }
-    }
+    if (rng->rnd(TRAVEL_CHANCE) == 1 && travel_randomly(mob, false)) return;
 }
 
 // Ticks all the mobiles in active rooms.
@@ -82,4 +77,22 @@ void AI::tick_mobs()
         if (!mob->can_act()) continue;
         tick_mob(mob, m);
     }
+}
+
+// Sends the Mobile in a random direction.
+bool AI::travel_randomly(std::shared_ptr<Mobile> mob, bool allow_dangerous_exits)
+{
+    const uint32_t location = mob->location();
+    auto room = core()->world()->get_room(location);
+
+    std::vector<uint8_t> viable_exits;
+    for (unsigned int i = 0; i < Room::ROOM_LINKS_MAX; i++)
+    {
+        if (room->fake_link(i)) continue;
+        if (!allow_dangerous_exits && room->dangerous_link(i)) continue;
+        if (room->link_tag(i, LinkTag::Locked)) continue;
+        viable_exits.push_back(i);
+    }
+    if (viable_exits.size()) return ActionTravel::travel(mob, static_cast<Direction>(viable_exits.at(core()->rng()->rnd(0, viable_exits.size() - 1))), true);
+    else return false;
 }
