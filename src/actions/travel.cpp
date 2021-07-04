@@ -61,7 +61,7 @@ bool ActionTravel::travel(std::shared_ptr<Mobile> mob, Direction dir, bool confi
 
     if (room->link_tag(dir, LinkTag::Openable) && !room->link_tag(dir, LinkTag::Open))
     {
-        if (is_player) core()->message("{m}(first opening the " + room->door_name(dir) + ")");
+        if (is_player) core()->message("{0}{m}(first opening the " + room->door_name(dir) + ")");
         const bool opened = ActionDoors::open_or_close(mob, dir, true);
         if (!opened) return false;
     }

@@ -75,7 +75,7 @@ bool ActionDoors::lock_or_unlock(std::shared_ptr<Mobile> mob, Direction dir, boo
     // If we're locking a door, make sure it's closed first.
     if (!unlock && room->link_tag(dir, LinkTag::Open))
     {
-        if (is_player) core()->message("{m}(first closing the " + door_name + ")");
+        if (is_player) core()->message("{0}{m}(first closing the " + door_name + ")");
         if (!open_or_close(mob, dir, false)) return false;
     }
 
