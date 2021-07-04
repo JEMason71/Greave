@@ -102,8 +102,12 @@ bool ActionTravel::travel(std::shared_ptr<Mobile> mob, Direction dir, bool confi
 
     mob->set_location(room_link);
     if (is_player) ActionLook::look(mob);
-    else if (room_link == player_loc) core()->message("{U}" + mob_name_a + " {U}arrives " + StrX::dir_to_name(MathX::dir_invert(dir), StrX::DirNameType::FROM_THE_ALT) + ".",
-        Show::WAITING, Wake::NEVER);
+    else if (room_link == player_loc)
+    {
+        const bool hostile = mob->is_hostile();
+        core()->message("{U}" + mob_name_a + " {U}arrives " + StrX::dir_to_name(MathX::dir_invert(dir), StrX::DirNameType::FROM_THE_ALT) + ".",
+            (hostile ? Show::RESTING : Show::WAITING), (hostile ? Wake::NEVER : Wake::RESTING));
+    }
 
     if (sky || sky2 || sky3)
     {
