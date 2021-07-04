@@ -106,11 +106,11 @@ std::string StrX::decode_compressed_string(std::string cb)
 std::string StrX::dir_to_name(Direction dir, DirNameType dnt)
 {
     std::string prefix;
-    if (dnt == DirNameType::TO_THE || dnt == DirNameType::TO_THE_ALT)
+    if (dnt == DirNameType::TO_THE || dnt == DirNameType::TO_THE_ALT || dnt == DirNameType::FROM_THE || dnt == DirNameType::FROM_THE_ALT)
     {
-        if (dir == Direction::UP) return (dnt == DirNameType::TO_THE ? "above" : "up");
-        else if (dir == Direction::DOWN) return (dnt == DirNameType::TO_THE ? "below" : "down");
-        else prefix = "to the ";
+        if (dir == Direction::UP) return (dnt == DirNameType::TO_THE || dnt == DirNameType::FROM_THE ? "above" : "up");
+        else if (dir == Direction::DOWN) return (dnt == DirNameType::TO_THE || dnt == DirNameType::FROM_THE ? "below" : "down");
+        else prefix = (dnt == DirNameType::TO_THE || dnt == DirNameType::TO_THE_ALT ? "to the " : "from the ");
     }
 
     switch(dir)

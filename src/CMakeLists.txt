@@ -64,6 +64,7 @@ set(GREAVE_CPPS
   core/strx.cpp
   core/terminal-blt.cpp
   core/terminal-curses.cpp
+  world/ai.cpp
   world/inventory.cpp
   world/item.cpp
   world/room.cpp

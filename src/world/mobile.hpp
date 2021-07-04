@@ -43,6 +43,7 @@ public:
                         Mobile();                                   // Constructor, sets default values.
     float               attack_speed() const;                       // Returns the number of seconds needed for this Mobile to make an attack.
     float               block_mod() const;                          // Returns the modified chance to block for this Mobile, based on equipped gear.
+    bool                can_act() const;                            // Checks if the Mobile's action timer is ready.
     uint32_t            carry_weight() const;                       // Checks how much weight this Mobile is carrying.
     void                clear_tag(MobileTag the_tag);               // Clears an MobileTag from this Mobile.
     float               dodge_mod() const;                          // Returns the modified chance to dodge for this Mobile, based on equipped gear.
@@ -64,6 +65,7 @@ public:
     uint16_t            parser_id() const;                          // Retrieves the current ID of this Mobile, for parser differentiation.
     bool                pass_time(float seconds);                   // Causes time to pass for this Mobile.
     void                reduce_hp(int amount);                      // Reduces this Mobile's hit points.
+    void                restore_action_timer(float amount);         // Restores time for this Mobile's action timer.
     int                 restore_hp(int amount);                     // Restores a specified amount of hit points.
     virtual uint32_t    save(std::shared_ptr<SQLite::Database> save_db);    // Saves this Mobile.
     void                set_hp(int hp, int hp_max = 0);             // Sets the current (and, optionally, maximum) HP of this Mobile.

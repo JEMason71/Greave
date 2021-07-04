@@ -6,10 +6,11 @@
 #include "actions/travel.hpp"
 #include "combat/combat.hpp"
 #include "core/core.hpp"
+#include "core/mathx.hpp"
 #include "core/parser.hpp"
 #include "core/random.hpp"
 #include "core/strx.hpp"
-#include "world/mobile.hpp"
+#include "world/player.hpp"
 #include "world/room.hpp"
 #include "world/world.hpp"
 
@@ -38,6 +39,7 @@ const float ActionTravel::TRAVEL_TIME_TRIPLE =      480.0f; // The time (in seco
 bool ActionTravel::travel(std::shared_ptr<Mobile> mob, Direction dir, bool confirm)
 {
     const uint32_t mob_loc = mob->location();
+    const uint32_t player_loc = core()->world()->player()->location();
     const std::shared_ptr<Room> room = core()->world()->get_room(mob_loc);
     const bool is_player = mob->is_player();
     const uint32_t room_link = room->link(dir);
@@ -45,7 +47,6 @@ bool ActionTravel::travel(std::shared_ptr<Mobile> mob, Direction dir, bool confi
     if (!room_link)
     {
         if (is_player) core()->message("{y}You cannot travel {Y}" + StrX::dir_to_name(dir, StrX::DirNameType::TO_THE_ALT) + "{y}.");
-        // todo: NPC failure messages
         return false;
     }
     else if (room_link == Room::UNFINISHED)
@@ -86,10 +87,23 @@ bool ActionTravel::travel(std::shared_ptr<Mobile> mob, Direction dir, bool confi
         return false;
     }
 
-    // todo: messages for NPC travel
-    if (sky || sky2 || sky3) core()->message("{C}You take a {U}leap of faith{C}!", Show::ALWAYS, Wake::ALWAYS);
+    const bool player_can_see = room->light(core()->world()->player());
+    const std::string mob_name_the = (player_can_see ? mob->name(Mobile::NAME_FLAG_THE | Mobile::NAME_FLAG_CAPITALIZE_FIRST) : "Something");
+    const std::string mob_name_a = (player_can_see ? mob->name(Mobile::NAME_FLAG_A | Mobile::NAME_FLAG_CAPITALIZE_FIRST) : "Something");
+
+    if (sky || sky2 || sky3)
+    {
+        if (is_player) core()->message("{C}You take a {U}leap of faith{C}!", Show::ALWAYS, Wake::ALWAYS);
+        else if (mob_loc == player_loc) core()->message("{U}" + mob_name_the + " {U}takes a leap of faith " + StrX::dir_to_name(dir, StrX::DirNameType::TO_THE_ALT) + "!",
+            Show::WAITING, Wake::NEVER);
+    }
+    else if (!is_player && mob_loc == player_loc) core()->message("{U}" + mob_name_the + " {U}leaves " + StrX::dir_to_name(dir, StrX::DirNameType::TO_THE_ALT) + ".",
+        Show::WAITING, Wake::NEVER);
+
     mob->set_location(room_link);
     if (is_player) ActionLook::look(mob);
+    else if (room_link == player_loc) core()->message("{U}" + mob_name_a + " {U}arrives " + StrX::dir_to_name(MathX::dir_invert(dir), StrX::DirNameType::FROM_THE_ALT) + ".",
+        Show::WAITING, Wake::NEVER);
 
     if (sky || sky2 || sky3)
     {
@@ -118,16 +132,21 @@ bool ActionTravel::travel(std::shared_ptr<Mobile> mob, Direction dir, bool confi
         {
             unsigned int hp_damage = std::round(static_cast<float>(mob->hp(true)) * damage_perc);
             mob->reduce_hp(hp_damage);
-            // todo: NPC damage message here.
-            core()->message("{R}You land badly, and the impact " + Combat::damage_str(hp_damage, mob, false) + " {R}you! {W}<{R}-" + StrX::intostr_pretty(hp_damage) + "{W}>",
-                Show::ALWAYS, Wake::ALWAYS);
+            if (is_player) core()->message("{R}You land badly, and the impact " + Combat::damage_str(hp_damage, mob, false) + " {R}you! {W}<{R}-" + StrX::intostr_pretty(hp_damage) +
+                "{W}>", Show::ALWAYS, Wake::ALWAYS);
+            else
+            {
+                if (player_can_see) core()->message("{U}" + mob_name_a + " {U}lands badly nearby with a painful crunch!", Show::RESTING, Wake::RESTING);
+                else core()->message("{U}You hear the loud crunch of something landing badly nearby!", Show::RESTING, Wake::RESTING);
+            }
             core()->world()->get_room(mob->location())->add_scar(ScarType::BLOOD, blood_intensity);
-            if (mob->hp() <= 0) core()->message("{0}{M}Your bones are shattered from the impact, death is mercifully quick.");
+            if (mob->hp() <= 0)
+            {
+                if (is_player) core()->message("{0}{M}Your bones are shattered from the impact, death is mercifully quick.", Show::ALWAYS, Wake::ALWAYS);
+                else if (player_can_see) core()->message("{U}" + mob_name_the + " is slain instantly from the impact!", Show::RESTING, Wake::RESTING);
+            }
         }
-        else
-        {
-            core()->message("{g}Despite the distance fallen, you manage to land safely on your feet.");
-        }
+        else if (is_player) core()->message("{g}Despite the distance fallen, you manage to land safely on your feet.");
     }
 
     return true;

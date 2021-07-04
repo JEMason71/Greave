@@ -135,6 +135,18 @@ void Room::clear_tag(RoomTag the_tag)
     m_tags.erase(the_tag);
 }
 
+// Checks if a room link is dangerous (e.g. a sky link).
+bool Room::dangerous_link(Direction dir)
+{
+    if (link_tag(dir, LinkTag::Sky)) return true;
+    if (link_tag(dir, LinkTag::Sky2)) return true;
+    if (link_tag(dir, LinkTag::Sky3)) return true;
+    return false;
+}
+
+// As above, but using an integer instead of an enum.
+bool Room::dangerous_link(uint8_t dir) { return dangerous_link(static_cast<Direction>(dir)); }
+
 // This Room was previously active, and has now become inactive.
 void Room::deactivate()
 {

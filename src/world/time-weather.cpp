@@ -7,6 +7,7 @@
 #include "core/core.hpp"
 #include "core/random.hpp"
 #include "core/strx.hpp"
+#include "world/ai.hpp"
 #include "world/player.hpp"
 #include "world/room.hpp"
 #include "world/time-weather.hpp"
@@ -269,6 +270,9 @@ bool TimeWeather::pass_time(float seconds)
             change_happened = show_weather_messages;
         }
         if (change_happened) core()->message(weather_message_colour() + weather_msg.substr(1), Show::WAITING, Wake::NEVER);
+
+        // Runs the AI on all active mobiles.
+        AI::tick_mobs();
 
         std::set<uint32_t> active_rooms;    // This starts empty, but can be re-used if multiple heartbeats need to check active rooms.
 

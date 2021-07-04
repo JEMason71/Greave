@@ -68,6 +68,9 @@ float Mobile::block_mod() const
     return mod_perc / 100.0f;
 }
 
+// Checks if the Mobile's action timer is ready.
+bool Mobile::can_act() const { return m_action_timer >= 0; }
+
 // Checks how much weight this Mobile is carrying.
 uint32_t Mobile::carry_weight() const
 {
@@ -249,6 +252,9 @@ void Mobile::reduce_hp(int amount)
     if (m_spawn_room) core()->world()->get_room(m_spawn_room)->clear_tag(RoomTag::MobSpawned);
     core()->world()->remove_mobile(m_id);
 }
+
+// Restores time for this Mobile's action timer.
+void Mobile::restore_action_timer(float amount) { m_action_timer += amount; }
 
 // Restores a specified amount of hit points.
 int Mobile::restore_hp(int amount)

@@ -7,7 +7,7 @@
 #include "core/strx.hpp"
 #include "world/inventory.hpp"
 #include "world/item.hpp"
-#include "world/mobile.hpp"
+#include "world/player.hpp"
 #include "world/room.hpp"
 #include "world/world.hpp"
 
@@ -22,30 +22,26 @@ const float ActionDoors::TIME_UNLOCK_DOOR = 10.0f;  // The time taken (in second
 bool ActionDoors::lock_or_unlock(std::shared_ptr<Mobile> mob, Direction dir, bool unlock, bool silent_fail)
 {
     const uint32_t mob_loc = mob->location();
+    const uint32_t player_loc = core()->world()->player()->location();
     const std::shared_ptr<Room> room = core()->world()->get_room(mob_loc);
     const bool is_player = mob->is_player();
     const bool is_unlocked = !room->link_tag(dir, LinkTag::Locked);
     const std::string lock_unlock_str = (unlock ? "unlock" : "lock");
     const std::string locked_unlocked_str = (unlock ? "unlocked" : "locked");
+    const bool player_can_see = room->light(core()->world()->player());
+    const std::string mob_name_the = (player_can_see ? mob->name(Mobile::NAME_FLAG_THE | Mobile::NAME_FLAG_CAPITALIZE_FIRST) : "Something");
+    const uint32_t other_side = room->link(dir);
+    const Direction dir_invert = MathX::dir_invert(dir);
 
     if (!room->link_tag(dir, LinkTag::Lockable))
     {
-        if (!silent_fail)
-        {
-            if (is_player) core()->message("{y}That isn't something you can {Y}" + lock_unlock_str + "{y}!");
-            // todo: add fail message for NPCs
-        }
+        if (!silent_fail && is_player) core()->message("{y}That isn't something you can {Y}" + lock_unlock_str + "{y}!");
         return false;
     }
 
     if (unlock == is_unlocked)
     {
-        if (!silent_fail)
-        {
-            if (is_player) core()->message("{y}You can't do that, it's {Y}already " + locked_unlocked_str + "{y}!");
-            // todo: add fail message for NPCs
-            return false;
-        }
+        if (!silent_fail && is_player) core()->message("{y}You can't do that, it's {Y}already " + locked_unlocked_str + "{y}!");
         return false;
     }
 
@@ -65,7 +61,16 @@ bool ActionDoors::lock_or_unlock(std::shared_ptr<Mobile> mob, Direction dir, boo
         if (!silent_fail)
         {
             if (is_player) core()->message("{y}You can't do that, you don't have {Y}the correct key{y}.");
-            // todo: add fail message for NPCs
+            else if (player_loc == mob_loc)
+            {
+                if (player_can_see) core()->message("{u}" + mob_name_the + " {u}attempts to unlock the " + room->door_name(dir) + " " +
+                    StrX::dir_to_name(dir, StrX::DirNameType::TO_THE) + ", but is unable to!", Show::WAITING, Wake::NEVER);
+                else core()->message("{u}You hear the sounds of a " + room->door_name(dir) + " rattling " + StrX::dir_to_name(dir, StrX::DirNameType::TO_THE) + ".",
+                    Show::WAITING, Wake::NEVER);
+            }
+            else if (player_loc == other_side)
+                core()->message("{u}You hear the sounds of a " + core()->world()->get_room(other_side)->door_name(dir_invert) + " rattling " +
+                    StrX::dir_to_name(dir_invert, StrX::DirNameType::TO_THE) + ".", Show::WAITING, Wake::NEVER);
         }
         return false;
     }
@@ -82,16 +87,25 @@ bool ActionDoors::lock_or_unlock(std::shared_ptr<Mobile> mob, Direction dir, boo
     const float time_taken = (unlock ? TIME_UNLOCK_DOOR : TIME_LOCK_DOOR);
     if (!mob->pass_time(time_taken))
     {
-        core()->message("{R}You are interrupted while attempting to " + lock_unlock_str + " the " + door_name + "!");
+        core()->message("{R}You are interrupted while attempting to " + lock_unlock_str + " the " + door_name + "!", Show::ALWAYS, Wake::ALWAYS);
         return false;
     }
 
     if (is_player) core()->message("{u}You {U}" + lock_unlock_str + " {u}the " + door_name + " " + StrX::dir_to_name(dir, StrX::DirNameType::TO_THE) + " with your {U}" +
         correct_key->name() + "{u}.");
-    // todo: add lock/unlock messages for NPCs, in both source and destination rooms
+    else
+    {
+        if (player_loc == mob_loc)
+        {
+            if (player_can_see) core()->message("{u}" + mob_name_the + " {u}" + lock_unlock_str + "s the " + room->door_name(dir) + " " +
+                StrX::dir_to_name(dir, StrX::DirNameType::TO_THE) + ".", Show::WAITING, Wake::NEVER);
+            else core()->message("{u}You hear the sound of a key turning in a lock " + StrX::dir_to_name(dir, StrX::DirNameType::TO_THE) + ".", Show::WAITING, Wake::NEVER);
+        }
+        else if (player_loc == other_side) core()->message("{u}You hear the sound of a key turning in a lock " + StrX::dir_to_name(dir_invert, StrX::DirNameType::TO_THE) + ".",
+            Show::WAITING, Wake::NEVER);
+    }
 
-    const std::shared_ptr<Room> dest_room = core()->world()->get_room(room->link(dir));
-    const Direction dir_invert = MathX::dir_invert(dir);
+    const std::shared_ptr<Room> dest_room = core()->world()->get_room(other_side);
     if (unlock)
     {
         room->set_link_tag(dir, LinkTag::Unlocked);
@@ -121,23 +135,26 @@ bool ActionDoors::lock_or_unlock(std::shared_ptr<Mobile> mob, Direction dir, boo
 bool ActionDoors::open_or_close(std::shared_ptr<Mobile> mob, Direction dir, bool open)
 {
     const uint32_t mob_loc = mob->location();
+    const uint32_t player_loc = core()->world()->player()->location();
     const std::shared_ptr<Room> room = core()->world()->get_room(mob_loc);
     const bool is_player = mob->is_player();
     const bool is_open = room->link_tag(dir, LinkTag::Open);
     const std::string open_close_str = (open ? "open" : "close");
     const std::string open_closed_str = (open ? "open" : "closed");
+    const bool player_can_see = room->light(core()->world()->player());
+    const std::string mob_name_the = (player_can_see ? mob->name(Mobile::NAME_FLAG_THE | Mobile::NAME_FLAG_CAPITALIZE_FIRST) : "Something");
+    const uint32_t other_side = room->link(dir);
+    const Direction dir_invert = MathX::dir_invert(dir);
 
     if (!room->link_tag(dir, LinkTag::Openable))
     {
         if (is_player) core()->message("{y}That isn't something you can {Y}" + open_close_str + "{y}!");
-        // todo: add fail message for NPCs
         return false;
     }
 
     if (open == is_open)
     {
         if (is_player) core()->message("{y}You can't do that, it's {Y}already " + open_closed_str + "{y}!");
-        // todo: add fail message for NPCs
         return false;
     }
 
@@ -156,7 +173,7 @@ bool ActionDoors::open_or_close(std::shared_ptr<Mobile> mob, Direction dir, bool
                     dest_room->set_link_tag(MathX::dir_invert(dir), LinkTag::KnownLocked);
                 }
             }
-            // todo: add fail message for NPCs
+            // NPCs already have their own failure message in lock_or_unlock().
             return false;
         }
     }
@@ -166,23 +183,34 @@ bool ActionDoors::open_or_close(std::shared_ptr<Mobile> mob, Direction dir, bool
     const float time_taken = (open ? TIME_OPEN_DOOR : TIME_CLOSE_DOOR);
     if (!mob->pass_time(time_taken))
     {
-        core()->message("{R}You are interrupted while trying to " + open_close_str + " the " + door_name + "!");
+        core()->message("{R}You are interrupted while trying to " + open_close_str + " the " + door_name + "!", Show::ALWAYS, Wake::ALWAYS);
         return false;
     }
 
     if (is_player) core()->message("{u}You {U}" + open_close_str + " {u}the " + door_name + " " + StrX::dir_to_name(dir, StrX::DirNameType::TO_THE) + ".");
-    // todo: add open/close messages for NPCs, in both source and destination rooms
+    else if (player_loc == mob_loc)
+    {
+        if (player_can_see) core()->message("{u} " + mob_name_the + " " + open_close_str + "s the " + door_name + " " + StrX::dir_to_name(dir, StrX::DirNameType::TO_THE) + ".",
+            Show::WAITING, Wake::NEVER);
+        else core()->message("{u}You hear something " + open_close_str + " " + StrX::dir_to_name(dir, StrX::DirNameType::TO_THE) + ".", Show::WAITING, Wake::NEVER);
+    }
+    else if (player_loc == other_side)
+    {
+        if (player_can_see) core()->message("{u}The " + door_name + " " + StrX::dir_to_name(dir_invert, StrX::DirNameType::TO_THE) + " " + open_close_str + "s.", Show::WAITING,
+            Wake::NEVER);
+        else core()->message("{u}You hear something " + open_close_str + " " + StrX::dir_to_name(dir_invert, StrX::DirNameType::TO_THE) + ".", Show::WAITING, Wake::NEVER);
+    }
 
     const std::shared_ptr<Room> dest_room = core()->world()->get_room(room->link(dir));
     if (open)
     {
         room->set_link_tag(dir, LinkTag::Open);
-        dest_room->set_link_tag(MathX::dir_invert(dir), LinkTag::Open);
+        dest_room->set_link_tag(dir_invert, LinkTag::Open);
     }
     else
     {
         room->clear_link_tag(dir, LinkTag::Open);
-        dest_room->clear_link_tag(MathX::dir_invert(dir), LinkTag::Open);
+        dest_room->clear_link_tag(dir_invert, LinkTag::Open);
     }
 
     return true;

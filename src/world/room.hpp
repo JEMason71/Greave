@@ -139,6 +139,8 @@ public:
     void        clear_link_tag(uint8_t id, LinkTag the_tag);            // Clears a tag on this Room's link.
     void        clear_link_tag(Direction dir, LinkTag the_tag);         // As above, but with a Direction enum.
     void        clear_tag(RoomTag the_tag);                             // Clears a tag on this Room.
+    bool        dangerous_link(Direction dir);                          // Checks if a room link is dangerous (e.g. a sky link).
+    bool        dangerous_link(uint8_t dir);                            // As above, but using an integer instead of an enum.
     void        deactivate();                                           // This Room was previously active, and has now become inactive.
     void        decay_scars();                                          // Reduces the intensity of any room scars present.
     std::string desc() const;                                           // Returns the Room's description.
