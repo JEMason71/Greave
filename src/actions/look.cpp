@@ -168,7 +168,7 @@ void ActionLook::look(std::shared_ptr<Mobile> mob)
         const auto world_mob = core()->world()->mob_vec(i);
         if (!world_mob) continue; // Ignore any nullptr Mobiles.
         if (world_mob->location() != mob->location()) continue; // Ignore any Mobiles not in this Room.
-        mobs_nearby.push_back("{Y}" + world_mob->name());
+        mobs_nearby.push_back((world_mob->is_hostile() ? "{R}" : "{Y}") + world_mob->name(Mobile::NAME_FLAG_NO_COLOUR) + "{w}");
     }
     if (mobs_nearby.size()) core()->message("{0}{g}```Nearby: {w}" + StrX::comma_list(mobs_nearby, StrX::CL_FLAG_USE_AND));
 }

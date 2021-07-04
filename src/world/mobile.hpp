@@ -57,6 +57,7 @@ public:
     uint32_t            id() const;                                 // Retrieves the unique ID of this Mobile.
     const std::shared_ptr<Inventory>    inv() const;                // Returns a pointer to the Mobile's Inventory.
     bool                is_dead() const;                            // Checks if this Mobile is dead.
+    bool                is_hostile() const;                         // Is this Mobile hostile to the player?
     virtual bool        is_player() const;                          // Returns true if this Mobile is a Player, false if not.
     virtual uint32_t    load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id);   // Loads a Mobile.
     uint32_t            location() const;                           // Retrieves the location of this Mobile, in the form of a Room ID.

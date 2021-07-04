@@ -156,6 +156,14 @@ const std::shared_ptr<Inventory> Mobile::inv() const { return m_inventory; }
 // Checks if this Mobile is dead.
 bool Mobile::is_dead() const { return m_hp[0] <= 0; }
 
+// Is this Mobile hostile to the player?
+bool Mobile::is_hostile() const
+{
+    for (auto h : m_hostility)
+        if (h == 0) return true;
+    return false;
+}
+
 // Returns true if this Mobile is a Player, false if not.
 bool Mobile::is_player() const { return false; }
 
