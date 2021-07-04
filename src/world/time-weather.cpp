@@ -14,15 +14,15 @@
 
 
 // SQL table construction string for time and weather data.
-const std::string TimeWeather::SQL_TIME_WEATHER = "CREATE TABLE time_weather ( day INTEGER NOT NULL, moon INTEGER NOT NULL, time INTEGER PRIMARY KEY UNIQUE NOT NULL, "
-    "subsecond REAL NOT NULL, weather INTEGER NOT NULL )";
+const std::string TimeWeather::SQL_TIME_WEATHER = "CREATE TABLE time_weather ( day INTEGER NOT NULL, moon INTEGER NOT NULL, subsecond REAL NOT NULL, "
+    "time INTEGER PRIMARY KEY UNIQUE NOT NULL, time_total INTEGER NOT NULL, weather INTEGER NOT NULL )";
 
 const int   TimeWeather::LUNAR_CYCLE_DAYS =     29;     // How many days are in a lunar cycle?
 const float TimeWeather::UNINTERRUPTABLE_TIME = 5.0f;   // The maximum amount of time for an action that cannot be interrupted.
 
 
 // Constructor, sets default values.
-TimeWeather::TimeWeather() : m_day(80), m_moon(1), m_time(39660), m_subsecond(0), m_weather(Weather::FAIR)
+TimeWeather::TimeWeather() : m_day(80), m_moon(1), m_time(39660), m_time_passed(0), m_subsecond(0), m_weather(Weather::FAIR)
 {
     m_weather_change_map.resize(9);
     const YAML::Node yaml_weather = YAML::LoadFile("data/weather.yml");
@@ -122,8 +122,9 @@ void TimeWeather::load(std::shared_ptr<SQLite::Database> save_db)
     {
         m_day = query.getColumn("day").getInt();
         m_moon = query.getColumn("moon").getInt();
-        m_time = query.getColumn("time").getInt();
         m_subsecond = query.getColumn("subsecond").getDouble();
+        m_time = query.getColumn("time").getInt();
+        m_time_passed = query.getColumn("time_total").getUInt();
         m_weather = static_cast<Weather>(query.getColumn("weather").getInt());
     }
     else throw std::runtime_error("Could not load time and weather data!");
@@ -208,6 +209,7 @@ bool TimeWeather::pass_time(float seconds)
         old_hp = hp;
 
         // Update the time of day and weather.
+        m_time_passed++;    // The total time passed in the game. This will loop every 136 years, but that's not a problem; see time_passed().
         const bool show_weather_messages = (!indoors || can_see_outside);
         TimeOfDay old_time_of_day = time_of_day(true);
         int old_time = m_time;
@@ -237,12 +239,13 @@ bool TimeWeather::pass_time(float seconds)
 // Saves the time/weather data to disk.
 void TimeWeather::save(std::shared_ptr<SQLite::Database> save_db) const
 {
-    SQLite::Statement query(*save_db, "INSERT INTO time_weather ( day, moon, time, subsecond, weather ) VALUES ( ?, ?, ?, ?, ? )");
+    SQLite::Statement query(*save_db, "INSERT INTO time_weather ( day, moon, subsecond, time, time_total, weather ) VALUES ( ?, ?, ?, ?, ?, ? )");
     query.bind(1, m_day);
     query.bind(2, m_moon);
-    query.bind(3, m_time);
-    query.bind(4, m_subsecond);
-    query.bind(5, static_cast<int>(m_weather));
+    query.bind(3, m_subsecond);
+    query.bind(4, m_time);
+    query.bind(5, m_time_passed);
+    query.bind(6, static_cast<int>(m_weather));
     query.exec();
 }
 
@@ -336,6 +339,16 @@ void TimeWeather::trigger_event(TimeWeather::Season season, std::string *message
     const std::string time_message = m_tw_string_map.at(time_of_day_str(true) + "_" + weather_str(fix_weather(m_weather, season)) + (indoors ? "_INDOORS" : ""));
     if (message_to_append) *message_to_append += " " + time_message;
     else core()->message(weather_message_colour() + time_message, Show::WAITING, Wake::NEVER);
+}
+
+// Checks how much time has passed since a given time integer. Handles integer overflow loops.
+uint32_t TimeWeather::time_passed(uint32_t since) const
+{
+    // If the total time hasn't looped yet, no problem! This is easy!
+    if (since <= m_time_passed) return m_time_passed - since;
+
+    // If not, we'll try to work around the overflow. This ain't great if we overflowed twice, but shouldn't cause too many problems.
+    return UINT_MAX - since + m_time_passed;
 }
 
 // Returns a weather description for the current time/weather, based on the current season.
