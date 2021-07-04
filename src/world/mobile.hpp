@@ -69,6 +69,7 @@ public:
     void                set_location(uint32_t room_id);             // Sets the location of this Mobile with a Room ID.
     void                set_location(const std::string &room_id);   // As above, but with a string Room ID.
     void                set_name(const std::string &name);          // Sets the name of this Mobile.
+    void                set_spawn_room(uint32_t id);                // Sets this Mobile's spawn room.
     void                set_species(const std::string &species);    // Sets the species of this Mobile.
     void                set_tag(MobileTag the_tag);                 // Sets a MobileTag on this Mobile.
     std::string         species() const;                            // Checks the species of this Mobile.
@@ -85,6 +86,7 @@ private:
     uint32_t            m_location;     // The Room that this Mobile is currently located in.
     std::string         m_name;         // The name of this Mobile.
     uint16_t            m_parser_id;    // The semi-unique ID of this Mobile, for parser differentiation.
+    uint32_t            m_spawn_room;   // The Room that spawned this Mobile.
     std::string         m_species;      // Ths species type of this Mobile.
     std::set<MobileTag> m_tags;         // Any and all tags on this Mobile.
 };

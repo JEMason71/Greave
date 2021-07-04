@@ -4,20 +4,24 @@
 #include "3rdparty/SQLiteCpp/SQLiteCpp.h"
 #include "core/core.hpp"
 #include "core/filex.hpp"
+#include "core/list.hpp"
 #include "core/message.hpp"
+#include "core/random.hpp"
 #include "core/strx.hpp"
 #include "world/inventory.hpp"
 #include "world/item.hpp"
-#include "world/mobile.hpp"
+#include "world/player.hpp"
 #include "world/room.hpp"
 #include "world/time-weather.hpp"
 #include "world/world.hpp"
 
 
-const uint32_t  Room::BLOCKED =         538012167;  // Hashed value for BLOCKED, which is used to mark exits as impassible.
-const uint32_t  Room::FALSE_ROOM =      3399618268; // Hashed value for FALSE_ROOM, which is used to make 'fake' impassible room exits.
-const uint8_t   Room::LIGHT_VISIBLE =   3;          // Any light level below this is considered too dark to see.
-const uint32_t  Room::UNFINISHED =      1909878064; // Hashed value for UNFINISHED, which is used to mark room exits as unfinished and to be completed later.
+const uint32_t  Room::BLOCKED =             538012167;  // Hashed value for BLOCKED, which is used to mark exits as impassible.
+const uint32_t  Room::FALSE_ROOM =          3399618268; // Hashed value for FALSE_ROOM, which is used to make 'fake' impassible room exits.
+const uint8_t   Room::LIGHT_VISIBLE =       3;          // Any light level below this is considered too dark to see.
+const uint32_t  Room::UNFINISHED =          1909878064; // Hashed value for UNFINISHED, which is used to mark room exits as unfinished and to be completed later.
+
+const uint32_t  Room::RESPAWN_INTERVAL =    300;        // The minimum respawn time, in seconds, for Mobiles.
 
 // The descriptions for different types of room scars.
 const std::vector<std::vector<std::string>> Room::ROOM_SCAR_DESCS = {
@@ -65,11 +69,11 @@ const std::vector<std::vector<std::string>> Room::ROOM_SCAR_DESCS = {
 };
 
 // The SQL table construction string for the saved rooms.
-const std::string   Room::SQL_ROOMS =   "CREATE TABLE rooms ( sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, id INTEGER UNIQUE NOT NULL, scars TEXT, spawn_mobs TEXT, tags TEXT, "
-    "link_tags TEXT, inventory INTEGER UNIQUE )";
+const std::string   Room::SQL_ROOMS =   "CREATE TABLE rooms ( sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, id INTEGER UNIQUE NOT NULL, last_spawned_mobs INTEGER, scars TEXT, "
+    "spawn_mobs TEXT, tags TEXT, link_tags TEXT, inventory INTEGER UNIQUE )";
 
 
-Room::Room(std::string new_id) : m_inventory(std::make_shared<Inventory>()), m_light(0), m_security(Security::ANARCHY)
+Room::Room(std::string new_id) : m_inventory(std::make_shared<Inventory>()), m_last_spawned_mobs(0), m_light(0), m_security(Security::ANARCHY)
 {
     if (new_id.size()) m_id = StrX::hash(new_id);
     else m_id = 0;
@@ -295,6 +299,7 @@ void Room::load(std::shared_ptr<SQLite::Database> save_db)
     if (query.executeStep())
     {
         inventory_id = query.getColumn("inventory").getUInt();
+        if (!query.isColumnNull("last_spawned_mobs")) m_last_spawned_mobs = query.getColumn("last_spawned_mobs").getUInt();
         if (!query.isColumnNull("link_tags"))
         {
             const std::string link_tags_str = query.getColumn("link_tags").getString();
@@ -335,6 +340,30 @@ void Room::load(std::shared_ptr<SQLite::Database> save_db)
 // Returns the Room's full or short name.
 std::string Room::name(bool short_name) const { return (short_name ? m_name_short : m_name); }
 
+// Respawn Mobiles in this Room, if possible.
+void Room::respawn_mobs()
+{
+    if (!m_spawn_mobs.size()) return;       // Do nothing if there's nothing to spawn.
+    if (m_id == core()->world()->player()->location()) return;  // Do nothing if the player is standing here.
+    if (tag(RoomTag::MobSpawned)) return;   // Do nothing if a Mobile has already spawned here.
+    if (m_last_spawned_mobs && core()->world()->time_weather()->time_passed_since(m_last_spawned_mobs) < RESPAWN_INTERVAL) return;    // Do nothing if the respawn timer isn't up.
+
+    // Set the respawn timer!
+    m_last_spawned_mobs = core()->world()->time_weather()->time_passed();
+
+    // Pick a Mobile to spawn here.
+    std::string spawn_str = m_spawn_mobs.at(core()->rng()->rnd(m_spawn_mobs.size()) - 1);
+    if (spawn_str.size() && spawn_str[0] == '#') spawn_str = core()->world()->get_list(spawn_str.substr(1))->rnd().str; // If it's a list, pick an entry.
+    if (!spawn_str.size() || spawn_str == "-") return;   // If for some reason we pick a blank entry, just do nothing. Yes, we updated the spawn timer, that's fine.
+
+    // Spawn the Mobile!
+    auto new_mob = core()->world()->get_mob(spawn_str);
+    new_mob->set_location(m_id);
+    new_mob->set_spawn_room(m_id);
+    core()->world()->add_mobile(new_mob);
+    set_tag(RoomTag::MobSpawned);
+}
+
 // Saves the Room and anything it contains.
 void Room::save(std::shared_ptr<SQLite::Database> save_db)
 {
@@ -350,10 +379,11 @@ void Room::save(std::shared_ptr<SQLite::Database> save_db)
 
     if (!tags.size() && link_tags == ",,,,,,,,," && !m_scar_type.size()) return;
 
-    SQLite::Statement room_query(*save_db, "INSERT INTO rooms (id, inventory, link_tags, scars, spawn_mobs, sql_id, tags) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    SQLite::Statement room_query(*save_db, "INSERT INTO rooms (id, inventory, last_spawned_mobs, link_tags, scars, spawn_mobs, sql_id, tags) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
     room_query.bind(1, m_id);
     if (inventory_id) room_query.bind(2, inventory_id);
-    if (link_tags != ",,,,,,,,,") room_query.bind(3, link_tags);
+    if (m_last_spawned_mobs) room_query.bind(3, m_last_spawned_mobs);
+    if (link_tags != ",,,,,,,,,") room_query.bind(4, link_tags);
     if (m_scar_type.size())
     {
         std::string scar_str;
@@ -362,11 +392,11 @@ void Room::save(std::shared_ptr<SQLite::Database> save_db)
             scar_str += StrX::itoh(static_cast<int>(m_scar_type.at(i)), 1) + ";" + StrX::itoh(m_scar_intensity.at(i), 1);
             if (i < m_scar_type.size() - 1) scar_str += ",";
         }
-        room_query.bind(4, scar_str);
+        room_query.bind(5, scar_str);
     }
-    if (tag(RoomTag::MobSpawnListChanged) && m_spawn_mobs.size()) room_query.bind(5, StrX::collapse_vector(m_spawn_mobs));
-    room_query.bind(6, core()->sql_unique_id());
-    if (tags.size()) room_query.bind(7, tags);
+    if (tag(RoomTag::MobSpawnListChanged) && m_spawn_mobs.size()) room_query.bind(6, StrX::collapse_vector(m_spawn_mobs));
+    room_query.bind(7, core()->sql_unique_id());
+    if (tags.size()) room_query.bind(8, tags);
     room_query.exec();
 }
 

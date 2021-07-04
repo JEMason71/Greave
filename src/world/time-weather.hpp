@@ -36,7 +36,8 @@ public:
     TimeOfDay   time_of_day(bool fine) const;       // Returns the current time of day (morning, day, dusk, night).
     int         time_of_day_exact() const;          // Returns the exact time of day.
     std::string time_of_day_str(bool fine) const;   // Returns the current time of day as a string.
-    uint32_t    time_passed(uint32_t since) const;  // Checks how much time has passed since a given time integer. Handles integer overflow loops.
+    uint32_t    time_passed() const;                // Returns the total amount of seconds that passed in the game.
+    uint32_t    time_passed_since(uint32_t since) const;    // Checks how much time has passed since a given time integer. Handles integer overflow loops.
     std::string weather_desc() const;               // Returns a weather description for the current time/weather, based on the current season.
     std::string weather_message_colour() const;     // Returns a colour to be used for time/weather messages, based on the time of day.
     std::string weather_str(Weather weather) const; // Converts a weather integer to a string.

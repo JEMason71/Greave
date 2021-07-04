@@ -27,6 +27,7 @@ class World
 {
 public:
                     World();                                                    // Constructor, loads the room YAML data.
+    std::set<uint32_t>  active_rooms() const;                                   // Retrieve a list of all active rooms.
     void            add_mobile(std::shared_ptr<Mobile> mob);                    // Adds a Mobile to the world.
     std::string     generic_desc(const std::string &id) const;                  // Retrieves a generic description string.
     const std::vector<std::shared_ptr<BodyPart>>& get_anatomy(const std::string &id) const; // Retrieves a copy of the anatomy data for a given species.

@@ -66,6 +66,7 @@ enum class RoomTag : uint16_t {
     _None = 0,              // Do not use this tag, it's just a marker to start the tags below counting from 1.
 
     Explored,               // The player has visited this room before.
+    MobSpawned,             // This room has spawned a mob already.
     MobSpawnListChanged,    // The mob spawn list on this room has changed.
     SaveActive,             // An extra-temporary tag used by the save system, to keep track of active rooms when saving/loading the game.
 
@@ -154,6 +155,7 @@ public:
     bool        link_tag(Direction dir, LinkTag the_tag) const;         // As above, but with a Direction enum.
     void        load(std::shared_ptr<SQLite::Database> save_db);        // Loads the Room and anything it contains.
     std::string name(bool short_name = false) const;                    // Returns the Room's full or short name.
+    void        respawn_mobs();                                         // Respawn Mobiles in this Room, if possible.
     void        save(std::shared_ptr<SQLite::Database> save_db);        // Saves the Room and anything it contains.
     std::string scar_desc() const;                                      // Returns the description of any room scars present.
     void        set_base_light(uint8_t new_light);                      // Sets this Room's base light level.
@@ -168,11 +170,13 @@ public:
     bool        tag(RoomTag the_tag) const;                             // Checks if a tag is set on this Room.
 
 private:
+    static const uint32_t   RESPAWN_INTERVAL;   // The minimum respawn time, in seconds, for Mobiles.
     static const std::vector<std::vector<std::string>>  ROOM_SCAR_DESCS;    // The descriptions for different types of room scars.
 
     std::string                 m_desc;                         // The Room's description.
     uint32_t                    m_id;                           // The Room's unique ID, hashed from its YAML name.
     std::shared_ptr<Inventory>  m_inventory;                    // The Room's inventory, for storing dropped items.
+    uint32_t                    m_last_spawned_mobs;            // The timer for when this Room last spawned Mobiles.
     uint8_t                     m_light;                        // The default light level of this Room.
     uint32_t                    m_links[ROOM_LINKS_MAX];        // Links to other Rooms.
     std::string                 m_name;                         // The Room's title.

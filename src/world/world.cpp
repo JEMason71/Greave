@@ -108,6 +108,9 @@ void World::active_room_scan(uint32_t target, uint32_t depth)
     }
 }
 
+// Retrieve a list of all active rooms.
+std::set<uint32_t> World::active_rooms() const { return m_active_rooms; }
+
 // Adds a Mobile to the world.
 void World::add_mobile(std::shared_ptr<Mobile> mob)
 {

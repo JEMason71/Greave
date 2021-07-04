@@ -24,11 +24,13 @@ const int Mobile::NAME_FLAG_THE =               32; // Precede the Mobile's name
 
 // The SQL table construction string for Mobiles.
 const std::string   Mobile::SQL_MOBILES =   "CREATE TABLE mobiles ( action_timer REAL, equipment INTEGER UNIQUE, gender INTEGER, hp INTEGER NOT NULL, hp_max INTEGER NOT NULL, "
-    "inventory INTEGER UNIQUE, location INTEGER NOT NULL, name TEXT, parser_id INTEGER, species TEXT NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, tags TEXT )";
+    "inventory INTEGER UNIQUE, location INTEGER NOT NULL, name TEXT, parser_id INTEGER, spawn_room INTEGER, species TEXT NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, "
+    "tags TEXT )";
 
 
 // Constructor, sets default values.
-Mobile::Mobile() : m_action_timer(0), m_equipment(std::make_shared<Inventory>()), m_gender(Gender::IT), m_inventory(std::make_shared<Inventory>()), m_location(0), m_parser_id(0)
+Mobile::Mobile() : m_action_timer(0), m_equipment(std::make_shared<Inventory>()), m_gender(Gender::IT), m_inventory(std::make_shared<Inventory>()), m_location(0), m_parser_id(0),
+    m_spawn_room(0)
 {
     m_hp[0] = m_hp[1] = 100;
 }
@@ -153,6 +155,7 @@ uint32_t Mobile::load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id
         m_location = query.getColumn("location").getUInt();
         if (!query.isColumnNull("name")) m_name = query.getColumn("name").getString();
         if (!query.isColumnNull("parser_id")) m_parser_id = query.getColumn("parser_id").getInt();
+        if (!query.isColumnNull("spawn_room")) m_spawn_room = query.getColumn("spawn_room").getUInt();
         m_species = query.getColumn("species").getString();
         if (!query.isColumnNull("tags")) StrX::string_to_tags(query.getColumn("tags").getString(), m_tags);
     }
@@ -244,8 +247,8 @@ uint32_t Mobile::save(std::shared_ptr<SQLite::Database> save_db)
     const uint32_t equipment_id = m_equipment->save(save_db);
 
     const uint32_t sql_id = core()->sql_unique_id();
-    SQLite::Statement query(*save_db, "INSERT INTO mobiles ( action_timer, equipment, gender, hp, hp_max, inventory, location, name, parser_id, species, sql_id, tags ) "
-        "VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
+    SQLite::Statement query(*save_db, "INSERT INTO mobiles ( action_timer, equipment, gender, hp, hp_max, inventory, location, name, parser_id, spawn_room, species, sql_id, tags ) "
+        "VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
     if (m_action_timer) query.bind(1, m_action_timer);
     if (equipment_id) query.bind(2, equipment_id);
     if (m_gender != Gender::IT) query.bind(3, static_cast<int>(m_gender));
@@ -255,10 +258,11 @@ uint32_t Mobile::save(std::shared_ptr<SQLite::Database> save_db)
     query.bind(7, m_location);
     if (m_name.size()) query.bind(8, m_name);
     if (m_parser_id) query.bind(9, m_parser_id);
-    query.bind(10, m_species);
-    query.bind(11, sql_id);
+    if (m_spawn_room) query.bind(10, m_spawn_room);
+    query.bind(11, m_species);
+    query.bind(12, sql_id);
     const std::string tags = StrX::tags_to_string(m_tags);
-    if (tags.size()) query.bind(12, tags);
+    if (tags.size()) query.bind(13, tags);
     query.exec();
     return sql_id;
 }
@@ -286,6 +290,9 @@ void Mobile::set_location(const std::string &room_id)
 
 // Sets the name of this Mobile.
 void Mobile::set_name(const std::string &name) { m_name = name; }
+
+// Sets this Mobile's spawn room.
+void Mobile::set_spawn_room(uint32_t id) { m_spawn_room = id; }
 
 // Sets the species of this Mobile.
 void Mobile::set_species(const std::string &species) { m_species = species; }

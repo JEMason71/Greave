@@ -231,6 +231,14 @@ bool TimeWeather::pass_time(float seconds)
             change_happened = show_weather_messages;
         }
         if (change_happened) core()->message(weather_message_colour() + weather_msg.substr(1), Show::WAITING, Wake::NEVER);
+
+        // Scan through all active rooms, respawning NPCs if needed.
+        const auto active_rooms = core()->world()->active_rooms();
+        for (auto room_id : active_rooms)
+        {
+            const auto room = core()->world()->get_room(room_id);
+            room->respawn_mobs();
+        }
     }
 
     return true;
@@ -341,8 +349,11 @@ void TimeWeather::trigger_event(TimeWeather::Season season, std::string *message
     else core()->message(weather_message_colour() + time_message, Show::WAITING, Wake::NEVER);
 }
 
+// Returns the total amount of seconds that passed in the game.
+uint32_t TimeWeather::time_passed() const { return m_time_passed; }
+
 // Checks how much time has passed since a given time integer. Handles integer overflow loops.
-uint32_t TimeWeather::time_passed(uint32_t since) const
+uint32_t TimeWeather::time_passed_since(uint32_t since) const
 {
     // If the total time hasn't looped yet, no problem! This is easy!
     if (since <= m_time_passed) return m_time_passed - since;
