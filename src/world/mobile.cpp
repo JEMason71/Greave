@@ -159,6 +159,7 @@ bool Mobile::is_dead() const { return m_hp[0] <= 0; }
 // Is this Mobile hostile to the player?
 bool Mobile::is_hostile() const
 {
+    if (tag(MobileTag::AggroOnSight)) return true;
     for (auto h : m_hostility)
         if (h == 0) return true;
     return false;

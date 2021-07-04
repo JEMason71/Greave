@@ -11,6 +11,7 @@
 #include "world/world.hpp"
 
 
+const uint32_t  AI::AGGRO_CHANCE =  60;     // 1 in X chance of starting a fight.
 const uint32_t  AI::TRAVEL_CHANCE = 300;    // 1 in X chance of traveling to another room.
 
 
@@ -18,7 +19,9 @@ const uint32_t  AI::TRAVEL_CHANCE = 300;    // 1 in X chance of traveling to ano
 void AI::tick_mob(std::shared_ptr<Mobile> mob, uint32_t)
 {
     auto rng = core()->rng();
-    auto room = core()->world()->get_room(mob->location());
+    const uint32_t location = mob->location();
+    const uint32_t player_location = core()->world()->player()->location();
+    auto room = core()->world()->get_room(location);
 
     // Scan the Mobile's hostility vector, looking for anyone they're hostile towards.
     std::shared_ptr<Mobile> attack_target = nullptr;
@@ -42,6 +45,12 @@ void AI::tick_mob(std::shared_ptr<Mobile> mob, uint32_t)
     if (attack_target)
     {
         Melee::attack(mob, attack_target);
+        return;
+    }
+
+    if (rng->rnd(AGGRO_CHANCE) == 1 && location == player_location)
+    {
+        Melee::attack(mob, core()->world()->player());
         return;
     }
 
