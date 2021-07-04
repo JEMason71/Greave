@@ -18,6 +18,8 @@
 #include "world/world.hpp"
 
 
+const unsigned int  World::ROOM_SCAN_DISTANCE = 10; // The distance to scan for active rooms.
+
 // Lookup table for converting DamageType text names into enums.
 const std::map<std::string, DamageType> World::DAMAGE_TYPE_MAP = { { "acid", DamageType::ACID }, { "ballistic", DamageType::BALLISTIC }, { "crushing", DamageType::CRUSHING },
     { "edged", DamageType::EDGED }, { "explosive", DamageType::EXPLOSIVE }, { "energy", DamageType::ENERGY }, { "kinetic", DamageType::KINETIC },
@@ -88,6 +90,22 @@ World::World() : m_player(std::make_shared<Player>()), m_time_weather(std::make_
     load_anatomy_pool();
     load_generic_descs();
     load_lists();
+}
+
+// Attempts to scan a room for the active rooms list. Only for internal use with recalc_active_rooms().
+void World::active_room_scan(uint32_t target, uint32_t depth)
+{
+    if (m_active_rooms.count(target)) return;       // Ignore any room already on the active list.
+
+    const auto room = get_room(target);
+    m_active_rooms.insert(target);                  // Add this room to the active list.
+    if (depth + 1 >= ROOM_SCAN_DISTANCE) return;    // Just stop here if we're past the scan limit.
+    for (unsigned int i = 0; i < Room::ROOM_LINKS_MAX; i++)
+    {
+        if (room->fake_link(i)) continue;           // Ignore empty links, links to FALSE_ROOM, etc.
+        const uint32_t link = room->link(i);
+        active_room_scan(link, depth + 1);
+    }
 }
 
 // Adds a Mobile to the world.
@@ -199,7 +217,15 @@ void World::load(std::shared_ptr<SQLite::Database> save_db)
 {
     core()->messagelog()->load(save_db);
     for (auto room : m_room_pool)
+    {
         room.second->load(save_db);
+        // Check if the Room has the SaveActive tag; if so, add it to the active rooms list, then remove the tag.
+        if (room.second->tag(RoomTag::SaveActive))
+        {
+            m_active_rooms.insert(room.first);
+            room.second->clear_tag(RoomTag::SaveActive);
+        }
+    }
     const uint32_t player_sql_id = m_player->load(save_db, 0);
     m_time_weather->load(save_db);
 
@@ -750,6 +776,22 @@ void World::purge_mobs()
     }
 }
 
+// Recalculates the list of active rooms.
+void World::recalc_active_rooms()
+{
+    std::set<uint32_t> old_active_rooms = m_active_rooms;   // Make a copy of the currently active rooms, so we can see what changed.
+    m_active_rooms.clear();
+    active_room_scan(player()->location(), 0);
+
+    // Ping any rooms that have become active.
+    for (auto room : m_active_rooms)
+        if (!old_active_rooms.count(room)) get_room(room)->activate();
+
+    // Ping any rooms that have become inactive.
+    for (auto room : old_active_rooms)
+        if (!m_active_rooms.count(room)) get_room(room)->deactivate();
+}
+
 // Removes a Mobile from the world.
 void World::remove_mobile(std::shared_ptr<Mobile> mob)
 {
@@ -763,6 +805,9 @@ void World::remove_mobile(std::shared_ptr<Mobile> mob)
     }
     core()->guru()->nonfatal("Attempt to remove mobile that does not exist in the world: " + mob->name(), Guru::ERROR);
 }
+
+// Checks if a room is currently active.
+bool World::room_active(uint32_t id) const { return m_active_rooms.count(id); }
 
 // Checks if a specified room ID exists.
 bool World::room_exists(const std::string &str) const { return m_room_pool.count(StrX::hash(str)); }
@@ -782,7 +827,13 @@ void World::save(std::shared_ptr<SQLite::Database> save_db)
     m_time_weather->save(save_db);
 
     for (auto room : m_room_pool)
+    {
+        // Temporarily tag the room with SaveActive, if it's in the active rooms list.
+        const bool is_active = room_active(room.first);
+        if (is_active) room.second->set_tag(RoomTag::SaveActive);
         room.second->save(save_db);
+        if (is_active) room.second->clear_tag(RoomTag::SaveActive);
+    }
     for (auto mob : m_mobiles)
         mob->save(save_db);
 }

@@ -78,6 +78,12 @@ Room::Room(std::string new_id) : m_inventory(std::make_shared<Inventory>()), m_l
         m_links[e] = 0;
 }
 
+// This Room was previously inactive, and has now become active.
+void Room::activate()
+{
+    // nothing happens here yet
+}
+
 // Adds a scar to this room.
 void Room::add_scar(ScarType type, int intensity)
 {
@@ -120,6 +126,12 @@ void Room::clear_tag(RoomTag the_tag)
 {
     if (!(m_tags.count(the_tag) > 0)) return;
     m_tags.erase(the_tag);
+}
+
+// This Room was previously active, and has now become inactive.
+void Room::deactivate()
+{
+    // nothing happens here yet
 }
 
 // Returns the Room's description.
@@ -175,6 +187,9 @@ bool Room::fake_link(Direction dir) const
     if (!link_id || link_id == FALSE_ROOM || link_id == UNFINISHED || link_id == BLOCKED) return true;
     else return false;
 }
+
+// As above, but takes an integer link instead of an enum.
+bool Room::fake_link(uint8_t dir) const { return fake_link(static_cast<Direction>(dir)); }
 
 // Retrieves the unique hashed ID of this Room.
 uint32_t Room::id() const { return m_id; }

@@ -66,6 +66,7 @@ enum class RoomTag : uint16_t {
     _None = 0,              // Do not use this tag, it's just a marker to start the tags below counting from 1.
 
     Explored,               // The player has visited this room before.
+    SaveActive,             // An extra-temporary tag used by the save system, to keep track of active rooms when saving/loading the game.
 
 
     // ****************************************************************************************************
@@ -130,14 +131,17 @@ public:
     static const uint32_t       UNFINISHED;             // Hashed value for UNFINISHED, which is used to mark room exits as unfinished and to be completed later.
 
                 Room(std::string new_id = "");                          // Constructor, sets the Room's ID hash.
+    void        activate();                                             // This Room was previously inactive, and has now become active.
     void        add_scar(ScarType type, int intensity);                 // Adds a scar to this room.
     void        clear_link_tag(uint8_t id, LinkTag the_tag);            // Clears a tag on this Room's link.
     void        clear_link_tag(Direction dir, LinkTag the_tag);         // As above, but with a Direction enum.
     void        clear_tag(RoomTag the_tag);                             // Clears a tag on this Room.
+    void        deactivate();                                           // This Room was previously active, and has now become inactive.
     std::string desc() const;                                           // Returns the Room's description.
     std::string door_name(Direction dir) const;                         // Returns the name of a door in the specified direction.
     std::string door_name(uint8_t dir) const;                           // As above, but for non-enum integer directions.
     bool        fake_link(Direction dir) const;                         // Checks if a room link is fake (e.g. to FALSE_ROOM or UNFINISHED).
+    bool        fake_link(uint8_t dir) const;                           // As above, but takes an integer link instead of an enum.
     uint32_t    id() const;                                             // Retrieves the unique hashed ID of this Room.
     const std::shared_ptr<Inventory>    inv() const;                    // Returns a pointer to the Room's Inventory.
     bool        key_can_unlock(std::shared_ptr<Item> key, Direction dir);   // Checks if a key can unlock a door in the specified direction.

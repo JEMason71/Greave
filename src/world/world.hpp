@@ -43,7 +43,9 @@ public:
     void            new_game();                                                 // Sets up for a new game.
     const std::shared_ptr<Player>   player() const;                             // Retrieves a pointer to the Player object.
     void            purge_mobs();                                               // Purges null entries from the active Mobiles. Only call this from the main loop, for safety.
+    void            recalc_active_rooms();                                      // Recalculates the list of active rooms.
     void            remove_mobile(std::shared_ptr<Mobile> mob);                 // Removes a Mobile from the world.
+    bool            room_active(uint32_t id) const;                             // Checks if a room is currently active.
     bool            room_exists(const std::string &str) const;                  // Checks if a specified room ID exists.
     void            save(std::shared_ptr<SQLite::Database> save_db);            // Saves the World and all things within it.
     const std::shared_ptr<TimeWeather> time_weather() const;                    // Gets a pointer to the TimeWeather object.
@@ -57,12 +59,14 @@ private:
     static const std::map<std::string, uint8_t>     LIGHT_LEVEL_MAP;    // Lookup table for converting textual light levels (e.g. "bright") to integer values.
     static const std::map<std::string, LinkTag>     LINK_TAG_MAP;       // Lookup table for converting LinkTag text names into enums.
     static const std::map<std::string, MobileTag>   MOBILE_TAG_MAP;     // Lookup table for converting MobileTag text names into enums.
+    static const unsigned int                       ROOM_SCAN_DISTANCE; // The distance to scan for active rooms.
     static const std::map<std::string, RoomTag>     ROOM_TAG_MAP;       // Lookup table for converting RoomTag text names into enums.
     static const std::map<std::string, Security>    SECURITY_MAP;       // Lookup table for converting textual room security (e.g. "anarchy") to enum values.
     static const std::set<std::string>              VALID_YAML_KEYS_AREAS;  // A list of all valid keys in area YAML files.
     static const std::set<std::string>              VALID_YAML_KEYS_ITEMS;  // A list of all valid keys in item YAML files.
     static const std::set<std::string>              VALID_YAML_KEYS_MOBS;   // A list of all valid keys in mobile YAML files.
 
+    std::set<uint32_t>                              m_active_rooms;     // Rooms relatively close to the player, where AI/respawning/etc. will be active.
     std::map<std::string, std::vector<std::shared_ptr<BodyPart>>>   m_anatomy_pool; // The anatomy pool, containing body part data for Mobiles.
     std::map<std::string, std::string>              m_generic_descs;    // Generic descriptions for items and rooms, where multiple share a description.
     std::map<uint32_t, std::shared_ptr<Item>>       m_item_pool;        // All the Item templates in the game.
@@ -74,6 +78,7 @@ private:
     std::map<uint32_t, std::shared_ptr<Room>>       m_room_pool;        // All the Room templates in the game.
     std::shared_ptr<TimeWeather>                    m_time_weather;     // The World's TimeWeather object, for tracking... well, the time and weather.
 
+    void    active_room_scan(uint32_t target, uint32_t depth);  // Attempts to scan a room for the active rooms list. Only for internal use with recalc_active_rooms().
     void    load_anatomy_pool();    // Loads the anatomy YAML data into memory.
     void    load_generic_descs();   // Loads the generic descriptions YAML data into memory.
     void    load_item_pool();       // Loads the Item YAML data into memory.

@@ -271,7 +271,11 @@ void Mobile::set_hp(int hp, int hp_max)
 }
 
 // Sets the location of this Mobile with a Room ID.
-void Mobile::set_location(uint32_t room_id) { m_location = room_id; }
+void Mobile::set_location(uint32_t room_id)
+{
+    m_location = room_id;
+    if (is_player()) core()->world()->recalc_active_rooms();
+}
 
 // As above, but with a string Room ID.
 void Mobile::set_location(const std::string &room_id)
