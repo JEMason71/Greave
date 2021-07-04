@@ -77,7 +77,7 @@ public:
     std::string         species() const;                            // Checks the species of this Mobile.
     bool                tag(MobileTag the_tag) const;               // Checks if a MobileTag is set on this Mobile.
 
-private:
+protected:
     static const uint32_t   BASE_CARRY_WEIGHT;  // The maximum amount of weight a Mobile can carry, before modifiers.
 
     float               m_action_timer; // When this timer reaches 0, the Mobile is able to act. Any actions it takes detract from the timer.

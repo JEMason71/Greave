@@ -270,7 +270,7 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
     // Check if a target needs to be parsed.
     if (pcd.target_match)
     {
-        for (unsigned int i = 0; i < std::min(pcd.words.size(), words.size()); i++)
+        for (unsigned int i = 0; i < pcd.words.size(); i++)
         {
             uint32_t target_flags = 0;
             const std::string pcd_word = pcd.words.at(i);
@@ -280,6 +280,35 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             if (pcd_word.find("mobile") != std::string::npos) target_flags ^= ParserTarget::TARGET_MOBILE;
             if (!target_flags) continue;
 
+            if (words.size() <= i)
+            {
+                // Normally we'd just skip trying to parse this if the player hasn't given enough input.
+                // BUT...! For target-only matches, there's a special exception. This allows the player
+                // to do something like "kill goblin", then just type "kill" again to keep attacking
+                // the same target without naming it over and over.
+                if (target_flags == ParserTarget::TARGET_MOBILE)
+                {
+                    // Check if the player has a *valid* Mobile targetted already. mob_target() will
+                    // return 0 if there is no target, no valid target, or the valid target is no
+                    // longer in the same room, which saves us some effort here.
+                    uint32_t target_id = core()->world()->player()->mob_target();
+                    if (!target_id) continue;
+
+                    for (unsigned int i = 0; i < core()->world()->mob_count(); i++)
+                    {
+                        const auto mob = core()->world()->mob_vec(i);
+                        if (mob->id() == target_id)
+                        {
+                            parsed_target = i;
+                            parsed_target_type = ParserTarget::TARGET_MOBILE;
+                            core()->message("{0}{m}(" + mob->name(Mobile::NAME_FLAG_THE | Mobile::NAME_FLAG_NO_COLOUR) + ")");
+                            break;
+                        }
+                    }
+                }
+                continue;
+            }
+
             // Pick out the words used to match the target.
             std::vector<std::string> target_words(words.size() - i);
             std::copy(words.begin() + i, words.end(), target_words.begin());
@@ -288,6 +317,18 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             ParserSearchResult psr = parse_target(target_words, static_cast<ParserTarget>(target_flags));
             parsed_target = psr.target;
             parsed_target_type = psr.type;
+
+            // Auto-target matching only applies to targets that are mobile-only:
+            if (target_flags == ParserTarget::TARGET_MOBILE)
+            {
+                // Clear any existing auto-target, if the player enters something uncertain.
+                if (psr.type == ParserTarget::TARGET_NONE || psr.type == ParserTarget::TARGET_UNCLEAR)
+                    core()->world()->player()->set_mob_target(0);
+
+                // If a target was picked, update the player's auto-target.
+                else if (psr.type == ParserTarget::TARGET_MOBILE)
+                    core()->world()->player()->set_mob_target(core()->world()->mob_vec(psr.target)->id());
+            }
         }
     }
 
@@ -296,9 +337,9 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
     {
         case ParserCommand::NONE: break;
         case ParserCommand::ATTACK:
-            if (!words.size()) core()->message("{y}Please specify {Y}what you want to attack{y}.");
+            if (parsed_target_type == ParserTarget::TARGET_MOBILE) Melee::attack(player, core()->world()->mob_vec(parsed_target));
+            else if (!words.size()) core()->message("{y}Please specify {Y}what you want to attack{y}.");
             else if (parsed_target_type == ParserTarget::TARGET_NONE) core()->message("{y}You don't see any such {Y}" + collapsed_words + " {y}here.");
-            else if (parsed_target_type == ParserTarget::TARGET_MOBILE) Melee::attack(player, core()->world()->mob_vec(parsed_target));
             break;
         case ParserCommand::DIRECTION:
             ActionTravel::travel(player, parse_direction(first_word), confirm);
