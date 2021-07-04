@@ -9,6 +9,8 @@
 #include "world/mobile.hpp"
 
 
+const float Combat::BASE_ATTACK_SPEED_MULTIPLIER =  10.0f;  // The base speed multiplier for all attacks.
+
 // Weapon type damage modifiers to unarmoured, light, medium and heavy armour targets.
 const float Combat::DAMAGE_MODIFIER_ACID[4] =       { 1.8f, 1.3f, 1.2f, 1.0f };
 const float Combat::DAMAGE_MODIFIER_BALLISTIC[4] =  { 1.3f, 1.3f, 1.2f, 1.0f };

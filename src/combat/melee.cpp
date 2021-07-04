@@ -45,7 +45,7 @@ bool Melee::attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mobile> def
     if (!main_can_attack[0] && !off_can_attack[0]) return false;        // Should be impossible, but can't hurt to be safe.
 
     const bool unarmed_only = (wield_type[0] == WieldType::UNARMED || wield_type[0] == WieldType::UNARMED_PLUS_SHIELD);
-    float attack_speed = attacker->attack_speed();
+    const float attack_speed = attacker->attack_speed() * BASE_ATTACK_SPEED_MULTIPLIER;
 
     bool attacked = false;
     if (main_can_attack[0])
