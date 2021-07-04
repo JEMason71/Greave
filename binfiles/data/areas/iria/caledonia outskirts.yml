@@ -146,6 +146,7 @@ NORTH_CALEDONIA_3:
   light: wilderness
   name: [ North of Caledonia, walls ]
   security: anarchy
+  spawn_mobs: GOBLIN_SCOUT
   tags: [ DigOK, EastTripleLength, NorthDoubleLength, WestTripleLength, Wide ]
 
 NORTH_CALEDONIA_4:

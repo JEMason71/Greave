@@ -71,7 +71,7 @@ const std::map<std::string, Security>   World::SECURITY_MAP = { { "anarchy", Sec
     { "sanctuary", Security::SANCTUARY }, { "inaccessible", Security::INACCESSIBLE } };
 
 // A list of all valid keys in area YAML files.
-const std::set<std::string>     World::VALID_YAML_KEYS_AREAS = { "desc", "exits", "light", "name", "security", "tags" };
+const std::set<std::string>     World::VALID_YAML_KEYS_AREAS = { "desc", "exits", "light", "name", "security", "spawn_mobs", "tags" };
 
 // A list of all valid keys in item YAML files.
 const std::set<std::string>     World::VALID_YAML_KEYS_ITEMS = { "block_mod", "crit", "damage_type", "desc", "dodge_mod", "metadata", "name", "parry_mod", "power", "rare", "slot",
@@ -741,6 +741,17 @@ void World::load_room_pool()
                         }
                     }
                 }
+            }
+
+            // Mobile spawns, if any.
+            if (room_data["spawn_mobs"])
+            {
+                if (room_data["spawn_mobs"].IsSequence())
+                {
+                    for (auto e : room_data["spawn_mobs"])
+                        new_room->add_mob_spawn(e.as<std::string>());
+                }
+                else new_room->add_mob_spawn(room_data["spawn_mobs"].as<std::string>());
             }
 
             // Add the new Room to the room pool.

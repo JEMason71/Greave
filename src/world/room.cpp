@@ -65,8 +65,8 @@ const std::vector<std::vector<std::string>> Room::ROOM_SCAR_DESCS = {
 };
 
 // The SQL table construction string for the saved rooms.
-const std::string   Room::SQL_ROOMS =   "CREATE TABLE rooms ( sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, id INTEGER UNIQUE NOT NULL, scars TEXT, tags TEXT, link_tags TEXT, "
-    "inventory INTEGER UNIQUE )";
+const std::string   Room::SQL_ROOMS =   "CREATE TABLE rooms ( sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, id INTEGER UNIQUE NOT NULL, scars TEXT, spawn_mobs TEXT, tags TEXT, "
+    "link_tags TEXT, inventory INTEGER UNIQUE )";
 
 
 Room::Room(std::string new_id) : m_inventory(std::make_shared<Inventory>()), m_light(0), m_security(Security::ANARCHY)
@@ -109,6 +109,9 @@ void Room::add_scar(ScarType type, int intensity)
         m_scar_intensity.push_back(total_intensity);
     }
 }
+
+// Adds a Mobile or List to the mobile spawn list.
+void Room::add_mob_spawn(const std::string &id) { m_spawn_mobs.push_back(id); }
 
 // Clears a tag on this Room.
 void Room::clear_link_tag(uint8_t id, LinkTag the_tag)
@@ -318,6 +321,13 @@ void Room::load(std::shared_ptr<SQLite::Database> save_db)
             }
         }
         if (!query.isColumnNull("tags")) StrX::string_to_tags(query.getColumn("tags").getString(), m_tags);
+
+        // Make sure this goes *after* loading tags.
+        if (tag(RoomTag::MobSpawnListChanged))
+        {
+            m_spawn_mobs.clear();
+            if (!query.isColumnNull("spawn_mobs")) m_spawn_mobs = StrX::string_explode(query.getColumn("spawn_mobs").getString(), " ");
+        }
     }
     if (inventory_id) m_inventory->load(save_db, inventory_id);
 }
@@ -340,7 +350,7 @@ void Room::save(std::shared_ptr<SQLite::Database> save_db)
 
     if (!tags.size() && link_tags == ",,,,,,,,," && !m_scar_type.size()) return;
 
-    SQLite::Statement room_query(*save_db, "INSERT INTO rooms (id, inventory, link_tags, scars, sql_id, tags) VALUES (?, ?, ?, ?, ?, ?)");
+    SQLite::Statement room_query(*save_db, "INSERT INTO rooms (id, inventory, link_tags, scars, spawn_mobs, sql_id, tags) VALUES (?, ?, ?, ?, ?, ?, ?)");
     room_query.bind(1, m_id);
     if (inventory_id) room_query.bind(2, inventory_id);
     if (link_tags != ",,,,,,,,,") room_query.bind(3, link_tags);
@@ -354,8 +364,9 @@ void Room::save(std::shared_ptr<SQLite::Database> save_db)
         }
         room_query.bind(4, scar_str);
     }
-    room_query.bind(5, core()->sql_unique_id());
-    if (tags.size()) room_query.bind(6, tags);
+    if (tag(RoomTag::MobSpawnListChanged) && m_spawn_mobs.size()) room_query.bind(5, StrX::collapse_vector(m_spawn_mobs));
+    room_query.bind(6, core()->sql_unique_id());
+    if (tags.size()) room_query.bind(7, tags);
     room_query.exec();
 }
 

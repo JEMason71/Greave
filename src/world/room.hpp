@@ -66,6 +66,7 @@ enum class RoomTag : uint16_t {
     _None = 0,              // Do not use this tag, it's just a marker to start the tags below counting from 1.
 
     Explored,               // The player has visited this room before.
+    MobSpawnListChanged,    // The mob spawn list on this room has changed.
     SaveActive,             // An extra-temporary tag used by the save system, to keep track of active rooms when saving/loading the game.
 
 
@@ -133,6 +134,7 @@ public:
                 Room(std::string new_id = "");                          // Constructor, sets the Room's ID hash.
     void        activate();                                             // This Room was previously inactive, and has now become active.
     void        add_scar(ScarType type, int intensity);                 // Adds a scar to this room.
+    void        add_mob_spawn(const std::string &id);                   // Adds a Mobile or List to the mobile spawn list.
     void        clear_link_tag(uint8_t id, LinkTag the_tag);            // Clears a tag on this Room's link.
     void        clear_link_tag(Direction dir, LinkTag the_tag);         // As above, but with a Direction enum.
     void        clear_tag(RoomTag the_tag);                             // Clears a tag on this Room.
@@ -178,6 +180,7 @@ private:
     std::vector<uint8_t>        m_scar_intensity;               // The intensity of the room scars, if any.
     std::vector<ScarType>       m_scar_type;                    // The type of room scars, if any.
     Security                    m_security;                     // The security rating for this Room.
+    std::vector<std::string>    m_spawn_mobs;                   // The list of Mobiles to spawn here.
     std::set<RoomTag>           m_tags;                         // Any and all RoomTags on this Room.
     std::set<LinkTag>           m_tags_link[ROOM_LINKS_MAX];    // Any and all LinkTags on this Room's links.
 };
