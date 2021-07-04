@@ -140,11 +140,11 @@ void Core::load(unsigned int save_slot)
 // The main game loop.
 void Core::main_loop()
 {
+    const auto player = m_world->player();
     // bröther may I have some lööps
-    while (true)
+    do
     {
         // For checking if the light level has changed due to something that happened this turn.
-        const auto player = m_world->player();
         const uint32_t location = player->location();
         const auto room = m_world->get_room(location);
         int old_light = room->light(player);
@@ -166,6 +166,13 @@ void Core::main_loop()
 
         // Purge any null entries from the World's active Mobiles.
         m_world->purge_mobs();
+    } while (!player->is_dead());
+
+    while (true)
+    {
+        message("{R}You are dead! Type {M}quit {R}when you are ready to end the game.");
+        const std::string input = StrX::str_tolower(m_message_log->render_message_log());
+        if (input == "quit") return;
     }
 }
 
