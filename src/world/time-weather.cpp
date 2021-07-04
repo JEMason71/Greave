@@ -13,12 +13,20 @@
 #include "world/world.hpp"
 
 
+// SQL table construction string for the heartbeat timers.
+const std::string TimeWeather::SQL_HEARTBEATS = "CREATE TABLE heartbeats ( id INTEGER PRIMARY KEY UNIQUE NOT NULL, count INTEGER NOT NULL )";
+
 // SQL table construction string for time and weather data.
 const std::string TimeWeather::SQL_TIME_WEATHER = "CREATE TABLE time_weather ( day INTEGER NOT NULL, moon INTEGER NOT NULL, subsecond REAL NOT NULL, "
     "time INTEGER PRIMARY KEY UNIQUE NOT NULL, time_total INTEGER NOT NULL, weather INTEGER NOT NULL )";
 
 const int   TimeWeather::LUNAR_CYCLE_DAYS =     29;     // How many days are in a lunar cycle?
 const float TimeWeather::UNINTERRUPTABLE_TIME = 5.0f;   // The maximum amount of time for an action that cannot be interrupted.
+
+// The heartbeat timers, for triggering various events at periodic intervals.
+const uint32_t TimeWeather::HEARTBEAT_TIMERS[TimeWeather::Heartbeat::_TOTAL] = {
+    10 * Time::MINUTE,  // MOBILE_SPAWN, used to trigger Mobiles (re)spawning.
+};
 
 
 // Constructor, sets default values.
@@ -38,6 +46,10 @@ TimeWeather::TimeWeather() : m_day(80), m_moon(1), m_time(39660), m_time_passed(
         }
         else m_tw_string_map.insert(std::pair<std::string, std::string>(id, text));
     }
+
+    // Reset all the heartbeats.
+    for (unsigned int h = 0; h < TimeWeather::Heartbeat::_TOTAL; h++)
+        m_heartbeats[h] = HEARTBEAT_TIMERS[h];
 }
 
 // Gets the current season.
@@ -104,6 +116,18 @@ TimeWeather::Weather TimeWeather::fix_weather(TimeWeather::Weather weather, Time
 // Gets the current weather, runs fix_weather() internally.
 TimeWeather::Weather TimeWeather::get_weather() const { return fix_weather(m_weather, current_season()); }
 
+// Checks if a given heartbeat is ready to trigger, and resets its counter.
+bool TimeWeather::heartbeat_ready(Heartbeat beat)
+{
+    if (beat >= Heartbeat::_TOTAL) throw std::runtime_error("Invalid heartbeat ID!");
+    if (m_heartbeats[beat] >= HEARTBEAT_TIMERS[beat])
+    {
+        m_heartbeats[beat] = 0;
+        return true;
+    }
+    return false;
+}
+
 // Checks whether it's light or dark right now.
 TimeWeather::LightDark TimeWeather::light_dark() const
 {
@@ -128,6 +152,14 @@ void TimeWeather::load(std::shared_ptr<SQLite::Database> save_db)
         m_weather = static_cast<Weather>(query.getColumn("weather").getInt());
     }
     else throw std::runtime_error("Could not load time and weather data!");
+
+    SQLite::Statement heartbeat_query(*save_db, "SELECT * FROM heartbeats");
+    while (heartbeat_query.executeStep())
+    {
+        uint32_t id = heartbeat_query.getColumn("id").getUInt();
+        if (id >= Heartbeat::_TOTAL) throw std::runtime_error("Invalid heartbeat data!");
+        m_heartbeats[id] = heartbeat_query.getColumn("count").getUInt();
+    }
 }
 
 // Returns the name of the current month.
@@ -208,8 +240,13 @@ bool TimeWeather::pass_time(float seconds)
         }
         old_hp = hp;
 
-        // Update the time of day and weather.
         m_time_passed++;    // The total time passed in the game. This will loop every 136 years, but that's not a problem; see time_passed().
+
+        // Increase all heartbeat timers.
+        for (unsigned int h = 0; h < Heartbeat::_TOTAL; h++)
+            m_heartbeats[h]++;
+
+        // Update the time of day and weather.
         const bool show_weather_messages = (!indoors || can_see_outside);
         TimeOfDay old_time_of_day = time_of_day(true);
         int old_time = m_time;
@@ -233,11 +270,14 @@ bool TimeWeather::pass_time(float seconds)
         if (change_happened) core()->message(weather_message_colour() + weather_msg.substr(1), Show::WAITING, Wake::NEVER);
 
         // Scan through all active rooms, respawning NPCs if needed.
-        const auto active_rooms = core()->world()->active_rooms();
-        for (auto room_id : active_rooms)
+        if (heartbeat_ready(Heartbeat::MOBILE_SPAWN))
         {
-            const auto room = core()->world()->get_room(room_id);
-            room->respawn_mobs();
+            const auto active_rooms = core()->world()->active_rooms();
+            for (auto room_id : active_rooms)
+            {
+                const auto room = core()->world()->get_room(room_id);
+                room->respawn_mobs();
+            }
         }
     }
 
@@ -255,6 +295,14 @@ void TimeWeather::save(std::shared_ptr<SQLite::Database> save_db) const
     query.bind(5, m_time_passed);
     query.bind(6, static_cast<int>(m_weather));
     query.exec();
+
+    for (unsigned int h = 0; h < Heartbeat::_TOTAL; h++)
+    {
+        SQLite::Statement heartbeat_query(*save_db, "INSERT INTO heartbeats ( id, count ) VALUES ( ?, ? )");
+        heartbeat_query.bind(1, h);
+        heartbeat_query.bind(2, m_heartbeats[h]);
+        heartbeat_query.exec();
+    }
 }
 
 // Converts a season enum to a string.

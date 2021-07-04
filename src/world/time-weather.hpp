@@ -11,6 +11,7 @@ namespace SQLite { class Database; }    // defined in 3rdparty/SQLiteCpp/Databas
 class TimeWeather
 {
 public:
+    enum Heartbeat : uint32_t { MOBILE_SPAWN, _TOTAL };
     enum class LightDark : uint8_t { LIGHT, DARK, NIGHT };
     enum class LunarPhase : uint8_t { NEW, WAXING_CRESCENT, FIRST_QUARTER, WAXING_GIBBOUS, FULL, WANING_GIBBOUS, THIRD_QUARTER, WANING_CRESCENT };
     enum class Season : uint8_t { AUTO, WINTER, SPRING, SUMMER, AUTUMN };
@@ -18,6 +19,7 @@ public:
     enum class Weather : uint8_t { BLIZZARD, STORMY, RAIN, CLEAR, FAIR, OVERCAST, FOG, LIGHTSNOW, SLEET };
     enum Time { SECOND = 1, MINUTE = 60, HOUR = 3600, DAY = 86400 };
 
+    static const std::string    SQL_HEARTBEATS;     // SQL table construction string for the heartbeat timers.
     static const std::string    SQL_TIME_WEATHER;   // SQL table construction string for time and weather data.
 
                 TimeWeather();                      // Constructor, sets default values.
@@ -46,11 +48,16 @@ private:
     static const int    LUNAR_CYCLE_DAYS;       // How many days are in a lunar cycle?
     static const float  UNINTERRUPTABLE_TIME;   // The maximum amount of time for an action that cannot be interrupted.
 
+    // The heartbeat timers, for triggering various events at periodic intervals.
+    static const uint32_t   HEARTBEAT_TIMERS[Heartbeat::_TOTAL];
+
     Weather     fix_weather(Weather weather, Season season) const;  // Fixes weather for a specified season, to account for unavailable weather types.
+    bool        heartbeat_ready(Heartbeat beat);                    // Checks if a given heartbeat is ready to trigger, and resets its counter.
     void        trigger_event(Season season, std::string *message_to_append, bool silent);  // Triggers a time-change event.
     std::string weather_desc(Season season) const;                  // Returns a weather description for the current time/weather, based on the specified season.
 
     int         m_day;          // The current day of the year.
+    uint32_t    m_heartbeats[Heartbeat::_TOTAL];    // The heartbeat timers, for triggering various events at periodic intervals.
     int         m_moon;         // The current moon phase.
     int         m_time;         // The time of day.
     uint32_t    m_time_passed;  // The total # of seconds that have passed since the game started. This will loop every ~136 years, see time_passed().
