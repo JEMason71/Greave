@@ -138,7 +138,9 @@ void Room::clear_tag(RoomTag the_tag)
 // This Room was previously active, and has now become inactive.
 void Room::deactivate()
 {
-    // nothing happens here yet
+    // Remove any and all scars on this room.
+    m_scar_intensity.clear();
+    m_scar_type.clear();
 }
 
 // Returns the Room's description.
