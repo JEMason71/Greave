@@ -25,7 +25,8 @@ const float TimeWeather::UNINTERRUPTABLE_TIME = 5.0f;   // The maximum amount of
 
 // The heartbeat timers, for triggering various events at periodic intervals.
 const uint32_t TimeWeather::HEARTBEAT_TIMERS[TimeWeather::Heartbeat::_TOTAL] = {
-    10 * Time::MINUTE,  // MOBILE_SPAWN, used to trigger Mobiles (re)spawning.
+    5 * Time::MINUTE,   // MOBILE_SPAWN, used to trigger Mobiles (re)spawning.
+    10 * Time::MINUTE,  // ROOM_SCARS, for decreasing the intensity of room scars.
 };
 
 
@@ -277,6 +278,17 @@ bool TimeWeather::pass_time(float seconds)
             {
                 const auto room = core()->world()->get_room(room_id);
                 room->respawn_mobs();
+            }
+        }
+
+        // Reduce room scars on active rooms.
+        if (heartbeat_ready(Heartbeat::ROOM_SCARS))
+        {
+            const auto active_rooms = core()->world()->active_rooms();
+            for (auto room_id : active_rooms)
+            {
+                const auto room = core()->world()->get_room(room_id);
+                room->decay_scars();
             }
         }
     }

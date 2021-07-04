@@ -143,6 +143,20 @@ void Room::deactivate()
     m_scar_type.clear();
 }
 
+// Reduces the intensity of any room scars present.
+void Room::decay_scars()
+{
+    for (unsigned int i = 0; i < m_scar_type.size(); i++)
+    {
+        if (--m_scar_intensity.at(i) == 0)
+        {
+            m_scar_intensity.erase(m_scar_intensity.begin() + i);
+            m_scar_type.erase(m_scar_type.begin() + i);
+            i--;
+        }
+    }
+}
+
 // Returns the Room's description.
 std::string Room::desc() const
 {

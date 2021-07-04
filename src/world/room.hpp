@@ -140,6 +140,7 @@ public:
     void        clear_link_tag(Direction dir, LinkTag the_tag);         // As above, but with a Direction enum.
     void        clear_tag(RoomTag the_tag);                             // Clears a tag on this Room.
     void        deactivate();                                           // This Room was previously active, and has now become inactive.
+    void        decay_scars();                                          // Reduces the intensity of any room scars present.
     std::string desc() const;                                           // Returns the Room's description.
     std::string door_name(Direction dir) const;                         // Returns the name of a door in the specified direction.
     std::string door_name(uint8_t dir) const;                           // As above, but for non-enum integer directions.
