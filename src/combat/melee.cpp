@@ -65,7 +65,13 @@ bool Melee::attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mobile> def
 // Performs an attack with a single weapon.
 void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mobile> defender, EquipSlot weapon, WieldType wield_type_attacker, WieldType wield_type_defender)
 {
-    defender->add_hostility(attacker->id());
+    if (defender->is_player())
+    {
+        // If the player does not yet have an automatic mob target, set it now.
+        if (!core()->world()->player()->mob_target()) core()->world()->player()->set_mob_target(attacker->id());
+    }
+    else defender->add_hostility(attacker->id());   // Only do this on NON-player defenders, because obviously the player doesn't use the hostility vector.
+
     std::shared_ptr<Item> weapon_ptr = attacker->equ()->get(weapon);
     if (!weapon_ptr) weapon_ptr = core()->world()->get_item("UNARMED_ATTACK");
     const std::shared_ptr<Item> def_weapon_main = defender->equ()->get(EquipSlot::HAND_MAIN);
