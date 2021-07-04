@@ -140,14 +140,17 @@ bool ActionTravel::travel(std::shared_ptr<Mobile> mob, Direction dir, bool confi
                 "{W}>", Show::ALWAYS, Wake::ALWAYS);
             else
             {
-                if (player_can_see) core()->message("{U}" + mob_name_a + " {U}lands badly nearby with a painful crunch!", Show::RESTING, Wake::RESTING);
-                else core()->message("{U}You hear the loud crunch of something landing badly nearby!", Show::RESTING, Wake::RESTING);
+                if (room_link == player_loc)
+                {
+                    if (player_can_see) core()->message("{U}" + mob_name_a + " {U}lands badly nearby with a painful crunch!", Show::RESTING, Wake::RESTING);
+                    else core()->message("{U}You hear the loud crunch of something landing badly nearby!", Show::RESTING, Wake::RESTING);
+                }
             }
             core()->world()->get_room(mob->location())->add_scar(ScarType::BLOOD, blood_intensity);
             if (mob->hp() <= 0)
             {
                 if (is_player) core()->message("{0}{M}Your bones are shattered from the impact, death is mercifully quick.", Show::ALWAYS, Wake::ALWAYS);
-                else if (player_can_see) core()->message("{U}" + mob_name_the + " is slain instantly from the impact!", Show::RESTING, Wake::RESTING);
+                else if (player_can_see && room_link == player_loc) core()->message("{U}" + mob_name_the + " is slain instantly from the impact!", Show::RESTING, Wake::RESTING);
             }
         }
         else if (is_player) core()->message("{g}Despite the distance fallen, you manage to land safely on your feet.");
