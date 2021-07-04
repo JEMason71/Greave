@@ -190,7 +190,7 @@ Parser::ParserSearchResult Parser::parse_target(const std::vector<std::string> &
     // Mobiles in the player's room.
     for (unsigned int i = 0; i < world->mob_count(); i++)
     {
-        const std::shared_ptr<Mobile> mob = world->mob(i);
+        const std::shared_ptr<Mobile> mob = world->mob_vec(i);
         if (mob->location() == player_location) candidates.push_back({0, StrX::str_tolower(mob->name(Item::NAME_FLAG_NO_COLOUR)), mob->parser_id(), i, ParserTarget::TARGET_MOBILE});
     }
 
@@ -298,7 +298,7 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
         case ParserCommand::ATTACK:
             if (!words.size()) core()->message("{y}Please specify {Y}what you want to attack{y}.");
             else if (parsed_target_type == ParserTarget::TARGET_NONE) core()->message("{y}You don't see any such {Y}" + collapsed_words + " {y}here.");
-            else if (parsed_target_type == ParserTarget::TARGET_MOBILE) Melee::attack(player, core()->world()->mob(parsed_target));
+            else if (parsed_target_type == ParserTarget::TARGET_MOBILE) Melee::attack(player, core()->world()->mob_vec(parsed_target));
             break;
         case ParserCommand::DIRECTION:
             ActionTravel::travel(player, parse_direction(first_word), confirm);

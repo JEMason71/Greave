@@ -7,7 +7,8 @@
 #include "core/strx.hpp"
 #include "world/inventory.hpp"
 #include "world/item.hpp"
-#include "world/mobile.hpp"
+#include "world/player.hpp"
+#include "world/room.hpp"
 #include "world/time-weather.hpp"
 #include "world/world.hpp"
 
@@ -24,13 +25,13 @@ const int Mobile::NAME_FLAG_THE =               32; // Precede the Mobile's name
 
 // The SQL table construction string for Mobiles.
 const std::string   Mobile::SQL_MOBILES =   "CREATE TABLE mobiles ( action_timer REAL, equipment INTEGER UNIQUE, gender INTEGER, hp INTEGER NOT NULL, hp_max INTEGER NOT NULL, "
-    "inventory INTEGER UNIQUE, location INTEGER NOT NULL, name TEXT, parser_id INTEGER, spawn_room INTEGER, species TEXT NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, "
-    "tags TEXT )";
+    "id INTEGER UNIQUE NOT NULL, inventory INTEGER UNIQUE, location INTEGER NOT NULL, name TEXT, parser_id INTEGER, spawn_room INTEGER, species TEXT NOT NULL, "
+    "sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, tags TEXT )";
 
 
 // Constructor, sets default values.
-Mobile::Mobile() : m_action_timer(0), m_equipment(std::make_shared<Inventory>()), m_gender(Gender::IT), m_inventory(std::make_shared<Inventory>()), m_location(0), m_parser_id(0),
-    m_spawn_room(0)
+Mobile::Mobile() : m_action_timer(0), m_equipment(std::make_shared<Inventory>()), m_gender(Gender::IT), m_id(0), m_inventory(std::make_shared<Inventory>()), m_location(0),
+    m_parser_id(0), m_spawn_room(0)
 {
     m_hp[0] = m_hp[1] = 100;
 }
@@ -129,6 +130,9 @@ std::string Mobile::his_her() const
 // Retrieves the HP (or maximum HP) of this Mobile.
 int Mobile::hp(bool max) const { return m_hp[max ? 1 : 0]; }
 
+// Retrieves the unique ID of this Mobile.
+uint32_t Mobile::id() const { return m_id; }
+
 // Returns a pointer to the Mobile's Inventory.
 const std::shared_ptr<Inventory> Mobile::inv() const { return m_inventory; }
 
@@ -151,6 +155,7 @@ uint32_t Mobile::load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id
         if (!query.isColumnNull("gender")) m_gender = static_cast<Gender>(query.getColumn("gender").getInt());
         m_hp[0] = query.getColumn("hp").getInt();
         m_hp[1] = query.getColumn("hp_max").getInt();
+        m_id = query.getColumn("id").getUInt();
         if (!query.isColumnNull("inventory")) inventory_id = query.getColumn("inventory").getUInt();
         m_location = query.getColumn("location").getUInt();
         if (!query.isColumnNull("name")) m_name = query.getColumn("name").getString();
@@ -229,7 +234,21 @@ bool Mobile::pass_time(float seconds)
 }
 
 // Reduces this Mobile's hit points.
-void Mobile::reduce_hp(int amount) { m_hp[0] -= amount; }
+void Mobile::reduce_hp(int amount)
+{
+    m_hp[0] -= amount;
+    if (m_hp[0] > 0 || is_player()) return; // The player character's death is handled elsewhere.
+
+    if (m_location == core()->world()->player()->location())
+    {
+        std::string death_message = "{U}" + name(NAME_FLAG_CAPITALIZE_FIRST | NAME_FLAG_THE);
+        if (tag(MobileTag::Unliving)) death_message += " is destroyed!";
+        else death_message += " is slain!";
+        core()->message(death_message, Show::RESTING, Wake::NEVER);
+    }
+    if (m_spawn_room) core()->world()->get_room(m_spawn_room)->clear_tag(RoomTag::MobSpawned);
+    core()->world()->remove_mobile(m_id);
+}
 
 // Restores a specified amount of hit points.
 int Mobile::restore_hp(int amount)
@@ -247,22 +266,23 @@ uint32_t Mobile::save(std::shared_ptr<SQLite::Database> save_db)
     const uint32_t equipment_id = m_equipment->save(save_db);
 
     const uint32_t sql_id = core()->sql_unique_id();
-    SQLite::Statement query(*save_db, "INSERT INTO mobiles ( action_timer, equipment, gender, hp, hp_max, inventory, location, name, parser_id, spawn_room, species, sql_id, tags ) "
-        "VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
+    SQLite::Statement query(*save_db, "INSERT INTO mobiles ( action_timer, equipment, gender, hp, hp_max, id, inventory, location, name, parser_id, spawn_room, species, sql_id, "
+        "tags ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
     if (m_action_timer) query.bind(1, m_action_timer);
     if (equipment_id) query.bind(2, equipment_id);
     if (m_gender != Gender::IT) query.bind(3, static_cast<int>(m_gender));
     query.bind(4, m_hp[0]);
     query.bind(5, m_hp[1]);
-    if (inventory_id) query.bind(6, inventory_id);
-    query.bind(7, m_location);
-    if (m_name.size()) query.bind(8, m_name);
-    if (m_parser_id) query.bind(9, m_parser_id);
-    if (m_spawn_room) query.bind(10, m_spawn_room);
-    query.bind(11, m_species);
-    query.bind(12, sql_id);
+    query.bind(6, m_id);
+    if (inventory_id) query.bind(7, inventory_id);
+    query.bind(8, m_location);
+    if (m_name.size()) query.bind(9, m_name);
+    if (m_parser_id) query.bind(10, m_parser_id);
+    if (m_spawn_room) query.bind(11, m_spawn_room);
+    query.bind(12, m_species);
+    query.bind(13, sql_id);
     const std::string tags = StrX::tags_to_string(m_tags);
-    if (tags.size()) query.bind(13, tags);
+    if (tags.size()) query.bind(14, tags);
     query.exec();
     return sql_id;
 }
@@ -273,6 +293,9 @@ void Mobile::set_hp(int hp, int hp_max)
     m_hp[0] = hp;
     if (hp_max) m_hp[1] = hp_max;
 }
+
+// Sets this Mobile's unique ID.
+void Mobile::set_id(uint32_t new_id) { m_id = new_id; }
 
 // Sets the location of this Mobile with a Room ID.
 void Mobile::set_location(uint32_t room_id)

@@ -22,7 +22,7 @@ void ActionLook::examine(std::shared_ptr<Mobile> mob, ParserTarget target_type, 
     {
         case ParserTarget::TARGET_EQUIPMENT: examine_item(mob, mob->equ()->get(target)); break;
         case ParserTarget::TARGET_INVENTORY: examine_item(mob, mob->inv()->get(target)); break;
-        case ParserTarget::TARGET_MOBILE: examine_mobile(mob, core()->world()->mob(target)); break;
+        case ParserTarget::TARGET_MOBILE: examine_mobile(mob, core()->world()->mob_vec(target)); break;
         case ParserTarget::TARGET_ROOM: examine_item(mob, core()->world()->get_room(mob->location())->inv()->get(target)); break;
         default: core()->guru()->nonfatal("Invalid examine target.", Guru::ERROR);
     }
@@ -165,7 +165,7 @@ void ActionLook::look(std::shared_ptr<Mobile> mob)
     std::vector<std::string> mobs_nearby;
     for (unsigned int i = 0; i < core()->world()->mob_count(); i++)
     {
-        const auto world_mob = core()->world()->mob(i);
+        const auto world_mob = core()->world()->mob_vec(i);
         if (!world_mob) continue; // Ignore any nullptr Mobiles.
         if (world_mob->location() != mob->location()) continue; // Ignore any Mobiles not in this Room.
         mobs_nearby.push_back("{Y}" + world_mob->name());

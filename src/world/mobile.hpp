@@ -38,7 +38,7 @@ class Mobile
 public:
                                 // Flags for the name() function.
     static const int            NAME_FLAG_A, NAME_FLAG_CAPITALIZE_FIRST, NAME_FLAG_NO_COLOUR, NAME_FLAG_PLURAL, NAME_FLAG_POSSESSIVE, NAME_FLAG_THE;
-    static const std::string    SQL_MOBILES;        // The SQL table construction string for Mobiles.
+    static const std::string    SQL_MOBILES;    // The SQL table construction string for Mobiles.
 
                         Mobile();                                   // Constructor, sets default values.
     float               attack_speed() const;                       // Returns the number of seconds needed for this Mobile to make an attack.
@@ -51,6 +51,7 @@ public:
     std::string         he_she() const;                             // Returns a gender string (he/she/it/they/etc.)
     std::string         his_her() const;                            // Returns a gender string (his/her/its/their/etc.)
     int                 hp(bool max = false) const;                 // Retrieves the HP (or maximum HP) of this Mobile.
+    uint32_t            id() const;                                 // Retrieves the unique ID of this Mobile.
     const std::shared_ptr<Inventory>    inv() const;                // Returns a pointer to the Mobile's Inventory.
     bool                is_dead() const;                            // Checks if this Mobile is dead.
     virtual bool        is_player() const;                          // Returns true if this Mobile is a Player, false if not.
@@ -66,6 +67,7 @@ public:
     int                 restore_hp(int amount);                     // Restores a specified amount of hit points.
     virtual uint32_t    save(std::shared_ptr<SQLite::Database> save_db);    // Saves this Mobile.
     void                set_hp(int hp, int hp_max = 0);             // Sets the current (and, optionally, maximum) HP of this Mobile.
+    void                set_id(uint32_t new_id);                    // Sets this Mobile's unique ID.
     void                set_location(uint32_t room_id);             // Sets the location of this Mobile with a Room ID.
     void                set_location(const std::string &room_id);   // As above, but with a string Room ID.
     void                set_name(const std::string &name);          // Sets the name of this Mobile.
@@ -82,6 +84,7 @@ private:
     std::shared_ptr<Inventory>  m_equipment;    // The Items currently worn or wielded by this Mobile.
     Gender              m_gender;       // The gender of this Mobile.
     int                 m_hp[2];        // The current and maxmum hit points of this Mobile.
+    uint32_t            m_id;           // The Mobile's unique ID.
     std::shared_ptr<Inventory>  m_inventory;    // The Items being carried by this Mobile.
     uint32_t            m_location;     // The Room that this Mobile is currently located in.
     std::string         m_name;         // The name of this Mobile.

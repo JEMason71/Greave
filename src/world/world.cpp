@@ -20,6 +20,9 @@
 
 const unsigned int  World::ROOM_SCAN_DISTANCE = 10; // The distance to scan for active rooms.
 
+// The SQL construction table for the World data.
+const std::string   World::SQL_WORLD = "CREATE TABLE world ( mob_unique_id INTEGER PRIMARY KEY UNIQUE NOT NULL )";
+
 // Lookup table for converting DamageType text names into enums.
 const std::map<std::string, DamageType> World::DAMAGE_TYPE_MAP = { { "acid", DamageType::ACID }, { "ballistic", DamageType::BALLISTIC }, { "crushing", DamageType::CRUSHING },
     { "edged", DamageType::EDGED }, { "explosive", DamageType::EXPLOSIVE }, { "energy", DamageType::ENERGY }, { "kinetic", DamageType::KINETIC },
@@ -82,7 +85,7 @@ const std::set<std::string>     World::VALID_YAML_KEYS_MOBS = { "gear", "hp", "n
 
 
 // Constructor, loads the room YAML data.
-World::World() : m_player(std::make_shared<Player>()), m_time_weather(std::make_shared<TimeWeather>())
+World::World() : m_mob_unique_id(0), m_player(std::make_shared<Player>()), m_time_weather(std::make_shared<TimeWeather>())
 {
     load_room_pool();
     load_item_pool();
@@ -127,6 +130,7 @@ void World::add_mobile(std::shared_ptr<Mobile> mob)
         }
         if (!parser_id_valid) mob->new_parser_id();
     } while (!parser_id_valid && ++tries < 100000);
+    if (!mob->id()) mob->set_id(++m_mob_unique_id);
     m_mobiles.push_back(mob);
 }
 
@@ -219,6 +223,11 @@ bool World::item_exists(const std::string &str) const { return m_item_pool.count
 void World::load(std::shared_ptr<SQLite::Database> save_db)
 {
     core()->messagelog()->load(save_db);
+
+    SQLite::Statement world_query(*save_db, "SELECT * FROM world");
+    if (!world_query.executeStep()) throw std::runtime_error("Unable to retrieve world data!");
+    m_mob_unique_id = world_query.getColumn("mob_unique_id").getUInt();
+
     for (auto room : m_room_pool)
     {
         room.second->load(save_db);
@@ -279,16 +288,6 @@ void World::load_anatomy_pool()
         m_anatomy_pool.insert(std::pair<std::string, std::vector<std::shared_ptr<BodyPart>>>(species_id, anatomy_vec));
     }
 }
-
-// Retrieves a Mobile by vector position.
-const std::shared_ptr<Mobile> World::mob(uint32_t vec_pos) const
-{
-    if (vec_pos >= m_mobiles.size()) throw std::runtime_error("Invalid mobile vector position.");
-    return m_mobiles.at(vec_pos);
-}
-
-// Returns the number of Mobiles currently active.
-unsigned int World::mob_count() const { return m_mobiles.size(); }
 
 // Loads the generic descriptions YAML data into memory.
 void World::load_generic_descs()
@@ -763,8 +762,18 @@ void World::load_room_pool()
     }
 }
 
+// Returns the number of Mobiles currently active.
+unsigned int World::mob_count() const { return m_mobiles.size(); }
+
 // Checks if a specified mobile ID exists.
 bool World::mob_exists(const std::string &str) const { return m_mob_pool.count(StrX::hash(str)); }
+
+// Retrieves a Mobile by vector position.
+const std::shared_ptr<Mobile> World::mob_vec(uint32_t vec_pos) const
+{
+    if (vec_pos >= m_mobiles.size()) throw std::runtime_error("Invalid mobile vector position.");
+    return m_mobiles.at(vec_pos);
+}
 
 // Sets up for a new game.
 void World::new_game()
@@ -775,20 +784,6 @@ void World::new_game()
 
 // Retrieves a pointer to the Player object.
 const std::shared_ptr<Player> World::player() const { return m_player; }
-
-// Purges null entries from the active Mobiles. Only call this from the main loop, for safety.
-void World::purge_mobs()
-{
-    for (unsigned int i = 0; i < m_mobiles.size(); i++)
-    {
-        if (m_mobiles.at(i) == nullptr)
-        {
-            m_mobiles.erase(m_mobiles.begin() + i);
-            i--;
-            continue;
-        }
-    }
-}
 
 // Recalculates the list of active rooms.
 void World::recalc_active_rooms()
@@ -807,17 +802,17 @@ void World::recalc_active_rooms()
 }
 
 // Removes a Mobile from the world.
-void World::remove_mobile(std::shared_ptr<Mobile> mob)
+void World::remove_mobile(uint32_t id)
 {
     for (unsigned int i = 0; i < m_mobiles.size(); i++)
     {
-        if (m_mobiles.at(i) == mob)
+        if (m_mobiles.at(i)->id() == id)
         {
-            m_mobiles.at(i) = nullptr;
+            m_mobiles.erase(m_mobiles.begin() + i);
             return;
         }
     }
-    core()->guru()->nonfatal("Attempt to remove mobile that does not exist in the world: " + mob->name(), Guru::ERROR);
+    core()->guru()->nonfatal("Attempt to remove mobile that does not exist in the world.", Guru::ERROR);
 }
 
 // Checks if a room is currently active.
@@ -836,6 +831,11 @@ void World::save(std::shared_ptr<SQLite::Database> save_db)
     save_db->exec(Room::SQL_ROOMS);
     save_db->exec(TimeWeather::SQL_HEARTBEATS);
     save_db->exec(TimeWeather::SQL_TIME_WEATHER);
+    save_db->exec(SQL_WORLD);
+
+    SQLite::Statement query(*save_db, "INSERT INTO world ( mob_unique_id ) VALUES ( ? )");
+    query.bind(1, m_mob_unique_id);
+    query.exec();
 
     m_player->save(save_db);
     core()->messagelog()->save(save_db);

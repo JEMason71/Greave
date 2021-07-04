@@ -25,7 +25,7 @@ const float TimeWeather::UNINTERRUPTABLE_TIME = 5.0f;   // The maximum amount of
 
 // The heartbeat timers, for triggering various events at periodic intervals.
 const uint32_t TimeWeather::HEARTBEAT_TIMERS[TimeWeather::Heartbeat::_TOTAL] = {
-    5 * Time::MINUTE,   // MOBILE_SPAWN, used to trigger Mobiles (re)spawning.
+    30 * Time::MINUTE,  // MOBILE_SPAWN, used to trigger Mobiles (re)spawning.
     10 * Time::MINUTE,  // ROOM_SCARS, for decreasing the intensity of room scars.
 };
 

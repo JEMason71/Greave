@@ -38,31 +38,31 @@ public:
     const std::shared_ptr<Room>     get_room(const std::string &room_id) const; // As above, but with a Room ID string.
     bool            item_exists(const std::string &str) const;                  // Checks if a specified item ID exists.
     void            load(std::shared_ptr<SQLite::Database> save_db);            // Loads the World and all things within it.
-    const std::shared_ptr<Mobile>   mob(uint32_t vec_pos) const;                // Retrieves a Mobile by vector position.
+    const std::shared_ptr<Mobile>   mob_vec(uint32_t vec_pos) const;            // Retrieves a Mobile by vector position.
     unsigned int    mob_count() const;                                          // Returns the number of Mobiles currently active.
     bool            mob_exists(const std::string &str) const;                   // Checks if a specified mobile ID exists.
     void            new_game();                                                 // Sets up for a new game.
     const std::shared_ptr<Player>   player() const;                             // Retrieves a pointer to the Player object.
-    void            purge_mobs();                                               // Purges null entries from the active Mobiles. Only call this from the main loop, for safety.
     void            recalc_active_rooms();                                      // Recalculates the list of active rooms.
-    void            remove_mobile(std::shared_ptr<Mobile> mob);                 // Removes a Mobile from the world.
+    void            remove_mobile(uint32_t id);                                 // Removes a Mobile from the world.
     bool            room_active(uint32_t id) const;                             // Checks if a room is currently active.
     bool            room_exists(const std::string &str) const;                  // Checks if a specified room ID exists.
     void            save(std::shared_ptr<SQLite::Database> save_db);            // Saves the World and all things within it.
     const std::shared_ptr<TimeWeather> time_weather() const;                    // Gets a pointer to the TimeWeather object.
 
 private:
-    static const std::map<std::string, DamageType>  DAMAGE_TYPE_MAP;    // Lookup table for converting DamageType text names into enums.
-    static const std::map<std::string, EquipSlot>   EQUIP_SLOT_MAP;     // Lookup table for converting EquipSlot text names into enums.
-    static const std::map<std::string, ItemSub>     ITEM_SUBTYPE_MAP;   // Lookup table for converting ItemSub text names into enums.
-    static const std::map<std::string, ItemTag>     ITEM_TAG_MAP;       // Lookup table for converting ItemTag text names into enums.
-    static const std::map<std::string, ItemType>    ITEM_TYPE_MAP;      // Lookup table for converting ItemType text names into enums.
-    static const std::map<std::string, uint8_t>     LIGHT_LEVEL_MAP;    // Lookup table for converting textual light levels (e.g. "bright") to integer values.
-    static const std::map<std::string, LinkTag>     LINK_TAG_MAP;       // Lookup table for converting LinkTag text names into enums.
-    static const std::map<std::string, MobileTag>   MOBILE_TAG_MAP;     // Lookup table for converting MobileTag text names into enums.
-    static const unsigned int                       ROOM_SCAN_DISTANCE; // The distance to scan for active rooms.
-    static const std::map<std::string, RoomTag>     ROOM_TAG_MAP;       // Lookup table for converting RoomTag text names into enums.
-    static const std::map<std::string, Security>    SECURITY_MAP;       // Lookup table for converting textual room security (e.g. "anarchy") to enum values.
+    static const std::map<std::string, DamageType>  DAMAGE_TYPE_MAP;        // Lookup table for converting DamageType text names into enums.
+    static const std::map<std::string, EquipSlot>   EQUIP_SLOT_MAP;         // Lookup table for converting EquipSlot text names into enums.
+    static const std::map<std::string, ItemSub>     ITEM_SUBTYPE_MAP;       // Lookup table for converting ItemSub text names into enums.
+    static const std::map<std::string, ItemTag>     ITEM_TAG_MAP;           // Lookup table for converting ItemTag text names into enums.
+    static const std::map<std::string, ItemType>    ITEM_TYPE_MAP;          // Lookup table for converting ItemType text names into enums.
+    static const std::map<std::string, uint8_t>     LIGHT_LEVEL_MAP;        // Lookup table for converting textual light levels (e.g. "bright") to integer values.
+    static const std::map<std::string, LinkTag>     LINK_TAG_MAP;           // Lookup table for converting LinkTag text names into enums.
+    static const std::map<std::string, MobileTag>   MOBILE_TAG_MAP;         // Lookup table for converting MobileTag text names into enums.
+    static const unsigned int                       ROOM_SCAN_DISTANCE;     // The distance to scan for active rooms.
+    static const std::map<std::string, RoomTag>     ROOM_TAG_MAP;           // Lookup table for converting RoomTag text names into enums.
+    static const std::map<std::string, Security>    SECURITY_MAP;           // Lookup table for converting textual room security (e.g. "anarchy") to enum values.
+    static const std::string                        SQL_WORLD;              // The SQL construction table for the World data.
     static const std::set<std::string>              VALID_YAML_KEYS_AREAS;  // A list of all valid keys in area YAML files.
     static const std::set<std::string>              VALID_YAML_KEYS_ITEMS;  // A list of all valid keys in item YAML files.
     static const std::set<std::string>              VALID_YAML_KEYS_MOBS;   // A list of all valid keys in mobile YAML files.
@@ -74,6 +74,7 @@ private:
     std::map<std::string, std::shared_ptr<List>>    m_list_pool;        // List data from lists.yml
     std::map<uint32_t, std::string>                 m_mob_gear;         // Equipment lists for gearing up Mobiles.
     std::map<uint32_t, std::shared_ptr<Mobile>>     m_mob_pool;         // All the Mobile templates in the game.
+    uint32_t                                        m_mob_unique_id;    // The unique ID counter for Mobiles.
     std::vector<std::shared_ptr<Mobile>>            m_mobiles;          // All the Mobiles currently active in the game.
     std::shared_ptr<Player>                         m_player;           // The player character.
     std::map<uint32_t, std::shared_ptr<Room>>       m_room_pool;        // All the Room templates in the game.
