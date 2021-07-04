@@ -264,6 +264,7 @@ bool Mobile::pass_time(float seconds)
 void Mobile::reduce_hp(int amount)
 {
     m_hp[0] -= amount;
+    if (m_action_timer < -10.0f) m_action_timer = -10.0f;   // Kludge to allow NPCs to react more quickly when engaged in combat after arriving in a room.
     if (m_hp[0] > 0 || is_player()) return; // The player character's death is handled elsewhere.
 
     if (m_location == core()->world()->player()->location())
