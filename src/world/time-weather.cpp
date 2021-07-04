@@ -270,10 +270,12 @@ bool TimeWeather::pass_time(float seconds)
         }
         if (change_happened) core()->message(weather_message_colour() + weather_msg.substr(1), Show::WAITING, Wake::NEVER);
 
+        std::set<uint32_t> active_rooms;    // This starts empty, but can be re-used if multiple heartbeats need to check active rooms.
+
         // Scan through all active rooms, respawning NPCs if needed.
         if (heartbeat_ready(Heartbeat::MOBILE_SPAWN))
         {
-            const auto active_rooms = core()->world()->active_rooms();
+            if (!active_rooms.size()) active_rooms = core()->world()->active_rooms();
             for (auto room_id : active_rooms)
             {
                 const auto room = core()->world()->get_room(room_id);
@@ -284,7 +286,7 @@ bool TimeWeather::pass_time(float seconds)
         // Reduce room scars on active rooms.
         if (heartbeat_ready(Heartbeat::ROOM_SCARS))
         {
-            const auto active_rooms = core()->world()->active_rooms();
+            if (!active_rooms.size()) active_rooms = core()->world()->active_rooms();
             for (auto room_id : active_rooms)
             {
                 const auto room = core()->world()->get_room(room_id);
