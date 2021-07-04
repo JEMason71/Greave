@@ -34,6 +34,15 @@ std::string StrX::collapse_vector(std::vector<std::string> vec)
     return output.str();
 }
 
+// As above, but for an integer vector>
+std::string StrX::collapse_vector(std::vector<uint32_t> vec)
+{
+    std::vector<std::string> converted_vec;
+    for (auto i : vec)
+        converted_vec.push_back(std::to_string(i));
+    return collapse_vector(converted_vec);
+}
+
 std::string StrX::comma_list(std::vector<std::string> vec, unsigned int flags)
 {
     const bool use_and = ((flags & CL_FLAG_USE_AND) == CL_FLAG_USE_AND);
@@ -292,6 +301,15 @@ std::string StrX::rainbow_text(const std::string &str, const std::string &colour
 
 // Calls MathX::round_to_two(), then returns the result as a string.
 std::string StrX::round_to_two(double num) { return ftos(MathX::round_to_two(num)); }
+
+// Converts a std::string vector into a uint32_t vector.
+std::vector<uint32_t> StrX::stoi_vec(std::vector<std::string> vec)
+{
+    std::vector<uint32_t> output;
+    for (auto str : vec)
+        output.push_back(std::stoul(str));
+    return output;
+}
 
 // Converts a string to lower-case.
 std::string StrX::str_tolower(std::string str)

@@ -4,10 +4,10 @@
 
 #include "3rdparty/SQLiteCpp/SQLiteCpp.h"
 #include "3rdparty/yaml-cpp/yaml.h"
+#include "actions/ai.hpp"
 #include "core/core.hpp"
 #include "core/random.hpp"
 #include "core/strx.hpp"
-#include "world/ai.hpp"
 #include "world/player.hpp"
 #include "world/room.hpp"
 #include "world/time-weather.hpp"
@@ -222,11 +222,6 @@ bool TimeWeather::pass_time(float seconds)
         int hp = player->hp();
         if (player->is_dead()) return false;    // Don't pass time if the player is dead.
 
-        if (seconds > UNINTERRUPTABLE_TIME)
-        {
-            // todo: check if the player is in combat, or something else that'll interrupt their actions
-        }
-
         // Wake the player if they are resting, and take damage.
         if (hp < old_hp)
         {
@@ -239,6 +234,7 @@ bool TimeWeather::pass_time(float seconds)
                     player->set_awake(Player::Awake::ACTIVE);
                     break;
             }
+            if (seconds > UNINTERRUPTABLE_TIME) return false;
         }
         old_hp = hp;
 

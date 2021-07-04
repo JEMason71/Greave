@@ -1,4 +1,4 @@
-// world/ai.hpp -- NPC AI actions and behaviour.
+// actions/ai.hpp -- NPC AI actions and behaviour.
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #pragma once

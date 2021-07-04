@@ -24,9 +24,9 @@ const int Mobile::NAME_FLAG_POSSESSIVE =        16; // Change the Mobile's name 
 const int Mobile::NAME_FLAG_THE =               32; // Precede the Mobile's name with 'the', unless the name is a proper noun.
 
 // The SQL table construction string for Mobiles.
-const std::string   Mobile::SQL_MOBILES =   "CREATE TABLE mobiles ( action_timer REAL, equipment INTEGER UNIQUE, gender INTEGER, hp INTEGER NOT NULL, hp_max INTEGER NOT NULL, "
-    "id INTEGER UNIQUE NOT NULL, inventory INTEGER UNIQUE, location INTEGER NOT NULL, name TEXT, parser_id INTEGER, spawn_room INTEGER, species TEXT NOT NULL, "
-    "sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, tags TEXT )";
+const std::string   Mobile::SQL_MOBILES =   "CREATE TABLE mobiles ( action_timer REAL, equipment INTEGER UNIQUE, gender INTEGER, hostility TEXT, hp INTEGER NOT NULL, "
+    "hp_max INTEGER NOT NULL, id INTEGER UNIQUE NOT NULL, inventory INTEGER UNIQUE, location INTEGER NOT NULL, name TEXT, parser_id INTEGER, spawn_room INTEGER, "
+    "species TEXT NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, tags TEXT )";
 
 
 // Constructor, sets default values.
@@ -34,6 +34,17 @@ Mobile::Mobile() : m_action_timer(0), m_equipment(std::make_shared<Inventory>())
     m_parser_id(0), m_spawn_room(0)
 {
     m_hp[0] = m_hp[1] = 100;
+}
+
+// Adds a Mobile (or the player, with ID 0) to this Mobile's hostility list.
+void Mobile::add_hostility(uint32_t mob_id)
+{
+    // Check if this Mobile is already on the hostility vector.
+    for (auto h : m_hostility)
+        if (h == mob_id) return;
+
+    // If not, add 'em to the list!
+    m_hostility.push_back(mob_id);
 }
 
 // Returns the number of seconds needed for this Mobile to make an attack.
@@ -130,6 +141,9 @@ std::string Mobile::his_her() const
     }
 }
 
+// Returns the hostility vector.
+const std::vector<uint32_t>& Mobile::hostility_vector() const { return m_hostility; }
+
 // Retrieves the HP (or maximum HP) of this Mobile.
 int Mobile::hp(bool max) const { return m_hp[max ? 1 : 0]; }
 
@@ -156,6 +170,7 @@ uint32_t Mobile::load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id
         if (!query.isColumnNull("action_timer")) m_action_timer = query.getColumn("action_timer").getDouble();
         if (!query.isColumnNull("equipment")) equipment_id = query.getColumn("equipment").getUInt();
         if (!query.isColumnNull("gender")) m_gender = static_cast<Gender>(query.getColumn("gender").getInt());
+        if (!query.isColumnNull("hostility")) m_hostility = StrX::stoi_vec(StrX::string_explode(query.getColumn("hostility").getString(), " "));
         m_hp[0] = query.getColumn("hp").getInt();
         m_hp[1] = query.getColumn("hp_max").getInt();
         m_id = query.getColumn("id").getUInt();
@@ -272,23 +287,24 @@ uint32_t Mobile::save(std::shared_ptr<SQLite::Database> save_db)
     const uint32_t equipment_id = m_equipment->save(save_db);
 
     const uint32_t sql_id = core()->sql_unique_id();
-    SQLite::Statement query(*save_db, "INSERT INTO mobiles ( action_timer, equipment, gender, hp, hp_max, id, inventory, location, name, parser_id, spawn_room, species, sql_id, "
-        "tags ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
+    SQLite::Statement query(*save_db, "INSERT INTO mobiles ( action_timer, equipment, gender, hostility, hp, hp_max, id, inventory, location, name, parser_id, spawn_room, "
+        "species, sql_id, tags ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
     if (m_action_timer) query.bind(1, m_action_timer);
     if (equipment_id) query.bind(2, equipment_id);
     if (m_gender != Gender::IT) query.bind(3, static_cast<int>(m_gender));
-    query.bind(4, m_hp[0]);
-    query.bind(5, m_hp[1]);
-    query.bind(6, m_id);
-    if (inventory_id) query.bind(7, inventory_id);
-    query.bind(8, m_location);
-    if (m_name.size()) query.bind(9, m_name);
-    if (m_parser_id) query.bind(10, m_parser_id);
-    if (m_spawn_room) query.bind(11, m_spawn_room);
-    query.bind(12, m_species);
-    query.bind(13, sql_id);
+    if (m_hostility.size()) query.bind(4, StrX::collapse_vector(m_hostility));
+    query.bind(5, m_hp[0]);
+    query.bind(6, m_hp[1]);
+    query.bind(7, m_id);
+    if (inventory_id) query.bind(8, inventory_id);
+    query.bind(9, m_location);
+    if (m_name.size()) query.bind(10, m_name);
+    if (m_parser_id) query.bind(11, m_parser_id);
+    if (m_spawn_room) query.bind(12, m_spawn_room);
+    query.bind(13, m_species);
+    query.bind(14, sql_id);
     const std::string tags = StrX::tags_to_string(m_tags);
-    if (tags.size()) query.bind(14, tags);
+    if (tags.size()) query.bind(15, tags);
     query.exec();
     return sql_id;
 }

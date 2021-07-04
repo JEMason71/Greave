@@ -1,11 +1,12 @@
-// world/ai.cpp -- NPC AI actions and behaviour.
+// actions/ai.cpp -- NPC AI actions and behaviour.
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
+#include "actions/ai.hpp"
 #include "actions/travel.hpp"
+#include "combat/melee.hpp"
 #include "core/core.hpp"
 #include "core/random.hpp"
-#include "world/ai.hpp"
-#include "world/mobile.hpp"
+#include "world/player.hpp"
 #include "world/room.hpp"
 #include "world/world.hpp"
 
@@ -18,6 +19,31 @@ void AI::tick_mob(std::shared_ptr<Mobile> mob, uint32_t)
 {
     auto rng = core()->rng();
     auto room = core()->world()->get_room(mob->location());
+
+    // Scan the Mobile's hostility vector, looking for anyone they're hostile towards.
+    std::shared_ptr<Mobile> attack_target = nullptr;
+    for (auto h : mob->hostility_vector())
+    {
+        if (h == 0 && mob->location() == core()->world()->player()->location())
+        {
+            attack_target = core()->world()->player();
+            break;
+        }
+        else for (unsigned int m = 0; m < core()->world()->mob_count(); m++)
+        {
+            const auto check_mob = core()->world()->mob_vec(m);
+            if (check_mob->id() == h && check_mob->location() == mob->location())
+            {
+                attack_target = check_mob;
+                break;
+            }
+        }
+    }
+    if (attack_target)
+    {
+        Melee::attack(mob, attack_target);
+        return;
+    }
 
     if (rng->rnd(TRAVEL_CHANCE) == 1)
     {

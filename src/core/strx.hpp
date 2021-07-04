@@ -14,6 +14,7 @@ public:
 
     static std::string  capitalize_first_letter(std::string str);   // Capitalizes the first letter of a string.
     static std::string  collapse_vector(std::vector<std::string> vec);  // Simple function to collapse a string vector into words.
+    static std::string  collapse_vector(std::vector<uint32_t> vec);     // As above, but for an integer vector>
     static std::string  comma_list(std::vector<std::string> vec, unsigned int flags = 0);   // Converts a vector to a comma-separated list.
     static unsigned int count_colour_tags(const std::string &str);  // Counts all the colour tags in a string.
     static std::string  decode_compressed_string(std::string cb);   // Decodes a compressed string (e.g. 4cab2z becomes ccccabzz).
@@ -32,6 +33,7 @@ public:
     static std::string  possessive_string(const std::string &str);  // Makes a string into a possessive noun (e.g. orc = orc's, platypus = platypus')
     static std::string  rainbow_text(const std::string &str, const std::string &colours);   // Makes pretty rainbow text!
     static std::string  round_to_two(double num);                   // Calls MathX::round_to_two(), then returns the result as a string.
+    static std::vector<uint32_t>    stoi_vec(std::vector<std::string> vec); // Converts a std::string vector into a uint32_t vector.
     static std::string  str_tolower(std::string str);               // Converts a string to lower-case.
     static std::string  str_toupper(std::string str);               // Converts a string to upper-case.
     static std::vector<std::string> string_explode(std::string str, const std::string &separator);          // String split/explode function.

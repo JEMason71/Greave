@@ -41,6 +41,7 @@ public:
     static const std::string    SQL_MOBILES;    // The SQL table construction string for Mobiles.
 
                         Mobile();                                   // Constructor, sets default values.
+    void                add_hostility(uint32_t mob_id);             // Adds a Mobile (or the player, with ID 0) to this Mobile's hostility list.
     float               attack_speed() const;                       // Returns the number of seconds needed for this Mobile to make an attack.
     float               block_mod() const;                          // Returns the modified chance to block for this Mobile, based on equipped gear.
     bool                can_act() const;                            // Checks if the Mobile's action timer is ready.
@@ -51,6 +52,7 @@ public:
     const std::vector<std::shared_ptr<BodyPart>>& get_anatomy() const;  // Retrieves the anatomy vector for this Mobile.
     std::string         he_she() const;                             // Returns a gender string (he/she/it/they/etc.)
     std::string         his_her() const;                            // Returns a gender string (his/her/its/their/etc.)
+    const std::vector<uint32_t>&  hostility_vector() const;         // Returns the hostility vector.
     int                 hp(bool max = false) const;                 // Retrieves the HP (or maximum HP) of this Mobile.
     uint32_t            id() const;                                 // Retrieves the unique ID of this Mobile.
     const std::shared_ptr<Inventory>    inv() const;                // Returns a pointer to the Mobile's Inventory.
@@ -82,16 +84,17 @@ public:
 protected:
     static const uint32_t   BASE_CARRY_WEIGHT;  // The maximum amount of weight a Mobile can carry, before modifiers.
 
-    float               m_action_timer; // When this timer reaches 0, the Mobile is able to act. Any actions it takes detract from the timer.
+    float                       m_action_timer; // When this timer reaches 0, the Mobile is able to act. Any actions it takes detract from the timer.
     std::shared_ptr<Inventory>  m_equipment;    // The Items currently worn or wielded by this Mobile.
-    Gender              m_gender;       // The gender of this Mobile.
-    int                 m_hp[2];        // The current and maxmum hit points of this Mobile.
-    uint32_t            m_id;           // The Mobile's unique ID.
+    Gender                      m_gender;       // The gender of this Mobile.
+    std::vector<uint32_t>       m_hostility;    // The hostility vector keeps track of who this Mobile is angry with.
+    int                         m_hp[2];        // The current and maxmum hit points of this Mobile.
+    uint32_t                    m_id;           // The Mobile's unique ID.
     std::shared_ptr<Inventory>  m_inventory;    // The Items being carried by this Mobile.
-    uint32_t            m_location;     // The Room that this Mobile is currently located in.
-    std::string         m_name;         // The name of this Mobile.
-    uint16_t            m_parser_id;    // The semi-unique ID of this Mobile, for parser differentiation.
-    uint32_t            m_spawn_room;   // The Room that spawned this Mobile.
-    std::string         m_species;      // Ths species type of this Mobile.
-    std::set<MobileTag> m_tags;         // Any and all tags on this Mobile.
+    uint32_t                    m_location;     // The Room that this Mobile is currently located in.
+    std::string                 m_name;         // The name of this Mobile.
+    uint16_t                    m_parser_id;    // The semi-unique ID of this Mobile, for parser differentiation.
+    uint32_t                    m_spawn_room;   // The Room that spawned this Mobile.
+    std::string                 m_species;      // Ths species type of this Mobile.
+    std::set<MobileTag>         m_tags;         // Any and all tags on this Mobile.
 };
