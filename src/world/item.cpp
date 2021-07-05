@@ -22,11 +22,11 @@ const int Item::NAME_FLAG_THE =                 512;    // Precede the Item's na
 
 // The SQL table construction string for saving items.
 const std::string Item::SQL_ITEMS = "CREATE TABLE items ( description TEXT, metadata TEXT, name TEXT NOT NULL, owner_id INTEGER NOT NULL, parser_id INTEGER NOT NULL, "
-    "rare INTEGER NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, subtype INTEGER, tags TEXT, type INTEGER, value INTEGER, weight INTEGER NOT NULL )";
+    "rare INTEGER NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, stack INTEGER, subtype INTEGER, tags TEXT, type INTEGER, value INTEGER, weight INTEGER NOT NULL )";
 
 
 // Constructor, sets default values.
-Item::Item() : m_parser_id(0), m_rarity(1), m_type(ItemType::NONE), m_type_sub(ItemSub::NONE), m_value(0) { }
+Item::Item() : m_parser_id(0), m_rarity(1), m_stack(1), m_type(ItemType::NONE), m_type_sub(ItemSub::NONE), m_value(0) { }
 
 // Returns the armour damage reduction value of this Item, if any.
 float Item::armour(int bonus_power) const
@@ -102,6 +102,7 @@ std::shared_ptr<Item> Item::load(std::shared_ptr<SQLite::Database> save_db, uint
         new_item->set_name(query.getColumn("name").getString());
         new_item->m_parser_id = query.getColumn("parser_id").getUInt();
         new_item->m_rarity = query.getColumn("rare").getInt();
+        if (!query.isColumnNull("stack")) new_item->m_stack = query.getColumn("stack").getUInt(); else new_item->m_stack = 1;
         if (!query.isColumnNull("subtype")) new_subtype = static_cast<ItemSub>(query.getColumn("subtype").getInt());
         if (!query.getColumn("tags").isNull()) StrX::string_to_tags(query.getColumn("tags").getString(), new_item->m_tags);
         if (!query.isColumnNull("type")) new_type = static_cast<ItemType>(query.getColumn("type").getInt());
@@ -165,7 +166,7 @@ std::string Item::name(int flags) const
         using_plural_name = true;
     }
 
-    //if (m_stack > 1 && !no_count) ret = StrX::number_to_word(m_stack) + " " + name(NAME_FLAG_PLURAL | NAME_FLAG_NO_COUNT);
+    if (m_stack > 1 && !no_count) ret = StrX::number_to_word(m_stack) + " " + name(NAME_FLAG_PLURAL | NAME_FLAG_NO_COUNT);
 
     if (the && !tag(ItemTag::ProperNoun)) ret = "the " + ret;
     else if (a && !tag(ItemTag::PluralName) && !tag(ItemTag::NoA) && !tag(ItemTag::ProperNoun))
@@ -226,8 +227,8 @@ uint8_t Item::rare() const { return m_rarity; }
 // Saves the Item.
 void Item::save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id)
 {
-    SQLite::Statement query(*save_db, "INSERT INTO items ( description, metadata, name, owner_id, parser_id, rare, sql_id, subtype, tags, type, value, weight ) "
-        "VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
+    SQLite::Statement query(*save_db, "INSERT INTO items ( description, metadata, name, owner_id, parser_id, rare, sql_id, stack, subtype, tags, type, value, weight ) "
+        "VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
     if (m_description.size()) query.bind(1, m_description);
     if (m_metadata.size()) query.bind(2, StrX::metadata_to_string(m_metadata));
     query.bind(3, m_name);
@@ -235,11 +236,12 @@ void Item::save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id)
     query.bind(5, m_parser_id);
     query.bind(6, m_rarity);
     query.bind(7, core()->sql_unique_id());
-    if (m_type_sub != ItemSub::NONE) query.bind(8, static_cast<int>(m_type_sub));
-    if (m_tags.size()) query.bind(9, StrX::tags_to_string(m_tags));
-    if (m_type != ItemType::NONE) query.bind(10, static_cast<int>(m_type));
-    if (m_value) query.bind(11, m_value);
-    query.bind(12, m_weight);
+    if (m_stack != 1) query.bind(8, m_stack);
+    if (m_type_sub != ItemSub::NONE) query.bind(9, static_cast<int>(m_type_sub));
+    if (m_tags.size()) query.bind(10, StrX::tags_to_string(m_tags));
+    if (m_type != ItemType::NONE) query.bind(11, static_cast<int>(m_type));
+    if (m_value) query.bind(12, m_value);
+    query.bind(13, m_weight);
     query.exec();
 }
 
@@ -269,6 +271,14 @@ void Item::set_name(const std::string &name) { m_name = name; }
 // Sets this Item's rarity.
 void Item::set_rare(uint8_t rarity) { m_rarity = rarity; }
 
+// Sets the stack size for this Item.
+void Item::set_stack(uint32_t size)
+{
+    if (!tag(ItemTag::Stackable)) core()->guru()->nonfatal("Attempt to set stack size on non-stackable item: " + m_name, Guru::WARN);
+    if (!size) core()->guru()->nonfatal("Attempt to set zero stack size: " + m_name, Guru::ERROR);
+    m_stack = size;
+}
+
 // Sets a tag on this Item.
 void Item::set_tag(ItemTag the_tag)
 {
@@ -291,6 +301,13 @@ void Item::set_weight(uint32_t pacs) { m_weight = pacs; }
 
 // Retrieves the speed of this Item.
 float Item::speed() const { return meta_float("speed"); }
+
+// Retrieves the stack size of this Item.
+uint32_t Item::stack() const
+{
+    if (!tag(ItemTag::Stackable)) core()->guru()->nonfatal("Attempt to check stack size of non-stackable item: " + m_name, Guru::WARN);
+    return m_stack;
+}
 
 // Returns the ItemSub (sub-type) of this Item.
 ItemSub Item::subtype() const { return m_type_sub; }

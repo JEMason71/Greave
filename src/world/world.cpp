@@ -38,7 +38,8 @@ const std::map<std::string, ItemSub>    World::ITEM_SUBTYPE_MAP = { { "clothing"
 
 // Lookup table for converting ItemTag text names into enums.
 const std::map<std::string, ItemTag>    World::ITEM_TAG_MAP = { { "handandahalf", ItemTag::HandAndAHalf }, { "noa", ItemTag::NoA }, { "offhandonly", ItemTag::OffHandOnly },
-    { "pluralname", ItemTag::PluralName }, { "preferoffhand", ItemTag::PreferOffHand }, { "propernoun", ItemTag::ProperNoun }, { "twohanded", ItemTag::TwoHanded } };
+    { "pluralname", ItemTag::PluralName }, { "preferoffhand", ItemTag::PreferOffHand }, { "propernoun", ItemTag::ProperNoun }, { "stackable", ItemTag::Stackable },
+    { "twohanded", ItemTag::TwoHanded } };
 
 // Lookup table for converting ItemType text names into enums.
 const std::map<std::string, ItemType>   World::ITEM_TYPE_MAP = { { "armour", ItemType::ARMOUR }, { "key", ItemType::KEY }, { "light", ItemType::LIGHT },
@@ -79,7 +80,7 @@ const std::set<std::string>     World::VALID_YAML_KEYS_AREAS = { "desc", "exits"
 
 // A list of all valid keys in item YAML files.
 const std::set<std::string>     World::VALID_YAML_KEYS_ITEMS = { "block_mod", "crit", "damage_type", "desc", "dodge_mod", "metadata", "name", "parry_mod", "power", "rare", "slot",
-    "speed", "tags", "type", "value", "weight" };
+    "speed", "stack", "tags", "type", "value", "weight" };
 
 // A list of all valid keys in mobile YAML files.
 const std::set<std::string>     World::VALID_YAML_KEYS_MOBS = { "gear", "hp", "name", "species", "tags" };
@@ -458,6 +459,13 @@ void World::load_item_pool()
             // The Item's weight.
             if (!item_data["weight"]) core()->guru()->nonfatal("Missing weight for item " + item_id_str, Guru::ERROR);
             else new_item->set_weight(item_data["weight"].as<uint32_t>());
+
+            // The Item's stack size, if any.
+            if (item_data["stack"])
+            {
+                if (!new_item->tag(ItemTag::Stackable)) core()->guru()->nonfatal("Stack size specified for nonstackable item: " + item_id_str, Guru::ERROR);
+                new_item->set_stack(item_data["stack"].as<uint32_t>());
+            }
 
             // Add the new Item to the item pool.
             m_item_pool.insert(std::make_pair(item_id, new_item));

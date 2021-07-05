@@ -22,13 +22,20 @@ enum class ItemSub : uint16_t { NONE,
     MELEE, UNARMED, // Weapon subtypes.
     };
 
-enum class ItemTag : uint16_t {
-    HandAndAHalf = 1,   // Hand-and-a-half weapons can be wielded in either one or both hands.
+enum class ItemTag : uint16_t { _None = 0,  // Do not use this tag, it's just a marker to start the tags below counting from 1.
+
+    // Basic, generic, core details about an item.
+    Stackable,          // Can this Item be stacked with others identical to itself?
+
+    // Tags regarding the item's name.
     NoA,                // This Item's name should not be prefaced with 'a' (e.g. 'plate mail armour' instead of 'a plate mail armour').
-    OffHandOnly,        // This item can ONLY be equipped in the off-hand.
     PluralName,         // This Item's name is a plural (e.g. "boots").
-    PreferOffHand,      // When equipped, this Item prefers to be held in the off-hand.
     ProperNoun,         // This Item's name is a proper noun (e.g. Foehammer).
+
+    // Tags specific to weapons, armour and other equipment.
+    HandAndAHalf,   // Hand-and-a-half weapons can be wielded in either one or both hands.
+    OffHandOnly,        // This item can ONLY be equipped in the off-hand.
+    PreferOffHand,      // When equipped, this Item prefers to be held in the off-hand.
     TwoHanded,          // This Item requires two hands to wield.
 };
 
@@ -70,11 +77,13 @@ public:
     void        set_meta(const std::string &key, float value);          // As above again, but this time for floats.
     void        set_name(const std::string &name);  // Sets the name of this Item.
     void        set_rare(uint8_t rarity);           // Sets this Item's rarity.
+    void        set_stack(uint32_t size);           // Sets the stack size for this Item.
     void        set_tag(ItemTag the_tag);           // Sets a tag on this Item.
     void        set_type(ItemType type, ItemSub sub = ItemSub::NONE);   // Sets the type of this Item.
     void        set_value(uint32_t val);            // Sets this Item's value.
     void        set_weight(uint32_t pacs);          // Sets this Item's weight.
     float       speed() const;                      // Retrieves the speed of this Item.
+    uint32_t    stack() const;                      // Retrieves the stack size of this Item.
     ItemSub     subtype() const;                    // Returns the ItemSub (sub-type) of this Item.
     bool        tag(ItemTag the_tag) const;         // Checks if a tag is set on this Item.
     ItemType    type() const;                       // Returns the ItemType of this Item.
@@ -87,6 +96,7 @@ private:
     std::string m_name;             // The name of this Item!
     uint16_t    m_parser_id;        // The semi-unique ID of this Item, for parser differentiation.
     uint8_t     m_rarity;           // The rarity of this Item.
+    uint32_t    m_stack;            // If this Item can be stacked, this is how many is in the stack.
     std::set<ItemTag>   m_tags;     // Any and all ItemTags on this Item.
     ItemType    m_type;             // The primary type of this Item.
     ItemSub     m_type_sub;         // The subtype of this Item, if any.

@@ -1,5 +1,5 @@
 // core/strx.cpp -- Various utility functions that deal with string manipulation/conversion.
-// Copyright (c) 2009-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+// Copyright (c) 2009-2021 Raine "Gravecat" Simmons and the Greave contributors. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #include "core/core.hpp"
 #include "core/guru.hpp"
@@ -297,6 +297,24 @@ std::string StrX::mgsc_string(uint32_t coin, StrX::MGSC mode)
 		if (result_vec.size()) return comma_list(result_vec);
 		else return "zero";
 	}
+}
+
+// Converts small numbers into words.
+// Thanks to Josh Homann on StackOverflow for this one: https://stackoverflow.com/questions/40252753/c-converting-number-to-words
+std::string StrX::number_to_word(uint64_t number)
+{
+    static const std::vector<std::string> ones { "", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
+    static const std::vector<std::string> teens { "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen","sixteen", "seventeen", "eighteen", "nineteen" };
+    static const std::vector<std::string> tens { "", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety" };
+
+    if (number < 10) return ones[number];
+    else if (number < 20) return teens[number - 10];
+    else if (number < 100) return tens[number / 10] + ((number % 10 != 0) ? "-" + number_to_word(number % 10) : "");
+    else if (number < 1000) return number_to_word(number / 100) + " hundred" + ((number % 100 != 0) ? " " + number_to_word(number % 100) : "");
+    else if (number < 1000000) return number_to_word(number / 1000) + " thousand" + ((number % 1000 != 0) ? " " + number_to_word(number % 1000) : "");
+    else if (number < 1000000000UL) return number_to_word(number / 1000000) + " million" + ((number % 1000000 != 0) ? " " + number_to_word(number % 1000000) : "");
+    else if (number < 1000000000000ULL) return number_to_word(number / 1000000000UL) + " billion" + ((number % 1000000000UL != 0) ? " " + number_to_word(number % 1000000000UL) : "");
+    else return intostr_pretty(number);
 }
 
 // Makes a string into a possessive noun (e.g. orc = orc's, platypus = platypus')

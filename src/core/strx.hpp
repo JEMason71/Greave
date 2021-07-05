@@ -32,6 +32,7 @@ public:
     static std::string  itos(unsigned int num, uint32_t min_len);   // Converts an integer to a string, but optionally pads it to a minimum length with leading zeroes.
     static std::string  metadata_to_string(const std::map<std::string, std::string> &metadata); // Converts a metadata map into a string.
     static std::string  mgsc_string(uint32_t coin, MGSC mode);      // Converts a coin value into a mithril/gold/silver/copper ANSI string.
+    static std::string  number_to_word(uint64_t number);            // Converts small numbers into words.
     static std::string  possessive_string(const std::string &str);  // Makes a string into a possessive noun (e.g. orc = orc's, platypus = platypus')
     static std::string  rainbow_text(const std::string &str, const std::string &colours);   // Makes pretty rainbow text!
     static std::string  round_to_two(double num);                   // Calls MathX::round_to_two(), then returns the result as a string.
