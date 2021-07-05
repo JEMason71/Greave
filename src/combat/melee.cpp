@@ -13,12 +13,16 @@
 #include "world/world.hpp"
 
 
+const float Melee::AGILE_DEFENDER_PARRY_MODIFIER =          1.5f;   // The multiplier to the parry chance of a Mobile with the Agile tag.
+const float Melee::AGILE_DEFENDER_TO_HIT_MODIFIER =         0.8f;   // The to-hit multiplier when attempting to hit a Mobile with the Agile tag.
 const float Melee::BASE_ABSORPTION_VARIANCE =               4;      // The variance in weapon damage soaked by armour (lower number = more variance).
 const float Melee::BASE_BLOCK_CHANCE_MELEE =                20.0f;  // The base block chance in melee combat.
 const float Melee::BASE_DAMAGE_VARIANCE =                   3;      // The variance in weapon damage (lower number = more variance).
 const float Melee::BASE_HIT_CHANCE_MELEE =                  75.0f;  // The base hit chance in melee combat.
 const float Melee::BASE_MELEE_DAMAGE_MULTIPLIER =           1.2f;   // The base damage multiplier for melee weapons.
 const float Melee::BASE_PARRY_CHANCE =                      10.0f;  // The base parry chance in melee combat.
+const float Melee::CLUMSY_DEFENDER_PARRY_MODIFIER =         0.5f;   // The multiplier to the parry chance of a Mobile with the Clumsy tag.
+const float Melee::CLUMSY_DEFENDER_TO_HIT_MODIFIER =        1.25f;  // The to-hit multiplier when attempting to hit a Mobile with the Clumsy tag.
 const float Melee::DUAL_WIELD_HIT_CHANCE_MULTIPLIER =       0.9f;   // The multiplier to accuracy% for dual-wielding.
 const float Melee::SINGLE_WIELD_CRIT_CHANCE_MULTIPLIER =    1.1f;   // The multiplier to crit% for single-wielding.
 const float Melee::SINGLE_WIELD_HIT_CHANCE_MULTIPLIER =     1.2f;   // The multiplier to accuracy% for single-wielding.
@@ -115,6 +119,10 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
     bool can_parry = wield_type_defender != WieldType::UNARMED && wield_type_defender != WieldType::SHIELD_ONLY && wield_type_defender != WieldType::UNARMED_PLUS_SHIELD &&
         defender_melee && !defender->tag(MobileTag::CannotParry);
 
+    // Check for Agile or Clumsy defender.
+    if (defender->tag(MobileTag::Agile)) to_hit *= AGILE_DEFENDER_TO_HIT_MODIFIER;
+    else if (defender->tag(MobileTag::Clumsy)) to_hit *= CLUMSY_DEFENDER_TO_HIT_MODIFIER;
+
     if (defender->tag(MobileTag::CannotDodge)) to_hit = 100;
     else to_hit *= defender->dodge_mod();
 
@@ -125,6 +133,8 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
         if (can_parry)
         {
             float parry_chance = BASE_PARRY_CHANCE * defender->parry_mod();
+            if (defender->tag(MobileTag::Agile) || attacker->tag(MobileTag::Clumsy)) parry_chance *= AGILE_DEFENDER_PARRY_MODIFIER;
+            else if (defender->tag(MobileTag::Clumsy) || attacker->tag(MobileTag::Agile)) parry_chance *= CLUMSY_DEFENDER_PARRY_MODIFIER;
             if (core()->rng()->frnd(100) <= parry_chance) parried = true;
         }
 

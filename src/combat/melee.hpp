@@ -14,12 +14,16 @@ public:
     static bool attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mobile> defender); // A basic attack, no special moves being used.
 
 private:
+    static const float  AGILE_DEFENDER_PARRY_MODIFIER;          // The multiplier to the parry chance of a Mobile with the Agile tag.
+    static const float  AGILE_DEFENDER_TO_HIT_MODIFIER;         // The to-hit multiplier when attempting to hit a Mobile with the Agile tag.
     static const float  BASE_ABSORPTION_VARIANCE;               // The variance in weapon damage soaked by armour (lower number = more variance).
     static const float  BASE_BLOCK_CHANCE_MELEE;                // The base block chance in melee combat.
     static const float  BASE_DAMAGE_VARIANCE;                   // The variance in weapon damage (lower number = more variance).
     static const float  BASE_HIT_CHANCE_MELEE;                  // The base hit chance in melee combat.
     static const float  BASE_MELEE_DAMAGE_MULTIPLIER;           // The base damage multiplier for melee weapons.
     static const float  BASE_PARRY_CHANCE;                      // The base parry chance in melee combat.
+    static const float  CLUMSY_DEFENDER_PARRY_MODIFIER;         // The multiplier to the parry chance of a Mobile with the Clumsy tag.
+    static const float  CLUMSY_DEFENDER_TO_HIT_MODIFIER;        // The to-hit multiplier when attempting to hit a Mobile with the Clumsy tag.
     static const float  DUAL_WIELD_HIT_CHANCE_MULTIPLIER;       // The multiplier to accuracy% for dual-wielding.
     static const float  SINGLE_WIELD_CRIT_CHANCE_MULTIPLIER;    // The multiplier to crit% for single-wielding.
     static const float  SINGLE_WIELD_HIT_CHANCE_MULTIPLIER;     // The multiplier to accuracy% for single-wielding.
