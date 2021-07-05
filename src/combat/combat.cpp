@@ -7,9 +7,15 @@
 #include "world/inventory.hpp"
 #include "world/item.hpp"
 #include "world/mobile.hpp"
+#include "world/room.hpp"
+#include "world/world.hpp"
 
 
-const float Combat::BASE_ATTACK_SPEED_MULTIPLIER =  10.0f;  // The base speed multiplier for all attacks.
+const float     Combat::BASE_ATTACK_SPEED_MULTIPLIER =              10.0f;  // The base speed multiplier for all attacks.
+const uint32_t  Combat::BLEED_SEVERITY_BASE =                       6;      // The base value of bleed severity, used in the bleed calculations.
+const uint32_t  Combat::BLEED_SEVERITY_RANGE=                       4;      // The range of variation on the bleed severity.
+const uint32_t  Combat::BLEED_TIME_RANGE =                          10;     // The range of time (1 - X) that a weapon bleed effect can cause.
+const uint32_t  Combat::SCAR_BLEED_INTENSITY_FROM_BLEED_ATTACK =    2;      // Blood type scar intensity for attacks that cause bleeding.
 
 // Weapon type damage modifiers to unarmoured, light, medium and heavy armour targets.
 const float Combat::DAMAGE_MODIFIER_ACID[4] =       { 1.8f, 1.3f, 1.2f, 1.0f };
@@ -239,4 +245,14 @@ std::string Combat::threshold_str(std::shared_ptr<Mobile> defender, int damage, 
     if (old_perc > 0.5f && new_perc <= 0.5f) return good_colour + name + (alive ? (plural ? "have a few cuts and bruises." : "has a few cuts and bruises.") :
         (plural ? "have a few scratches and dents." : "has a few scratches and dents."));
     return "";
+}
+
+// Applies a weapon bleed debuff and applies room scars.
+void Combat::weapon_bleed_effect(std::shared_ptr<Mobile> defender, unsigned int damage)
+{
+    const int bleed_time = core()->rng()->rnd(BLEED_TIME_RANGE);
+    int bleed_severity = damage / (BLEED_SEVERITY_BASE + core()->rng()->rnd(BLEED_SEVERITY_RANGE));
+    if (!bleed_severity) bleed_severity = 1;
+    defender->set_buff(Buff::Type::BLEED, bleed_time, bleed_severity, false);
+    core()->world()->get_room(defender->location())->add_scar(ScarType::BLOOD, SCAR_BLEED_INTENSITY_FROM_BLEED_ATTACK);
 }

@@ -47,7 +47,7 @@ struct BodyPart
 
 struct Buff
 {
-    enum class Type : uint8_t { NONE, RECENTLY_FLED };
+    enum class Type : uint8_t { NONE, BLEED, RECENTLY_FLED };
 
     static const std::string    SQL_BUFFS;  // The SQL table construction string for Buffs.
 
@@ -114,11 +114,13 @@ public:
     void                set_tag(MobileTag the_tag);                 // Sets a MobileTag on this Mobile.
     std::string         species() const;                            // Checks the species of this Mobile.
     bool                tag(MobileTag the_tag) const;               // Checks if a MobileTag is set on this Mobile.
+    bool                tick_bleed(uint32_t power, uint16_t time);  // Triggers a single bleed tick.
     void                tick_buffs();                               // Reduce the timer on all buffs.
 
 protected:
     static const float      ACTION_TIMER_CAP_MAX;   // The maximum value the action timer can ever reach.
     static const uint32_t   BASE_CARRY_WEIGHT;      // The maximum amount of weight a Mobile can carry, before modifiers.
+    static const uint32_t   SCAR_BLEED_INTENSITY_FROM_BLEED_TICK;   // Blood type scar intensity caused by each tick of the player or an NPC bleeding.
 
     std::shared_ptr<Buff>   buff(Buff::Type type) const;    // Returns a pointer to a specified Buff.
 

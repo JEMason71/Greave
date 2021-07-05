@@ -229,6 +229,7 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
         if (damage_blocked >= damage) damage_blocked = damage;
         damage -= damage_blocked;
 
+        const bool fatal = (damage >= defender->hp());
         if (player_is_here && (player_can_see_attacker || player_can_see_defender))
         {
             std::string damage_word = damage_str(damage, defender, false);
@@ -270,7 +271,7 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
                 else absorb_str = " {U}" + defender_your_string_c + " " + armour_piece_hit->name() + " " + lessens_str + " the blow.";
             }
 
-            if (damage >= defender->hp())
+            if (fatal)
             {
                 if (defender_is_player) death_str = " {M}You are slain!";
                 else death_str = " {U}" + defender_name_c + (defender->tag(MobileTag::Unliving) ? " is destroyed!" : " is slain!");
@@ -278,7 +279,8 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
             core()->message(block_str + damage_colour + attacker_your_string_c + " " + weapon_name + " " + damage_word + " " + damage_colour +
                 (blocked ? defender_name : defender_name_s + " " + def_location_hit_str) + "!" + threshold_string + absorb_str + " " +
                 damage_number_str(damage, damage_blocked, critical_hit, bleed, poison) + death_str);
-            defender->reduce_hp(damage);
         }
+        if (bleed) weapon_bleed_effect(defender, damage);
+        defender->reduce_hp(damage);
     }
 }

@@ -14,8 +14,9 @@
 #include "world/world.hpp"
 
 
-const float     Mobile::ACTION_TIMER_CAP_MAX =  3600.0f;    // The maximum value the action timer can ever reach.
-const uint32_t  Mobile::BASE_CARRY_WEIGHT =     30000;      // The maximum amount of weight a Mobile can carry, before modifiers.
+const float     Mobile::ACTION_TIMER_CAP_MAX =                  3600.0f;    // The maximum value the action timer can ever reach.
+const uint32_t  Mobile::BASE_CARRY_WEIGHT =                     30000;      // The maximum amount of weight a Mobile can carry, before modifiers.
+const uint32_t  Mobile::SCAR_BLEED_INTENSITY_FROM_BLEED_TICK =  1;          // Blood type scar intensity caused by each tick of the player or an NPC bleeding.
 
 // Flags for the name() function.
 const int Mobile::NAME_FLAG_A =                 1;  // Precede the Mobile's name with 'a' or 'an', unless the name is a proper noun.
@@ -472,12 +473,45 @@ std::string Mobile::species() const { return m_species; }
 // Checks if a MobileTag is set on this Mobile.
 bool Mobile::tag(MobileTag the_tag) const { return (m_tags.count(the_tag) > 0); }
 
+// Triggers a single bleed tick.
+bool Mobile::tick_bleed(uint32_t power, uint16_t time)
+{
+    if (!power) return true;
+    const auto room = core()->world()->get_room(m_location);
+    const bool fatal = (static_cast<int>(power) >= m_hp[0]);
+
+    room->add_scar(ScarType::BLOOD, SCAR_BLEED_INTENSITY_FROM_BLEED_TICK);
+    if (is_player())
+    {
+        core()->message("{r}You are {R}bleeding {r}rather badly. {w}[{R}-" + std::to_string(power) + "{w}]");
+        if (fatal) core()->message("{0}{R}You've lost too much blood and collapse, bleeding out on the ground.");
+    }
+    else
+    {
+        const std::shared_ptr<Player> player = core()->world()->player();
+        if (player->location() == m_location && room->light(player) >= Room::LIGHT_VISIBLE)
+            core()->message("{r}" + name(NAME_FLAG_CAPITALIZE_FIRST | NAME_FLAG_THE) + " {r}is {R}bleeding {r}rather badly. {w}[{R}-" + std::to_string(power) + "{w}]");
+    }
+    reduce_hp(power);
+    if (!fatal && is_player() && time == 1) core()->message("{g}Your wounds stop bleeding.");
+    return !fatal;
+}
+
 // Reduce the timer on all buffs.
 void Mobile::tick_buffs()
 {
     for (unsigned int i = 0; i < m_buffs.size(); i++)
     {
         if (m_buffs.at(i)->time == USHRT_MAX) continue;
+
+        switch (m_buffs.at(i)->type)
+        {
+            case Buff::Type::BLEED:
+                if (!tick_bleed(m_buffs.at(i)->power, m_buffs.at(i)->time)) return;
+                break;
+            default: break;
+        }
+
         if (!--m_buffs.at(i)->time)
             m_buffs.erase(m_buffs.begin() + i--);
     }

@@ -28,7 +28,7 @@ const float TimeWeather::UNINTERRUPTABLE_TIME = 5.0f;   // The maximum amount of
 const uint32_t TimeWeather::HEARTBEAT_TIMERS[TimeWeather::Heartbeat::_TOTAL] = {
     30 * Time::MINUTE,  // MOBILE_SPAWN, used to trigger Mobiles (re)spawning.
     10 * Time::MINUTE,  // ROOM_SCARS, for decreasing the intensity of room scars.
-    1 * Time::MINUTE,   // BUFFS, for ticking down buffs/debuffs on Mobiles and the Player.
+    10 * Time::SECOND,  // BUFFS, for ticking down buffs/debuffs on Mobiles and the Player.
 };
 
 

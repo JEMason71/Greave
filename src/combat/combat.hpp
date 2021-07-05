@@ -19,7 +19,11 @@ protected:
     enum class WieldType : uint8_t { NONE, UNARMED, ONE_HAND_PLUS_EXTRA, TWO_HAND, DUAL_WIELD, HAND_AND_A_HALF_2H, SINGLE_WIELD, ONE_HAND_PLUS_SHIELD, SHIELD_ONLY,
         UNARMED_PLUS_SHIELD };
 
-    static const float  BASE_ATTACK_SPEED_MULTIPLIER;   // The base speed multiplier for all attacks.
+    static const float      BASE_ATTACK_SPEED_MULTIPLIER;           // The base speed multiplier for all attacks.
+    static const uint32_t   BLEED_SEVERITY_BASE;                    // The base value of bleed severity, used in the bleed calculations.
+    static const uint32_t   BLEED_SEVERITY_RANGE;                   // The range of variation on the bleed severity.
+    static const uint32_t   BLEED_TIME_RANGE;                       // The range of time (1 - X) that a weapon bleed effect can cause.
+    static const uint32_t   SCAR_BLEED_INTENSITY_FROM_BLEED_ATTACK; // Blood type scar intensity for attacks that cause bleeding.
 
     // Weapon type damage modifiers to unarmoured, light, medium and heavy armour targets.
     static const float DAMAGE_MODIFIER_ACID[4], DAMAGE_MODIFIER_BALLISTIC[4], DAMAGE_MODIFIER_CRUSHING[4], DAMAGE_MODIFIER_EDGED[4], DAMAGE_MODIFIER_EXPLOSIVE[4],
@@ -35,4 +39,5 @@ protected:
     static void         pick_hit_location(std::shared_ptr<Mobile> mob, EquipSlot* slot, std::string* slot_name);
                         // Returns a threshold string, if a damage threshold has been passed.
     static std::string  threshold_str(std::shared_ptr<Mobile> defender, int damage, const std::string& good_colour, const std::string& bad_colour);
+    static void         weapon_bleed_effect(std::shared_ptr<Mobile> defender, unsigned int damage); // Applies a weapon bleed debuff and applies room scars.
 };

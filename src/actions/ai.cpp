@@ -12,7 +12,7 @@
 
 
 const uint32_t  AI::AGGRO_CHANCE =      60;     // 1 in X chance of starting a fight.
-const uint16_t  AI::FLEE_DEBUFF_TIME =  8;      // The length of time the fleeing debuff lasts.
+const uint16_t  AI::FLEE_DEBUFF_TIME =  48;     // The length of time the fleeing debuff lasts.
 const float     AI::FLEE_TIME =         60.0f;  // The action time it takes to flee in terror.
 const uint32_t  AI::TRAVEL_CHANCE =     300;    // 1 in X chance of traveling to another room.
 
