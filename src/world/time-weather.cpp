@@ -225,15 +225,6 @@ bool TimeWeather::pass_time(float seconds)
         // Wake the player if they are resting, and take damage.
         if (hp < old_hp)
         {
-            switch (player->awake())
-            {
-                case Player::Awake::ACTIVE: case Player::Awake::COMA: break;
-                case Player::Awake::WAITING: player->set_awake(Player::Awake::ACTIVE); break;
-                case Player::Awake::RESTING: case Player::Awake::SLEEPING:
-                    core()->message("{Y}You awaken with a start!");
-                    player->set_awake(Player::Awake::ACTIVE);
-                    break;
-            }
             if (seconds > UNINTERRUPTABLE_TIME) return false;
         }
         old_hp = hp;
@@ -255,7 +246,7 @@ bool TimeWeather::pass_time(float seconds)
         {
             if (++m_day > 364) m_day = 1;
             if (++m_moon >= LUNAR_CYCLE_DAYS) m_moon = 0;
-            core()->message("{B}It is now " + day_name() + ", the " + day_of_month_string() + " day of " +  month_name() + ".", Show::ALWAYS, Wake::NEVER);
+            core()->message("{B}It is now " + day_name() + ", the " + day_of_month_string() + " day of " +  month_name() + ".");
         }
         old_time = m_time;
         if (time_of_day(true) != old_time_of_day)
@@ -265,7 +256,7 @@ bool TimeWeather::pass_time(float seconds)
             trigger_event(current_season(), &weather_msg, !show_weather_messages);
             change_happened = show_weather_messages;
         }
-        if (change_happened) core()->message(weather_message_colour() + weather_msg.substr(1), Show::WAITING, Wake::NEVER);
+        if (change_happened) core()->message(weather_message_colour() + weather_msg.substr(1));
 
         // Runs the AI on all active mobiles.
         AI::tick_mobs();
@@ -408,7 +399,7 @@ void TimeWeather::trigger_event(TimeWeather::Season season, std::string *message
     if (indoors && !can_see_outside) return;
     const std::string time_message = m_tw_string_map.at(time_of_day_str(true) + "_" + weather_str(fix_weather(m_weather, season)) + (indoors ? "_INDOORS" : ""));
     if (message_to_append) *message_to_append += " " + time_message;
-    else core()->message(weather_message_colour() + time_message, Show::WAITING, Wake::NEVER);
+    else core()->message(weather_message_colour() + time_message);
 }
 
 // Returns the total amount of seconds that passed in the game.

@@ -13,14 +13,6 @@ class Terminal;     // defined in terminal/terminal.hpp
 class World;        // defined in core/world.hpp
 
 
-// Determines when messages are shown -- for example, RESTING will be shown when the player is resting, waiting, or active. WAITING will only show when waiting or active.
-// ALWAYS is used in *all* cases no matter what -- for example, if the player is unconscious.
-enum class Show : uint8_t { ACTIVE, WAITING, RESTING, SLEEPING, ALWAYS };
-
-// Determines when messages will interrupt the player's rest. NEVER will never interrupt rest.
-enum class Wake : uint8_t { ACTIVE, WAITING, RESTING, SLEEPING, ALWAYS, NEVER };
-
-
 class Core
 {
 public:
@@ -30,7 +22,7 @@ public:
     void                                init();             // Sets up the core game classes and data.
     void                                load(unsigned int save_slot);   // Loads a specified slot's saved game.
     void                                main_loop();        // The main game loop.
-    void                                message(std::string msg, Show show = Show::ALWAYS, Wake wake = Wake::NEVER, bool interrupt = false);    // Prints a message.
+    void                                message(std::string msg, bool interrupt = false);   // Prints a message.
     const std::shared_ptr<MessageLog>   messagelog() const; // Returns a pointer to the MessageLog object.
     const std::shared_ptr<Parser>       parser() const;     // Returns a pointer to the Parser object.
     const std::shared_ptr<Random>       rng() const;        // Returns a pointer to the Random object.

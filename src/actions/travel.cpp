@@ -93,21 +93,14 @@ bool ActionTravel::travel(std::shared_ptr<Mobile> mob, Direction dir, bool confi
 
     if (sky || sky2 || sky3)
     {
-        if (is_player) core()->message("{C}You take a {U}leap of faith{C}!", Show::ALWAYS, Wake::ALWAYS);
-        else if (mob_loc == player_loc) core()->message("{U}" + mob_name_the + " {U}takes a leap of faith " + StrX::dir_to_name(dir, StrX::DirNameType::TO_THE_ALT) + "!",
-            Show::WAITING, Wake::NEVER);
+        if (is_player) core()->message("{C}You take a {U}leap of faith{C}!");
+        else if (mob_loc == player_loc) core()->message("{U}" + mob_name_the + " {U}takes a leap of faith " + StrX::dir_to_name(dir, StrX::DirNameType::TO_THE_ALT) + "!");
     }
-    else if (!is_player && mob_loc == player_loc) core()->message("{U}" + mob_name_the + " {U}leaves " + StrX::dir_to_name(dir, StrX::DirNameType::TO_THE_ALT) + ".",
-        Show::WAITING, Wake::NEVER);
+    else if (!is_player && mob_loc == player_loc) core()->message("{U}" + mob_name_the + " {U}leaves " + StrX::dir_to_name(dir, StrX::DirNameType::TO_THE_ALT) + ".");
 
     mob->set_location(room_link);
     if (is_player) ActionLook::look(mob);
-    else if (room_link == player_loc)
-    {
-        const bool hostile = mob->is_hostile();
-        core()->message("{U}" + mob_name_a + " {U}arrives " + StrX::dir_to_name(MathX::dir_invert(dir), StrX::DirNameType::FROM_THE_ALT) + ".",
-            (hostile ? Show::RESTING : Show::WAITING), (hostile ? Wake::NEVER : Wake::RESTING));
-    }
+    else if (room_link == player_loc) core()->message("{U}" + mob_name_a + " {U}arrives " + StrX::dir_to_name(MathX::dir_invert(dir), StrX::DirNameType::FROM_THE_ALT) + ".");
 
     if (sky || sky2 || sky3)
     {
@@ -137,20 +130,20 @@ bool ActionTravel::travel(std::shared_ptr<Mobile> mob, Direction dir, bool confi
             unsigned int hp_damage = std::round(static_cast<float>(mob->hp(true)) * damage_perc);
             mob->reduce_hp(hp_damage);
             if (is_player) core()->message("{R}You land badly, and the impact " + Combat::damage_str(hp_damage, mob, false) + " {R}you! {W}<{R}-" + StrX::intostr_pretty(hp_damage) +
-                "{W}>", Show::ALWAYS, Wake::ALWAYS);
+                "{W}>");
             else
             {
                 if (room_link == player_loc)
                 {
-                    if (player_can_see) core()->message("{U}" + mob_name_a + " {U}lands badly nearby with a painful crunch!", Show::RESTING, Wake::RESTING);
-                    else core()->message("{U}You hear the loud crunch of something landing badly nearby!", Show::RESTING, Wake::RESTING);
+                    if (player_can_see) core()->message("{U}" + mob_name_a + " {U}lands badly nearby with a painful crunch!");
+                    else core()->message("{U}You hear the loud crunch of something landing badly nearby!");
                 }
             }
             core()->world()->get_room(mob->location())->add_scar(ScarType::BLOOD, blood_intensity);
             if (mob->hp() <= 0)
             {
-                if (is_player) core()->message("{0}{M}Your bones are shattered from the impact, death is mercifully quick.", Show::ALWAYS, Wake::ALWAYS);
-                else if (player_can_see && room_link == player_loc) core()->message("{U}" + mob_name_the + " is slain instantly from the impact!", Show::RESTING, Wake::RESTING);
+                if (is_player) core()->message("{0}{M}Your bones are shattered from the impact, death is mercifully quick.");
+                else if (player_can_see && room_link == player_loc) core()->message("{U}" + mob_name_the + " is slain instantly from the impact!");
             }
         }
         else if (is_player) core()->message("{g}Despite the distance fallen, you manage to land safely on your feet.");

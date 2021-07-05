@@ -33,7 +33,7 @@
 std::shared_ptr<Core> greave = nullptr;   // The main Core object.
 
 const std::string   Core::GAME_VERSION =    "pre-alpha";    // The game's version number.
-const unsigned int  Core::SAVE_VERSION =    42;             // The version number for saved game files. This should increment when old saves can no longer be loaded.
+const unsigned int  Core::SAVE_VERSION =    43;             // The version number for saved game files. This should increment when old saves can no longer be loaded.
 const unsigned int  Core::TAGS_PERMANENT =  10000;          // The tag number at which tags are considered permanent.
 
 
@@ -175,18 +175,11 @@ void Core::main_loop()
 
 // Prints a message in the message log.
 #ifdef GREAVE_TOLK
-void Core::message(std::string msg, Show show, Wake wake, bool interrupt)
+void Core::message(std::string msg, bool interrupt)
 #else
-void Core::message(std::string msg, Show show, Wake wake, bool)
+void Core::message(std::string msg, bool)
 #endif
 {
-    if (m_world)
-    {
-        const int awake = static_cast<int>(m_world->player()->awake());
-        if (awake > static_cast<int>(show)) return; // Don't show certain messages if the player is resting/sleeping too deeply.
-        if (wake != Wake::NEVER && awake <= static_cast<int>(wake)) m_world->player()->set_awake(Player::Awake::ACTIVE);    // Wake the player with certain messages.
-    }
-
     m_message_log->msg(msg);
 
 #ifdef GREAVE_TOLK

@@ -97,9 +97,6 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
     const std::string attacker_your_string_c = StrX::capitalize_first_letter(attacker_your_string);
     const std::string weapon_name = weapon_ptr->name();
 
-    const Show show = (attacker_is_player || defender_is_player ? Show::ALWAYS : Show::RESTING);
-    const Wake wake = (attacker_is_player || defender_is_player ? Wake::ALWAYS : Wake::WAITING);
-
     // Roll to hit!
     float hit_multiplier = 1.0f;
     switch (wield_type_attacker)
@@ -152,15 +149,14 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
         {
             if (player_can_see_attacker || player_can_see_defender)
             {
-                if (defender_is_player) core()->message("{G}You parry the " + attacker_your_string + " " + weapon_name + "!", show, wake);
-                else core()->message((attacker_is_player ? "{Y}" : "{U}") + attacker_your_string_c + " " + weapon_name + " is parried by " + defender_name + ".", show, wake);
+                if (defender_is_player) core()->message("{G}You parry the " + attacker_your_string + " " + weapon_name + "!");
+                else core()->message((attacker_is_player ? "{Y}" : "{U}") + attacker_your_string_c + " " + weapon_name + " is parried by " + defender_name + ".");
             }
         }
         else
         {
             if (player_can_see_attacker || player_can_see_defender)
-                core()->message((attacker_is_player ? "{Y}" : (defender_is_player ? "{U}" : "{U}")) + attacker_your_string_c + " " + weapon_name + " misses " + defender_name + ".",
-                    show, wake);
+                core()->message((attacker_is_player ? "{Y}" : (defender_is_player ? "{U}" : "{U}")) + attacker_your_string_c + " " + weapon_name + " misses " + defender_name + ".");
         }
     }
     else
@@ -256,7 +252,7 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
             }
             core()->message(block_str + damage_colour + attacker_your_string_c + " " + weapon_name + " " + damage_word + " " + damage_colour +
                 (blocked ? defender_name : defender_name_s + " " + def_location_hit_str) + "!" + threshold_string + absorb_str + " " +
-                damage_number_str(damage, damage_blocked, critical_hit, bleed, poison) + death_str, show, wake);
+                damage_number_str(damage, damage_blocked, critical_hit, bleed, poison) + death_str);
             defender->reduce_hp(damage);
         }
     }

@@ -186,7 +186,7 @@ bool ActionInventory::equip(std::shared_ptr<Mobile> mob, uint32_t item_pos)
     const bool success = mob->pass_time(time_taken);
     if (!success)
     {
-        core()->message("{R}You are interrupted while attempting to " + action + " the " + item->name() + "{R}!", Show::ALWAYS, Wake::ALWAYS);
+        core()->message("{R}You are interrupted while attempting to " + action + " the " + item->name() + "{R}!");
         return false;
     }
     core()->message("{U}You " + action + " the " + item->name() + " {U}" + slot_name + ".");
@@ -303,7 +303,7 @@ bool ActionInventory::unequip(std::shared_ptr<Mobile> mob, uint32_t item_pos)
     const bool success = mob->pass_time(time_taken);
     if (!success)
     {
-        core()->message("{R}You are interrupted while attempting to " + action + " the " + item->name() + "{R}!", Show::ALWAYS, Wake::ALWAYS);
+        core()->message("{R}You are interrupted while attempting to " + action + " the " + item->name() + "{R}!");
         return false;
     }
 

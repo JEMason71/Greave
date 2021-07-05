@@ -8,20 +8,15 @@
 class Player : public Mobile
 {
 public:
-    enum class Awake : uint8_t { ACTIVE, WAITING, RESTING, SLEEPING, COMA };
-
     static const std::string    SQL_PLAYER; // The SQL table construction string for the player data.
 
                 Player();                           // Constructor, sets default values.
-    Awake       awake() const;                      // Checks the consciousness level of the Player.
     bool        is_player() const override;         // Returns true if this Mobile is a Player, false if not.
     uint32_t    load(std::shared_ptr<SQLite::Database> save_db, unsigned int sql_id) override;  // Loads the Player data.
     uint32_t    mob_target();                       // Retrieves the Mobile target if it's still valid, or sets it to 0 if not.
     uint32_t    save(std::shared_ptr<SQLite::Database> save_db) override;   // Saves this Player.
-    void        set_awake(Awake awake);             // Sets the consciousness level of this Player.
     void        set_mob_target(uint32_t target);    // Sets a new Mobile target.
 
 private:
-    Awake       m_awake;        // The consciousness of the Player character.
     uint32_t    m_mob_target;   // The last Mobile to have been attacked.
 };

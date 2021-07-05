@@ -51,11 +51,11 @@ void AI::tick_mob(std::shared_ptr<Mobile> mob, uint32_t)
         if (mob->tag(MobileTag::Coward))
         {
             // Attempt a safe travel; if it fails, panic and attempt a more dangerous exit.
-            if (location == player_location) core()->message("{U}" + mob->name(Mobile::NAME_FLAG_THE) + " {U}flees in a blind panic!", Show::ACTIVE, Wake::NEVER);
+            if (location == player_location) core()->message("{U}" + mob->name(Mobile::NAME_FLAG_THE) + " {U}flees in a blind panic!");
             if (!travel_randomly(mob, true))
             {
                 mob->pass_time();
-                if (location == player_location) core()->message("{0}{u}... But " + mob->he_she() + " can't get away!", Show::ACTIVE, Wake::NEVER);
+                if (location == player_location) core()->message("{0}{u}... But " + mob->he_she() + " can't get away!");
             }
         }
         // For non-cowardly NPCs, we'll wait until there's sufficient action time available to perform an attack. If not, just wait until there is.

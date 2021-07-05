@@ -280,7 +280,7 @@ void Mobile::reduce_hp(int amount)
         std::string death_message = "{U}" + name(NAME_FLAG_CAPITALIZE_FIRST | NAME_FLAG_THE);
         if (tag(MobileTag::Unliving)) death_message += " is destroyed!";
         else death_message += " is slain!";
-        core()->message(death_message, Show::RESTING, Wake::NEVER);
+        core()->message(death_message);
     }
     if (m_spawn_room) core()->world()->get_room(m_spawn_room)->clear_tag(RoomTag::MobSpawned);
     core()->world()->remove_mobile(m_id);

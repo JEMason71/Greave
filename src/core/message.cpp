@@ -175,7 +175,7 @@ std::string MessageLog::render_message_log(bool accept_blank_input)
             std::string result = std::regex_replace(m_input_buffer, std::regex("^ +| +$|( ) +"), "$1");
             if (result.size())
             {
-                core()->message("{c}> " + result, Show::ALWAYS, Wake::ALWAYS, true);
+                core()->message("{c}> " + result, true);
                 m_input_buffer = "";
                 m_last_input = result;
                 return result;
