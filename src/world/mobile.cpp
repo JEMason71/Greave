@@ -3,6 +3,7 @@
 
 #include "3rdparty/SQLiteCpp/SQLiteCpp.h"
 #include "core/core.hpp"
+#include "core/guru.hpp"
 #include "core/random.hpp"
 #include "core/strx.hpp"
 #include "world/inventory.hpp"
@@ -13,7 +14,8 @@
 #include "world/world.hpp"
 
 
-const uint32_t Mobile::BASE_CARRY_WEIGHT =      30000;  // The maximum amount of weight a Mobile can carry, before modifiers.
+const float     Mobile::ACTION_TIMER_CAP_MAX =  3600.0f;    // The maximum value the action timer can ever reach.
+const uint32_t  Mobile::BASE_CARRY_WEIGHT =     30000;      // The maximum amount of weight a Mobile can carry, before modifiers.
 
 // Flags for the name() function.
 const int Mobile::NAME_FLAG_A =                 1;  // Precede the Mobile's name with 'a' or 'an', unless the name is a proper noun.
@@ -47,6 +49,9 @@ void Mobile::add_hostility(uint32_t mob_id)
     m_hostility.push_back(mob_id);
 }
 
+// Adds a second to this Mobile's action timer.
+void Mobile::add_second() { if (++m_action_timer > ACTION_TIMER_CAP_MAX) m_action_timer = ACTION_TIMER_CAP_MAX; }
+
 // Returns the number of seconds needed for this Mobile to make an attack.
 float Mobile::attack_speed() const
 {
@@ -79,8 +84,8 @@ float Mobile::block_mod() const
     return mod_perc / 100.0f;
 }
 
-// Checks if the Mobile's action timer is ready.
-bool Mobile::can_act() const { return m_action_timer >= 0; }
+// Checks if this Mobile has enough action timer built up to perform an action.
+bool Mobile::can_perform_action(float time) const { return m_action_timer >= time; }
 
 // Checks how much weight this Mobile is carrying.
 uint32_t Mobile::carry_weight() const
@@ -253,10 +258,14 @@ uint16_t Mobile::parser_id() const { return m_parser_id; }
 bool Mobile::pass_time(float seconds)
 {
     // For the player, time passes in the world itself.
-    if (is_player()) return core()->world()->time_weather()->pass_time(seconds);
+    if (is_player())
+    {
+        if (!seconds) core()->guru()->nonfatal("Attempt to pass 0 seconds on player character.", Guru::WARN);
+        return core()->world()->time_weather()->pass_time(seconds);
+    }
 
-    // For NPCs, we'll just take the time from their action timer.
-    m_action_timer -= seconds;
+    // For NPCs, any action clears their action timer.
+    m_action_timer = 0;
     return true;
 }
 
@@ -264,7 +273,6 @@ bool Mobile::pass_time(float seconds)
 void Mobile::reduce_hp(int amount)
 {
     m_hp[0] -= amount;
-    if (m_action_timer < -10.0f) m_action_timer = -10.0f;   // Kludge to allow NPCs to react more quickly when engaged in combat after arriving in a room.
     if (m_hp[0] > 0 || is_player()) return; // The player character's death is handled elsewhere.
 
     if (m_location == core()->world()->player()->location())
@@ -277,9 +285,6 @@ void Mobile::reduce_hp(int amount)
     if (m_spawn_room) core()->world()->get_room(m_spawn_room)->clear_tag(RoomTag::MobSpawned);
     core()->world()->remove_mobile(m_id);
 }
-
-// Restores time for this Mobile's action timer.
-void Mobile::restore_action_timer(float amount) { m_action_timer += amount; }
 
 // Restores a specified amount of hit points.
 int Mobile::restore_hp(int amount)

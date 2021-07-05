@@ -18,6 +18,7 @@ const uint32_t  AI::TRAVEL_CHANCE = 300;    // 1 in X chance of traveling to ano
 // Processes AI for a specific active Mobile.
 void AI::tick_mob(std::shared_ptr<Mobile> mob, uint32_t)
 {
+    mob->add_second();  // This is called every second, per active Mobile.
     auto rng = core()->rng();
     const uint32_t location = mob->location();
     const uint32_t player_location = core()->world()->player()->location();
@@ -44,39 +45,56 @@ void AI::tick_mob(std::shared_ptr<Mobile> mob, uint32_t)
     }
     if (attack_target)
     {
+        // Fleeing happens regardless of the action timer. This is a concession to allow mobiles to even have a chance of realistically running away.
+        // Penalizing their action timer after fleeing leaves all sorts of problems, such as the mobile left standing there defenseless while the player
+        // character beats on them. It's not an ideal solution, but this is really the best I can do for now. This will need to be balanced better later.
         if (mob->tag(MobileTag::Coward))
         {
             // Attempt a safe travel; if it fails, panic and attempt a more dangerous exit.
             if (location == player_location) core()->message("{U}" + mob->name(Mobile::NAME_FLAG_THE) + " {U}flees in a blind panic!", Show::ACTIVE, Wake::NEVER);
             if (!travel_randomly(mob, true))
             {
-                mob->pass_time(600);
+                mob->pass_time();
                 if (location == player_location) core()->message("{0}{u}... But " + mob->he_she() + " can't get away!", Show::ACTIVE, Wake::NEVER);
             }
         }
-        else Melee::attack(mob, attack_target);
+        // For non-cowardly NPCs, we'll wait until there's sufficient action time available to perform an attack. If not, just wait until there is.
+        // This will prevent angry NPCs from just doing something else entirely, instead of winding up to attack.
+        else if (mob->can_perform_action(mob->attack_speed())) Melee::attack(mob, attack_target);
         return;
     }
 
     if (mob->tag(MobileTag::AggroOnSight) && rng->rnd(AGGRO_CHANCE) == 1 && location == player_location)
     {
-        Melee::attack(mob, core()->world()->player());
-        return;
+        // Unlike the code above -- which handles NPCs that have a specific hatred for a specific mobile (or the player), this is more of a general
+        // 'picking a fight' situation. If action time isn't available, we'll allow the option to do something else in the meantime, because this
+        // particular mobile isn't hellbent on unleashing limitless unlimited unprecedented eternal terrible violence on anyone *in particular*.
+        if (mob->can_perform_action(mob->attack_speed()))
+        {
+            Melee::attack(mob, core()->world()->player());
+            return;
+        }
     }
 
-    if (rng->rnd(TRAVEL_CHANCE) == 1 && travel_randomly(mob, false)) return;
+    if (rng->rnd(TRAVEL_CHANCE) == 1)
+    {
+        // This is another concession I'm making for mobiles -- all exits will 'cost' the same, while for the player, 'longer' exits cost more.
+        // Why? Because this AI code is ticking once an in-game second, it'll end up heavily favouring the shorter exit routs as soon as the
+        // action time is available, which will result in much less interesting AI behaviour.
+        if (mob->can_perform_action(ActionTravel::TRAVEL_TIME_NORMAL))
+        {
+            // If the attempt fails (no valid exits, etc.) we'll just continue looking for more actions to perform.
+            if (travel_randomly(mob, false)) return;
+        }
+    }
+
 }
 
 // Ticks all the mobiles in active rooms.
 void AI::tick_mobs()
 {
     for (unsigned int m = 0; m < core()->world()->mob_count(); m++)
-    {
-        const auto mob = core()->world()->mob_vec(m);
-        mob->restore_action_timer(1.0f);    // tick_mobs() is called every in-game second.
-        if (!mob->can_act()) continue;
-        tick_mob(mob, m);
-    }
+        tick_mob(core()->world()->mob_vec(m), m);
 }
 
 // Sends the Mobile in a random direction.

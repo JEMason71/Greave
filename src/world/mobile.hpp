@@ -46,9 +46,10 @@ public:
 
                         Mobile();                                   // Constructor, sets default values.
     void                add_hostility(uint32_t mob_id);             // Adds a Mobile (or the player, with ID 0) to this Mobile's hostility list.
+    void                add_second();                               // Adds a second to this Mobile's action timer.
     float               attack_speed() const;                       // Returns the number of seconds needed for this Mobile to make an attack.
     float               block_mod() const;                          // Returns the modified chance to block for this Mobile, based on equipped gear.
-    bool                can_act() const;                            // Checks if the Mobile's action timer is ready.
+    bool                can_perform_action(float time) const;       // Checks if this Mobile has enough action timer built up to perform an action.
     uint32_t            carry_weight() const;                       // Checks how much weight this Mobile is carrying.
     void                clear_tag(MobileTag the_tag);               // Clears an MobileTag from this Mobile.
     float               dodge_mod() const;                          // Returns the modified chance to dodge for this Mobile, based on equipped gear.
@@ -70,9 +71,8 @@ public:
     void                new_parser_id();                            // Generates a new parser ID for this Mobile.
     float               parry_mod() const;                          // Returns the modified chance to parry for this Mobile, based on equipped gear.
     uint16_t            parser_id() const;                          // Retrieves the current ID of this Mobile, for parser differentiation.
-    bool                pass_time(float seconds);                   // Causes time to pass for this Mobile.
+    bool                pass_time(float seconds = 0.0f);            // Causes time to pass for this Mobile.
     void                reduce_hp(int amount);                      // Reduces this Mobile's hit points.
-    void                restore_action_timer(float amount);         // Restores time for this Mobile's action timer.
     int                 restore_hp(int amount);                     // Restores a specified amount of hit points.
     virtual uint32_t    save(std::shared_ptr<SQLite::Database> save_db);    // Saves this Mobile.
     void                set_hp(int hp, int hp_max = 0);             // Sets the current (and, optionally, maximum) HP of this Mobile.
@@ -87,9 +87,10 @@ public:
     bool                tag(MobileTag the_tag) const;               // Checks if a MobileTag is set on this Mobile.
 
 protected:
-    static const uint32_t   BASE_CARRY_WEIGHT;  // The maximum amount of weight a Mobile can carry, before modifiers.
+    static const float      ACTION_TIMER_CAP_MAX;   // The maximum value the action timer can ever reach.
+    static const uint32_t   BASE_CARRY_WEIGHT;      // The maximum amount of weight a Mobile can carry, before modifiers.
 
-    float                       m_action_timer; // When this timer reaches 0, the Mobile is able to act. Any actions it takes detract from the timer.
+    float                       m_action_timer; // 'Charges up' with time, to allow NPCs to perform timed actions.
     std::shared_ptr<Inventory>  m_equipment;    // The Items currently worn or wielded by this Mobile.
     Gender                      m_gender;       // The gender of this Mobile.
     std::vector<uint32_t>       m_hostility;    // The hostility vector keeps track of who this Mobile is angry with.
