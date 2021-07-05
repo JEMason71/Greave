@@ -47,7 +47,7 @@ struct BodyPart
 
 struct Buff
 {
-    enum class Type : uint8_t { NONE };
+    enum class Type : uint8_t { NONE, RECENTLY_FLED };
 
     static const std::string    SQL_BUFFS;  // The SQL table construction string for Buffs.
 
@@ -122,18 +122,18 @@ protected:
 
     std::shared_ptr<Buff>   buff(Buff::Type type) const;    // Returns a pointer to a specified Buff.
 
-    float                           m_action_timer; // 'Charges up' with time, to allow NPCs to perform timed actions.
-    std::set<std::shared_ptr<Buff>> m_buffs;        // Any and all buffs or debuffs on this Mobile.
-    std::shared_ptr<Inventory>      m_equipment;    // The Items currently worn or wielded by this Mobile.
-    Gender                          m_gender;       // The gender of this Mobile.
-    std::vector<uint32_t>           m_hostility;    // The hostility vector keeps track of who this Mobile is angry with.
-    int                             m_hp[2];        // The current and maxmum hit points of this Mobile.
-    uint32_t                        m_id;           // The Mobile's unique ID.
-    std::shared_ptr<Inventory>      m_inventory;    // The Items being carried by this Mobile.
-    uint32_t                        m_location;     // The Room that this Mobile is currently located in.
-    std::string                     m_name;         // The name of this Mobile.
-    uint16_t                        m_parser_id;    // The semi-unique ID of this Mobile, for parser differentiation.
-    uint32_t                        m_spawn_room;   // The Room that spawned this Mobile.
-    std::string                     m_species;      // Ths species type of this Mobile.
-    std::set<MobileTag>             m_tags;         // Any and all tags on this Mobile.
+    float                               m_action_timer; // 'Charges up' with time, to allow NPCs to perform timed actions.
+    std::vector<std::shared_ptr<Buff>>  m_buffs;        // Any and all buffs or debuffs on this Mobile.
+    std::shared_ptr<Inventory>          m_equipment;    // The Items currently worn or wielded by this Mobile.
+    Gender                              m_gender;       // The gender of this Mobile.
+    std::vector<uint32_t>               m_hostility;    // The hostility vector keeps track of who this Mobile is angry with.
+    int                                 m_hp[2];        // The current and maxmum hit points of this Mobile.
+    uint32_t                            m_id;           // The Mobile's unique ID.
+    std::shared_ptr<Inventory>          m_inventory;    // The Items being carried by this Mobile.
+    uint32_t                            m_location;     // The Room that this Mobile is currently located in.
+    std::string                         m_name;         // The name of this Mobile.
+    uint16_t                            m_parser_id;    // The semi-unique ID of this Mobile, for parser differentiation.
+    uint32_t                            m_spawn_room;   // The Room that spawned this Mobile.
+    std::string                         m_species;      // Ths species type of this Mobile.
+    std::set<MobileTag>                 m_tags;         // Any and all tags on this Mobile.
 };

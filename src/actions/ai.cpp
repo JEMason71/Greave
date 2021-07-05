@@ -11,8 +11,10 @@
 #include "world/world.hpp"
 
 
-const uint32_t  AI::AGGRO_CHANCE =  60;     // 1 in X chance of starting a fight.
-const uint32_t  AI::TRAVEL_CHANCE = 300;    // 1 in X chance of traveling to another room.
+const uint32_t  AI::AGGRO_CHANCE =      60;     // 1 in X chance of starting a fight.
+const uint16_t  AI::FLEE_DEBUFF_TIME =  8;      // The length of time the fleeing debuff lasts.
+const float     AI::FLEE_TIME =         60.0f;  // The action time it takes to flee in terror.
+const uint32_t  AI::TRAVEL_CHANCE =     300;    // 1 in X chance of traveling to another room.
 
 
 // Processes AI for a specific active Mobile.
@@ -50,13 +52,28 @@ void AI::tick_mob(std::shared_ptr<Mobile> mob, uint32_t)
         // character beats on them. It's not an ideal solution, but this is really the best I can do for now. This will need to be balanced better later.
         if (mob->tag(MobileTag::Coward))
         {
-            // Attempt a safe travel; if it fails, panic and attempt a more dangerous exit.
-            if (location == player_location) core()->message("{U}" + mob->name(Mobile::NAME_FLAG_THE) + " {U}flees in a blind panic!");
-            if (!travel_randomly(mob, true))
+            // Check if we've fled recently.
+            if (mob->has_buff(Buff::Type::RECENTLY_FLED))
             {
-                mob->pass_time();
-                if (location == player_location) core()->message("{0}{u}... But " + mob->he_she() + " can't get away!");
+                if (mob->can_perform_action(FLEE_TIME))
+                {
+                    if (location == player_location) core()->message("{u}" + mob->name(Mobile::NAME_FLAG_THE) + " {u}cowers in fear!");
+                    mob->pass_time();
+                }
+                return;
             }
+            else if (mob->can_perform_action(FLEE_TIME))
+            {
+                // Attempt a safe travel; if it fails, panic and attempt a more dangerous exit.
+                if (location == player_location) core()->message("{U}" + mob->name(Mobile::NAME_FLAG_THE) + " {U}flees in a blind panic!");
+                if (!travel_randomly(mob, true))
+                {
+                    mob->pass_time();
+                    if (location == player_location) core()->message("{0}{u}... But " + mob->he_she() + " can't get away!");
+                }
+                mob->set_buff(Buff::Type::RECENTLY_FLED, FLEE_DEBUFF_TIME);
+            }
+            else return;    // If they don't have enough action time available to flee, just wait and charge it up, it won't take long.
         }
         // For non-cowardly NPCs, we'll wait until there's sufficient action time available to perform an attack. If not, just wait until there is.
         // This will prevent angry NPCs from just doing something else entirely, instead of winding up to attack.
@@ -76,7 +93,7 @@ void AI::tick_mob(std::shared_ptr<Mobile> mob, uint32_t)
         }
     }
 
-    if (rng->rnd(TRAVEL_CHANCE) == 1)
+    if (rng->rnd(TRAVEL_CHANCE) == 1 && !mob->has_buff(Buff::Type::RECENTLY_FLED))
     {
         // This is another concession I'm making for mobiles -- all exits will 'cost' the same, while for the player, 'longer' exits cost more.
         // Why? Because this AI code is ticking once an in-game second, it'll end up heavily favouring the shorter exit routs as soon as the

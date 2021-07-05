@@ -151,15 +151,13 @@ uint32_t Mobile::carry_weight() const
 // Clears a specified buff/debuff from the Actor, if it exists.
 void Mobile::clear_buff(Buff::Type type)
 {
-    auto it = m_buffs.begin();
-    while (it != m_buffs.end())
+    for (unsigned int i = 0; i < m_buffs.size(); i++)
     {
-        if (it->get()->type == type)
+        if (m_buffs.at(i)->type == type)
         {
-            m_buffs.erase(it);
+            m_buffs.erase(m_buffs.begin() + i);
             return;
         }
-        it++;
     }
 }
 
@@ -278,7 +276,7 @@ uint32_t Mobile::load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id
     SQLite::Statement buff_query(*save_db, "SELECT * FROM buffs WHERE owner = ?");
     buff_query.bind(1, sql_id);
     while (buff_query.executeStep())
-        m_buffs.insert(Buff::load(buff_query));
+        m_buffs.push_back(Buff::load(buff_query));
 
     return sql_id;
 }
@@ -425,7 +423,7 @@ void Mobile::set_buff(Buff::Type type, uint16_t time, uint32_t power, bool addit
     new_buff->type = type;
     new_buff->time = time;
     new_buff->power = power;
-    m_buffs.insert(new_buff);
+    m_buffs.push_back(new_buff);
 }
 
 // Sets the current (and, optionally, maximum) HP of this Mobile.
@@ -477,13 +475,13 @@ bool Mobile::tag(MobileTag the_tag) const { return (m_tags.count(the_tag) > 0); 
 // Reduce the timer on all buffs.
 void Mobile::tick_buffs()
 {
-    auto it = m_buffs.begin();
-    while (it != m_buffs.end())
+    for (unsigned int i = 0; i < m_buffs.size(); i++)
     {
-        if (it->get()->time != USHRT_MAX)
+        if (m_buffs.at(i)->time == USHRT_MAX) continue;
+        if (!--m_buffs.at(i)->time)
         {
-            if (!(--it->get()->time)) m_buffs.erase(it);
-            else it++;
+            m_buffs.erase(m_buffs.begin() + i--);
+            core()->message("{G}BUFF EXPIRED");
         }
     }
 }
