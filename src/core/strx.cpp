@@ -265,6 +265,40 @@ std::string StrX::metadata_to_string(const std::map<std::string, std::string> &m
     return output;
 }
 
+// Converts a coin value into a mithril/gold/silver/copper ANSI string.
+std::string StrX::mgsc_string(uint32_t coin, StrX::MGSC mode)
+{
+	const uint32_t mithril = coin / 1000000;
+	const uint32_t gold = (coin - (mithril * 1000000)) / 1000;
+	const uint32_t silver = (coin - (mithril * 1000000) - (gold * 1000)) / 10;
+	const uint32_t copper = (coin - (mithril * 1000000) - (gold * 1000) - (silver * 10));
+	if (mode == MGSC::SHORT || mode == MGSC::SHORT_ROUND)
+	{
+		std::string mithril_string, gold_string, silver_string, copper_string;
+		if (mithril) mithril_string = "{C}" + intostr_pretty(mithril) + "m";
+		if (gold) gold_string = "{Y}" + std::to_string(gold) + "g";
+		if (silver) silver_string = "{w}" + std::to_string(silver) + "s";
+		if (copper) copper_string = "{y}" + std::to_string(copper) + "c";
+		if (mode == MGSC::SHORT_ROUND)
+		{
+			if (mithril >= 100) gold_string = "";
+			if (mithril) silver_string = "";
+			if (gold >= 100 || mithril) copper_string = "";
+		}
+		return mithril_string + gold_string + silver_string + copper_string;
+	}
+	else
+	{
+		std::vector<std::string> result_vec;
+		if (mithril) result_vec.push_back(intostr_pretty(mithril) + " mithril");
+		if (gold) result_vec.push_back(std::to_string(gold) + " gold");
+		if (silver) result_vec.push_back(std::to_string(silver) + " silver");
+		if (copper) result_vec.push_back(std::to_string(copper) + " copper");
+		if (result_vec.size()) return comma_list(result_vec);
+		else return "zero";
+	}
+}
+
 // Makes a string into a possessive noun (e.g. orc = orc's, platypus = platypus')
 std::string StrX::possessive_string(const std::string &str)
 {

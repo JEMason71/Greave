@@ -10,6 +10,18 @@
 #include "world/world.hpp"
 
 
+// Adds money to the player's wallet.
+void ActionCheat::add_money(int32_t amount)
+{
+    if (amount <= 0)
+    {
+        core()->message("{m}Don't be ridiculous.");
+        return;
+    }
+    core()->world()->player()->add_money(amount);
+    core()->message("{G}Your purse suddenly feels heavier!");
+}
+
 // Attempts to spawn an item.
 void ActionCheat::spawn_item(std::string item)
 {

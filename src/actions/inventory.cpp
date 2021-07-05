@@ -7,7 +7,7 @@
 #include "core/strx.hpp"
 #include "world/inventory.hpp"
 #include "world/item.hpp"
-#include "world/mobile.hpp"
+#include "world/player.hpp"
 #include "world/room.hpp"
 #include "world/world.hpp"
 
@@ -36,15 +36,13 @@ void ActionInventory::check_inventory(std::shared_ptr<Mobile> mob)
     const auto inventory = mob->inv();
     const uint32_t inv_size = inventory->count();
 
-    if (!inv_size)
+    if (inv_size)
     {
-        core()->message("{y}You are not carrying anything.");
-        return;
+        core()->message("{G}You are carrying:");
+        for (unsigned int i = 0; i < inv_size; i++)
+            core()->message("{0}" + inventory->get(i)->name(Item::NAME_FLAG_FULL_STATS | Item::NAME_FLAG_ID));
     }
-
-    core()->message("{G}You are carrying:");
-    for (unsigned int i = 0; i < inv_size; i++)
-        core()->message("{0}" + inventory->get(i)->name(Item::NAME_FLAG_FULL_STATS | Item::NAME_FLAG_ID));
+    else core()->message("{y}You are not carrying anything.");
 
     weight_and_money(mob);
 }
@@ -325,5 +323,11 @@ bool ActionInventory::unequip(std::shared_ptr<Mobile> mob, EquipSlot slot)
 // Shows the total carry weight and currency the Mobile is carrying.
 void ActionInventory::weight_and_money(std::shared_ptr<Mobile> mob)
 {
-    core()->message("{0}{c}Total weight: {C}" + StrX::intostr_pretty(mob->carry_weight()) + "{c}/{C}" + StrX::intostr_pretty(mob->max_carry()) + " {c}pacs.");
+    if (mob->carry_weight() || mob->inv()->count())
+        core()->message("{0}{c}Total weight: {C}" + StrX::intostr_pretty(mob->carry_weight()) + "{c}/{C}" + StrX::intostr_pretty(mob->max_carry()) + " {c}pacs.");
+
+    if (!mob->is_player()) return;
+    const auto player = core()->world()->player();
+    if (!player->money()) return;
+    core()->message("{0}{c}Money carried: " + StrX::mgsc_string(player->money(), StrX::MGSC::SHORT) + "{c}.");
 }

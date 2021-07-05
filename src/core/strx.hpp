@@ -11,6 +11,7 @@ public:
     static const int    CL_FLAG_USE_AND, CL_FLAG_SQL_MODE;  // comma_list() flags
 
     enum class DirNameType : uint8_t { NORMAL, TO_THE, TO_THE_ALT, FROM_THE, FROM_THE_ALT };
+    enum class MGSC : uint8_t { SHORT, SHORT_ROUND, LONG }; // mgsc_string() modes.
 
     static std::string  capitalize_first_letter(std::string str);   // Capitalizes the first letter of a string.
     static std::string  collapse_vector(std::vector<std::string> vec);  // Simple function to collapse a string vector into words.
@@ -30,6 +31,7 @@ public:
     static std::string  itoh(unsigned int num, uint32_t min_len);   // Converts an integer into a hex string.
     static std::string  itos(unsigned int num, uint32_t min_len);   // Converts an integer to a string, but optionally pads it to a minimum length with leading zeroes.
     static std::string  metadata_to_string(const std::map<std::string, std::string> &metadata); // Converts a metadata map into a string.
+    static std::string  mgsc_string(uint32_t coin, MGSC mode);      // Converts a coin value into a mithril/gold/silver/copper ANSI string.
     static std::string  possessive_string(const std::string &str);  // Makes a string into a possessive noun (e.g. orc = orc's, platypus = platypus')
     static std::string  rainbow_text(const std::string &str, const std::string &colours);   // Makes pretty rainbow text!
     static std::string  round_to_two(double num);                   // Calls MathX::round_to_two(), then returns the result as a string.

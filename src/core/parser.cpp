@@ -48,6 +48,7 @@ Parser::Parser() : m_special_state(SpecialState::NONE)
     add_command("[xyzzy|frotz|plugh|plover]", ParserCommand::XYZZY);
     add_command("yes", ParserCommand::YES);
     add_command("#hash <txt>", ParserCommand::HASH);
+    add_command("#money <txt>", ParserCommand::ADD_MONEY);
     add_command("[#spawnitem|#si] <txt>", ParserCommand::SPAWN_ITEM);
     add_command("[#spawnmobile|#spawnmob|#sm] <txt>", ParserCommand::SPAWN_MOBILE);
     add_command("#tp <txt>", ParserCommand::TELEPORT);
@@ -336,6 +337,10 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
     switch (pcd.command)
     {
         case ParserCommand::NONE: break;
+        case ParserCommand::ADD_MONEY:
+            if (!words.size() || !StrX::is_number(words.at(0))) core()->message("{y}Please specify {Y}how many coins to add{y}.");
+            else ActionCheat::add_money(std::stol(words.at(0)));
+            break;
         case ParserCommand::ATTACK:
             if (parsed_target_type == ParserTarget::TARGET_MOBILE) Melee::attack(player, core()->world()->mob_vec(parsed_target));
             else if (!words.size()) core()->message("{y}Please specify {Y}what you want to attack{y}.");
