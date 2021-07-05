@@ -32,6 +32,7 @@ enum class MobileTag : uint16_t { None = 0,
 
     // Tags that determine the Mobile's general state of being.
     Unliving,       // This Mobile is a construct or other unliving entity.
+    ImmunityBleed,  // This Mobile is unable to bleed.
 
     // Tags regarding the Mobile's AI and behaviour.
     AggroOnSight,   // This Mobile will attack the player on sight.

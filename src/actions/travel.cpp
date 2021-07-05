@@ -139,7 +139,7 @@ bool ActionTravel::travel(std::shared_ptr<Mobile> mob, Direction dir, bool confi
                     else core()->message("{U}You hear the loud crunch of something landing badly nearby!");
                 }
             }
-            core()->world()->get_room(mob->location())->add_scar(ScarType::BLOOD, blood_intensity);
+            if (!mob->tag(MobileTag::ImmunityBleed)) core()->world()->get_room(mob->location())->add_scar(ScarType::BLOOD, blood_intensity);
             if (mob->hp() <= 0)
             {
                 if (is_player) core()->message("{0}{M}Your bones are shattered from the impact, death is mercifully quick.");

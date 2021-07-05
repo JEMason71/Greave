@@ -250,6 +250,7 @@ std::string Combat::threshold_str(std::shared_ptr<Mobile> defender, int damage, 
 // Applies a weapon bleed debuff and applies room scars.
 void Combat::weapon_bleed_effect(std::shared_ptr<Mobile> defender, unsigned int damage)
 {
+    if (defender->tag(MobileTag::ImmunityBleed)) return;
     const int bleed_time = core()->rng()->rnd(BLEED_TIME_RANGE);
     int bleed_severity = damage / (BLEED_SEVERITY_BASE + core()->rng()->rnd(BLEED_SEVERITY_RANGE));
     if (!bleed_severity) bleed_severity = 1;

@@ -476,7 +476,7 @@ bool Mobile::tag(MobileTag the_tag) const { return (m_tags.count(the_tag) > 0); 
 // Triggers a single bleed tick.
 bool Mobile::tick_bleed(uint32_t power, uint16_t time)
 {
-    if (!power) return true;
+    if (!power || tag(MobileTag::ImmunityBleed)) return true;
     const auto room = core()->world()->get_room(m_location);
     const bool fatal = (static_cast<int>(power) >= m_hp[0]);
 
