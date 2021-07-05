@@ -85,6 +85,29 @@ int Item::dodge_mod() const { return meta_int("dodge_mod"); }
 // Checks what slot this Item equips in, if any.
 EquipSlot Item::equip_slot() const { return static_cast<EquipSlot>(meta_int("slot")); }
 
+// Checks if this Item is identical to another (except stack size).
+bool Item::is_identical(std::shared_ptr<Item> item) const
+{
+    // We'll go through the checks in order of computationally cheapest first, and leave the more expensive checks to the end.
+
+    // Integer comparison.
+    if (m_rarity != item->m_rarity) return false;
+    if (m_type != item->m_type) return false;
+    if (m_type_sub != item->m_type_sub) return false;
+    if (m_value != item->m_value) return false;
+    if (m_weight != item->m_weight) return false;
+
+    // String comparison.
+    if (m_name != item->m_name) return false;
+    if (m_description != item->m_description) return false;
+
+    // Way more complicated comparison stuff here.
+    if (StrX::metadata_to_string(m_metadata) != StrX::metadata_to_string(item->m_metadata)) return false;
+    if (StrX::tags_to_string(m_tags) != StrX::tags_to_string(item->m_tags)) return false;
+
+    return true;
+}
+
 // Loads a new Item from the save file.
 std::shared_ptr<Item> Item::load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id)
 {

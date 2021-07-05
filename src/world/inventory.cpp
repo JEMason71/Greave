@@ -12,6 +12,20 @@
 // Adds an Item to this Inventory (this will later handle auto-stacking, etc.)
 void Inventory::add_item(std::shared_ptr<Item> item)
 {
+    // Checks if there's anything else here that can be stacked.
+    if (item->tag(ItemTag::Stackable))
+    {
+        for (unsigned int i = 0; i < m_items.size(); i++)
+        {
+            if (!m_items.at(i)->tag(ItemTag::Stackable)) continue;
+            if (item->is_identical(m_items.at(i)))
+            {
+                m_items.at(i)->set_stack(item->stack() + m_items.at(i)->stack());
+                return;
+            }
+        }
+    }
+
     // Check the Item's hex ID. If it's unset, or if another Item in the Inventory shares its ID, we'll need a new one.
     // Infinite loops relying on RNG to break out are VERY BAD so let's put a threshold on this bad boy.
     int tries = 0;

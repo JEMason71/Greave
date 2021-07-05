@@ -58,6 +58,7 @@ public:
     std::string desc() const;                       // Retrieves this Item's description.
     int         dodge_mod() const;                  // Returns the dodge modifier% for this Item, if any.
     EquipSlot   equip_slot() const;                 // Checks what slot this Item equips in, if any.
+    bool        is_identical(std::shared_ptr<Item> item) const; // Checks if this Item is identical to another (except stack size).
     static std::shared_ptr<Item> load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id);  // Loads a new Item from the save file.
     std::string meta(const std::string &key) const; // Retrieves Item metadata.
     float       meta_float(const std::string &key) const;   // Retrieves metadata, in float format.
