@@ -32,4 +32,7 @@ private:
     static const int    FALL_5_STOREY_BLEED;
     static const int    FALL_5_STOREY_MIN_PERC;
     static const int    FALL_5_STOREY_RNG_PERC;
+    static const int    FALL_BLEED_DIVISOR_MAX;     // The maximum amount of HP damage division from falling applied to each bleed tick.
+    static const int    FALL_BLEED_DIVISOR_MIN;     // The minimum amount of HP damage division from falling applied to each bleed tick.
+    static const int    FALL_BLEED_INTENSITY_RANGE; // The variance range of the length of bleeds from falling.
 };

@@ -15,24 +15,27 @@
 #include "world/world.hpp"
 
 
-const int ActionTravel::FALL_1_STOREY_BLEED =       5;      // Intensity for the bleed room scar from a one-storey fall.
-const int ActionTravel::FALL_1_STOREY_MIN_PERC =    20;     // Minimum % damage taken from falling one storey.
-const int ActionTravel::FALL_1_STOREY_RNG_PERC =    50;     // Extra RNG % damage from one-storey fall.
-const int ActionTravel::FALL_2_STOREY_BLEED =       10;
-const int ActionTravel::FALL_2_STOREY_MIN_PERC =    50;
-const int ActionTravel::FALL_2_STOREY_RNG_PERC =    70;
-const int ActionTravel::FALL_3_STOREY_BLEED =       20;
-const int ActionTravel::FALL_3_STOREY_MIN_PERC =    70;
-const int ActionTravel::FALL_3_STOREY_RNG_PERC =    100;
-const int ActionTravel::FALL_4_STOREY_BLEED =       25;
-const int ActionTravel::FALL_4_STOREY_MIN_PERC =    90;
-const int ActionTravel::FALL_4_STOREY_RNG_PERC =    200;
-const int ActionTravel::FALL_5_STOREY_BLEED =       30;
-const int ActionTravel::FALL_5_STOREY_MIN_PERC =    100;
-const int ActionTravel::FALL_5_STOREY_RNG_PERC =    500;
-const float ActionTravel::TRAVEL_TIME_DOUBLE =      120.0f; // The time (in seconds) it takes to travel across a double-length room link.
-const float ActionTravel::TRAVEL_TIME_NORMAL =      30.0f;  // The time (in seconds) it takes to travel across a normal room link.
-const float ActionTravel::TRAVEL_TIME_TRIPLE =      480.0f; // The time (in seconds) it takes to travel across a triple-length room link.
+const int ActionTravel::FALL_1_STOREY_BLEED =       5   ;      // Intensity for the bleed room scar from a one-storey fall.
+const int ActionTravel::FALL_1_STOREY_MIN_PERC =        20;     // Minimum % damage taken from falling one storey.
+const int ActionTravel::FALL_1_STOREY_RNG_PERC =        50;     // Extra RNG % damage from one-storey fall.
+const int ActionTravel::FALL_2_STOREY_BLEED =           10;
+const int ActionTravel::FALL_2_STOREY_MIN_PERC =        50;
+const int ActionTravel::FALL_2_STOREY_RNG_PERC =        70;
+const int ActionTravel::FALL_3_STOREY_BLEED =           20;
+const int ActionTravel::FALL_3_STOREY_MIN_PERC =        70;
+const int ActionTravel::FALL_3_STOREY_RNG_PERC =        100;
+const int ActionTravel::FALL_4_STOREY_BLEED =           25;
+const int ActionTravel::FALL_4_STOREY_MIN_PERC =        90;
+const int ActionTravel::FALL_4_STOREY_RNG_PERC =        00;
+const int ActionTravel::FALL_5_STOREY_BLEED =           30;
+const int ActionTravel::FALL_5_STOREY_MIN_PERC =        100;
+const int ActionTravel::FALL_5_STOREY_RNG_PERC =        500;
+const int ActionTravel::FALL_BLEED_DIVISOR_MAX =        20;     // The maximum amount of HP damage division from falling applied to each bleed tick.
+const int ActionTravel::FALL_BLEED_DIVISOR_MIN =        10;     // The minimum amount of HP damage division from falling applied to each bleed tick.
+const int ActionTravel::FALL_BLEED_INTENSITY_RANGE =    3;      // The variance range of the length of bleeds from falling.
+const float ActionTravel::TRAVEL_TIME_DOUBLE =          120.0f; // The time (in seconds) it takes to travel across a double-length room link.
+const float ActionTravel::TRAVEL_TIME_NORMAL =          30.0f;  // The time (in seconds) it takes to travel across a normal room link.
+const float ActionTravel::TRAVEL_TIME_TRIPLE =          480.0f; // The time (in seconds) it takes to travel across a triple-length room link.
 
 
 // Attempts to move from one Room to another.
@@ -139,7 +142,11 @@ bool ActionTravel::travel(std::shared_ptr<Mobile> mob, Direction dir, bool confi
                     else core()->message("{U}You hear the loud crunch of something landing badly nearby!");
                 }
             }
-            if (!mob->tag(MobileTag::ImmunityBleed)) core()->world()->get_room(mob->location())->add_scar(ScarType::BLOOD, blood_intensity);
+            if (!mob->tag(MobileTag::ImmunityBleed))
+            {
+                core()->world()->get_room(mob->location())->add_scar(ScarType::BLOOD, MathX::mixup(blood_intensity, FALL_BLEED_INTENSITY_RANGE));
+                mob->set_buff(Buff::Type::BLEED, blood_intensity, hp_damage / core()->rng()->rnd(FALL_BLEED_DIVISOR_MIN, FALL_BLEED_DIVISOR_MAX));
+            }
             if (mob->hp() <= 0)
             {
                 if (is_player) core()->message("{0}{M}Your bones are shattered from the impact, death is mercifully quick.");
