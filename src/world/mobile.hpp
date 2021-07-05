@@ -1,13 +1,12 @@
 // world/mobile.hpp -- The Mobile class defines entities that can move and interact with the game world.
-// Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+// Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #pragma once
 #include "core/greave.hpp"
 
-class Inventory;                        // defined in world/inventory.hpp
-enum class EquipSlot : uint8_t;         // defined in world/item.hpp
-namespace SQLite { class Database; }    // defined in 3rdparty/SQLiteCpp/Database.h
-
+class Inventory;                // defined in world/inventory.hpp
+enum class EquipSlot : uint8_t; // defined in world/item.hpp
+namespace SQLite { class Database; class Statement; }   // defined in 3rdparty/SQLiteCpp/Database.h
 
 enum class Gender : uint8_t { FEMALE, MALE, IT, THEY };
 
@@ -46,6 +45,21 @@ struct BodyPart
     EquipSlot   slot;       // The EquipSlot associated with this body part.
 };
 
+struct Buff
+{
+    enum class Type : uint8_t { NONE };
+
+    static const std::string    SQL_BUFFS;  // The SQL table construction string for Buffs.
+
+    static std::shared_ptr<Buff>    load(SQLite::Statement &query); // Loads this Buff from a save file.
+    void    save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id); // Saves this Buff to a save file.
+
+    uint32_t    power = 0;              // The power level of this buff/debuff.
+    uint16_t    time = USHRT_MAX;       // The time remaining on this buff/debuff, or USHRT_MAX for effects that expire on special circumstances.
+    Type        type = Type::NONE;      // The type of buff/debuff.
+};
+
+
 class Mobile
 {
 public:
@@ -58,12 +72,16 @@ public:
     void                add_second();                               // Adds a second to this Mobile's action timer.
     float               attack_speed() const;                       // Returns the number of seconds needed for this Mobile to make an attack.
     float               block_mod() const;                          // Returns the modified chance to block for this Mobile, based on equipped gear.
+    uint32_t            buff_power(Buff::Type type) const;          // Returns the power level of the specified buff/debuff.
+    uint16_t            buff_time(Buff::Type type) const;           // Returns the time remaining for the specifieid buff/debuff.
     bool                can_perform_action(float time) const;       // Checks if this Mobile has enough action timer built up to perform an action.
     uint32_t            carry_weight() const;                       // Checks how much weight this Mobile is carrying.
+    void                clear_buff(Buff::Type type);                // Clears a specified buff/debuff from the Actor, if it exists.
     void                clear_tag(MobileTag the_tag);               // Clears an MobileTag from this Mobile.
     float               dodge_mod() const;                          // Returns the modified chance to dodge for this Mobile, based on equipped gear.
     const std::shared_ptr<Inventory>    equ() const;                // Returns a pointer to the Movile's equipment.
     const std::vector<std::shared_ptr<BodyPart>>& get_anatomy() const;  // Retrieves the anatomy vector for this Mobile.
+    bool                has_buff(Buff::Type type) const;            // Checks if this Actor has the specified buff/debuff active.
     std::string         he_she() const;                             // Returns a gender string (he/she/it/they/etc.)
     std::string         his_her() const;                            // Returns a gender string (his/her/its/their/etc.)
     const std::vector<uint32_t>&  hostility_vector() const;         // Returns the hostility vector.
@@ -84,6 +102,8 @@ public:
     void                reduce_hp(int amount);                      // Reduces this Mobile's hit points.
     int                 restore_hp(int amount);                     // Restores a specified amount of hit points.
     virtual uint32_t    save(std::shared_ptr<SQLite::Database> save_db);    // Saves this Mobile.
+                        // Sets a specified buff/debuff on the Actor, or extends an existing buff/debuff.
+    void                set_buff(Buff::Type type, uint16_t time = USHRT_MAX, uint32_t power = 0, bool additive_power = false);
     void                set_hp(int hp, int hp_max = 0);             // Sets the current (and, optionally, maximum) HP of this Mobile.
     void                set_id(uint32_t new_id);                    // Sets this Mobile's unique ID.
     void                set_location(uint32_t room_id);             // Sets the location of this Mobile with a Room ID.
@@ -94,22 +114,26 @@ public:
     void                set_tag(MobileTag the_tag);                 // Sets a MobileTag on this Mobile.
     std::string         species() const;                            // Checks the species of this Mobile.
     bool                tag(MobileTag the_tag) const;               // Checks if a MobileTag is set on this Mobile.
+    void                tick_buffs();                               // Reduce the timer on all buffs.
 
 protected:
     static const float      ACTION_TIMER_CAP_MAX;   // The maximum value the action timer can ever reach.
     static const uint32_t   BASE_CARRY_WEIGHT;      // The maximum amount of weight a Mobile can carry, before modifiers.
 
-    float                       m_action_timer; // 'Charges up' with time, to allow NPCs to perform timed actions.
-    std::shared_ptr<Inventory>  m_equipment;    // The Items currently worn or wielded by this Mobile.
-    Gender                      m_gender;       // The gender of this Mobile.
-    std::vector<uint32_t>       m_hostility;    // The hostility vector keeps track of who this Mobile is angry with.
-    int                         m_hp[2];        // The current and maxmum hit points of this Mobile.
-    uint32_t                    m_id;           // The Mobile's unique ID.
-    std::shared_ptr<Inventory>  m_inventory;    // The Items being carried by this Mobile.
-    uint32_t                    m_location;     // The Room that this Mobile is currently located in.
-    std::string                 m_name;         // The name of this Mobile.
-    uint16_t                    m_parser_id;    // The semi-unique ID of this Mobile, for parser differentiation.
-    uint32_t                    m_spawn_room;   // The Room that spawned this Mobile.
-    std::string                 m_species;      // Ths species type of this Mobile.
-    std::set<MobileTag>         m_tags;         // Any and all tags on this Mobile.
+    std::shared_ptr<Buff>   buff(Buff::Type type) const;    // Returns a pointer to a specified Buff.
+
+    float                           m_action_timer; // 'Charges up' with time, to allow NPCs to perform timed actions.
+    std::set<std::shared_ptr<Buff>> m_buffs;        // Any and all buffs or debuffs on this Mobile.
+    std::shared_ptr<Inventory>      m_equipment;    // The Items currently worn or wielded by this Mobile.
+    Gender                          m_gender;       // The gender of this Mobile.
+    std::vector<uint32_t>           m_hostility;    // The hostility vector keeps track of who this Mobile is angry with.
+    int                             m_hp[2];        // The current and maxmum hit points of this Mobile.
+    uint32_t                        m_id;           // The Mobile's unique ID.
+    std::shared_ptr<Inventory>      m_inventory;    // The Items being carried by this Mobile.
+    uint32_t                        m_location;     // The Room that this Mobile is currently located in.
+    std::string                     m_name;         // The name of this Mobile.
+    uint16_t                        m_parser_id;    // The semi-unique ID of this Mobile, for parser differentiation.
+    uint32_t                        m_spawn_room;   // The Room that spawned this Mobile.
+    std::string                     m_species;      // Ths species type of this Mobile.
+    std::set<MobileTag>             m_tags;         // Any and all tags on this Mobile.
 };

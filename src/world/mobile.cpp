@@ -1,5 +1,5 @@
 // world/mobile.cpp -- The Mobile class defines entities that can move and interact with the game world.
-// Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+// Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #include "3rdparty/SQLiteCpp/SQLiteCpp.h"
 #include "core/core.hpp"
@@ -25,10 +25,36 @@ const int Mobile::NAME_FLAG_PLURAL =            8;  // Return a plural of the Mo
 const int Mobile::NAME_FLAG_POSSESSIVE =        16; // Change the Mobile's name to a possessive noun (e.g. goblin -> goblin's).
 const int Mobile::NAME_FLAG_THE =               32; // Precede the Mobile's name with 'the', unless the name is a proper noun.
 
+// The SQL table construction string for Buffs.
+const std::string   Buff::SQL_BUFFS =       "CREATE TABLE buffs ( owner INTEGER, power INTEGER, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, time INTEGER, type INTEGER NOT NULL )";
+
 // The SQL table construction string for Mobiles.
 const std::string   Mobile::SQL_MOBILES =   "CREATE TABLE mobiles ( action_timer REAL, equipment INTEGER UNIQUE, gender INTEGER, hostility TEXT, hp INTEGER NOT NULL, "
     "hp_max INTEGER NOT NULL, id INTEGER UNIQUE NOT NULL, inventory INTEGER UNIQUE, location INTEGER NOT NULL, name TEXT, parser_id INTEGER, spawn_room INTEGER, "
     "species TEXT NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, tags TEXT )";
+
+
+// Loads this Buff from a save file.
+std::shared_ptr<Buff> Buff::load(SQLite::Statement &query)
+{
+    auto new_buff = std::make_shared<Buff>();
+    if (!query.isColumnNull("power")) new_buff->power = query.getColumn("power").getUInt();
+    if (!query.isColumnNull("time")) new_buff->time = query.getColumn("time").getUInt();
+    new_buff->type = static_cast<Buff::Type>(query.getColumn("type").getUInt());
+    return new_buff;
+}
+
+// Saves this Buff to a save file.
+void Buff::save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id)
+{
+    SQLite::Statement query(*save_db, "INSERT INTO BUFFS ( owner, power, sql_id, time, type ) VALUES ( ?, ?, ?, ?, ? )");
+    query.bind(1, owner_id);
+    if (power) query.bind(2, power);
+    query.bind(3, core()->sql_unique_id());
+    if (time != USHRT_MAX) query.bind(4, time);
+    query.bind(5, static_cast<unsigned int>(type));
+    query.exec();
+}
 
 
 // Constructor, sets default values.
@@ -84,6 +110,30 @@ float Mobile::block_mod() const
     return mod_perc / 100.0f;
 }
 
+// Returns a pointer to a specified Buff.
+std::shared_ptr<Buff> Mobile::buff(Buff::Type type) const
+{
+    for (auto b : m_buffs)
+        if (b->type == type) return b;
+    return nullptr;
+}
+
+// Returns the power level of the specified buff/debuff.
+uint32_t Mobile::buff_power(Buff::Type type) const
+{
+    auto b = buff(type);
+    if (b) return b->power;
+    else return 0;
+}
+
+// Returns the time remaining for the specifieid buff/debuff.
+uint16_t Mobile::buff_time(Buff::Type type) const
+{
+    auto b = buff(type);
+    if (b) return b->time;
+    else return 0;
+}
+
 // Checks if this Mobile has enough action timer built up to perform an action.
 bool Mobile::can_perform_action(float time) const { return m_action_timer >= time; }
 
@@ -96,6 +146,21 @@ uint32_t Mobile::carry_weight() const
     for (unsigned int i = 0; i < m_equipment->count(); i++)
         total_weight += m_equipment->get(i)->weight();
     return total_weight;
+}
+
+// Clears a specified buff/debuff from the Actor, if it exists.
+void Mobile::clear_buff(Buff::Type type)
+{
+    auto it = m_buffs.begin();
+    while (it != m_buffs.end())
+    {
+        if (it->get()->type == type)
+        {
+            m_buffs.erase(it);
+            return;
+        }
+        it++;
+    }
 }
 
 // Clears a MobileTag from this Mobile.
@@ -119,6 +184,14 @@ const std::shared_ptr<Inventory> Mobile::equ() const { return m_equipment; }
 
 // Retrieves the anatomy vector for this Mobile.
 const std::vector<std::shared_ptr<BodyPart>>& Mobile::get_anatomy() const { return core()->world()->get_anatomy(m_species); }
+
+// Checks if this Actor has the specified buff/debuff active.
+bool Mobile::has_buff(Buff::Type type) const
+{
+    for (auto b : m_buffs)
+        if (b->type == type) return true;
+    return false;
+}
 
 // Returns a gender string (he/she/it/they/etc.)
 std::string Mobile::he_she() const
@@ -200,6 +273,12 @@ uint32_t Mobile::load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id
 
     if (inventory_id) m_inventory->load(save_db, inventory_id);
     if (equipment_id) m_equipment->load(save_db, equipment_id);
+
+    // Load any and all buffs/debuffs.
+    SQLite::Statement buff_query(*save_db, "SELECT * FROM buffs WHERE owner = ?");
+    buff_query.bind(1, sql_id);
+    while (buff_query.executeStep())
+        m_buffs.insert(Buff::load(buff_query));
 
     return sql_id;
 }
@@ -321,7 +400,32 @@ uint32_t Mobile::save(std::shared_ptr<SQLite::Database> save_db)
     const std::string tags = StrX::tags_to_string(m_tags);
     if (tags.size()) query.bind(15, tags);
     query.exec();
+
+    // Save any and all buffs/debuffs.
+    for (auto b : m_buffs)
+        b->save(save_db, sql_id);
+
     return sql_id;
+}
+
+// Sets a specified buff/debuff on the Actor, or extends an existing buff/debuff.
+void Mobile::set_buff(Buff::Type type, uint16_t time, uint32_t power, bool additive_power)
+{
+    for (auto b : m_buffs)
+    {
+        if (b->type == type)
+        {
+            if (time != USHRT_MAX) b->time += time;
+            if (additive_power) b->power += power;
+            else if (b->power < power) b->power = power;
+            return;
+        }
+    }
+    auto new_buff = std::make_shared<Buff>();
+    new_buff->type = type;
+    new_buff->time = time;
+    new_buff->power = power;
+    m_buffs.insert(new_buff);
 }
 
 // Sets the current (and, optionally, maximum) HP of this Mobile.
@@ -369,3 +473,17 @@ std::string Mobile::species() const { return m_species; }
 
 // Checks if a MobileTag is set on this Mobile.
 bool Mobile::tag(MobileTag the_tag) const { return (m_tags.count(the_tag) > 0); }
+
+// Reduce the timer on all buffs.
+void Mobile::tick_buffs()
+{
+    auto it = m_buffs.begin();
+    while (it != m_buffs.end())
+    {
+        if (it->get()->time != USHRT_MAX)
+        {
+            if (!(--it->get()->time)) m_buffs.erase(it);
+            else it++;
+        }
+    }
+}

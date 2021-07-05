@@ -28,6 +28,7 @@ const float TimeWeather::UNINTERRUPTABLE_TIME = 5.0f;   // The maximum amount of
 const uint32_t TimeWeather::HEARTBEAT_TIMERS[TimeWeather::Heartbeat::_TOTAL] = {
     30 * Time::MINUTE,  // MOBILE_SPAWN, used to trigger Mobiles (re)spawning.
     10 * Time::MINUTE,  // ROOM_SCARS, for decreasing the intensity of room scars.
+    1 * Time::MINUTE,   // BUFFS, for ticking down buffs/debuffs on Mobiles and the Player.
 };
 
 
@@ -283,6 +284,14 @@ bool TimeWeather::pass_time(float seconds)
                 const auto room = core()->world()->get_room(room_id);
                 room->decay_scars();
             }
+        }
+
+        // Reduce timers on buffs for all Mobiles and the Player.
+        if (heartbeat_ready(Heartbeat::BUFFS))
+        {
+            core()->world()->player()->tick_buffs();
+            for (unsigned int m = 0; m < core()->world()->mob_count(); m++)
+                core()->world()->mob_vec(m)->tick_buffs();
         }
     }
 

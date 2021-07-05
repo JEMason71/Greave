@@ -834,6 +834,7 @@ bool World::room_exists(const std::string &str) const { return m_room_pool.count
 // Saves the World and all things within it.
 void World::save(std::shared_ptr<SQLite::Database> save_db)
 {
+    save_db->exec(Buff::SQL_BUFFS);
     save_db->exec(Item::SQL_ITEMS);
     save_db->exec(MessageLog::SQL_MSGLOG);
     save_db->exec(Mobile::SQL_MOBILES);
