@@ -57,9 +57,10 @@ const std::map<std::string, LinkTag>    World::LINK_TAG_MAP = { { "autoclose", L
     { "triplelength", LinkTag::TripleLength }, { "window", LinkTag::Window } };
 
 // Lookup table for converting MobileTag text names into enums.
-const std::map<std::string, MobileTag>  World::MOBILE_TAG_MAP = { { "aggroonsight", MobileTag::AggroOnSight }, { "agile", MobileTag::Agile },
-    { "cannotblock", MobileTag::CannotBlock }, { "cannotdodge", MobileTag::CannotDodge }, { "cannotparry", MobileTag::CannotParry }, { "clumsy", MobileTag::Clumsy },
-    { "coward", MobileTag::Coward }, { "pluralname", MobileTag::PluralName }, { "propernoun", MobileTag::ProperNoun }, { "unliving", MobileTag::Unliving } };
+const std::map<std::string, MobileTag>  World::MOBILE_TAG_MAP = { { "aggroonsight", MobileTag::AggroOnSight }, { "agile", MobileTag::Agile }, { "anemic", MobileTag::Anemic },
+    { "brawny", MobileTag::Brawny }, { "cannotblock", MobileTag::CannotBlock }, { "cannotdodge", MobileTag::CannotDodge }, { "cannotparry", MobileTag::CannotParry },
+    { "clumsy", MobileTag::Clumsy }, { "coward", MobileTag::Coward }, { "feeble", MobileTag::Feeble }, { "mighty", MobileTag::Mighty }, { "pluralname", MobileTag::PluralName },
+    { "propernoun", MobileTag::ProperNoun }, { "puny", MobileTag::Puny }, { "strong", MobileTag::Strong }, { "unliving", MobileTag::Unliving }, { "vigorous", MobileTag::Vigorous } };
 
 // Lookup table for converting RoomTag text names into enums.
 const std::map<std::string, RoomTag>    World::ROOM_TAG_MAP = { { "canseeoutside", RoomTag::CanSeeOutside }, { "churchaltar", RoomTag::ChurchAltar }, { "digok", RoomTag::DigOK },

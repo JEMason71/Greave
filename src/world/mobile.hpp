@@ -21,8 +21,15 @@ enum class MobileTag : uint16_t { None = 0,
     CannotBlock,    // This Mobile is unable to block attacks.
     CannotDodge,    // This Mobile is unable to dodge attacks.
     CannotParry,    // This Mobbile is unable to parry melee attacks.
-    Agile,          // Agile Mobiles are harder to hit in combat, and more likely to parry attacks.
-    Clumsy,         // The opposite of Agile, Clumsy Mobiles are easier to hit and suffer a penalty to parrying.
+    Agile,          // Agile Mobiles are harder to hit in melee combat (0.8x hit chance), and more likely to parry attacks (1.5x chance).
+    Clumsy,         // The opposite of Agile, Clumsy Mobiles are easier to hit in melee (1.25x hit chance) and suffer a penalty to parrying (0.5x chance).
+    Anemic,         // Anemic Mobiles deal less damage with melee attacks (0.5x).
+    Feeble,         // Feeble Mobiles deal less damage with melee attacks (0.75x).
+    Puny,           // Puny Mobiles deal less damage with melee attacks (0.9x).
+    Strong,         // Strong Mobiles deal more damage with melee attacks (1.1x).
+    Brawny,         // Brawny Mobiles deal more damage with melee attacks (1.25x).
+    Vigorous,       // Vigorous Mobiles deal more damage with melee attacks (1.5x).
+    Mighty,         // Mighty Mobiles deal more damage with melee attacks (2x).
 
     // Tags that determine the Mobile's general state of being.
     Unliving,       // This Mobile is a construct or other unliving entity.
