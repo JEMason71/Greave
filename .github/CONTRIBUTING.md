@@ -6,7 +6,7 @@ Greave, here are the things to bear in mind:
 
 1. **Be cool.** I can't stress this one enough. We're all friends here, so please behave. More specifically, I expect everyone
 interacting with this project on GitHub to abide by the
-[Code of Conduct](https://github.com/Gravecat/Greave/blob/master/CODE_OF_CONDUCT.md).
+[Code of Conduct](https://github.com/Gravecat/Greave/blob/master/.github/CODE_OF_CONDUCT.md).
 
 2. This project is open-source (licensed under the
 [GNU Affero General Public License v3.0](https://github.com/Gravecat/Greave/blob/main/LICENSE)), so you are of course welcome to
