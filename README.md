@@ -1,5 +1,6 @@
 # GREAVE
 
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.0-4baaaa.svg)](https://github.com/Gravecat/Greave/blob/main/CODE_OF_CONDUCT.md)
 [![Development status](https://img.shields.io/badge/development%20status-prealpha-red.svg)](https://github.com/Gravecat/Greave)
 [![GitHub last commit](https://img.shields.io/github/last-commit/Gravecat/Greave/main)](https://github.com/Gravecat/Greave/commits/main)
 
