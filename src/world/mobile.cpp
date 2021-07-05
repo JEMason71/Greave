@@ -479,9 +479,6 @@ void Mobile::tick_buffs()
     {
         if (m_buffs.at(i)->time == USHRT_MAX) continue;
         if (!--m_buffs.at(i)->time)
-        {
             m_buffs.erase(m_buffs.begin() + i--);
-            core()->message("{G}BUFF EXPIRED");
-        }
     }
 }
