@@ -1,20 +1,22 @@
 ---
-name: Feature request
-about: Suggest an idea for this project
+name: Feature Request
+about: Suggest an idea or improvement.
 title: ''
 labels: enhancement, new
 assignees: ''
 
 ---
 
-**Is your feature request related to a problem? Please describe.**
-A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+(Thanks for suggesting an improvement! Please check [the existing open issues](https://github.com/Gravecat/Greave/issues) to ensure someone hasn't already suggested this, and if not, fill out the blanks below.)
 
-**Describe the solution you'd like**
-A clear and concise description of what you want to happen.
+Is this suggestion a new idea, or a change to an existing system?
+-----------------------------------------------------------------
+…
 
-**Describe alternatives you've considered**
-A clear and concise description of any alternative solutions or features you've considered.
+What did you have in mind?
+--------------------------
+…
 
-**Additional context**
-Add any other context or screenshots about the feature request here.
+Any other comments?
+-------------------
+…

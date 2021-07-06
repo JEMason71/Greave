@@ -1,32 +1,38 @@
 ---
-name: Bug report
-about: Create a report to help us improve
+name: Bug Report
+about: Create a report about something that's broken or needs fixing.
 title: ''
 labels: bug, new
 assignees: ''
 
 ---
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+(Thanks for reporting an issue! Please check [the existing open issues](https://github.com/Gravecat/Greave/issues) to see if this bug has already been reported, and if not, fill out the blanks below.)
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Wait until '...'
-3. Use the '...'
-4. See error
+What are the steps to reproduce this issue?
+-------------------------------------------
+1. …
+2. …
+3. …
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+What happens?
+-------------
+…
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+What were you expecting to happen?
+----------------------------------
+…
 
-**Platform (please complete the following information):**
- - OS: [e.g. Windows]
- - Terminal: [e.g. BLT, Curses]
- - Compiler: [e.g. GCC]
+Any logs, error output, etc?
+----------------------------
+(Please include the contents of log.txt if any relevant error messages are shown there.)
 
-**Additional context**
-Add any other context about the problem here.
+Any other comments?
+-------------------
+…
+
+What versions of software are you using?
+----------------------------------------
+**Operating System:** …
+
+**Toolchain Version:** …
