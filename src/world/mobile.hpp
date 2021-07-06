@@ -101,7 +101,7 @@ public:
     void                new_parser_id();                            // Generates a new parser ID for this Mobile.
     float               parry_mod() const;                          // Returns the modified chance to parry for this Mobile, based on equipped gear.
     uint16_t            parser_id() const;                          // Retrieves the current ID of this Mobile, for parser differentiation.
-    bool                pass_time(float seconds = 0.0f);            // Causes time to pass for this Mobile.
+    bool                pass_time(float seconds = 0.0f, bool interruptable = true); // Causes time to pass for this Mobile.
     void                reduce_hp(int amount);                      // Reduces this Mobile's hit points.
     int                 restore_hp(int amount);                     // Restores a specified amount of hit points.
     virtual uint32_t    save(std::shared_ptr<SQLite::Database> save_db);    // Saves this Mobile.

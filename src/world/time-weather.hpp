@@ -32,7 +32,7 @@ public:
     void        load(std::shared_ptr<SQLite::Database> save_db);    // Loads the time/weather data from disk.
     std::string month_name() const;                 // Returns the name of the current month.
     LunarPhase  moon_phase() const;                 // Gets the current lunar phase.
-    bool        pass_time(float seconds);           // Causes time to pass.
+    bool        pass_time(float seconds, bool interruptable);       // Causes time to pass.
     void        save(std::shared_ptr<SQLite::Database> save_db) const;  // Saves the time/weather data to disk.
     std::string season_str(Season season) const;    // Converts a season enum to a string.
     TimeOfDay   time_of_day(bool fine) const;       // Returns the current time of day (morning, day, dusk, night).

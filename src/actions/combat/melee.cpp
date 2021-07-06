@@ -75,7 +75,7 @@ bool Melee::attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mobile> def
         perform_attack(attacker, defender, EquipSlot::HAND_OFF, wield_type[0], wield_type[1]);
         attacked = true;
     }
-    attacker->pass_time(attack_speed);
+    attacker->pass_time(attack_speed, false);
     return attacked;
 }
 

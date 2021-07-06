@@ -335,13 +335,13 @@ float Mobile::parry_mod() const
 uint16_t Mobile::parser_id() const { return m_parser_id; }
 
 // Causes time to pass for this Mobile.
-bool Mobile::pass_time(float seconds)
+bool Mobile::pass_time(float seconds, bool interruptable)
 {
     // For the player, time passes in the world itself.
     if (is_player())
     {
         if (!seconds) core()->guru()->nonfatal("Attempt to pass 0 seconds on player character.", Guru::WARN);
-        return core()->world()->time_weather()->pass_time(seconds);
+        return core()->world()->time_weather()->pass_time(seconds, interruptable);
     }
 
     // For NPCs, any action clears their action timer.

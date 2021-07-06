@@ -201,8 +201,9 @@ TimeWeather::LunarPhase TimeWeather::moon_phase() const
 }
 
 // Causes time to pass.
-bool TimeWeather::pass_time(float seconds)
+bool TimeWeather::pass_time(float seconds, bool interruptable)
 {
+    if (seconds > UNINTERRUPTABLE_TIME) interruptable = false;
     const std::shared_ptr<Player> player = core()->world()->player();
     const std::shared_ptr<Room> room = core()->world()->get_room(player->location());
     const bool indoors = room->tag(RoomTag::Indoors);
@@ -220,15 +221,15 @@ bool TimeWeather::pass_time(float seconds)
     int old_hp = player->hp();
     while (seconds_to_add--)
     {
-        int hp = player->hp();
         if (player->is_dead()) return false;    // Don't pass time if the player is dead.
 
-        // Wake the player if they are resting, and take damage.
-        if (hp < old_hp)
+        // Interrupt the action if the player takes damage.
+        if (interruptable)
         {
-            if (seconds > UNINTERRUPTABLE_TIME) return false;
+            const int hp = player->hp();
+            if (hp < old_hp) return false;
+            old_hp = hp;
         }
-        old_hp = hp;
 
         m_time_passed++;    // The total time passed in the game. This will loop every 136 years, but that's not a problem; see time_passed().
 
