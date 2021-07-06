@@ -14,7 +14,8 @@ enum class CombatStance : uint8_t;  // defined in world/mobile.hpp
 class Combat
 {
 public:
-    static const float  STANCE_CHANGE_TIME; // The time it takes to change combat stances.
+    static const float  BASE_ATTACK_SPEED_MULTIPLIER;   // The base speed multiplier for all attacks.
+    static const float  STANCE_CHANGE_TIME;             // The time it takes to change combat stances.
 
     static void         change_stance(std::shared_ptr<Mobile> mob, CombatStance stance);            // Changes to a specified combat stance.
     static std::string  damage_str(unsigned int damage, std::shared_ptr<Mobile> def, bool heat);    // Returns an appropriate damage string.
@@ -23,7 +24,6 @@ protected:
     enum class WieldType : uint8_t { NONE, UNARMED, ONE_HAND_PLUS_EXTRA, TWO_HAND, DUAL_WIELD, HAND_AND_A_HALF_2H, SINGLE_WIELD, ONE_HAND_PLUS_SHIELD, SHIELD_ONLY,
         UNARMED_PLUS_SHIELD };
 
-    static const float      BASE_ATTACK_SPEED_MULTIPLIER;           // The base speed multiplier for all attacks.
     static const uint32_t   BLEED_SEVERITY_BASE;                    // The base value of bleed severity, used in the bleed calculations.
     static const uint32_t   BLEED_SEVERITY_RANGE;                   // The range of variation on the bleed severity.
     static const uint32_t   BLEED_TIME_RANGE;                       // The range of time (1 - X) that a weapon bleed effect can cause.
