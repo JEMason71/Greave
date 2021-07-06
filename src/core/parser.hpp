@@ -44,6 +44,7 @@ private:
     Direction           parse_direction(const std::string &dir) const;  // Parses a string into a Direction enum.
     ParserSearchResult  parse_target(const std::vector<std::string> &input, ParserTarget target);   // Attempts to match a name to a given target.
     void                parse_pcd(const std::string &first_word, const std::vector<std::string> &words, ParserCommandData pcd, bool confirm);   // Parses a known command.
+    long int            wrap_int(const std::string &s); // Wrapper function to check for out of range values
 
     std::vector<ParserCommandData>  m_commands;         // The commands the parser can understand.
     std::string                     m_last_input;       // The last raw input from the player.

@@ -18,23 +18,6 @@
 #include "world/world.hpp"
 
 
-//Wrapper function to check for out of range values
-
-long int wrap(std::string s)
-{
-    try
-    {
-        return (std::stoll(s));
-    }
-    catch(const std::exception& e)
-    {
-        return INT_MAX;
-    }
-    
-    
-}
-
-
 // Constructor, sets up the parser.
 Parser::Parser() : m_special_state(SpecialState::NONE)
 {
@@ -356,7 +339,7 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
         case ParserCommand::NONE: break;
         case ParserCommand::ADD_MONEY:
             if (!words.size() || !StrX::is_number(words.at(0))) core()->message("{y}Please specify {Y}how many coins to add{y}.");
-            else ActionCheat::add_money(std::stol(words.at(0)));
+            else ActionCheat::add_money(wrap_int(words.at(0)));
             break;
         case ParserCommand::ATTACK:
             if (parsed_target_type == ParserTarget::TARGET_MOBILE) Melee::attack(player, core()->world()->mob_vec(parsed_target));
@@ -471,4 +454,17 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
     }
 
     if (parsed_target_type != ParserTarget::TARGET_UNCLEAR) m_special_state = SpecialState::NONE;
+}
+
+// Wrapper function to check for out of range values
+long int Parser::wrap_int(const std::string &s)
+{
+    try
+    {
+        return (std::stoll(s));
+    }
+    catch(const std::exception& e)
+    {
+        return INT_MAX;
+    }
 }
