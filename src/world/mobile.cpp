@@ -430,6 +430,9 @@ void Mobile::set_buff(Buff::Type type, uint16_t time, uint32_t power, bool addit
     m_buffs.push_back(new_buff);
 }
 
+// Sets the gender of this Mobile.
+void Mobile::set_gender(Gender gender) { m_gender = gender; }
+
 // Sets the current (and, optionally, maximum) HP of this Mobile.
 void Mobile::set_hp(int hp, int hp_max)
 {

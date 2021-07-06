@@ -33,8 +33,9 @@ enum class MobileTag : uint16_t { None = 0,
     Mighty,         // Mighty Mobiles deal more damage with melee attacks (2x).
 
     // Tags that determine the Mobile's general state of being.
-    Unliving,       // This Mobile is a construct or other unliving entity.
     ImmunityBleed,  // This Mobile is unable to bleed.
+    RandomGender,   // This Mobile can be assigned a random gender.
+    Unliving,       // This Mobile is a construct or other unliving entity.
 
     // Tags regarding the Mobile's AI and behaviour.
     AggroOnSight,   // This Mobile will attack the player on sight.
@@ -107,6 +108,7 @@ public:
     virtual uint32_t    save(std::shared_ptr<SQLite::Database> save_db);    // Saves this Mobile.
                         // Sets a specified buff/debuff on the Actor, or extends an existing buff/debuff.
     void                set_buff(Buff::Type type, uint16_t time = USHRT_MAX, uint32_t power = 0, bool additive_power = false);
+    void                set_gender(Gender gender);                  // Sets the gender of this Mobile.
     void                set_hp(int hp, int hp_max = 0);             // Sets the current (and, optionally, maximum) HP of this Mobile.
     void                set_id(uint32_t new_id);                    // Sets this Mobile's unique ID.
     void                set_location(uint32_t room_id);             // Sets the location of this Mobile with a Room ID.

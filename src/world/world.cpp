@@ -9,6 +9,7 @@
 #include "core/guru.hpp"
 #include "core/list.hpp"
 #include "core/message.hpp"
+#include "core/random.hpp"
 #include "core/strx.hpp"
 #include "world/inventory.hpp"
 #include "world/item.hpp"
@@ -60,8 +61,8 @@ const std::map<std::string, LinkTag>    World::LINK_TAG_MAP = { { "autoclose", L
 const std::map<std::string, MobileTag>  World::MOBILE_TAG_MAP = { { "aggroonsight", MobileTag::AggroOnSight }, { "agile", MobileTag::Agile }, { "anemic", MobileTag::Anemic },
     { "brawny", MobileTag::Brawny }, { "cannotblock", MobileTag::CannotBlock }, { "cannotdodge", MobileTag::CannotDodge }, { "cannotparry", MobileTag::CannotParry },
     { "clumsy", MobileTag::Clumsy }, { "coward", MobileTag::Coward }, { "feeble", MobileTag::Feeble }, { "immunitybleed", MobileTag::ImmunityBleed }, { "mighty", MobileTag::Mighty },
-    { "pluralname", MobileTag::PluralName }, { "propernoun", MobileTag::ProperNoun }, { "puny", MobileTag::Puny }, { "strong", MobileTag::Strong },
-    { "unliving", MobileTag::Unliving }, { "vigorous", MobileTag::Vigorous } };
+    { "pluralname", MobileTag::PluralName }, { "propernoun", MobileTag::ProperNoun }, { "puny", MobileTag::Puny }, { "randomgender", MobileTag::RandomGender },
+    { "strong", MobileTag::Strong }, { "unliving", MobileTag::Unliving }, { "vigorous", MobileTag::Vigorous } };
 
 // Lookup table for converting RoomTag text names into enums.
 const std::map<std::string, RoomTag>    World::ROOM_TAG_MAP = { { "canseeoutside", RoomTag::CanSeeOutside }, { "churchaltar", RoomTag::ChurchAltar }, { "digok", RoomTag::DigOK },
@@ -181,6 +182,12 @@ const std::shared_ptr<Mobile> World::get_mob(const std::string &mob_id) const
     const auto it = m_mob_pool.find(id_hash);
     if (it == m_mob_pool.end()) throw std::runtime_error("Invalid mobile ID requested: " + mob_id);
     auto new_mob = std::make_shared<Mobile>(*it->second);
+
+    if (new_mob->tag(MobileTag::RandomGender))
+    {
+        if (core()->rng()->rnd(2) == 1) new_mob->set_gender(Gender::FEMALE);
+        else new_mob->set_gender(Gender::MALE);
+    }
 
     // If this Mobile has a gear list, equip it now.
     const std::string gear_list_str = m_mob_gear.at(id_hash);
