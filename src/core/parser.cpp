@@ -148,7 +148,7 @@ Direction Parser::parse_direction(const std::string &dir) const
 // Attempts to match a name to a given target.
 Parser::ParserSearchResult Parser::parse_target(const std::vector<std::string> &input, ParserTarget target)
 {
-    if (!input.size()) return { 0, "", 0, 0, ParserTarget::TARGET_NONE };  // Don't even *try* with blank inputs.
+    if (!input.size()) return { 0, "", "", 0, 0, ParserTarget::TARGET_NONE };   // Don't even *try* with blank inputs.
 
     std::vector<ParserSearchResult> candidates;
     const std::shared_ptr<World> world = core()->world();
@@ -162,7 +162,8 @@ Parser::ParserSearchResult Parser::parse_target(const std::vector<std::string> &
         for (unsigned int i = 0; i < equ->count(); i++)
         {
             const std::shared_ptr<Item> item = equ->get(i);
-            candidates.push_back({0, StrX::str_tolower(item->name(Item::NAME_FLAG_NO_COLOUR)), item->parser_id(), i, ParserTarget::TARGET_EQUIPMENT});
+            candidates.push_back({0, StrX::str_tolower(item->name(Item::NAME_FLAG_NO_COLOUR)), StrX::str_tolower(item->name(Item::NAME_FLAG_NO_COLOUR | Item::NAME_FLAG_NO_COUNT)),
+                item->parser_id(), i, ParserTarget::TARGET_EQUIPMENT});
         }
     }
 
@@ -173,7 +174,8 @@ Parser::ParserSearchResult Parser::parse_target(const std::vector<std::string> &
         for (unsigned int i = 0; i < inv->count(); i++)
         {
             const std::shared_ptr<Item> item = inv->get(i);
-            candidates.push_back({0, StrX::str_tolower(item->name(Item::NAME_FLAG_NO_COLOUR)), item->parser_id(), i, ParserTarget::TARGET_INVENTORY});
+            candidates.push_back({0, StrX::str_tolower(item->name(Item::NAME_FLAG_NO_COLOUR)), StrX::str_tolower(item->name(Item::NAME_FLAG_NO_COLOUR | Item::NAME_FLAG_NO_COUNT)),
+                item->parser_id(), i, ParserTarget::TARGET_INVENTORY});
         }
     }
 
@@ -184,7 +186,8 @@ Parser::ParserSearchResult Parser::parse_target(const std::vector<std::string> &
         for (unsigned int i = 0; i < room_inv->count(); i++)
         {
             const std::shared_ptr<Item> item = room_inv->get(i);
-            candidates.push_back({0, StrX::str_tolower(item->name(Item::NAME_FLAG_NO_COLOUR)), item->parser_id(), i, ParserTarget::TARGET_ROOM});
+            candidates.push_back({0, StrX::str_tolower(item->name(Item::NAME_FLAG_NO_COLOUR)), StrX::str_tolower(item->name(Item::NAME_FLAG_NO_COLOUR | Item::NAME_FLAG_NO_COUNT)),
+                item->parser_id(), i, ParserTarget::TARGET_ROOM});
         }
     }
 
@@ -192,7 +195,8 @@ Parser::ParserSearchResult Parser::parse_target(const std::vector<std::string> &
     for (unsigned int i = 0; i < world->mob_count(); i++)
     {
         const std::shared_ptr<Mobile> mob = world->mob_vec(i);
-        if (mob->location() == player_location) candidates.push_back({0, StrX::str_tolower(mob->name(Item::NAME_FLAG_NO_COLOUR)), mob->parser_id(), i, ParserTarget::TARGET_MOBILE});
+        if (mob->location() == player_location) candidates.push_back({0, StrX::str_tolower(mob->name(Item::NAME_FLAG_NO_COLOUR)), "", mob->parser_id(), i,
+            ParserTarget::TARGET_MOBILE});
     }
 
     // Score each candidate.
@@ -208,12 +212,26 @@ Parser::ParserSearchResult Parser::parse_target(const std::vector<std::string> &
         // Score each target by matching words in its name.
         std::vector<std::string> name_words = StrX::string_explode(candidates.at(i).name, " ");
         const std::string collapsed_input = StrX::collapse_vector(input);
-        if (candidates.at(i).name == collapsed_input) candidates.at(i).score = 100;
+        if (candidates.at(i).name == collapsed_input || candidates.at(i).name_np == collapsed_input) candidates.at(i).score = 100;
         else
         {
+            int score = 0, singular_score = 0;
+            const bool calc_singular_score = (candidates.at(i).name_np.size() && candidates.at(i).name_np != candidates.at(i).name);
             for (unsigned int j = 0; j < input.size(); j++)
+            {
                 for (unsigned int k = 0; k < name_words.size(); k++)
-                    if (input.at(j) == name_words.at(k)) candidates.at(i).score++;
+                    if (input.at(j) == name_words.at(k)) score++;
+            }
+            if (calc_singular_score)
+            {
+                std::vector<std::string> name_words_singular = StrX::string_explode(candidates.at(i).name_np, " ");
+                for (unsigned int j = 0; j < input.size(); j++)
+                {
+                    for (unsigned int k = 0; k < name_words_singular.size(); k++)
+                        if (input.at(j) == name_words_singular.at(k)) singular_score++;
+                }
+            }
+            candidates.at(i).score = std::max(score, singular_score);
         }
     }
 
@@ -223,7 +241,7 @@ Parser::ParserSearchResult Parser::parse_target(const std::vector<std::string> &
         if (candidates.at(i).score > highest_score) highest_score = candidates.at(i).score;
 
     // No matches at all?
-    if (!highest_score) return { 0, "", 0, 0, ParserTarget::TARGET_NONE };
+    if (!highest_score) return { 0, "", "", 0, 0, ParserTarget::TARGET_NONE };
 
     // Now strip out any candidates that don't match the highest score.
     for (unsigned int i = 0; i < candidates.size(); i++)
@@ -246,7 +264,7 @@ Parser::ParserSearchResult Parser::parse_target(const std::vector<std::string> &
     disambig += StrX::comma_list(candidate_names) + "?";
     core()->message(disambig);
     m_special_state = SpecialState::DISAMBIGUATION;
-    return { 0, "", 0, 0, ParserTarget::TARGET_UNCLEAR };
+    return { 0, "", "", 0, 0, ParserTarget::TARGET_UNCLEAR };
 }
 
 // Parses a known command.

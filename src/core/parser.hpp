@@ -34,7 +34,7 @@ private:
     struct ParserSearchResult
     {
         int             score;
-        std::string     name;
+        std::string     name, name_np;
         uint32_t        parser_id;
         uint32_t        target;
         ParserTarget    type;
