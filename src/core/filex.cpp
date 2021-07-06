@@ -8,6 +8,10 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+#ifdef GREAVE_TARGET_WINDOWS
+#include <windows.h>
+#endif
+
 
 // Deletes a specified file. Simple enough, but we'll keep this function around in case there's any platform-specific weirdness that needs to be worked in.
 void FileX::delete_file(const std::string &filename) { unlink(filename.c_str()); }
@@ -58,6 +62,16 @@ std::vector<std::string> FileX::files_in_dir(const std::string &directory, bool 
     }
     closedir(dir);
     return files;
+}
+
+// Checks if a file is read-only.
+bool FileX::is_read_only(const std::string &file)
+{
+#ifdef GREAVE_TARGET_WINDOWS
+    DWORD attributes = GetFileAttributes(file.c_str());
+    if (attributes != INVALID_FILE_ATTRIBUTES) return (attributes & FILE_ATTRIBUTE_READONLY);
+#endif
+    return false;
 }
 
 // Makes a new directory, if it doesn't already exist.

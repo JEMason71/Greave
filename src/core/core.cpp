@@ -218,18 +218,44 @@ void Core::save()
 {
     const std::string save_fn = save_filename(m_save_slot);
     const std::string save_fn_old = save_filename(m_save_slot, true);
+    if (FileX::is_read_only(save_fn) || (FileX::file_exists(save_fn_old) && FileX::is_read_only(save_fn_old)))
+    {
+        core()->guru()->nonfatal("Saved game file is read-only!", Guru::GURU_ERROR);
+        return;
+    }
     if (FileX::file_exists(save_fn_old)) FileX::delete_file(save_fn_old);
-    if (FileX::file_exists(save_fn)) FileX::rename_file(save_fn, save_fn_old);
+    if (FileX::file_exists(save_fn))
+    {
+        FileX::rename_file(save_fn, save_fn_old);
+        if (FileX::file_exists(save_fn))
+        {
+            m_guru_meditation->nonfatal("Could not rename saved game file. Is it read-only?", Guru::GURU_ERROR);
+            return;
+        }
+    }
 
-    std::shared_ptr<SQLite::Database> save_db = std::make_shared<SQLite::Database>(save_fn, SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
-    save_db->exec("PRAGMA user_version = " + std::to_string(SAVE_VERSION));
-    m_sql_unique_id = 0;    // We're making a new save file each time, so we can reset the unique ID counter.
+    try
+    {
+        std::shared_ptr<SQLite::Database> save_db = std::make_shared<SQLite::Database>(save_fn, SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
+        save_db->exec("PRAGMA user_version = " + std::to_string(SAVE_VERSION));
+        m_sql_unique_id = 0;    // We're making a new save file each time, so we can reset the unique ID counter.
 
-    SQLite::Transaction transaction(*save_db);
-    m_world->save(save_db);
-    transaction.commit();
+        SQLite::Transaction transaction(*save_db);
+        m_world->save(save_db);
+        transaction.commit();
 
-    message("{M}Game saved in slot {Y}" + std::to_string(m_save_slot) + "{M}.");
+        message("{M}Game saved in slot {Y}" + std::to_string(m_save_slot) + "{M}.");
+    } catch (std::exception &e)
+    {
+        m_guru_meditation->nonfatal("SQL error while attempting to save the game: " + std::string(e.what()), Guru::CRITICAL);
+        if (FileX::file_exists(save_fn_old))
+        {
+            m_guru_meditation->nonfatal("Attempting to restore backup saved game file.", Guru::WARN);
+            FileX::delete_file(save_fn);
+            if (FileX::file_exists(save_fn)) m_guru_meditation->nonfatal("Could not delete current saved game file! Is it read-only?", Guru::GURU_ERROR);
+            else FileX::rename_file(save_fn_old, save_fn);
+        }
+    }
 }
 
 // Returns a filename for a saved game file.
