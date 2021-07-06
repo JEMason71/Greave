@@ -154,7 +154,7 @@ void Guru::log(std::string msg, int type)
 void Guru::nonfatal(std::string error, int type)
 {
     if (m_cascade_failure || m_dead_already) return;
-    unsigned int cascade_weight = 0;
+    int cascade_weight = 0;
     switch(type)
     {
         case Guru::WARN: cascade_weight = Guru::CASCADE_WEIGHT_WARNING; break;
@@ -167,7 +167,7 @@ void Guru::nonfatal(std::string error, int type)
 
     if (cascade_weight)
     {
-        unsigned int elapsed_seconds = std::time(0) - m_cascade_timer;
+        time_t elapsed_seconds = std::time(0) - m_cascade_timer;
         if (elapsed_seconds <= Guru::CASCADE_TIMEOUT)
         {
             m_cascade_count += cascade_weight;

@@ -266,7 +266,7 @@ void TerminalCurses::print(std::string str, int x, int y, Colour col)
 
         const unsigned long ansi_code = colour(col);
         attron(ansi_code);
-        const unsigned int first_word_size = first_word.size();
+        const size_t first_word_size = first_word.size();
         StrX::find_and_replace(first_word, "%", "%%");
         mvprintw(y, x, first_word.c_str());
         attroff(ansi_code);
@@ -275,7 +275,7 @@ void TerminalCurses::print(std::string str, int x, int y, Colour col)
 }
 
 // Prints a character at a given coordinate on the screen.
-void TerminalCurses::put(unsigned int letter, int x, int y, Colour col)
+void TerminalCurses::put(uint16_t letter, int x, int y, Colour col)
 {
     if (letter > 255) letter = '?';
     const unsigned long ansi_code = colour(col);

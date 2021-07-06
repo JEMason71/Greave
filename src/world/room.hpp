@@ -6,8 +6,15 @@
 
 class Inventory;                        // defined in world/inventory.hpp
 class Item;                             // defined in world/item.hpp
+class Mobile;                           // defined in world/mobile.hpp
 namespace SQLite { class Database; }    // defined in 3rdparty/SQLiteCpp/Database.h
 
+
+enum class Direction : uint8_t { NORTH, SOUTH, EAST, WEST, NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHWEST, UP, DOWN, NONE };
+
+enum class ScarType : uint8_t { BLOOD, BURN, DEBRIS, DIRT, VOMIT, CAMPFIRE, WATER };
+
+enum class Security : uint8_t { ANARCHY, LOW, HIGH, SANCTUARY, INACCESSIBLE };
 
 enum class LinkTag : uint16_t {
     // ****************************************************************************************
@@ -118,17 +125,13 @@ enum class RoomTag : uint16_t {
     ChurchAltar,            // This room is a church altar, we can respawn here. [CURRENTLY UNUSED]
 };
 
-enum class ScarType : uint8_t { BLOOD, BURN, DEBRIS, DIRT, VOMIT, CAMPFIRE, WATER };
-
-enum class Security : uint8_t { ANARCHY, LOW, HIGH, SANCTUARY, INACCESSIBLE };
-
 class Room
 {
 public:
     static const uint32_t       BLOCKED;                // Hashed value for BLOCKED, which is used to mark exits as impassible.
     static const uint32_t       FALSE_ROOM;             // Hashed value for FALSE_ROOM, which is used to make 'fake' impassible room exits.
     static const uint8_t        LIGHT_VISIBLE;          // Any light level below this is considered too dark to see.
-    static const unsigned int   ROOM_LINKS_MAX = 10;    // The maximum amount of exit links from one Room to another.
+    static const int            ROOM_LINKS_MAX = 10;    // The maximum amount of exit links from one Room to another.
     static const std::string    SQL_ROOMS;              // The SQL table construction string for the saved rooms.
     static const uint32_t       UNFINISHED;             // Hashed value for UNFINISHED, which is used to mark room exits as unfinished and to be completed later.
 
@@ -161,7 +164,7 @@ public:
     void        respawn_mobs();                                         // Respawn Mobiles in this Room, if possible.
     void        save(std::shared_ptr<SQLite::Database> save_db);        // Saves the Room and anything it contains.
     std::string scar_desc() const;                                      // Returns the description of any room scars present.
-    void        set_base_light(uint8_t new_light);                      // Sets this Room's base light level.
+    void        set_base_light(int new_light);                          // Sets this Room's base light level.
     void        set_desc(const std::string &new_desc);                  // Sets this Room's description.
     void        set_link(Direction dir, const std::string &room_id);    // Sets a link to another Room.
     void        set_link(Direction dir, uint32_t room_id);              // As above, but with an already-hashed Room ID.
@@ -173,7 +176,7 @@ public:
     bool        tag(RoomTag the_tag) const;                             // Checks if a tag is set on this Room.
 
 private:
-    static const uint32_t   RESPAWN_INTERVAL;   // The minimum respawn time, in seconds, for Mobiles.
+    static const int    RESPAWN_INTERVAL;   // The minimum respawn time, in seconds, for Mobiles.
     static const std::vector<std::vector<std::string>>  ROOM_SCAR_DESCS;    // The descriptions for different types of room scars.
 
     std::string                 m_desc;                         // The Room's description.

@@ -11,12 +11,12 @@
 #include "world/world.hpp"
 
 
-const float     Combat::BASE_ATTACK_SPEED_MULTIPLIER =              10.0f;  // The base speed multiplier for all attacks.
-const uint32_t  Combat::BLEED_SEVERITY_BASE =                       6;      // The base value of bleed severity, used in the bleed calculations.
-const uint32_t  Combat::BLEED_SEVERITY_RANGE=                       4;      // The range of variation on the bleed severity.
-const uint32_t  Combat::BLEED_TIME_RANGE =                          10;     // The range of time (1 - X) that a weapon bleed effect can cause.
-const uint32_t  Combat::SCAR_BLEED_INTENSITY_FROM_BLEED_ATTACK =    2;      // Blood type scar intensity for attacks that cause bleeding.
-const float     Combat::STANCE_CHANGE_TIME =                        1.0f;   // The time it takes to change combat stances.
+const float Combat::BASE_ATTACK_SPEED_MULTIPLIER =              10.0f;  // The base speed multiplier for all attacks.
+const int   Combat::BLEED_SEVERITY_BASE =                       6;      // The base value of bleed severity, used in the bleed calculations.
+const int   Combat::BLEED_SEVERITY_RANGE=                       4;      // The range of variation on the bleed severity.
+const int   Combat::BLEED_TIME_RANGE =                          10;     // The range of time (1 - X) that a weapon bleed effect can cause.
+const int   Combat::SCAR_BLEED_INTENSITY_FROM_BLEED_ATTACK =    2;      // Blood type scar intensity for attacks that cause bleeding.
+const float Combat::STANCE_CHANGE_TIME =                        1.0f;   // The time it takes to change combat stances.
 
 // Weapon type damage modifiers to unarmoured, light, medium and heavy armour targets.
 const float Combat::DAMAGE_MODIFIER_ACID[4] =       { 1.8f, 1.3f, 1.2f, 1.0f };
@@ -42,9 +42,9 @@ float Combat::apply_damage_modifiers(float damage, std::shared_ptr<Item> weapon,
 {
     if (!damage || !weapon || !defender) return damage;
     const DamageType dt = weapon->damage_type();
-    if (DAMAGE_TYPE_MAP.find(dt) == DAMAGE_TYPE_MAP.end())
-        throw std::runtime_error("Unknown damage type: " + std::to_string(static_cast<int>(dt)));
-    const float *damage_modifier = DAMAGE_TYPE_MAP.at(dt);
+    const auto it = DAMAGE_TYPE_MAP.find(dt);
+    if (it == DAMAGE_TYPE_MAP.end()) throw std::runtime_error("Unknown damage type: " + std::to_string(static_cast<int>(dt)));
+    const float *damage_modifier = it->second;
 
     int armour_type = 0;    // 0 = unarmoured, 1 = light armour, 2 = medium armour, 3 = heavy armour.
     std::shared_ptr<Item> armour = defender->equ()->get(slot);
@@ -81,7 +81,7 @@ void Combat::change_stance(std::shared_ptr<Mobile> mob, CombatStance stance)
 }
 
 // Generates a standard-format damage number string.
-std::string Combat::damage_number_str(int damage, int blocked, bool crit, bool bleed, bool poison)
+std::string Combat::damage_number_str(uint32_t damage, uint32_t blocked, bool crit, bool bleed, bool poison)
 {
     std::string dmg_str;
     if (crit) dmg_str = "{w}[{m}*{M}-"; else dmg_str = "{w}[{R}-";
@@ -95,7 +95,7 @@ std::string Combat::damage_number_str(int damage, int blocked, bool crit, bool b
 }
 
 // Returns an appropriate damage string.
-std::string Combat::damage_str(unsigned int damage, std::shared_ptr<Mobile> def, bool heat)
+std::string Combat::damage_str(uint32_t damage, std::shared_ptr<Mobile> def, bool heat)
 {
     const float percentage = (static_cast<float>(damage) / static_cast<float>(def->hp(true))) * 100;
     if (percentage >= 200000) return StrX::rainbow_text("SUPERNOVAS", "RYW");
@@ -225,7 +225,7 @@ void Combat::pick_hit_location(std::shared_ptr<Mobile> mob, EquipSlot* slot, std
     const auto body_parts = mob->get_anatomy();
     const int bp_roll = core()->rng()->rnd(100);
     *slot = EquipSlot::NONE;
-    for (unsigned int i = 0; i < body_parts.size(); i++)
+    for (size_t i = 0; i < body_parts.size(); i++)
     {
         if (bp_roll < body_parts.at(i)->hit_chance) continue;
         *slot = body_parts.at(i)->slot;
@@ -257,7 +257,7 @@ int Combat::stance_compare(CombatStance atk, CombatStance def)
 }
 
 // Returns a threshold string, if a damage threshold has been passed.
-std::string Combat::threshold_str(std::shared_ptr<Mobile> defender, int damage, const std::string& good_colour, const std::string& bad_colour)
+std::string Combat::threshold_str(std::shared_ptr<Mobile> defender, uint32_t damage, const std::string& good_colour, const std::string& bad_colour)
 {
     const bool is_player = defender->is_player();
     const bool alive = !defender->tag(MobileTag::Unliving);
@@ -266,7 +266,7 @@ std::string Combat::threshold_str(std::shared_ptr<Mobile> defender, int damage, 
 
     const float old_perc = defender->hp() / static_cast<float>(defender->hp(true));
     float new_perc = (defender->hp() - damage) / static_cast<float>(defender->hp(true));
-    if (defender->hp() <= damage) new_perc = 0;
+    if (defender->hp() <= static_cast<int32_t>(damage)) new_perc = 0;
 
     if (old_perc >= 0.99f && new_perc >= 0.95f) return bad_colour + name + (alive ? (plural ? "barely notice." : "barely notices.") :
         (plural ? "are barely scratched." : "is barely scratched."));
@@ -288,7 +288,7 @@ std::string Combat::threshold_str(std::shared_ptr<Mobile> defender, int damage, 
 }
 
 // Applies a weapon bleed debuff and applies room scars.
-void Combat::weapon_bleed_effect(std::shared_ptr<Mobile> defender, unsigned int damage)
+void Combat::weapon_bleed_effect(std::shared_ptr<Mobile> defender, uint32_t damage)
 {
     if (defender->tag(MobileTag::ImmunityBleed)) return;
     const int bleed_time = core()->rng()->rnd(BLEED_TIME_RANGE);

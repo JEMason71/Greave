@@ -33,8 +33,8 @@
 std::shared_ptr<Core> greave = nullptr;   // The main Core object.
 
 const std::string   Core::GAME_VERSION =    "pre-alpha";    // The game's version number.
-const unsigned int  Core::SAVE_VERSION =    49;             // The version number for saved game files. This should increment when old saves can no longer be loaded.
-const unsigned int  Core::TAGS_PERMANENT =  10000;          // The tag number at which tags are considered permanent.
+const uint32_t      Core::SAVE_VERSION =    49;             // The version number for saved game files. This should increment when old saves can no longer be loaded.
+const uint16_t      Core::TAGS_PERMANENT =  10000;          // The tag number at which tags are considered permanent.
 
 
 // Main program entry point.
@@ -130,7 +130,7 @@ void Core::init()
 }
 
 // Loads a specified slot's saved game.
-void Core::load(unsigned int save_slot)
+void Core::load(int save_slot)
 {
     m_save_slot = save_slot;
     std::shared_ptr<SQLite::Database> save_db = std::make_shared<SQLite::Database>(save_filename(save_slot), SQLite::OPEN_READONLY);
@@ -259,15 +259,15 @@ void Core::save()
 }
 
 // Returns a filename for a saved game file.
-const std::string Core::save_filename(unsigned int slot, bool old_save) const { return "userdata/save/save-" + std::to_string(slot) + (old_save ? ".old" : ".sqlite"); }
+const std::string Core::save_filename(int slot, bool old_save) const { return "userdata/save/save-" + std::to_string(slot) + (old_save ? ".old" : ".sqlite"); }
 
 // Checks the saved game version of a save file.
-unsigned int Core::save_version(unsigned int slot)
+uint32_t Core::save_version(int slot)
 {
-    unsigned int version = 0;
+    uint32_t version = 0;
     std::shared_ptr<SQLite::Database> save_db = std::make_shared<SQLite::Database>(save_filename(slot), SQLite::OPEN_READONLY);
     SQLite::Statement version_query(*save_db, "PRAGMA user_version");
-    if (version_query.executeStep()) version = version_query.getColumn(0).getInt();
+    if (version_query.executeStep()) version = version_query.getColumn(0).getUInt();
     return version;
 }
 
@@ -302,12 +302,12 @@ void Core::title()
             message("{U}[{C}D{U}] {R}Delete a saved game");
             message("{0}{U}[{C}Q{U}] {R}Quit game");
         }
-        for (unsigned int i = 1; i <= m_prefs->save_file_slots; i++)
+        for (int i = 1; i <= m_prefs->save_file_slots; i++)
         {
             if (FileX::file_exists(save_filename(i)))
             {
                 std::string save_str = "Saved game #" + std::to_string(i);
-                const unsigned int save_ver = save_version(i);
+                const uint32_t save_ver = save_version(i);
                 if (save_ver == SAVE_VERSION) save_str = "{W}" + save_str;
                 else save_str = "{R}" + save_str + " {M}<incompatible>";
                 message("{0}{U}[{C}" + std::to_string(i) + "{U}] " + save_str);
@@ -399,7 +399,7 @@ void Core::title()
                     }
                     else
                     {
-                        unsigned int save_file_ver = 0;
+                        uint32_t save_file_ver = 0;
                         const bool file_exists = FileX::file_exists(save_filename(input_num));
                         if (file_exists) save_file_ver = save_version(input_num);
                         if (!file_exists || save_file_ver == SAVE_VERSION)

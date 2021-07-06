@@ -15,7 +15,7 @@ void Inventory::add_item(std::shared_ptr<Item> item)
     // Checks if there's anything else here that can be stacked.
     if (item->tag(ItemTag::Stackable))
     {
-        for (unsigned int i = 0; i < m_items.size(); i++)
+        for (size_t i = 0; i < m_items.size(); i++)
         {
             if (!m_items.at(i)->tag(ItemTag::Stackable)) continue;
             if (item->is_identical(m_items.at(i)))
@@ -38,17 +38,17 @@ void Inventory::add_item(std::shared_ptr<Item> item)
 void Inventory::add_item(const std::string &id) { add_item(core()->world()->get_item(id)); }
 
 // Returns the number of Items in this Inventory.
-unsigned int Inventory::count() const { return m_items.size(); }
+size_t Inventory::count() const { return m_items.size(); }
 
 // Deletes an Item from this Inventory.
-void Inventory::erase(uint32_t pos)
+void Inventory::erase(size_t pos)
 {
     if (pos >= m_items.size()) throw std::runtime_error("Invalid inventory position requested.");
     m_items.erase(m_items.begin() + pos);
 }
 
 // Retrieves an Item from this Inventory.
-std::shared_ptr<Item> Inventory::get(uint32_t pos) const
+std::shared_ptr<Item> Inventory::get(size_t pos) const
 {
     if (pos >= m_items.size()) throw std::runtime_error("Invalid inventory position requested.");
     return m_items.at(pos);
@@ -87,7 +87,7 @@ bool Inventory::parser_id_exists(uint16_t id)
 }
 
 // Removes an Item from this Inventory.
-void Inventory::remove_item(uint32_t pos)
+void Inventory::remove_item(size_t pos)
 {
     if (pos >= m_items.size()) throw std::runtime_error("Attempt to remove item with invalid inventory position.");
     m_items.erase(m_items.begin() + pos);
@@ -96,7 +96,7 @@ void Inventory::remove_item(uint32_t pos)
 // As above, but with a specified equipment slot.
 void Inventory::remove_item(EquipSlot es)
 {
-    for (unsigned int i = 0; i < m_items.size(); i++)
+    for (size_t i = 0; i < m_items.size(); i++)
     {
         if (m_items.at(i)->equip_slot() == es)
         {
@@ -112,7 +112,7 @@ uint32_t Inventory::save(std::shared_ptr<SQLite::Database> save_db)
 {
     if (!m_items.size()) return 0;
     const uint32_t sql_id = core()->sql_unique_id();
-    for (unsigned int i = 0; i < m_items.size(); i++)
+    for (size_t i = 0; i < m_items.size(); i++)
         m_items.at(i)->save(save_db, sql_id);
     return sql_id;
 }

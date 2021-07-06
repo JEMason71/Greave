@@ -4,6 +4,8 @@
 #pragma once
 #include "core/core.hpp"
 
+enum class Direction : uint8_t; // defined in world/room.hpp
+
 
 class StrX
 {
@@ -16,8 +18,8 @@ public:
     static std::string  capitalize_first_letter(std::string str);   // Capitalizes the first letter of a string.
     static std::string  collapse_vector(std::vector<std::string> vec);  // Simple function to collapse a string vector into words.
     static std::string  collapse_vector(std::vector<uint32_t> vec);     // As above, but for an integer vector>
-    static std::string  comma_list(std::vector<std::string> vec, unsigned int flags = 0);   // Converts a vector to a comma-separated list.
-    static unsigned int count_colour_tags(const std::string &str);  // Counts all the colour tags in a string.
+    static std::string  comma_list(std::vector<std::string> vec, int flags = 0);    // Converts a vector to a comma-separated list.
+    static size_t       count_colour_tags(const std::string &str);  // Counts all the colour tags in a string.
     static std::string  decode_compressed_string(std::string cb);   // Decodes a compressed string (e.g. 4cab2z becomes ccccabzz).
     static std::string  dir_to_name(Direction dir, DirNameType dnt = DirNameType::NORMAL);  // Converts a direction enum into a string.
     static std::string  dir_to_name(uint8_t dir, DirNameType dnt = DirNameType::NORMAL);    // As above, but with an integer instead of an enum.
@@ -28,8 +30,8 @@ public:
     static std::string  intostr_pretty(int num);                    // Returns a 'pretty' version of a number in string format, such as "12,345".
     static bool         is_number(const std::string &str);          // Checks if a string is a number.
     static bool         is_vowel(char ch);                          // Checks if a character is a vowel.
-    static std::string  itoh(unsigned int num, uint32_t min_len);   // Converts an integer into a hex string.
-    static std::string  itos(unsigned int num, uint32_t min_len);   // Converts an integer to a string, but optionally pads it to a minimum length with leading zeroes.
+    static std::string  itoh(uint32_t num, size_t min_len);         // Converts an integer into a hex string.
+    static std::string  itos(uint32_t num, size_t min_len);         // Converts an integer to a string, but optionally pads it to a minimum length with leading zeroes.
     static std::string  metadata_to_string(const std::map<std::string, std::string> &metadata); // Converts a metadata map into a string.
     static std::string  mgsc_string(uint32_t coin, MGSC mode);      // Converts a coin value into a mithril/gold/silver/copper ANSI string.
     static std::string  number_to_word(uint64_t number);            // Converts small numbers into words.
@@ -39,12 +41,12 @@ public:
     static std::vector<uint32_t>    stoi_vec(std::vector<std::string> vec); // Converts a std::string vector into a uint32_t vector.
     static std::string  str_tolower(std::string str);               // Converts a string to lower-case.
     static std::string  str_toupper(std::string str);               // Converts a string to upper-case.
-    static std::vector<std::string> string_explode(std::string str, const std::string &separator);          // String split/explode function.
-    static std::vector<std::string> string_explode_colour(const std::string &str, unsigned int line_len);   // Similar to string_explode(), but takes colour into account, and wraps to a given line.
+    static std::vector<std::string> string_explode(std::string str, const std::string &separator);  // String split/explode function.
+    static std::vector<std::string> string_explode_colour(const std::string &str, size_t line_len); // Similar to string_explode(), but takes colour into account, and wraps to a given line.
     static void         string_to_metadata(const std::string &str, std::map<std::string, std::string> &metadata);   // Converts a string to a metadata map.
     static std::string  strip_ansi(const std::string &str);         // Strips colour codes from a string.
-    static unsigned int strlen_colour(const std::string &str);      // Returns the length of a string, taking colour tags into account.
-    static unsigned int word_count(const std::string &str, const std::string &word);    // Returns a count of the amount of times a string is found in a parent string.
+    static size_t       strlen_colour(const std::string &str);      // Returns the length of a string, taking colour tags into account.
+    static size_t       word_count(const std::string &str, const std::string &word);    // Returns a count of the amount of times a string is found in a parent string.
 
     template<class T> static void string_to_tags(const std::string &tag_string, std::set<T> &tags)
     {
@@ -59,7 +61,7 @@ public:
         if (!tags.size()) return "";
         std::string tags_str;
         for (auto tag : tags)
-            if (static_cast<unsigned int>(tag) < Core::TAGS_PERMANENT) tags_str += itoh(static_cast<long long>(tag), 1) + " ";
+            if (static_cast<uint32_t>(tag) < Core::TAGS_PERMANENT) tags_str += itoh(static_cast<long long>(tag), 1) + " ";
         if (tags_str.size()) tags_str.pop_back();   // Strip off the excess space at the end.
         return tags_str;
     }

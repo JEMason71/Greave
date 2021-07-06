@@ -14,13 +14,13 @@ const int List::LIST_RARITY_SPECIAL =   100;
 
 
 // Returns the element at the given position of the List.
-ListEntry List::at(uint32_t pos, bool nofollow) const
+ListEntry List::at(size_t pos, bool nofollow) const
 {
     if (pos >= m_data.size()) throw std::runtime_error("Invalid list position: " + std::to_string(pos));
     if (m_data.at(pos).str[0] == '#' && !nofollow) return core()->world()->get_list(m_data.at(pos).str.substr(1))->rnd();
     else if (m_data.at(pos).str[0] == '&' && !nofollow)
     {
-        const unsigned int roll = core()->rng()->rnd(LIST_RARITY_RARE);
+        const int roll = core()->rng()->rnd(LIST_RARITY_RARE);
         std::string rarity = "COMMON";
         if (roll == 1)
         {
@@ -57,7 +57,7 @@ bool List::contains(const std::string &query) const
 // Merges a second List into this List.
 void List::merge_with(std::shared_ptr<List> second_list)
 {
-    for (uint32_t i = 0; i < second_list->size(); i++)
+    for (size_t i = 0; i < second_list->size(); i++)
     {
         ListEntry new_entry = second_list->at(i, true);
         m_data.push_back(new_entry);
@@ -74,12 +74,12 @@ ListEntry List::rnd() const
     while (true)
     {
         if (!list_copy->size()) throw std::runtime_error("Could not find suitable result on list.");
-        const uint32_t choice = core()->rng()->rnd(0, list_copy->m_data.size() - 1);
+        const size_t choice = core()->rng()->rnd(0, list_copy->m_data.size() - 1);
         ListEntry result = list_copy->m_data.at(choice);
         if (result.str.size() && result.str[0] == '#') return core()->world()->get_list(result.str.substr(1))->rnd();
         else if (result.str.size() && result.str[0] == '&')
         {
-            const unsigned int roll = core()->rng()->rnd(LIST_RARITY_RARE);
+            const int roll = core()->rng()->rnd(LIST_RARITY_RARE);
             std::string rarity = "COMMON";
             if (roll == 1)
             {
@@ -94,4 +94,4 @@ ListEntry List::rnd() const
 }
 
 // Returns the size of the List.
-uint32_t List::size() const { return m_data.size(); }
+size_t List::size() const { return m_data.size(); }

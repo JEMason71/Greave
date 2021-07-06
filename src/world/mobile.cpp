@@ -15,9 +15,9 @@
 #include "world/world.hpp"
 
 
-const float     Mobile::ACTION_TIMER_CAP_MAX =                  3600.0f;    // The maximum value the action timer can ever reach.
-const uint32_t  Mobile::BASE_CARRY_WEIGHT =                     30000;      // The maximum amount of weight a Mobile can carry, before modifiers.
-const uint32_t  Mobile::SCAR_BLEED_INTENSITY_FROM_BLEED_TICK =  1;          // Blood type scar intensity caused by each tick of the player or an NPC bleeding.
+const float Mobile::ACTION_TIMER_CAP_MAX =                  3600.0f;    // The maximum value the action timer can ever reach.
+const int   Mobile::BASE_CARRY_WEIGHT =                     30000;      // The maximum amount of weight a Mobile can carry, before modifiers.
+const int   Mobile::SCAR_BLEED_INTENSITY_FROM_BLEED_TICK =  1;          // Blood type scar intensity caused by each tick of the player or an NPC bleeding.
 
 // Flags for the name() function.
 const int Mobile::NAME_FLAG_A =                 1;  // Precede the Mobile's name with 'a' or 'an', unless the name is a proper noun.
@@ -54,7 +54,7 @@ void Buff::save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id)
     if (power) query.bind(2, power);
     query.bind(3, core()->sql_unique_id());
     if (time != USHRT_MAX) query.bind(4, time);
-    query.bind(5, static_cast<unsigned int>(type));
+    query.bind(5, static_cast<int>(type));
     query.exec();
 }
 
@@ -107,7 +107,7 @@ float Mobile::attack_speed() const
 float Mobile::block_mod() const
 {
     float mod_perc = 100.0f;
-    for (unsigned int i = 0; i < m_equipment->count(); i++)
+    for (size_t i = 0; i < m_equipment->count(); i++)
         mod_perc += m_equipment->get(i)->block_mod();
     return mod_perc / 100.0f;
 }
@@ -143,9 +143,9 @@ bool Mobile::can_perform_action(float time) const { return m_action_timer >= tim
 uint32_t Mobile::carry_weight() const
 {
     uint32_t total_weight = 0;
-    for (unsigned int i = 0; i < m_inventory->count(); i++)
+    for (size_t i = 0; i < m_inventory->count(); i++)
         total_weight += m_inventory->get(i)->weight();
-    for (unsigned int i = 0; i < m_equipment->count(); i++)
+    for (size_t i = 0; i < m_equipment->count(); i++)
         total_weight += m_equipment->get(i)->weight();
     return total_weight;
 }
@@ -153,7 +153,7 @@ uint32_t Mobile::carry_weight() const
 // Clears a specified buff/debuff from the Actor, if it exists.
 void Mobile::clear_buff(Buff::Type type)
 {
-    for (unsigned int i = 0; i < m_buffs.size(); i++)
+    for (size_t i = 0; i < m_buffs.size(); i++)
     {
         if (m_buffs.at(i)->type == type)
         {
@@ -174,7 +174,7 @@ void Mobile::clear_tag(MobileTag the_tag)
 float Mobile::dodge_mod() const
 {
     float mod_perc = 100.0f;
-    for (unsigned int i = 0; i < m_equipment->count(); i++)
+    for (size_t i = 0; i < m_equipment->count(); i++)
         mod_perc += m_equipment->get(i)->dodge_mod();
     return mod_perc / 100.0f;
 }
@@ -326,7 +326,7 @@ void Mobile::new_parser_id() { m_parser_id = core()->rng()->rnd(1, 9999); }
 float Mobile::parry_mod() const
 {
     float mod_perc = 100.0f;
-    for (unsigned int i = 0; i < m_equipment->count(); i++)
+    for (size_t i = 0; i < m_equipment->count(); i++)
         mod_perc += m_equipment->get(i)->parry_mod();
     return mod_perc / 100.0f;
 }
@@ -509,7 +509,7 @@ bool Mobile::tick_bleed(uint32_t power, uint16_t time)
 // Reduce the timer on all buffs.
 void Mobile::tick_buffs()
 {
-    for (unsigned int i = 0; i < m_buffs.size(); i++)
+    for (size_t i = 0; i < m_buffs.size(); i++)
     {
         if (m_buffs.at(i)->time == USHRT_MAX) continue;
 

@@ -69,7 +69,7 @@ TimeWeather::Season TimeWeather::current_season() const
 // Returns the name of the current day of the week.
 std::string TimeWeather::day_name() const
 {
-    unsigned int temp_day = m_day;
+    int temp_day = m_day;
     while (temp_day > 7) temp_day -= 7;
     switch (temp_day)
     {
@@ -88,7 +88,7 @@ std::string TimeWeather::day_name() const
 int TimeWeather::day_of_month() const
 {
     if (m_day <= 28) return m_day;
-    unsigned int temp_day = m_day;
+    int temp_day = m_day;
     while (temp_day > 28) temp_day -= 28;
     return temp_day;
 }
@@ -291,7 +291,7 @@ bool TimeWeather::pass_time(float seconds, bool interruptable)
         if (heartbeat_ready(Heartbeat::BUFFS))
         {
             core()->world()->player()->tick_buffs();
-            for (unsigned int m = 0; m < core()->world()->mob_count(); m++)
+            for (size_t m = 0; m < core()->world()->mob_count(); m++)
                 core()->world()->mob_vec(m)->tick_buffs();
         }
     }
@@ -422,7 +422,7 @@ uint32_t TimeWeather::time_passed_since(uint32_t since) const
     if (since <= m_time_passed) return m_time_passed - since;
 
     // If not, we'll try to work around the overflow. This ain't great if we overflowed twice, but shouldn't cause too many problems.
-    return UINT_MAX - since + m_time_passed;
+    return UINT32_MAX - since + m_time_passed;
 }
 
 // Returns a weather description for the current time/weather, based on the current season.

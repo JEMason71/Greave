@@ -5,6 +5,7 @@
 #include "core/guru.hpp"
 #include "core/mathx.hpp"
 #include "core/strx.hpp"
+#include "world/room.hpp"
 
 #include <algorithm>
 #include <iterator>
@@ -43,7 +44,7 @@ std::string StrX::collapse_vector(std::vector<uint32_t> vec)
     return collapse_vector(converted_vec);
 }
 
-std::string StrX::comma_list(std::vector<std::string> vec, unsigned int flags)
+std::string StrX::comma_list(std::vector<std::string> vec, int flags)
 {
     const bool use_and = ((flags & CL_FLAG_USE_AND) == CL_FLAG_USE_AND);
     const bool sql_mode = ((flags & CL_FLAG_SQL_MODE) == CL_FLAG_SQL_MODE);
@@ -62,7 +63,7 @@ std::string StrX::comma_list(std::vector<std::string> vec, unsigned int flags)
     else if (vec.size() == 2) return vec.at(0) + plus + vec.at(1);
 
     std::string str;
-    for (unsigned int i = 0; i < vec.size(); i++)
+    for (size_t i = 0; i < vec.size(); i++)
     {
         str += vec.at(i);
         if (i < vec.size() - 1)
@@ -76,10 +77,10 @@ std::string StrX::comma_list(std::vector<std::string> vec, unsigned int flags)
 }
 
 // Counts all the colour tags in a string.
-unsigned int StrX::count_colour_tags(const std::string &str)
+size_t StrX::count_colour_tags(const std::string &str)
 {
-    unsigned int tags = 0;
-    for (unsigned int i = 0; i < str.size(); i++)
+    size_t tags = 0;
+    for (size_t i = 0; i < str.size(); i++)
         if (str.at(i) == '{' && str.size() > i + 2 && str.at(i + 2) == '}') tags++;
     return tags;
 }
@@ -235,7 +236,7 @@ bool StrX::is_vowel(char ch)
 }
 
 // Converts an integer into a hex string.
-std::string StrX::itoh(uint32_t num, unsigned int min_len)
+std::string StrX::itoh(uint32_t num, size_t min_len)
 {
     std::stringstream ss;
     ss << std::hex << num;
@@ -245,7 +246,7 @@ std::string StrX::itoh(uint32_t num, unsigned int min_len)
 }
 
 // Converts an integer to a string, but optionally pads it to a minimum length with leading zeroes.
-std::string StrX::itos(unsigned int num, uint32_t min_len)
+std::string StrX::itos(uint32_t num, size_t min_len)
 {
     std::string result = std::to_string(num);
     while (result.size() < min_len) result = "0" + result;
@@ -268,35 +269,35 @@ std::string StrX::metadata_to_string(const std::map<std::string, std::string> &m
 // Converts a coin value into a mithril/gold/silver/copper ANSI string.
 std::string StrX::mgsc_string(uint32_t coin, StrX::MGSC mode)
 {
-	const uint32_t mithril = coin / 1000000;
-	const uint32_t gold = (coin - (mithril * 1000000)) / 1000;
-	const uint32_t silver = (coin - (mithril * 1000000) - (gold * 1000)) / 10;
-	const uint32_t copper = (coin - (mithril * 1000000) - (gold * 1000) - (silver * 10));
-	if (mode == MGSC::SHORT || mode == MGSC::SHORT_ROUND)
-	{
-		std::string mithril_string, gold_string, silver_string, copper_string;
-		if (mithril) mithril_string = "{C}" + intostr_pretty(mithril) + "m";
-		if (gold) gold_string = "{Y}" + std::to_string(gold) + "g";
-		if (silver) silver_string = "{w}" + std::to_string(silver) + "s";
-		if (copper) copper_string = "{y}" + std::to_string(copper) + "c";
-		if (mode == MGSC::SHORT_ROUND)
-		{
-			if (mithril >= 100) gold_string = "";
-			if (mithril) silver_string = "";
-			if (gold >= 100 || mithril) copper_string = "";
-		}
-		return mithril_string + gold_string + silver_string + copper_string;
-	}
-	else
-	{
-		std::vector<std::string> result_vec;
-		if (mithril) result_vec.push_back(intostr_pretty(mithril) + " mithril");
-		if (gold) result_vec.push_back(std::to_string(gold) + " gold");
-		if (silver) result_vec.push_back(std::to_string(silver) + " silver");
-		if (copper) result_vec.push_back(std::to_string(copper) + " copper");
-		if (result_vec.size()) return comma_list(result_vec);
-		else return "zero";
-	}
+    const uint32_t mithril = coin / 1000000;
+    const uint32_t gold = (coin - (mithril * 1000000)) / 1000;
+    const uint32_t silver = (coin - (mithril * 1000000) - (gold * 1000)) / 10;
+    const uint32_t copper = (coin - (mithril * 1000000) - (gold * 1000) - (silver * 10));
+    if (mode == MGSC::SHORT || mode == MGSC::SHORT_ROUND)
+    {
+        std::string mithril_string, gold_string, silver_string, copper_string;
+        if (mithril) mithril_string = "{C}" + intostr_pretty(mithril) + "m";
+        if (gold) gold_string = "{Y}" + std::to_string(gold) + "g";
+        if (silver) silver_string = "{w}" + std::to_string(silver) + "s";
+        if (copper) copper_string = "{y}" + std::to_string(copper) + "c";
+        if (mode == MGSC::SHORT_ROUND)
+        {
+            if (mithril >= 100) gold_string = "";
+            if (mithril) silver_string = "";
+            if (gold >= 100 || mithril) copper_string = "";
+        }
+        return mithril_string + gold_string + silver_string + copper_string;
+    }
+    else
+    {
+        std::vector<std::string> result_vec;
+        if (mithril) result_vec.push_back(intostr_pretty(mithril) + " mithril");
+        if (gold) result_vec.push_back(std::to_string(gold) + " gold");
+        if (silver) result_vec.push_back(std::to_string(silver) + " silver");
+        if (copper) result_vec.push_back(std::to_string(copper) + " copper");
+        if (result_vec.size()) return comma_list(result_vec);
+        else return "zero";
+    }
 }
 
 // Converts small numbers into words.
@@ -383,7 +384,7 @@ std::vector<std::string> StrX::string_explode(std::string str, const std::string
     std::vector<std::string> results;
 
     std::string::size_type pos = str.find(separator, 0);
-    const int pit = separator.length();
+    const size_t pit = separator.length();
 
     while(pos != std::string::npos)
     {
@@ -398,7 +399,7 @@ std::vector<std::string> StrX::string_explode(std::string str, const std::string
 }
 
 // Similar to string_explode(), but takes colour and high/low-ASCII tags into account, and wraps to a given line length.
-std::vector<std::string> StrX::string_explode_colour(const std::string &str, unsigned int line_len)
+std::vector<std::string> StrX::string_explode_colour(const std::string &str, size_t line_len)
 {
     std::vector<std::string> output;
 
@@ -452,10 +453,10 @@ std::vector<std::string> StrX::string_explode_colour(const std::string &str, uns
         }
         else
         {
-            unsigned int length = word.length();    // Find the length of the word.
+            size_t length = word.length();    // Find the length of the word.
 
-            const int colour_count = count_colour_tags(word);   // Count the colour tags.
-            if (colour_count) length -= (colour_count * 3);     // Reduce the length if one or more colour tags are found.
+            const size_t colour_count = count_colour_tags(word);    // Count the colour tags.
+            if (colour_count) length -= (colour_count * 3);         // Reduce the length if one or more colour tags are found.
             if (length + line_pos >= line_len)  // Is the word too long for the current line?
             {
                 line_pos = 0; current_line++;   // CR;LF
@@ -497,7 +498,7 @@ void StrX::string_to_metadata(const std::string &str, std::map<std::string, std:
 {
     metadata.clear();
     std::vector<std::string> md_exp = string_explode(str, " ");
-    for (unsigned int i = 0; i < md_exp.size(); i++)
+    for (size_t i = 0; i < md_exp.size(); i++)
     {
         std::vector<std::string> md_pair = string_explode(md_exp.at(i), ":");
         if (md_pair.size() != 2) throw std::runtime_error("Corrupt metadata in string conversion.");
@@ -513,9 +514,9 @@ std::string StrX::strip_ansi(const std::string &str)
 }
 
 // Returns the length of a string, taking colour and high/low-ASCII tags into account.
-unsigned int StrX::strlen_colour(const std::string &str)
+size_t StrX::strlen_colour(const std::string &str)
 {
-    unsigned int len = str.size();
+    size_t len = str.size();
 
     // Count any colour tags.
     len -= count_colour_tags(str) * 3;
@@ -524,9 +525,9 @@ unsigned int StrX::strlen_colour(const std::string &str)
 }
 
 // Returns a count of the amount of times a string is found in a parent string.
-unsigned int StrX::word_count(const std::string &str, const std::string &word)
+size_t StrX::word_count(const std::string &str, const std::string &word)
 {
-    unsigned int count = 0;
+    size_t count = 0;
     std::string::size_type word_pos = 0;
     while(word_pos != std::string::npos)
     {

@@ -51,7 +51,7 @@ std::vector<std::string> FileX::files_in_dir(const std::string &directory, bool 
                 if (recursive)
                 {
                     std::vector<std::string> result = files_in_dir(directory + "/" + filename, true);
-                    for (unsigned int i = 0; i < result.size(); i++)
+                    for (size_t i = 0; i < result.size(); i++)
                         result.at(i) = filename + "/" + result.at(i);
                     files.reserve(files.size() + result.size());
                     files.insert(files.end(), result.begin(), result.end());

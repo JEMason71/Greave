@@ -87,7 +87,7 @@ public:
     bool                has_buff(Buff::Type type) const;            // Checks if this Actor has the specified buff/debuff active.
     std::string         he_she() const;                             // Returns a gender string (he/she/it/they/etc.)
     std::string         his_her() const;                            // Returns a gender string (his/her/its/their/etc.)
-    const std::vector<uint32_t>&  hostility_vector() const;         // Returns the hostility vector.
+    const std::vector<uint32_t>&    hostility_vector() const;       // Returns the hostility vector.
     int                 hp(bool max = false) const;                 // Retrieves the HP (or maximum HP) of this Mobile.
     uint32_t            id() const;                                 // Retrieves the unique ID of this Mobile.
     const std::shared_ptr<Inventory>    inv() const;                // Returns a pointer to the Mobile's Inventory.
@@ -123,9 +123,9 @@ public:
     void                tick_buffs();                               // Reduce the timer on all buffs.
 
 protected:
-    static const float      ACTION_TIMER_CAP_MAX;   // The maximum value the action timer can ever reach.
-    static const uint32_t   BASE_CARRY_WEIGHT;      // The maximum amount of weight a Mobile can carry, before modifiers.
-    static const uint32_t   SCAR_BLEED_INTENSITY_FROM_BLEED_TICK;   // Blood type scar intensity caused by each tick of the player or an NPC bleeding.
+    static const float  ACTION_TIMER_CAP_MAX;   // The maximum value the action timer can ever reach.
+    static const int    BASE_CARRY_WEIGHT;      // The maximum amount of weight a Mobile can carry, before modifiers.
+    static const int    SCAR_BLEED_INTENSITY_FROM_BLEED_TICK;   // Blood type scar intensity caused by each tick of the player or an NPC bleeding.
 
     std::shared_ptr<Buff>   buff(Buff::Type type) const;    // Returns a pointer to a specified Buff.
 

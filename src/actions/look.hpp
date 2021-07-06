@@ -12,7 +12,7 @@ enum ParserTarget : uint8_t;    // defined in core/parser.hpp
 class ActionLook
 {
 public:
-    static void examine(std::shared_ptr<Mobile> mob, ParserTarget target_type, uint32_t target);    // Examines an Item or Mobile.
+    static void examine(std::shared_ptr<Mobile> mob, ParserTarget target_type, size_t target);  // Examines an Item or Mobile.
     static void look(std::shared_ptr<Mobile> mob);          // Take a look around at your surroundings.
     static void obvious_exits(std::shared_ptr<Mobile> mob, bool indent);    // Lists the exits from this area.
     static void time(std::shared_ptr<Mobile> mob);          // Determines the current time of day.

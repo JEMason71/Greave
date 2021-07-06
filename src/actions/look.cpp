@@ -16,7 +16,7 @@
 
 
 // Examines an Item or Mobile.
-void ActionLook::examine(std::shared_ptr<Mobile> mob, ParserTarget target_type, uint32_t target)
+void ActionLook::examine(std::shared_ptr<Mobile> mob, ParserTarget target_type, size_t target)
 {
     switch (target_type)
     {
@@ -156,14 +156,14 @@ void ActionLook::look(std::shared_ptr<Mobile> mob)
     if (room->inv()->count())
     {
         std::vector<std::string> items_nearby;
-        for (unsigned int i = 0; i < room->inv()->count(); i++)
+        for (size_t i = 0; i < room->inv()->count(); i++)
             items_nearby.push_back(room->inv()->get(i)->name(Item::NAME_FLAG_CORE_STATS) + "{w}");
         core()->message("{0}{g}```Items: {w}" + StrX::comma_list(items_nearby, StrX::CL_FLAG_USE_AND));
     }
 
     // Mobiles nearby.
     std::vector<std::string> mobs_nearby;
-    for (unsigned int i = 0; i < core()->world()->mob_count(); i++)
+    for (size_t i = 0; i < core()->world()->mob_count(); i++)
     {
         const auto world_mob = core()->world()->mob_vec(i);
         if (!world_mob) continue; // Ignore any nullptr Mobiles.
@@ -184,7 +184,7 @@ void ActionLook::obvious_exits(std::shared_ptr<Mobile> mob, bool indent)
     }
 
     std::vector<std::string> exits_vec;
-    for (unsigned int e = 0; e < Room::ROOM_LINKS_MAX; e++)
+    for (int e = 0; e < Room::ROOM_LINKS_MAX; e++)
     {
         uint32_t room_link = room->link(e);
         if (!room_link || room_link == Room::BLOCKED) continue;

@@ -34,12 +34,12 @@ const float ActionInventory::TIME_UNEQUIP_WEAPON =  0.5f;   // The time taken (i
 void ActionInventory::check_inventory(std::shared_ptr<Mobile> mob)
 {
     const auto inventory = mob->inv();
-    const uint32_t inv_size = inventory->count();
+    const size_t inv_size = inventory->count();
 
     if (inv_size)
     {
         core()->message("{G}You are carrying:");
-        for (unsigned int i = 0; i < inv_size; i++)
+        for (size_t i = 0; i < inv_size; i++)
             core()->message("{0}" + inventory->get(i)->name(Item::NAME_FLAG_FULL_STATS | Item::NAME_FLAG_ID));
     }
     else core()->message("{y}You are not carrying anything.");
@@ -48,7 +48,7 @@ void ActionInventory::check_inventory(std::shared_ptr<Mobile> mob)
 }
 
 // Drops an item on the ground.
-void ActionInventory::drop(std::shared_ptr<Mobile> mob, uint32_t item_pos)
+void ActionInventory::drop(std::shared_ptr<Mobile> mob, size_t item_pos)
 {
     const std::shared_ptr<Item> item = mob->inv()->get(item_pos);
     const std::shared_ptr<Room> room = core()->world()->get_room(mob->location());
@@ -66,7 +66,7 @@ void ActionInventory::drop(std::shared_ptr<Mobile> mob, uint32_t item_pos)
 }
 
 // Wields or wears an equippable item.
-bool ActionInventory::equip(std::shared_ptr<Mobile> mob, uint32_t item_pos)
+bool ActionInventory::equip(std::shared_ptr<Mobile> mob, size_t item_pos)
 {
     const auto inv = mob->inv();
     const auto equ = mob->equ();
@@ -207,7 +207,7 @@ void ActionInventory::equipment(std::shared_ptr<Mobile> mob)
     }
 
     core()->message("{G}Your equipment:");
-    for (unsigned int i = 1; i < static_cast<unsigned int>(EquipSlot::_END); i++)
+    for (int i = 1; i < static_cast<int>(EquipSlot::_END); i++)
     {
         const EquipSlot es = static_cast<EquipSlot>(i);
         const auto item = equ->get(es);
@@ -238,7 +238,7 @@ void ActionInventory::equipment(std::shared_ptr<Mobile> mob)
 }
 
 // Takes an item from the ground.
-void ActionInventory::take(std::shared_ptr<Mobile> mob, uint32_t item_pos)
+void ActionInventory::take(std::shared_ptr<Mobile> mob, size_t item_pos)
 {
     const std::shared_ptr<Room> room = core()->world()->get_room(mob->location());
     const std::shared_ptr<Item> item = room->inv()->get(item_pos);
@@ -263,7 +263,7 @@ void ActionInventory::take(std::shared_ptr<Mobile> mob, uint32_t item_pos)
 }
 
 // Unequips a worn or wielded item.
-bool ActionInventory::unequip(std::shared_ptr<Mobile> mob, uint32_t item_pos)
+bool ActionInventory::unequip(std::shared_ptr<Mobile> mob, size_t item_pos)
 {
     const auto equ = mob->equ();
     const auto inv = mob->inv();
@@ -315,7 +315,7 @@ bool ActionInventory::unequip(std::shared_ptr<Mobile> mob, uint32_t item_pos)
 bool ActionInventory::unequip(std::shared_ptr<Mobile> mob, EquipSlot slot)
 {
     const auto inv = mob->equ();
-    for (unsigned int i = 0; i < inv->count(); i++)
+    for (size_t i = 0; i < inv->count(); i++)
         if (inv->get(i)->equip_slot() == slot) return unequip(mob, i);
     return false;
 }

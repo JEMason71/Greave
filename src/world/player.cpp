@@ -31,7 +31,7 @@ void Player::add_money(uint32_t amount)
 bool Player::is_player() const { return true; }
 
 // Loads the Player data.
-uint32_t Player::load(std::shared_ptr<SQLite::Database> save_db, unsigned int sql_id)
+uint32_t Player::load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id)
 {
     SQLite::Statement query(*save_db, "SELECT * FROM player");
     if (query.executeStep())
@@ -49,7 +49,7 @@ uint32_t Player::mob_target()
 {
     if (m_mob_target)
     {
-        for (unsigned int i = 0; i < core()->world()->mob_count(); i++)
+        for (size_t i = 0; i < core()->world()->mob_count(); i++)
         {
             const auto mob = core()->world()->mob_vec(i);
             if (mob->id() == m_mob_target)

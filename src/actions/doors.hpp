@@ -4,7 +4,8 @@
 #pragma once
 #include "core/greave.hpp"
 
-class Mobile;   // defined in world/mobile.hpp
+class Mobile;                   // defined in world/mobile.hpp
+enum class Direction : uint8_t; // defined in world/room.hpp
 
 
 class ActionDoors

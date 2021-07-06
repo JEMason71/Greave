@@ -12,16 +12,16 @@ namespace SQLite { class Database; }    // defined in 3rdparty/SQLiteCpp/Databas
 class Inventory
 {
 public:
-    void            add_item(std::shared_ptr<Item> item);   // Adds an Item to this Inventory (this will later handle auto-stacking, etc.)
-    void            add_item(const std::string &id);        // As above, but generates a new Item from a template with a specified ID.
-    unsigned int    count() const;                          // Returns the number of Items in this Inventory.
-    void            erase(uint32_t pos);                    // Deletes an Item from this Inventory.
-    std::shared_ptr<Item> get(uint32_t pos) const;          // Retrieves an Item from this Inventory.
-    std::shared_ptr<Item> get(EquipSlot es) const;          // As above, but retrieves an item based on a given equipment slot.
-    void            load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id);   // Loads an Inventory from the save file.
-    void            remove_item(uint32_t pos);              // Removes an Item from this Inventory.
-    void            remove_item(EquipSlot es);              // As above, but with a specified equipment slot.
-    uint32_t        save(std::shared_ptr<SQLite::Database> save_db);    // Saves this Inventory, returns its SQL ID.
+    void        add_item(std::shared_ptr<Item> item);   // Adds an Item to this Inventory (this will later handle auto-stacking, etc.)
+    void        add_item(const std::string &id);        // As above, but generates a new Item from a template with a specified ID.
+    size_t      count() const;                          // Returns the number of Items in this Inventory.
+    void        erase(size_t pos);                      // Deletes an Item from this Inventory.
+    std::shared_ptr<Item> get(size_t pos) const;        // Retrieves an Item from this Inventory.
+    std::shared_ptr<Item> get(EquipSlot es) const;      // As above, but retrieves an item based on a given equipment slot.
+    void        load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id);   // Loads an Inventory from the save file.
+    void        remove_item(size_t pos);                // Removes an Item from this Inventory.
+    void        remove_item(EquipSlot es);              // As above, but with a specified equipment slot.
+    uint32_t    save(std::shared_ptr<SQLite::Database> save_db);    // Saves this Inventory, returns its SQL ID.
 
 private:
     bool            parser_id_exists(uint16_t id);          // Checks if a given parser ID already exists on an Item in this Inventory.

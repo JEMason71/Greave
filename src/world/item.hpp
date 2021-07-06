@@ -68,8 +68,8 @@ public:
     void        new_parser_id();                    // Generates a new parser ID for this Item.
     int         parry_mod() const;                  // Returns the parry% modifier of this Item, if any.
     uint16_t    parser_id() const;                  // Retrieves the current ID of this Item, for parser differentiation.
-    uint16_t    power() const;                      // Retrieves this Item's power.
-    uint8_t     rare() const;                       // Retrieves this Item's rarity.
+    int         power() const;                      // Retrieves this Item's power.
+    int         rare() const;                       // Retrieves this Item's rarity.
     void        save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id); // Saves the Item to the save file.
     void        set_description(const std::string &desc);   // Sets this Item's description.
     void        set_equip_slot(EquipSlot es);       // Sets this Item's equipment slot.
@@ -77,7 +77,7 @@ public:
     void        set_meta(const std::string &key, int value);            // As above, but with an integer value.
     void        set_meta(const std::string &key, float value);          // As above again, but this time for floats.
     void        set_name(const std::string &name);  // Sets the name of this Item.
-    void        set_rare(uint8_t rarity);           // Sets this Item's rarity.
+    void        set_rare(int rarity);               // Sets this Item's rarity.
     void        set_stack(uint32_t size);           // Sets the stack size for this Item.
     void        set_tag(ItemTag the_tag);           // Sets a tag on this Item.
     void        set_type(ItemType type, ItemSub sub = ItemSub::NONE);   // Sets the type of this Item.

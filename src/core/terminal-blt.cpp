@@ -213,7 +213,7 @@ void TerminalBLT::print(std::string str, int x, int y, Colour col)
 }
 
 // Prints a character at a given coordinate on the screen.
-void TerminalBLT::put(unsigned int letter, int x, int y, Colour col)
+void TerminalBLT::put(uint16_t letter, int x, int y, Colour col)
 {
     if (col == Colour::WHITE_BG) set_background(Terminal::Colour::WHITE);
     terminal_color(color_from_name(colour(col).c_str()));

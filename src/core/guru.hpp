@@ -31,7 +31,7 @@ private:
     bool            m_cache_nonfatal;   // Temporarily caches nonfatal error messages.
     int             m_cascade_count;    // Keeps track of rapidly-occurring, non-fatal error messages.
     bool            m_cascade_failure;  // Is a cascade failure in progress?
-    unsigned int    m_cascade_timer;    // Timer to check the speed of non-halting Guru warnings, to prevent cascade locks.
+    time_t          m_cascade_timer;    // Timer to check the speed of non-halting Guru warnings, to prevent cascade locks.
     bool            m_console_ready;    // Have we fully initialized the BLT console yet?
     bool            m_dead_already;     // Have we already died? Is this crash within the Guru subsystem?
     std::string     m_last_log_message; // Records the last log message, to avoid spamming the log with repeats.

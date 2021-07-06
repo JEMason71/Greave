@@ -11,28 +11,28 @@
 #include "world/world.hpp"
 
 
-const uint32_t  AI::AGGRO_CHANCE =                  60;     // 1 in X chance of starting a fight.
-const uint16_t  AI::FLEE_DEBUFF_TIME =              48;     // The length of time the fleeing debuff lasts.
-const float     AI::FLEE_TIME =                     60.0f;  // The action time it takes to flee in terror.
-const uint32_t  AI::STANCE_AGGRESSIVE_HP_PERCENT =  20;     // When a Mobile's target drops below this many hit points, they'll got to an aggressive stance.
+const int   AI::AGGRO_CHANCE =                  60;     // 1 in X chance of starting a fight.
+const int   AI::FLEE_DEBUFF_TIME =              48;     // The length of time the fleeing debuff lasts.
+const float AI::FLEE_TIME =                     60.0f;  // The action time it takes to flee in terror.
+const int   AI::STANCE_AGGRESSIVE_HP_PERCENT =  20;     // When a Mobile's target drops below this many hit points, they'll got to an aggressive stance.
                 // When a mobile's ratio of hit points lost compared to their target's hit points lost goes above this level, they'll go to an aggressive stance.
-const float     AI::STANCE_AGGRESSIVE_HP_RATIO =    1.3f;
-const uint32_t  AI::STANCE_COUNTER_CHANCE =         200;    // 1 in X chance to attempt to counter the target's choice of combat stance.
-const uint32_t  AI::STANCE_DEFENSIVE_HP_PERCENT =   20;     // Mobiles will switch to defensive stance when their hit points drop below this percentage of maximum.
+const float AI::STANCE_AGGRESSIVE_HP_RATIO =    1.3f;
+const int   AI::STANCE_COUNTER_CHANCE =         200;    // 1 in X chance to attempt to counter the target's choice of combat stance.
+const int   AI::STANCE_DEFENSIVE_HP_PERCENT =   20;     // Mobiles will switch to defensive stance when their hit points drop below this percentage of maximum.
                 // When a mobile's ratio of hit points lost compared to their target's hit points lost drops below this level, they'll go to a defensive stance.
-const float     AI::STANCE_DEFENSIVE_HP_RATIO =     0.7f;
-const uint32_t  AI::STANCE_RANDOM_CHANCE =          500;    // 1 in X chance to pick a random stance, rather than making a strategic decision.
-const uint32_t  AI::TRAVEL_CHANCE =                 300;    // 1 in X chance of traveling to another room.
+const float AI::STANCE_DEFENSIVE_HP_RATIO =     0.7f;
+const int   AI::STANCE_RANDOM_CHANCE =          500;    // 1 in X chance to pick a random stance, rather than making a strategic decision.
+const int   AI::TRAVEL_CHANCE =                 300;    // 1 in X chance of traveling to another room.
 
 
 // Processes AI for a specific active Mobile.
 void AI::tick_mob(std::shared_ptr<Mobile> mob, uint32_t)
 {
     mob->add_second();  // This is called every second, per active Mobile.
-    auto rng = core()->rng();
+    const auto rng = core()->rng();
     const uint32_t location = mob->location();
     const uint32_t player_location = core()->world()->player()->location();
-    auto room = core()->world()->get_room(location);
+    const auto room = core()->world()->get_room(location);
 
     // Scan the Mobile's hostility vector, looking for anyone they're hostile towards.
     std::shared_ptr<Mobile> attack_target = nullptr;
@@ -43,7 +43,7 @@ void AI::tick_mob(std::shared_ptr<Mobile> mob, uint32_t)
             attack_target = core()->world()->player();
             break;
         }
-        else for (unsigned int m = 0; m < core()->world()->mob_count(); m++)
+        else for (size_t m = 0; m < core()->world()->mob_count(); m++)
         {
             const auto check_mob = core()->world()->mob_vec(m);
             if (check_mob->id() == h && check_mob->location() == mob->location())
@@ -156,7 +156,7 @@ void AI::tick_mob(std::shared_ptr<Mobile> mob, uint32_t)
 // Ticks all the mobiles in active rooms.
 void AI::tick_mobs()
 {
-    for (unsigned int m = 0; m < core()->world()->mob_count(); m++)
+    for (size_t m = 0; m < core()->world()->mob_count(); m++)
         tick_mob(core()->world()->mob_vec(m), m);
 }
 
@@ -164,10 +164,10 @@ void AI::tick_mobs()
 bool AI::travel_randomly(std::shared_ptr<Mobile> mob, bool allow_dangerous_exits)
 {
     const uint32_t location = mob->location();
-    auto room = core()->world()->get_room(location);
+    const auto room = core()->world()->get_room(location);
 
-    std::vector<uint8_t> viable_exits;
-    for (unsigned int i = 0; i < Room::ROOM_LINKS_MAX; i++)
+    std::vector<int> viable_exits;
+    for (int i = 0; i < Room::ROOM_LINKS_MAX; i++)
     {
         if (room->fake_link(i)) continue;
         if (!allow_dangerous_exits && room->dangerous_link(i)) continue;

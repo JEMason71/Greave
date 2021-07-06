@@ -24,6 +24,3 @@
 #include <set>      // for std::set, of course
 #include <string>   // good old std::string
 #include <vector>   // std::vector is also our friend
-
-// These enums are used in many, many places, so it makes sense to allow them to be basically global.
-enum class Direction : uint8_t { NORTH, SOUTH, EAST, WEST, NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHWEST, UP, DOWN, NONE };

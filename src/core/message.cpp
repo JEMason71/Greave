@@ -55,7 +55,7 @@ void MessageLog::load(std::shared_ptr<SQLite::Database> save_db)
         m_output_raw.push_back(query.getColumn("text").getString());
 
     reprocess_output();
-    m_offset = static_cast<signed int>(m_output_processed.size() - m_output_window_height); // Move the offset back to the bottom of the message log.
+    m_offset = static_cast<int>(m_output_processed.size() - m_output_window_height);    // Move the offset back to the bottom of the message log.
     m_dragging_scrollbar = false;
     m_dragging_scrollbar_offset = 0;
 }
@@ -98,10 +98,10 @@ std::string MessageLog::render_message_log(bool accept_blank_input)
 
         // Render the visible part of the output window.
         int start = m_offset, end = m_output_processed.size();
-        if (end - start > static_cast<signed int>(m_output_window_height)) end = m_output_window_height + start;
+        if (end - start > static_cast<int>(m_output_window_height)) end = m_output_window_height + start;
         for (int i = start; i < end; i++)
         {
-            if (i < 0 || i >= static_cast<signed int>(m_output_processed.size())) continue;
+            if (i < 0 || i >= static_cast<int>(m_output_processed.size())) continue;
             core()->terminal()->print(m_output_processed.at(i), m_output_window_x, m_output_window_y + i - start);
         }
 
@@ -163,7 +163,7 @@ std::string MessageLog::render_message_log(bool accept_blank_input)
 
         const int key = core()->terminal()->get_key();
         const bool is_dead = core()->guru()->is_dead();
-        const int scroll_bottom = static_cast<signed int>(m_output_processed.size() - m_output_window_height);
+        const int scroll_bottom = static_cast<int>(m_output_processed.size() - m_output_window_height);
         if (key == Terminal::Key::CLOSE)
         {
             core()->cleanup();

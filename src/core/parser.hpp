@@ -4,10 +4,11 @@
 #pragma once
 #include "core/greave.hpp"
 
-class Inventory;    // defined in world/inventory.hpp
+class Inventory;                // defined in world/inventory.hpp
+enum class Direction : uint8_t; // defined in world/room.hpp
+
 
 enum ParserTarget : uint8_t { TARGET_NONE = 0, TARGET_EQUIPMENT = 1, TARGET_INVENTORY = 2, TARGET_MOBILE = 4, TARGET_ROOM = 8, TARGET_UNCLEAR = 16 };
-
 
 class Parser
 {
@@ -42,9 +43,9 @@ private:
 
     void                add_command(const std::string &text, ParserCommand cmd);    // Adds a command to the parser.
     Direction           parse_direction(const std::string &dir) const;  // Parses a string into a Direction enum.
+    int32_t             parse_int(const std::string &s);    // Wrapper function to check for out of range values.
     ParserSearchResult  parse_target(const std::vector<std::string> &input, ParserTarget target);   // Attempts to match a name to a given target.
     void                parse_pcd(const std::string &first_word, const std::vector<std::string> &words, ParserCommandData pcd, bool confirm);   // Parses a known command.
-    long int            wrap_int(const std::string &s); // Wrapper function to check for out of range values
 
     std::vector<ParserCommandData>  m_commands;         // The commands the parser can understand.
     std::string                     m_last_input;       // The last raw input from the player.

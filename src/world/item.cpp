@@ -242,10 +242,10 @@ int Item::parry_mod() const { return meta_int("parry_mod"); }
 uint16_t Item::parser_id() const { return m_parser_id; }
 
 // Retrieves this Item's power.
-uint16_t Item::power() const { return meta_int("power"); }
+int Item::power() const { return meta_int("power"); }
 
 // Retrieves this Item's rarity.
-uint8_t Item::rare() const { return m_rarity; }
+int Item::rare() const { return m_rarity; }
 
 // Saves the Item.
 void Item::save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id)
@@ -292,7 +292,7 @@ void Item::set_meta(const std::string &key, float value) { set_meta(key, StrX::f
 void Item::set_name(const std::string &name) { m_name = name; }
 
 // Sets this Item's rarity.
-void Item::set_rare(uint8_t rarity) { m_rarity = rarity; }
+void Item::set_rare(int rarity) { m_rarity = rarity; }
 
 // Sets the stack size for this Item.
 void Item::set_stack(uint32_t size)

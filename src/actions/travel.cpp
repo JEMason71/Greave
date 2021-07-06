@@ -15,7 +15,7 @@
 #include "world/world.hpp"
 
 
-const int ActionTravel::FALL_1_STOREY_BLEED =       5   ;      // Intensity for the bleed room scar from a one-storey fall.
+const int ActionTravel::FALL_1_STOREY_BLEED =           5;      // Intensity for the bleed room scar from a one-storey fall.
 const int ActionTravel::FALL_1_STOREY_MIN_PERC =        20;     // Minimum % damage taken from falling one storey.
 const int ActionTravel::FALL_1_STOREY_RNG_PERC =        50;     // Extra RNG % damage from one-storey fall.
 const int ActionTravel::FALL_2_STOREY_BLEED =           10;
@@ -107,7 +107,7 @@ bool ActionTravel::travel(std::shared_ptr<Mobile> mob, Direction dir, bool confi
 
     if (sky || sky2 || sky3)
     {
-        unsigned int min_perc = 0, rng_perc = 0, blood_intensity = 0;
+        int min_perc = 0, rng_perc = 0, blood_intensity = 0;
         if (sky3)
         {
             min_perc = FALL_3_STOREY_MIN_PERC;
@@ -130,7 +130,7 @@ bool ActionTravel::travel(std::shared_ptr<Mobile> mob, Direction dir, bool confi
 
         if (damage_perc > 0)
         {
-            unsigned int hp_damage = std::round(static_cast<float>(mob->hp(true)) * damage_perc);
+            uint32_t hp_damage = std::round(static_cast<float>(mob->hp(true)) * damage_perc);
             mob->reduce_hp(hp_damage);
             if (is_player) core()->message("{R}You land badly, and the impact " + Combat::damage_str(hp_damage, mob, false) + " {R}you! {W}<{R}-" + StrX::intostr_pretty(hp_damage) +
                 "{W}>");

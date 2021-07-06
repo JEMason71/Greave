@@ -38,28 +38,6 @@ Prefs::Prefs()
         return yaml_pref[value].as<bool>();
     };
 
-    /*
-    auto get_pref_tuple = [&yaml_pref, &yaml_override, &override](const std::string &value, float *result, unsigned int count) -> void
-    {
-        YAML::Node node = yaml_pref;
-        if (override && yaml_override[value]) node = yaml_override;
-        if (!node[value] || !node[value].IsSequence() || node[value].size() != count) throw std::runtime_error("Missing or incorrect value in prefs.yml: " + value);
-        for (unsigned int i = 0; i < count; i++)
-            result[i] = node[value][i].as<double>();
-    };
-    */
-
-    /*
-    auto get_pref_tuple_int = [&yaml_pref, &yaml_override, &override](const std::string &value, int *result, unsigned int count) -> void
-    {
-        YAML::Node node = yaml_pref;
-        if (override && yaml_override[value]) node = yaml_override;
-        if (!node[value] || !node[value].IsSequence() || node[value].size() != count) throw std::runtime_error("Missing or incorrect value in prefs.yml: " + value);
-        for (unsigned int i = 0; i < count; i++)
-            result[i] = node[value][i].as<int>();
-    };
-    */
-
     auto get_pref_string = [&yaml_pref, &yaml_override, &override](const std::string &value) -> std::string
     {
         if (override && yaml_override[value]) return yaml_override[value].as<std::string>();

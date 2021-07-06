@@ -21,7 +21,7 @@ const uint32_t  Room::FALSE_ROOM =          3399618268; // Hashed value for FALS
 const uint8_t   Room::LIGHT_VISIBLE =       3;          // Any light level below this is considered too dark to see.
 const uint32_t  Room::UNFINISHED =          1909878064; // Hashed value for UNFINISHED, which is used to mark room exits as unfinished and to be completed later.
 
-const uint32_t  Room::RESPAWN_INTERVAL =    300;        // The minimum respawn time, in seconds, for Mobiles.
+const int       Room::RESPAWN_INTERVAL =    300;        // The minimum respawn time, in seconds, for Mobiles.
 
 // The descriptions for different types of room scars.
 const std::vector<std::vector<std::string>> Room::ROOM_SCAR_DESCS = {
@@ -78,7 +78,7 @@ Room::Room(std::string new_id) : m_inventory(std::make_shared<Inventory>()), m_l
     if (new_id.size()) m_id = StrX::hash(new_id);
     else m_id = 0;
 
-    for (unsigned int e = 0; e < ROOM_LINKS_MAX; e++)
+    for (int e = 0; e < ROOM_LINKS_MAX; e++)
         m_links[e] = 0;
 }
 
@@ -93,7 +93,7 @@ void Room::add_scar(ScarType type, int intensity)
 {
     if (tag(RoomTag::WaterShallow) || tag(RoomTag::WaterDeep)) return;
     int pos = -1;
-    for (unsigned int i = 0; i < m_scar_type.size(); i++)
+    for (size_t i = 0; i < m_scar_type.size(); i++)
     {
         if (m_scar_type.at(i) == type)
         {
@@ -102,7 +102,7 @@ void Room::add_scar(ScarType type, int intensity)
         }
     }
 
-    unsigned int total_intensity = intensity;
+    int total_intensity = intensity;
     if (pos > -1) total_intensity += m_scar_intensity.at(pos);
     if (total_intensity > 250) total_intensity = 250;
 
@@ -158,7 +158,7 @@ void Room::deactivate()
 // Reduces the intensity of any room scars present.
 void Room::decay_scars()
 {
-    for (unsigned int i = 0; i < m_scar_type.size(); i++)
+    for (size_t i = 0; i < m_scar_type.size(); i++)
     {
         if (--m_scar_intensity.at(i) == 0)
         {
@@ -179,7 +179,7 @@ std::string Room::desc() const
         const size_t end = desc.find("]", start);
         if (active)
         {
-            const unsigned int insert_start = start + tag.size() + 2;
+            const size_t insert_start = start + tag.size() + 2;
             const std::string insert = desc.substr(insert_start, end - insert_start);
             desc = desc.substr(0, start) + insert + desc.substr(end + 1);
         }
@@ -333,7 +333,7 @@ void Room::load(std::shared_ptr<SQLite::Database> save_db)
             const std::string link_tags_str = query.getColumn("link_tags").getString();
             std::vector<std::string> split_links = StrX::string_explode(link_tags_str, ",");
             if (split_links.size() != ROOM_LINKS_MAX) throw std::runtime_error("Malformed room link tags data.");
-            for (unsigned int e = 0; e < ROOM_LINKS_MAX; e++)
+            for (int e = 0; e < ROOM_LINKS_MAX; e++)
             {
                 if (!split_links.at(e).size()) continue;
                 std::vector<std::string> split_tags = StrX::string_explode(split_links.at(e), " ");
@@ -345,7 +345,7 @@ void Room::load(std::shared_ptr<SQLite::Database> save_db)
         {
             std::string scar_str = query.getColumn("scars").getString();
             std::vector<std::string> scar_pairs = StrX::string_explode(scar_str, ",");
-            for (unsigned int i = 0; i < scar_pairs.size(); i++)
+            for (size_t i = 0; i < scar_pairs.size(); i++)
             {
                 std::vector<std::string> pair_explode = StrX::string_explode(scar_pairs.at(i), ";");
                 if (pair_explode.size() != 2) throw std::runtime_error("Malformed room scars data.");
@@ -399,7 +399,7 @@ void Room::save(std::shared_ptr<SQLite::Database> save_db)
 
     const std::string tags = StrX::tags_to_string(m_tags);
     std::string link_tags;
-    for (unsigned int e = 0; e < ROOM_LINKS_MAX; e++)
+    for (int e = 0; e < ROOM_LINKS_MAX; e++)
     {
         link_tags += StrX::tags_to_string(m_tags_link[e]);
         if (e < ROOM_LINKS_MAX - 1) link_tags += ",";
@@ -415,7 +415,7 @@ void Room::save(std::shared_ptr<SQLite::Database> save_db)
     if (m_scar_type.size())
     {
         std::string scar_str;
-        for (unsigned int i = 0; i < m_scar_type.size(); i++)
+        for (size_t i = 0; i < m_scar_type.size(); i++)
         {
             scar_str += StrX::itoh(static_cast<int>(m_scar_type.at(i)), 1) + ";" + StrX::itoh(m_scar_intensity.at(i), 1);
             if (i < m_scar_type.size() - 1) scar_str += ",";
@@ -432,7 +432,7 @@ void Room::save(std::shared_ptr<SQLite::Database> save_db)
 std::string Room::scar_desc() const
 {
     std::string scars;
-    for (unsigned int i = 0; i < m_scar_type.size(); i++)
+    for (size_t i = 0; i < m_scar_type.size(); i++)
     {
         const int intensity = m_scar_intensity.at(i);
         uint32_t vec_pos = 0;
@@ -447,7 +447,7 @@ std::string Room::scar_desc() const
 }
 
 // Sets this Room's base light level.
-void Room::set_base_light(uint8_t new_light) { m_light = new_light; }
+void Room::set_base_light(int new_light) { m_light = new_light; }
 
 // Sets this Room's description.
 void Room::set_desc(const std::string &new_desc) { m_desc = new_desc; }
@@ -459,7 +459,7 @@ void Room::set_link(Direction dir, const std::string &room_id) { set_link(dir, r
 void Room::set_link(Direction dir, uint32_t room_id)
 {
     const int dir_int = static_cast<int>(dir);
-    if (dir_int < 0 || static_cast<unsigned int>(dir) >= ROOM_LINKS_MAX) throw std::runtime_error("Invalid direction specified when setting room link.");
+    if (dir_int < 0 || static_cast<int>(dir) >= ROOM_LINKS_MAX) throw std::runtime_error("Invalid direction specified when setting room link.");
     m_links[dir_int] = room_id;
 }
 

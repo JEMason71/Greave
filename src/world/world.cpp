@@ -18,7 +18,7 @@
 #include "world/world.hpp"
 
 
-const unsigned int  World::ROOM_SCAN_DISTANCE = 10; // The distance to scan for active rooms.
+const int   World::ROOM_SCAN_DISTANCE = 10; // The distance to scan for active rooms.
 
 // The SQL construction table for the World data.
 const std::string   World::SQL_WORLD = "CREATE TABLE world ( mob_unique_id INTEGER PRIMARY KEY UNIQUE NOT NULL )";
@@ -129,7 +129,7 @@ void World::add_mobile(std::shared_ptr<Mobile> mob)
         if (!mob->parser_id()) parser_id_valid = false;
         else
         {
-            for (unsigned int i = 0; i < m_mobiles.size(); i++)
+            for (size_t i = 0; i < m_mobiles.size(); i++)
                 if (m_mobiles.at(i)->parser_id() == mob->parser_id()) parser_id_valid = false;
         }
         if (!parser_id_valid) mob->new_parser_id();
@@ -187,7 +187,7 @@ const std::shared_ptr<Mobile> World::get_mob(const std::string &mob_id) const
     if (gear_list_str.size())
     {
         auto gear_list = get_list(gear_list_str);
-        for (unsigned int i = 0; i < gear_list->size(); i++)
+        for (size_t i = 0; i < gear_list->size(); i++)
         {
             std::string gear_str = gear_list->at(i).str;
             if (gear_str == "-" || !gear_str.size()) continue;
@@ -774,13 +774,13 @@ void World::load_room_pool()
 }
 
 // Returns the number of Mobiles currently active.
-unsigned int World::mob_count() const { return m_mobiles.size(); }
+size_t World::mob_count() const { return m_mobiles.size(); }
 
 // Checks if a specified mobile ID exists.
 bool World::mob_exists(const std::string &str) const { return m_mob_pool.count(StrX::hash(str)); }
 
 // Retrieves a Mobile by vector position.
-const std::shared_ptr<Mobile> World::mob_vec(uint32_t vec_pos) const
+const std::shared_ptr<Mobile> World::mob_vec(size_t vec_pos) const
 {
     if (vec_pos >= m_mobiles.size()) throw std::runtime_error("Invalid mobile vector position.");
     return m_mobiles.at(vec_pos);
@@ -813,9 +813,9 @@ void World::recalc_active_rooms()
 }
 
 // Removes a Mobile from the world.
-void World::remove_mobile(uint32_t id)
+void World::remove_mobile(size_t id)
 {
-    for (unsigned int i = 0; i < m_mobiles.size(); i++)
+    for (size_t i = 0; i < m_mobiles.size(); i++)
     {
         if (m_mobiles.at(i)->id() == id)
         {

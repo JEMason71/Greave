@@ -147,6 +147,19 @@ Direction Parser::parse_direction(const std::string &dir) const
     else return Direction::NONE;
 }
 
+// Wrapper function to check for out of range values.
+int32_t Parser::parse_int(const std::string &s)
+{
+    try
+    {
+        return (std::stoll(s));
+    }
+    catch(const std::exception& e)
+    {
+        return INT_MAX;
+    }
+}
+
 // Attempts to match a name to a given target.
 Parser::ParserSearchResult Parser::parse_target(const std::vector<std::string> &input, ParserTarget target)
 {
@@ -161,7 +174,7 @@ Parser::ParserSearchResult Parser::parse_target(const std::vector<std::string> &
     const std::shared_ptr<Inventory> equ = player->equ();
     if ((target & ParserTarget::TARGET_EQUIPMENT) == ParserTarget::TARGET_EQUIPMENT)
     {
-        for (unsigned int i = 0; i < equ->count(); i++)
+        for (uint32_t i = 0; i < equ->count(); i++)
         {
             const std::shared_ptr<Item> item = equ->get(i);
             candidates.push_back({0, StrX::str_tolower(item->name(Item::NAME_FLAG_NO_COLOUR)), StrX::str_tolower(item->name(Item::NAME_FLAG_NO_COLOUR | Item::NAME_FLAG_NO_COUNT)),
@@ -173,7 +186,7 @@ Parser::ParserSearchResult Parser::parse_target(const std::vector<std::string> &
     const std::shared_ptr<Inventory> inv = player->inv();
     if ((target & ParserTarget::TARGET_INVENTORY) == ParserTarget::TARGET_INVENTORY)
     {
-        for (unsigned int i = 0; i < inv->count(); i++)
+        for (uint32_t i = 0; i < inv->count(); i++)
         {
             const std::shared_ptr<Item> item = inv->get(i);
             candidates.push_back({0, StrX::str_tolower(item->name(Item::NAME_FLAG_NO_COLOUR)), StrX::str_tolower(item->name(Item::NAME_FLAG_NO_COLOUR | Item::NAME_FLAG_NO_COUNT)),
@@ -185,7 +198,7 @@ Parser::ParserSearchResult Parser::parse_target(const std::vector<std::string> &
     const std::shared_ptr<Inventory> room_inv = world->get_room(player_location)->inv();
     if ((target & ParserTarget::TARGET_ROOM) == ParserTarget::TARGET_ROOM)
     {
-        for (unsigned int i = 0; i < room_inv->count(); i++)
+        for (uint32_t i = 0; i < room_inv->count(); i++)
         {
             const std::shared_ptr<Item> item = room_inv->get(i);
             candidates.push_back({0, StrX::str_tolower(item->name(Item::NAME_FLAG_NO_COLOUR)), StrX::str_tolower(item->name(Item::NAME_FLAG_NO_COLOUR | Item::NAME_FLAG_NO_COUNT)),
@@ -194,7 +207,7 @@ Parser::ParserSearchResult Parser::parse_target(const std::vector<std::string> &
     }
 
     // Mobiles in the player's room.
-    for (unsigned int i = 0; i < world->mob_count(); i++)
+    for (uint32_t i = 0; i < world->mob_count(); i++)
     {
         const std::shared_ptr<Mobile> mob = world->mob_vec(i);
         if (mob->location() == player_location) candidates.push_back({0, StrX::str_tolower(mob->name(Item::NAME_FLAG_NO_COLOUR)), "", mob->parser_id(), i,
@@ -202,7 +215,7 @@ Parser::ParserSearchResult Parser::parse_target(const std::vector<std::string> &
     }
 
     // Score each candidate.
-    for (unsigned int i = 0; i < candidates.size(); i++)
+    for (uint32_t i = 0; i < candidates.size(); i++)
     {
         // If the parser ID matches the player's input, that's an easy one.
         if (input.size() == 1 && input.at(0) == StrX::itos(candidates.at(i).parser_id, 4))
@@ -219,17 +232,17 @@ Parser::ParserSearchResult Parser::parse_target(const std::vector<std::string> &
         {
             int score = 0, singular_score = 0;
             const bool calc_singular_score = (candidates.at(i).name_np.size() && candidates.at(i).name_np != candidates.at(i).name);
-            for (unsigned int j = 0; j < input.size(); j++)
+            for (size_t j = 0; j < input.size(); j++)
             {
-                for (unsigned int k = 0; k < name_words.size(); k++)
+                for (size_t k = 0; k < name_words.size(); k++)
                     if (input.at(j) == name_words.at(k)) score++;
             }
             if (calc_singular_score)
             {
                 std::vector<std::string> name_words_singular = StrX::string_explode(candidates.at(i).name_np, " ");
-                for (unsigned int j = 0; j < input.size(); j++)
+                for (size_t j = 0; j < input.size(); j++)
                 {
-                    for (unsigned int k = 0; k < name_words_singular.size(); k++)
+                    for (size_t k = 0; k < name_words_singular.size(); k++)
                         if (input.at(j) == name_words_singular.at(k)) singular_score++;
                 }
             }
@@ -239,14 +252,14 @@ Parser::ParserSearchResult Parser::parse_target(const std::vector<std::string> &
 
     // Determine the highest score.
     int highest_score = 0;
-    for (unsigned int i = 0; i < candidates.size(); i++)
+    for (size_t i = 0; i < candidates.size(); i++)
         if (candidates.at(i).score > highest_score) highest_score = candidates.at(i).score;
 
     // No matches at all?
     if (!highest_score) return { 0, "", "", 0, 0, ParserTarget::TARGET_NONE };
 
     // Now strip out any candidates that don't match the highest score.
-    for (unsigned int i = 0; i < candidates.size(); i++)
+    for (size_t i = 0; i < candidates.size(); i++)
     {
         if (candidates.at(i).score < highest_score)
         {
@@ -280,7 +293,7 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
     // Check if a direction needs to be parsed.
     if (pcd.direction_match)
     {
-        for (unsigned int i = 0; i < std::min(pcd.words.size(), words.size()); i++)
+        for (size_t i = 0; i < std::min(pcd.words.size(), words.size()); i++)
         {
             const std::string pcd_word = pcd.words.at(i);
             if (pcd_word == "<dir>")
@@ -291,7 +304,7 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
     // Check if a target needs to be parsed.
     if (pcd.target_match)
     {
-        for (unsigned int i = 0; i < pcd.words.size(); i++)
+        for (size_t i = 0; i < pcd.words.size(); i++)
         {
             uint32_t target_flags = 0;
             const std::string pcd_word = pcd.words.at(i);
@@ -315,7 +328,7 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
                     uint32_t target_id = core()->world()->player()->mob_target();
                     if (!target_id) continue;
 
-                    for (unsigned int i = 0; i < core()->world()->mob_count(); i++)
+                    for (size_t i = 0; i < core()->world()->mob_count(); i++)
                     {
                         const auto mob = core()->world()->mob_vec(i);
                         if (mob->id() == target_id)
@@ -359,7 +372,7 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
         case ParserCommand::NONE: break;
         case ParserCommand::ADD_MONEY:
             if (!words.size() || !StrX::is_number(words.at(0))) core()->message("{y}Please specify {Y}how many coins to add{y}.");
-            else ActionCheat::add_money(wrap_int(words.at(0)));
+            else ActionCheat::add_money(parse_int(words.at(0)));
             break;
         case ParserCommand::ATTACK:
             if (parsed_target_type == ParserTarget::TARGET_MOBILE) Melee::attack(player, core()->world()->mob_vec(parsed_target));
@@ -499,17 +512,4 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
     }
 
     if (parsed_target_type != ParserTarget::TARGET_UNCLEAR) m_special_state = SpecialState::NONE;
-}
-
-// Wrapper function to check for out of range values
-long int Parser::wrap_int(const std::string &s)
-{
-    try
-    {
-        return (std::stoll(s));
-    }
-    catch(const std::exception& e)
-    {
-        return INT_MAX;
-    }
 }

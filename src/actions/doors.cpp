@@ -46,7 +46,7 @@ bool ActionDoors::lock_or_unlock(std::shared_ptr<Mobile> mob, Direction dir, boo
     }
 
     std::shared_ptr<Item> correct_key = nullptr;
-    for (unsigned int i = 0; i < mob->inv()->count(); i++)
+    for (size_t i = 0; i < mob->inv()->count(); i++)
     {
         const std::shared_ptr<Item> item = mob->inv()->get(i);
         if (item->type() != ItemType::KEY) continue;

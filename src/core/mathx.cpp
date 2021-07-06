@@ -4,6 +4,7 @@
 #include "core/core.hpp"
 #include "core/mathx.hpp"
 #include "core/random.hpp"
+#include "world/room.hpp"
 
 
 // Inverts a Direction enum (north becomes south, etc.)
@@ -29,7 +30,7 @@ Direction MathX::dir_invert(Direction dir)
 uint8_t MathX::dir_invert(uint8_t dir) { return static_cast<uint8_t>(dir_invert(static_cast<Direction>(dir))); }
 
 // Rounds a float to a specified number of digits.
-double MathX::round_to(double num, uint32_t digits)
+double MathX::round_to(double num, int digits)
 {
     const double power = std::pow(10, digits);
     num *= power;
@@ -48,7 +49,7 @@ uint32_t MathX::fuzz(uint32_t num)
     if (num >= 10000) { num = std::round(num / 1000.0f); return num * 1000; }
     if (num >= 1000) { num = std::round(num / 100.0f); return num * 100; }
     if (num >= 50) { num = std::round(num / 10.0f); return num * 10; }
-    if (num >= 25) return num + static_cast<uint32_t>(abs((static_cast<int>(num) % 5) - 5));
+    if (num >= 25) return num + static_cast<uint32_t>(abs((static_cast<int32_t>(num) % 5) - 5));
     return num;
 }
 
