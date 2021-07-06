@@ -38,9 +38,9 @@ public:
     const std::shared_ptr<Room>     get_room(const std::string &room_id) const; // As above, but with a Room ID string.
     bool            item_exists(const std::string &str) const;                  // Checks if a specified item ID exists.
     void            load(std::shared_ptr<SQLite::Database> save_db);            // Loads the World and all things within it.
-    const std::shared_ptr<Mobile>   mob_vec(size_t vec_pos) const;              // Retrieves a Mobile by vector position.
     size_t          mob_count() const;                                          // Returns the number of Mobiles currently active.
     bool            mob_exists(const std::string &str) const;                   // Checks if a specified mobile ID exists.
+    const std::shared_ptr<Mobile>   mob_vec(size_t vec_pos) const;              // Retrieves a Mobile by vector position.
     void            new_game();                                                 // Sets up for a new game.
     const std::shared_ptr<Player>   player() const;                             // Retrieves a pointer to the Player object.
     void            recalc_active_rooms();                                      // Recalculates the list of active rooms.
