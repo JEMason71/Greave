@@ -11,10 +11,18 @@
 #include "world/world.hpp"
 
 
-const uint32_t  AI::AGGRO_CHANCE =      60;     // 1 in X chance of starting a fight.
-const uint16_t  AI::FLEE_DEBUFF_TIME =  48;     // The length of time the fleeing debuff lasts.
-const float     AI::FLEE_TIME =         60.0f;  // The action time it takes to flee in terror.
-const uint32_t  AI::TRAVEL_CHANCE =     300;    // 1 in X chance of traveling to another room.
+const uint32_t  AI::AGGRO_CHANCE =                  60;     // 1 in X chance of starting a fight.
+const uint16_t  AI::FLEE_DEBUFF_TIME =              48;     // The length of time the fleeing debuff lasts.
+const float     AI::FLEE_TIME =                     60.0f;  // The action time it takes to flee in terror.
+const uint32_t  AI::STANCE_AGGRESSIVE_HP_PERCENT =  20;     // When a Mobile's target drops below this many hit points, they'll got to an aggressive stance.
+                // When a mobile's ratio of hit points lost compared to their target's hit points lost goes above this level, they'll go to an aggressive stance.
+const float     AI::STANCE_AGGRESSIVE_HP_RATIO =    1.3f;
+const uint32_t  AI::STANCE_COUNTER_CHANCE =         200;    // 1 in X chance to attempt to counter the target's choice of combat stance.
+const uint32_t  AI::STANCE_DEFENSIVE_HP_PERCENT =   20;     // Mobiles will switch to defensive stance when their hit points drop below this percentage of maximum.
+                // When a mobile's ratio of hit points lost compared to their target's hit points lost drops below this level, they'll go to a defensive stance.
+const float     AI::STANCE_DEFENSIVE_HP_RATIO =     0.7f;
+const uint32_t  AI::STANCE_RANDOM_CHANCE =          500;    // 1 in X chance to pick a random stance, rather than making a strategic decision.
+const uint32_t  AI::TRAVEL_CHANCE =                 300;    // 1 in X chance of traveling to another room.
 
 
 // Processes AI for a specific active Mobile.
@@ -72,12 +80,50 @@ void AI::tick_mob(std::shared_ptr<Mobile> mob, uint32_t)
                     if (location == player_location) core()->message("{0}{u}... But " + mob->he_she() + " can't get away!");
                 }
                 mob->set_buff(Buff::Type::RECENTLY_FLED, FLEE_DEBUFF_TIME);
+                return;
             }
             else return;    // If they don't have enough action time available to flee, just wait and charge it up, it won't take long.
         }
+
+        // The rest of the rules here apply to non-cowardly Mobiles.
+
+        // Check if this Mobile wants to change its combat stance.
+        if (mob->can_perform_action(Combat::STANCE_CHANGE_TIME))
+        {
+            CombatStance desired_stance = mob->stance();
+
+            const float hp_percent = (mob->hp(false) / mob->hp(true)) * 100.0f;
+            const float target_hp_percent = (attack_target->hp(false) / attack_target->hp(true)) * 100.0f;
+            const float hp_ratio = hp_percent / target_hp_percent;
+            if (hp_percent <= STANCE_DEFENSIVE_HP_PERCENT) desired_stance = CombatStance::DEFENSIVE;
+            else if (target_hp_percent <= STANCE_AGGRESSIVE_HP_PERCENT) desired_stance = CombatStance::AGGRESSIVE;
+            else if (hp_ratio <= STANCE_DEFENSIVE_HP_RATIO) desired_stance = CombatStance::DEFENSIVE;
+            else if (hp_ratio >= STANCE_AGGRESSIVE_HP_RATIO) desired_stance = CombatStance::AGGRESSIVE;
+
+            // Chance to attempt to counter the target's stance.
+            else if (core()->rng()->rnd(STANCE_COUNTER_CHANCE) == 1)
+            {
+                switch (attack_target->stance())
+                {
+                    case CombatStance::BALANCED: desired_stance = CombatStance::DEFENSIVE; break;
+                    case CombatStance::DEFENSIVE: desired_stance = CombatStance::AGGRESSIVE; break;
+                    case CombatStance::AGGRESSIVE: desired_stance = CombatStance::BALANCED; break;
+                }
+            }
+
+            // Chance to just pick a stance randomly. Sometimes, the unexpected can be useful!
+            else if (core()->rng()->rnd(STANCE_RANDOM_CHANCE) == 1) desired_stance = static_cast<CombatStance>(core()->rng()->rnd(0, 2));
+
+            if (desired_stance != mob->stance())
+            {
+                Combat::change_stance(mob, desired_stance);
+                return;
+            }
+        }
+
         // For non-cowardly NPCs, we'll wait until there's sufficient action time available to perform an attack. If not, just wait until there is.
         // This will prevent angry NPCs from just doing something else entirely, instead of winding up to attack.
-        else if (mob->can_perform_action(mob->attack_speed())) Melee::attack(mob, attack_target);
+        if (mob->can_perform_action(mob->attack_speed())) Melee::attack(mob, attack_target);
         return;
     }
 

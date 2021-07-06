@@ -1,7 +1,7 @@
-// combat/melee.cpp -- The melee combat engine, handles melee-specific combat between Mobiles.
+// actions/combat/melee.cpp -- The melee combat engine, handles melee-specific combat between Mobiles.
 // Copyright (c) 2021 Raine "Gravecat" Simmons. All rights reserved.
 
-#include "combat/melee.hpp"
+#include "actions/combat/melee.hpp"
 #include "core/core.hpp"
 #include "core/mathx.hpp"
 #include "core/random.hpp"
@@ -13,28 +13,34 @@
 #include "world/world.hpp"
 
 
-const float Melee::ATTACKER_DAMAGE_MODIFIER_ANEMIC =        0.5f;   // The damage multiplier when a Mobile with the Anemic tag attacks in melee combat.
-const float Melee::ATTACKER_DAMAGE_MODIFIER_BRAWNY =        1.25f;  // The damage multiplier when a Mobile with the Brawny tag attacks in melee combat.
-const float Melee::ATTACKER_DAMAGE_MODIFIER_FEEBLE =        0.75f;  // The damage multiplier when a Mobile with the Feeble tag attacks in melee combat.
-const float Melee::ATTACKER_DAMAGE_MODIFIER_MIGHTY =        2.0f;   // The damage multiplier when a Mobile with the Mighty tag attacks in melee combat.
-const float Melee::ATTACKER_DAMAGE_MODIFIER_PUNY =          0.9f;   // The damage multiplier when a Mobile with the Puny tag attacks in melee combat.
-const float Melee::ATTACKER_DAMAGE_MODIFIER_STRONG =        1.1f;   // The damage multiplier when a Mobile with the Strong tag attacks in melee combat.
-const float Melee::ATTACKER_DAMAGE_MODIFIER_VIGOROUS =      1.5f;   // The damage multiplier when a Mobile with the Vigorous tag attacks in melee combat.
-const float Melee::BASE_ABSORPTION_VARIANCE =               4;      // The variance in weapon damage soaked by armour (lower number = more variance).
-const float Melee::BASE_BLOCK_CHANCE_MELEE =                20.0f;  // The base block chance in melee combat.
-const float Melee::BASE_DAMAGE_VARIANCE =                   3;      // The variance in weapon damage (lower number = more variance).
-const float Melee::BASE_HIT_CHANCE_MELEE =                  75.0f;  // The base hit chance in melee combat.
-const float Melee::BASE_MELEE_DAMAGE_MULTIPLIER =           1.2f;   // The base damage multiplier for melee weapons.
-const float Melee::BASE_PARRY_CHANCE =                      10.0f;  // The base parry chance in melee combat.
-const float Melee::CRIT_CHANCE_MULTIPLIER_SINGLE_WIELD =    1.1f;   // The multiplier to crit% for single-wielding.
-const float Melee::DEFENDER_PARRY_MODIFIER_AGILE =          1.5f;   // The multiplier to the parry chance of a Mobile with the Agile tag.
-const float Melee::DEFENDER_PARRY_MODIFIER_CLUMSY =         0.5f;   // The multiplier to the parry chance of a Mobile with the Clumsy tag.
-const float Melee::DEFENDER_TO_HIT_MODIFIER_AGILE =         0.8f;   // The to-hit multiplier when attempting to hit a Mobile with the Agile tag.
-const float Melee::DEFENDER_TO_HIT_MODIFIER_CLUMSY =        1.25f;  // The to-hit multiplier when attempting to hit a Mobile with the Clumsy tag.
-const float Melee::HIT_CHANCE_MULTIPLIER_DUAL_WIELD =       0.9f;   // The multiplier to accuracy% for dual-wielding.
-const float Melee::HIT_CHANCE_MULTIPLIER_SINGLE_WIELD =     1.2f;   // The multiplier to accuracy% for single-wielding.
-const float Melee::HIT_CHANCE_MULTIPLIER_SWORD_AND_BOARD =  1.1f;   // The multiplier to accuracy% for wielding 1h+shield or 1h+extra.
-const float Melee::WEAPON_DAMAGE_MODIFIER_HAAH_2H =         1.8f;   // The damage modifier for wielding a hand-and-a-half weapon in two hands.
+const float Melee::ATTACKER_DAMAGE_MODIFIER_ANEMIC =            0.5f;   // The damage multiplier when a Mobile with the Anemic tag attacks in melee combat.
+const float Melee::ATTACKER_DAMAGE_MODIFIER_BRAWNY =            1.25f;  // The damage multiplier when a Mobile with the Brawny tag attacks in melee combat.
+const float Melee::ATTACKER_DAMAGE_MODIFIER_FEEBLE =            0.75f;  // The damage multiplier when a Mobile with the Feeble tag attacks in melee combat.
+const float Melee::ATTACKER_DAMAGE_MODIFIER_MIGHTY =            2.0f;   // The damage multiplier when a Mobile with the Mighty tag attacks in melee combat.
+const float Melee::ATTACKER_DAMAGE_MODIFIER_PUNY =              0.9f;   // The damage multiplier when a Mobile with the Puny tag attacks in melee combat.
+const float Melee::ATTACKER_DAMAGE_MODIFIER_STRONG =            1.1f;   // The damage multiplier when a Mobile with the Strong tag attacks in melee combat.
+const float Melee::ATTACKER_DAMAGE_MODIFIER_VIGOROUS =          1.5f;   // The damage multiplier when a Mobile with the Vigorous tag attacks in melee combat.
+const float Melee::BASE_ABSORPTION_VARIANCE =                   4;      // The variance in weapon damage soaked by armour (lower number = more variance).
+const float Melee::BASE_BLOCK_CHANCE_MELEE =                    20.0f;  // The base block chance in melee combat.
+const float Melee::BASE_DAMAGE_VARIANCE =                       3;      // The variance in weapon damage (lower number = more variance).
+const float Melee::BASE_HIT_CHANCE_MELEE =                      75.0f;  // The base hit chance in melee combat.
+const float Melee::BASE_MELEE_DAMAGE_MULTIPLIER =               1.2f;   // The base damage multiplier for melee weapons.
+const float Melee::BASE_PARRY_CHANCE =                          10.0f;  // The base parry chance in melee combat.
+const float Melee::CRIT_CHANCE_MULTIPLIER_SINGLE_WIELD =        1.1f;   // The multiplier to crit% for single-wielding.
+const float Melee::DEFENDER_PARRY_MODIFIER_AGILE =              1.5f;   // The multiplier to the parry chance of a Mobile with the Agile tag.
+const float Melee::DEFENDER_PARRY_MODIFIER_CLUMSY =             0.5f;   // The multiplier to the parry chance of a Mobile with the Clumsy tag.
+const float Melee::DEFENDER_TO_HIT_MODIFIER_AGILE =             0.8f;   // The to-hit multiplier when attempting to hit a Mobile with the Agile tag.
+const float Melee::DEFENDER_TO_HIT_MODIFIER_CLUMSY =            1.25f;  // The to-hit multiplier when attempting to hit a Mobile with the Clumsy tag.
+const float Melee::HIT_CHANCE_MULTIPLIER_DUAL_WIELD =           0.9f;   // The multiplier to accuracy% for dual-wielding.
+const float Melee::HIT_CHANCE_MULTIPLIER_SINGLE_WIELD =         1.2f;   // The multiplier to accuracy% for single-wielding.
+const float Melee::HIT_CHANCE_MULTIPLIER_SWORD_AND_BOARD =      1.1f;   // The multiplier to accuracy% for wielding 1h+shield or 1h+extra.
+const float Melee::STANCE_DAMAGE_MULTIPLIER_AGGRESSIVE =        1.2f;   // The multiplier to melee damage when in an aggressive stance.
+const float Melee::STANCE_DAMAGE_MULTIPLIER_DEFENSIVE =         0.8f;   // The multiplier to melee damage when in a defensive stance.
+const float Melee::STANCE_DAMAGE_TAKEN_MULTIPLIER_AGGRESSIVE =  1.2f;   // The multiplier to melee damage *taken* when in an aggressive stance.
+const float Melee::STANCE_DAMAGE_TAKEN_MULTIPLIER_DEFENSIVE =   0.8f;   // The multiplier to melee damage *taken* when in an defensive stance.
+const float Melee::STANCE_TO_HIT_MODIFIER_FAVOURABLE =          20;     // The to-hit % bonus when the attacker's stance is favourable vs the defender's.
+const float Melee::STANCE_TO_HIT_MODIFIER_UNFAVOURABLE =        -10;    // The to-hit % penalty when the attacker's stance is unfavourable vs the defender's.
+const float Melee::WEAPON_DAMAGE_MODIFIER_HAAH_2H =             1.8f;   // The damage modifier for wielding a hand-and-a-half weapon in two hands.
 
 
 // A basic attack, no special moves being used.
@@ -108,6 +114,9 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
     const std::string attacker_your_string_c = StrX::capitalize_first_letter(attacker_your_string);
     const std::string weapon_name = weapon_ptr->name();
 
+    const CombatStance attacker_stance = attacker->stance();
+    const CombatStance defender_stance = defender->stance();
+
     // Roll to hit!
     float hit_multiplier = 1.0f;
     switch (wield_type_attacker)
@@ -130,6 +139,12 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
     if (defender->tag(MobileTag::Agile)) to_hit *= DEFENDER_TO_HIT_MODIFIER_AGILE;
     else if (defender->tag(MobileTag::Clumsy)) to_hit *= DEFENDER_TO_HIT_MODIFIER_CLUMSY;
 
+    // Adjust to-hit chance based on stance matchup.
+    const int stance_favour = stance_compare(attacker_stance, defender_stance);
+    if (stance_favour > 0) to_hit += STANCE_TO_HIT_MODIFIER_FAVOURABLE;
+    else if (stance_favour < 0) to_hit += STANCE_TO_HIT_MODIFIER_UNFAVOURABLE;
+
+    // Defenders that cannot dodge always get hit.
     if (defender->tag(MobileTag::CannotDodge)) to_hit = 100;
     else to_hit *= defender->dodge_mod();
 
@@ -179,6 +194,18 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
     else
     {
         float damage = weapon_ptr->power() * BASE_MELEE_DAMAGE_MULTIPLIER;
+        switch (attacker_stance)
+        {
+            case CombatStance::AGGRESSIVE: damage *= STANCE_DAMAGE_MULTIPLIER_AGGRESSIVE; break;
+            case CombatStance::DEFENSIVE: damage *= STANCE_DAMAGE_MULTIPLIER_DEFENSIVE; break;
+            case CombatStance::BALANCED: break;
+        }
+        switch (defender_stance)
+        {
+            case CombatStance::AGGRESSIVE: damage *= STANCE_DAMAGE_TAKEN_MULTIPLIER_AGGRESSIVE; break;
+            case CombatStance::DEFENSIVE: damage *= STANCE_DAMAGE_TAKEN_MULTIPLIER_DEFENSIVE; break;
+            case CombatStance::BALANCED: break;
+        }
         if (wield_type_attacker == WieldType::HAND_AND_A_HALF_2H) damage *= WEAPON_DAMAGE_MODIFIER_HAAH_2H;
 
         bool critical_hit = false, bleed = false, poison = false;

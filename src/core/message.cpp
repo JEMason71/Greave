@@ -125,7 +125,14 @@ std::string MessageLog::render_message_log(bool accept_blank_input)
                 return colour + std::to_string(current) + colour_dark + "/" + colour + std::to_string(max) + colour_dark + name;
             };
 
-            input_buf = "{W}<" + coloured_value_indicator("hp", core()->world()->player()->hp(), core()->world()->player()->hp(true)) + "{W}> " + input_buf;
+            std::string stance_str;
+            switch (core()->world()->player()->stance())
+            {
+                case CombatStance::AGGRESSIVE: stance_str = "{R}a"; break;
+                case CombatStance::BALANCED: stance_str = "{G}b"; break;
+                case CombatStance::DEFENSIVE: stance_str = "{U}d"; break;
+            }
+            input_buf = "{W}<" + stance_str + "{W}:" + coloured_value_indicator("hp", core()->world()->player()->hp(), core()->world()->player()->hp(true)) + "{W}> " + input_buf;
         }
         const unsigned int input_buf_len = StrX::strlen_colour(input_buf);
         if (input_buf_len > m_input_window_width) input_buf = input_buf.substr(0, m_input_window_width);

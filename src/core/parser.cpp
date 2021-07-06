@@ -2,11 +2,11 @@
 // Copyright (c) 2021 Raine "Gravecat" Simmons and the Greave contributors. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #include "actions/cheat.hpp"
+#include "actions/combat/melee.hpp"
 #include "actions/doors.hpp"
 #include "actions/inventory.hpp"
 #include "actions/look.hpp"
 #include "actions/travel.hpp"
-#include "combat/melee.hpp"
 #include "core/core.hpp"
 #include "core/parser.hpp"
 #include "core/strx.hpp"
@@ -39,6 +39,8 @@ Parser::Parser() : m_special_state(SpecialState::NONE)
     add_command("open <dir>", ParserCommand::OPEN);
     add_command("[quit|exit]", ParserCommand::QUIT);
     add_command("save", ParserCommand::SAVE);
+    add_command("[sa|sb|sd]", ParserCommand::STANCE);
+    add_command("stance <txt>", ParserCommand::STANCE);
     add_command("[take|get] <item:r>", ParserCommand::TAKE);
     add_command("[time|date]", ParserCommand::TIME);
     add_command("[unequip|uneq|remove] <item:e>", ParserCommand::UNEQUIP);
@@ -427,6 +429,31 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             if (!words.size()) core()->message("{y}Please specify a {Y}mobile ID{Y}.");
             else ActionCheat::spawn_mobile(collapsed_words);
             break;
+        case ParserCommand::STANCE:
+        {
+            CombatStance chosen_stance = static_cast<CombatStance>(0xFF);
+            if (!words.size() || !words.at(0).size())
+            {
+                if (first_word.size() == 2)
+                {
+                    switch (first_word[1])
+                    {
+                        case 'a': chosen_stance = CombatStance::AGGRESSIVE; break;
+                        case 'b': chosen_stance = CombatStance::BALANCED; break;
+                        case 'd': chosen_stance = CombatStance::DEFENSIVE; break;
+                    }
+                }
+            }
+            else switch (words.at(0)[0])
+            {
+                case 'a': chosen_stance = CombatStance::AGGRESSIVE; break;
+                case 'b': chosen_stance = CombatStance::BALANCED; break;
+                case 'd': chosen_stance = CombatStance::DEFENSIVE; break;
+            }
+            if (chosen_stance == static_cast<CombatStance>(0xFF)) core()->message("{y}Please choose a stance ({Y}aggressive{y}, {Y}defensive{y} or {Y}balanced{y}).");
+            else Combat::change_stance(player, chosen_stance);
+            break;
+        }
         case ParserCommand::SWEAR:
             core()->message("{y}Real adventurers do not use such language.");
             break;

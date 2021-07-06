@@ -10,6 +10,8 @@ namespace SQLite { class Database; class Statement; }   // defined in 3rdparty/S
 
 enum class Gender : uint8_t { FEMALE, MALE, IT, THEY };
 
+enum class CombatStance : uint8_t { BALANCED, AGGRESSIVE, DEFENSIVE };
+
 enum class MobileTag : uint16_t { None = 0,
 
     // Tags that affect the Mobile's name.
@@ -112,8 +114,10 @@ public:
     void                set_name(const std::string &name);          // Sets the name of this Mobile.
     void                set_spawn_room(uint32_t id);                // Sets this Mobile's spawn room.
     void                set_species(const std::string &species);    // Sets the species of this Mobile.
+    void                set_stance(CombatStance stance);            // Sets this Mobile's combat stance.
     void                set_tag(MobileTag the_tag);                 // Sets a MobileTag on this Mobile.
     std::string         species() const;                            // Checks the species of this Mobile.
+    CombatStance        stance() const;                             // Checks this Mobile's combat stance.
     bool                tag(MobileTag the_tag) const;               // Checks if a MobileTag is set on this Mobile.
     bool                tick_bleed(uint32_t power, uint16_t time);  // Triggers a single bleed tick.
     void                tick_buffs();                               // Reduce the timer on all buffs.
@@ -138,5 +142,6 @@ protected:
     uint16_t                            m_parser_id;    // The semi-unique ID of this Mobile, for parser differentiation.
     uint32_t                            m_spawn_room;   // The Room that spawned this Mobile.
     std::string                         m_species;      // Ths species type of this Mobile.
+    CombatStance                        m_stance;       // The Mobile's current combat stance.
     std::set<MobileTag>                 m_tags;         // Any and all tags on this Mobile.
 };

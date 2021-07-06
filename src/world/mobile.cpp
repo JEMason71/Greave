@@ -32,7 +32,7 @@ const std::string   Buff::SQL_BUFFS =       "CREATE TABLE buffs ( owner INTEGER,
 // The SQL table construction string for Mobiles.
 const std::string   Mobile::SQL_MOBILES =   "CREATE TABLE mobiles ( action_timer REAL, equipment INTEGER UNIQUE, gender INTEGER, hostility TEXT, hp INTEGER NOT NULL, "
     "hp_max INTEGER NOT NULL, id INTEGER UNIQUE NOT NULL, inventory INTEGER UNIQUE, location INTEGER NOT NULL, name TEXT, parser_id INTEGER, spawn_room INTEGER, "
-    "species TEXT NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, tags TEXT )";
+    "species TEXT NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, stance INTEGER, tags TEXT )";
 
 
 // Loads this Buff from a save file.
@@ -60,7 +60,7 @@ void Buff::save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id)
 
 // Constructor, sets default values.
 Mobile::Mobile() : m_action_timer(0), m_equipment(std::make_shared<Inventory>()), m_gender(Gender::IT), m_id(0), m_inventory(std::make_shared<Inventory>()), m_location(0),
-    m_parser_id(0), m_spawn_room(0)
+    m_parser_id(0), m_spawn_room(0), m_stance(CombatStance::BALANCED)
 {
     m_hp[0] = m_hp[1] = 100;
 }
@@ -266,6 +266,7 @@ uint32_t Mobile::load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id
         if (!query.isColumnNull("parser_id")) m_parser_id = query.getColumn("parser_id").getInt();
         if (!query.isColumnNull("spawn_room")) m_spawn_room = query.getColumn("spawn_room").getUInt();
         m_species = query.getColumn("species").getString();
+        if (!query.isColumnNull("stance")) m_stance = static_cast<CombatStance>(query.getColumn("stance").getInt());
         if (!query.isColumnNull("tags")) StrX::string_to_tags(query.getColumn("tags").getString(), m_tags);
     }
     else throw std::runtime_error("Could not load mobile data!");
@@ -381,7 +382,7 @@ uint32_t Mobile::save(std::shared_ptr<SQLite::Database> save_db)
 
     const uint32_t sql_id = core()->sql_unique_id();
     SQLite::Statement query(*save_db, "INSERT INTO mobiles ( action_timer, equipment, gender, hostility, hp, hp_max, id, inventory, location, name, parser_id, spawn_room, "
-        "species, sql_id, tags ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
+        "species, sql_id, stance, tags ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
     if (m_action_timer) query.bind(1, m_action_timer);
     if (equipment_id) query.bind(2, equipment_id);
     if (m_gender != Gender::IT) query.bind(3, static_cast<int>(m_gender));
@@ -396,8 +397,9 @@ uint32_t Mobile::save(std::shared_ptr<SQLite::Database> save_db)
     if (m_spawn_room) query.bind(12, m_spawn_room);
     query.bind(13, m_species);
     query.bind(14, sql_id);
+    if (m_stance != CombatStance::BALANCED) query.bind(15, static_cast<int>(m_stance));
     const std::string tags = StrX::tags_to_string(m_tags);
-    if (tags.size()) query.bind(15, tags);
+    if (tags.size()) query.bind(16, tags);
     query.exec();
 
     // Save any and all buffs/debuffs.
@@ -460,6 +462,9 @@ void Mobile::set_spawn_room(uint32_t id) { m_spawn_room = id; }
 // Sets the species of this Mobile.
 void Mobile::set_species(const std::string &species) { m_species = species; }
 
+// Sets this Mobile's combat stance.
+void Mobile::set_stance(CombatStance stance) { m_stance = stance; }
+
 // Sets a MobileTag on this Mobile.
 void Mobile::set_tag(MobileTag the_tag)
 {
@@ -469,6 +474,9 @@ void Mobile::set_tag(MobileTag the_tag)
 
 // Checks the species of this Mobile.
 std::string Mobile::species() const { return m_species; }
+
+// Checks this Mobile's combat stance.
+CombatStance Mobile::stance() const { return m_stance; }
 
 // Checks if a MobileTag is set on this Mobile.
 bool Mobile::tag(MobileTag the_tag) const { return (m_tags.count(the_tag) > 0); }

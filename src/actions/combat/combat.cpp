@@ -1,12 +1,12 @@
-// combat/combat.cpp -- Generic combat routines that apply to multiple types of combat.
+// actions/combat/combat.cpp -- Generic combat routines that apply to multiple types of combat.
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#include "combat/combat.hpp"
+#include "actions/combat/combat.hpp"
 #include "core/random.hpp"
 #include "core/strx.hpp"
 #include "world/inventory.hpp"
 #include "world/item.hpp"
-#include "world/mobile.hpp"
+#include "world/player.hpp"
 #include "world/room.hpp"
 #include "world/world.hpp"
 
@@ -16,6 +16,7 @@ const uint32_t  Combat::BLEED_SEVERITY_BASE =                       6;      // T
 const uint32_t  Combat::BLEED_SEVERITY_RANGE=                       4;      // The range of variation on the bleed severity.
 const uint32_t  Combat::BLEED_TIME_RANGE =                          10;     // The range of time (1 - X) that a weapon bleed effect can cause.
 const uint32_t  Combat::SCAR_BLEED_INTENSITY_FROM_BLEED_ATTACK =    2;      // Blood type scar intensity for attacks that cause bleeding.
+const float     Combat::STANCE_CHANGE_TIME =                        1.0f;   // The time it takes to change combat stances.
 
 // Weapon type damage modifiers to unarmoured, light, medium and heavy armour targets.
 const float Combat::DAMAGE_MODIFIER_ACID[4] =       { 1.8f, 1.3f, 1.2f, 1.0f };
@@ -59,6 +60,24 @@ float Combat::apply_damage_modifiers(float damage, std::shared_ptr<Item> weapon,
     }
     if (!armour_type) return damage;
     else return damage * damage_modifier[armour_type];
+}
+
+// Changes to a specified combat stance.
+void Combat::change_stance(std::shared_ptr<Mobile> mob, CombatStance stance)
+{
+    if (stance == mob->stance()) return;    // Do nothing if the stance doesn't change.
+    mob->set_stance(stance);
+    std::string stance_str;
+    switch (stance)
+    {
+        case CombatStance::AGGRESSIVE: stance_str = "an {R}aggressive stance"; break;
+        case CombatStance::BALANCED: stance_str = "a {G}balanced stance"; break;
+        case CombatStance::DEFENSIVE: stance_str = "a {U}defensive stance"; break;
+    }
+    if (mob->is_player()) core()->message("{W}You assume " + stance_str + "{W}.");
+    else if (mob->location() == core()->world()->player()->location() && core()->world()->get_room(mob->location())->light(core()->world()->player()) >= Room::LIGHT_VISIBLE)
+        core()->message("{W}" + mob->name(Mobile::NAME_FLAG_THE | Mobile::NAME_FLAG_CAPITALIZE_FIRST) + " {W}assumes " + stance_str + "{W}!");
+    mob->pass_time(STANCE_CHANGE_TIME);
 }
 
 // Generates a standard-format damage number string.
@@ -214,6 +233,27 @@ void Combat::pick_hit_location(std::shared_ptr<Mobile> mob, EquipSlot* slot, std
         break;
     }
     if (*slot == EquipSlot::NONE) throw std::runtime_error("Could not determine body hit location for " + mob->name());
+}
+
+// Compares two combat stances; returns -1 for an unfavourable match-up, 0 for neutral, 1 for favourable.
+int Combat::stance_compare(CombatStance atk, CombatStance def)
+{
+    switch (atk)
+    {
+        case CombatStance::AGGRESSIVE:
+            if (def == CombatStance::DEFENSIVE) return 1;
+            else if (def == CombatStance::BALANCED) return -1;
+            break;
+        case CombatStance::BALANCED:
+            if (def == CombatStance::AGGRESSIVE) return 1;
+            else if (def == CombatStance::DEFENSIVE) return -1;
+            break;
+        case CombatStance::DEFENSIVE:
+            if (def == CombatStance::BALANCED) return 1;
+            else if (def == CombatStance::AGGRESSIVE) return -1;
+            break;
+    }
+    return 0;
 }
 
 // Returns a threshold string, if a damage threshold has been passed.

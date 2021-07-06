@@ -47,12 +47,12 @@ endif(TARGET_WINDOWS)
 set(GREAVE_CPPS
   actions/ai.cpp
   actions/cheat.cpp
+  actions/combat/combat.cpp
+  actions/combat/melee.cpp
   actions/doors.cpp
   actions/inventory.cpp
   actions/look.cpp
   actions/travel.cpp
-  combat/combat.cpp
-  combat/melee.cpp
   core/core.cpp
   core/filex.cpp
   core/guru.cpp
