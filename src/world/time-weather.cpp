@@ -203,7 +203,7 @@ TimeWeather::LunarPhase TimeWeather::moon_phase() const
 // Causes time to pass.
 bool TimeWeather::pass_time(float seconds, bool interruptable)
 {
-    if (seconds > UNINTERRUPTABLE_TIME) interruptable = false;
+    if (seconds <= UNINTERRUPTABLE_TIME) interruptable = false;
     const std::shared_ptr<Player> player = core()->world()->player();
     const std::shared_ptr<Room> room = core()->world()->get_room(player->location());
     const bool indoors = room->tag(RoomTag::Indoors);
