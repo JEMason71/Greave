@@ -22,10 +22,10 @@ public:
     void    log(std::string msg, int type = Guru::INFO);    // Logs a message in the system log file.
     void    nonfatal(std::string error, int type);          // Reports a non-fatal error, which will be logged but will not halt execution unless it cascades.
 
-    static const int    INFO;       // General logging information.
-    static const int    WARN;       // Warnings, non-fatal stuff.
-    static const int    ERROR;      // Serious errors. Shit is going down.
-    static const int    CRITICAL;   // Critical system failure.
+    static const int    INFO;               // General logging information.
+    static const int    WARN;               // Warnings, non-fatal stuff.
+    static const int    ERROR, GURU_ERROR;  // Serious errors. Shit is going down.
+    static const int    CRITICAL;           // Critical system failure.
 
 private:
     bool            m_cache_nonfatal;   // Temporarily caches nonfatal error messages.

@@ -15,6 +15,7 @@
 const int   Guru::INFO =        0;  // General logging information.
 const int   Guru::WARN =        1;  // Warnings, non-fatal stuff.
 const int   Guru::ERROR =       2;  // Serious errors. Shit is going down.
+const int   Guru::GURU_ERROR =  2;  // Same thing as ERROR, used when something else (*coughwindows.hcough*) #defines ERROR as a constant.
 const int   Guru::CRITICAL =    3;  // Critical system failure.
 
 const int   Guru::CASCADE_THRESHOLD =       20; // The amount m_cascade_count can reach within CASCADE_TIMEOUT seconds before it triggers an abort screen.
