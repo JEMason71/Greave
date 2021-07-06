@@ -18,6 +18,23 @@
 #include "world/world.hpp"
 
 
+//Wrapper function to check for out of range values
+
+long int wrap(std::string s)
+{
+    try
+    {
+        return (std::stoll(s));
+    }
+    catch(const std::exception& e)
+    {
+        return INT_MAX;
+    }
+    
+    
+}
+
+
 // Constructor, sets up the parser.
 Parser::Parser() : m_special_state(SpecialState::NONE)
 {
