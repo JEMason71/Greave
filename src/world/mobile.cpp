@@ -505,7 +505,11 @@ bool Mobile::tick_bleed(uint32_t power, uint16_t time)
     if (is_player())
     {
         core()->message("{r}You are {R}bleeding {r}rather badly. {w}[{R}-" + std::to_string(power) + "{w}]");
-        if (fatal) core()->message("{0}{R}You've lost too much blood and collapse, bleeding out on the ground.");
+        if (fatal)
+        {
+            core()->message("{0}{R}You've lost too much blood and collapse, bleeding out on the ground.");
+            core()->world()->player()->set_death_reason("died from excessive blood loss");
+        }
     }
     else
     {

@@ -15,7 +15,11 @@ const std::string   Player::SQL_PLAYER = "CREATE TABLE player ( mob_target INTEG
 
 
 // Constructor, sets default values.
-Player::Player() : m_mob_target(0), m_money(0) { set_species("humanoid"); }
+Player::Player() : m_death_reason("the will of the gods"), m_mob_target(0), m_money(0)
+{
+    set_species("humanoid");
+    set_name("Player");
+}
 
 // Adds money to the player's wallet.
 void Player::add_money(uint32_t amount)
@@ -37,6 +41,9 @@ int Player::clothes_warmth() const
         warmth += m_equipment->get(i)->warmth();
     return warmth;
 }
+
+// Retrieves the player's death reason.
+std::string Player::death_reason() const { return m_death_reason; }
 
 // Returns true if this Mobile is a Player, false if not.
 bool Player::is_player() const { return true; }
@@ -99,6 +106,9 @@ uint32_t Player::save(std::shared_ptr<SQLite::Database> save_db)
     query.exec();
     return sql_id;
 }
+
+// Sets the reason for this Player dying.
+void Player::set_death_reason(const std::string &reason) { m_death_reason = reason; }
 
 // Sets a new Mobile target.
 void Player::set_mob_target(uint32_t target) { m_mob_target = target; }

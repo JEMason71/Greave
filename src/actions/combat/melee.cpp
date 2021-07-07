@@ -307,7 +307,11 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
 
             if (fatal)
             {
-                if (defender_is_player) death_str = " {M}You are slain!";
+                if (defender_is_player)
+                {
+                    death_str = " {M}You are slain!";
+                    core()->world()->player()->set_death_reason("slain by " + attacker->name(Mobile::NAME_FLAG_A | Mobile::NAME_FLAG_NO_COLOUR));
+                }
                 else death_str = " {U}" + defender_name_c + (defender->tag(MobileTag::Unliving) ? " is destroyed!" : " is slain!");
             }
             core()->message(block_str + damage_colour + attacker_your_string_c + " " + weapon_name + " " + damage_word + " " + damage_colour +

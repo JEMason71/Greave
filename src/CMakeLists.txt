@@ -54,6 +54,7 @@ set(GREAVE_CPPS
   actions/look.cpp
   actions/status.cpp
   actions/travel.cpp
+  core/bones.cpp
   core/core.cpp
   core/filex.cpp
   core/guru.cpp

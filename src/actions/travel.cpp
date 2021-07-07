@@ -149,7 +149,11 @@ bool ActionTravel::travel(std::shared_ptr<Mobile> mob, Direction dir, bool confi
             }
             if (mob->hp() <= 0)
             {
-                if (is_player) core()->message("{0}{M}Your bones are shattered from the impact, death is mercifully quick.");
+                if (is_player)
+                {
+                    core()->message("{0}{M}Your bones are shattered from the impact, death is mercifully quick.");
+                    core()->world()->player()->set_death_reason("took a short walk and a long fall");
+                }
                 else if (player_can_see && room_link == player_loc) core()->message("{U}" + mob_name_the + " is slain instantly from the impact!");
             }
         }

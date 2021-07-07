@@ -3,6 +3,7 @@
 
 #include "3rdparty/SQLiteCpp/SQLiteCpp.h"
 #include "actions/look.hpp"
+#include "core/bones.hpp"
 #include "core/core.hpp"
 #include "core/filex.hpp"
 #include "core/guru.hpp"
@@ -127,6 +128,9 @@ void Core::init()
 
     // Sets up the text parser.
     m_parser = std::make_shared<Parser>();
+
+    // Sets up the bones file.
+    Bones::init_bones();
 }
 
 // Loads a specified slot's saved game.
@@ -165,6 +169,7 @@ void Core::main_loop()
         }
     } while (!player->is_dead());
 
+    Bones::record_death();
     while (true)
     {
         message("{R}You are dead! Type {M}quit {R}when you are ready to end the game.");
@@ -301,6 +306,7 @@ void Core::title()
             message("{U}Please select a saved game slot to begin the game:");
             message("{U}[{C}D{U}] {R}Delete a saved game");
             message("{0}{U}[{C}Q{U}] {R}Quit game");
+            message("{0}{U}[{C}L{U}] {W}Hall of Legends");
         }
         for (int i = 1; i <= m_prefs->save_file_slots; i++)
         {
@@ -346,6 +352,11 @@ void Core::title()
                 inner_loop = false;
                 message("{U}Okay, no save file will be deleted.");
             }
+            else if ((input[0] == 'l' || input[0] == 'L') && !deleting_file)
+            {
+                inner_loop = false;
+                Bones::hall_of_legends();
+            }
             else
             {
                 int input_num = input[0] - '0';
@@ -359,7 +370,7 @@ void Core::title()
                     else
                     {
                         if (deleting_file) message("{y}That is not a valid option. Please choose {Y}a save slot number{y} or {Y}C{y}.");
-                        else message("{y}That is not a valid option. Please choose {Y}a save slot number{y}, {Y}D{y} or {Y}Q{y}.");
+                        else message("{y}That is not a valid option. Please choose {Y}a save slot number{y}, {Y}D{y}, {Y}Q{y} or {Y}L{y}.");
                     }
                 }
                 else
