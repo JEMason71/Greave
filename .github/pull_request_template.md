@@ -1,5 +1,7 @@
 (Thanks for opening a pull request! Please make sure you've read the [contributing guidelines](https://github.com/Gravecat/Greave/blob/main/.github/CONTRIBUTING.md) and checked that there aren't any [existing pull requests](https://github.com/Gravecat/Greave/pulls) that already do the same thing. Once you've done that, please fill out the blanks below.)
 
+**Please be sure to target the `contrib` branch with your pull request.**
+
 What is the purpose of this pull request?
 -----------------------------------------
 …
