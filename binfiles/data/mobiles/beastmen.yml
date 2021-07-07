@@ -6,4 +6,4 @@ GOBLIN_SCOUT:
   hp: 70
   name: goblin scout
   species: humanoid
-  tags: [ AggroOnSight, RandomGender ]
+  tags: [ AggroOnSight, Agile, Puny, RandomGender ]
