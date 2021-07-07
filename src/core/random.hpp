@@ -12,7 +12,7 @@ public:
                 Random();                                   // Constructor, sets up the PRNG.
     float       frnd(float min_float, float max_float);     // Returns a random number between min_float and max_float.
     float       frnd(float max_float);                      // As above, but implicitly uses 1 as the minimum value.
-    bool        percent_check(int percent);                 // Returns true if a random number between 1 and 100 is lower than or equal to the specified value.
+    bool        percent_check(unsigned int percent);        // Returns true if a random number between 1 and 100 is lower than or equal to the specified value.
     uint32_t    rnd(uint32_t min_int, uint32_t max_int);    // Returns a random number between min_int and max_int.
     uint32_t    rnd(uint32_t max_int);                      // As above, but implicitly uses 1 as the minimum value.
     int         roll(int num_dice, int die_faces, int modifier = 0);    // 'Rolls' a number of dice with an optional modifier (e.g. 4d6+3).

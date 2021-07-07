@@ -22,7 +22,7 @@ float Random::frnd(float min_float, float max_float)
 float Random::frnd(float max_float) { return frnd(1, max_float); }
 
 // Returns true if a random number between 1 and 100 is lower than or equal to the specified value.
-bool Random::percent_check(int percent) { return rnd(1, 100) <= percent; }
+bool Random::percent_check(unsigned int percent) { return rnd(1, 100) <= percent; }
 
 // Returns a random number between min_int and max_int.
 uint32_t Random::rnd(uint32_t min_int, uint32_t max_int)
