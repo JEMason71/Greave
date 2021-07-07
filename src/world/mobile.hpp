@@ -34,6 +34,7 @@ enum class MobileTag : uint16_t { None = 0,
 
     // Tags that determine the Mobile's general state of being.
     ImmunityBleed,  // This Mobile is unable to bleed.
+    ImmunityPoison, // This Mobile is immune to being poisoned.
     RandomGender,   // This Mobile can be assigned a random gender.
     Unliving,       // This Mobile is a construct or other unliving entity.
 

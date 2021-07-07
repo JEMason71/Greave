@@ -217,6 +217,10 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
             bleed = true;
             damage *= 3;
         }
+        const float poison_chance = 0;
+        const float bleed_chance = 0;
+        if (poison_chance >= 100.0f || core()->rng()->frnd(100) <= poison_chance) poison = true;
+        if (bleed_chance >= 100.0f || core()->rng()->frnd(100) <= bleed_chance) bleed = true;
 
         if (attacker->tag(MobileTag::Anemic)) damage *= ATTACKER_DAMAGE_MODIFIER_ANEMIC;
         else if (attacker->tag(MobileTag::Feeble)) damage *= ATTACKER_DAMAGE_MODIFIER_FEEBLE;
@@ -225,6 +229,9 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
         else if (attacker->tag(MobileTag::Brawny)) damage *= ATTACKER_DAMAGE_MODIFIER_BRAWNY;
         else if (attacker->tag(MobileTag::Vigorous)) damage *= ATTACKER_DAMAGE_MODIFIER_VIGOROUS;
         else if (attacker->tag(MobileTag::Mighty)) damage *= ATTACKER_DAMAGE_MODIFIER_MIGHTY;
+
+        if (defender->tag(MobileTag::ImmunityBleed)) bleed = false;
+        if (defender->tag(MobileTag::ImmunityPoison)) poison = false;
 
         float damage_blocked = 0;
         if (def_location_hit_es == EquipSlot::BODY)
