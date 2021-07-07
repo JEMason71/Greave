@@ -1,9 +1,156 @@
 # data/help.yml -- Strings for the in-game help command.
 # Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-HELP: "This is a test help page. The help documentation will be added soon."
+ATTACK: "tbc"
 
-REDIRECT: "#TEST"
+CLOSE: "tbc"
 
-TEST: [ "This is another test help page.",
-        "This one has two lines of text." ]
+COMMAND: "#COMMANDS"
+
+COMMANDS: [ "{W}Combat commands: {C}ATTACK{w}, {C}STANCE",
+            "{W}Item interaction: {C}DROP{w}, {C}EQUIP{w}, {C}EQUIPMENT{w}, {C}EXAMINE{w}, {C}INVENTORY{w}, {C}TAKE{w}, {C}UNEQUIP",
+            "{W}Room interaction: {C}CLOSE{w}, {C}EXITS{w}, {C}LOCK{w}, {C}LOOK{w}, {C}OPEN{w}, {C}TRAVEL{w}, {C}UNLOCK",
+            "{W}Status commands: {C}SCORE{w}, {C}TIME{w}, {C}WEATHER",
+            "{W}Misc: {C}HELP{w}, {C}QUIT{w}, {C}SAVE{c}, {C}WAIT" ]
+
+CYAN: "According to Wikipedia, {C}cyan {w}is the colour between {G}green {w}and {U}blue {w}on the visible spectrum of light."
+
+D: "#TRAVEL"
+
+DATE: "#TIME"
+
+DOWN: "#TRAVEL"
+
+E: "#TRAVEL"
+
+EAST: "#TRAVEL"
+
+EQ: "The {C}EQ {w}command can be short for either {C}EQUIP or {C}EQUIPMENT{w}, depending on context. Please check those help pages for more details."
+
+EQUIP: "tbc"
+
+EQUIPMENT: "tbc"
+
+EXIT: "tbc"
+
+EXITS: "#EXIT"
+
+GET: "#TAKE"
+
+GO: "#TRAVEL"
+
+HELP: [ "Welcome to the in-game manual! Please type {C}HELP {w}followed by another word for more information on a command or other topic. If you see a word written in {C}CYAN {w}in a help entry, you can type {C}HELP {w}followed by that word (e.g. {C}HELP CYAN{w}) to read more.",
+        "If you are new to the game, type {C}HELP NEWPLAYER {w}for basic controls, and {C}HELP COMMANDS {w}for a complete list of commands." ]
+
+HOLD: "#EQUIP"
+
+I: "#INVENTORY"
+
+INV: "#INVENTORY"
+
+INVENT: "#INVENTORY"
+
+INVENTORY: "tbc"
+
+ITEM: "tbc"
+
+ITEMS: "#ITEM"
+
+K: "#ATTACK"
+
+KILL: "#ATTACK"
+
+LOCK: "tbc"
+
+LOCKED: "#LOCK"
+
+LOOK: "tbc"
+
+MOBILE: "tbc"
+
+MOBILES: "#MOBILE"
+
+MOVE: "#TRAVEL"
+
+NEWPLAYER: [ "{M}Greave {w}is a single-player survival RPG heavily inspired by the old telnet MUDs (Multi-User Dungeons). The game world consists of a great many different {C}ROOMS{w} - each room represents an area such as a city street, a room in a castle, or a forest trail. Each room is connected via a number of {C}EXITS {w}to other rooms. You can {C}TRAVEL {w}around the world using cardinal compass directions -- for example, type {C}NORTH {w}to travel north. If you're ever unsure where to go, just {C}LOOK {w}around.",
+             "You interact with the game world by typing {C}COMMANDS{w}, usually either a single verb (such as {C}TIME{w}), or a verb and noun, such as {C}ATTACK GOBLIN{w}. For a full list of available commands, just type {C}HELP COMMANDS{w}.",
+             "Anything you can pick up, carry, use or wear is called an {C}ITEM{w}. Weapons, food, clothing and treasure are all items, and you will find a large variety of different items in the game world to interact with. Items you pick up go in your {C}INVENTORY{w}.",
+             "As well as yourself, there are many other people, creatures and monsters living in this world - they are collectively known as {C}MOBILES{w}. Some are friendly, some will attack you on sight, and some just haven't made their minds up about you yet. You can {C}ATTACK{w} any mobile you wish." ]
+
+N: "#TRAVEL"
+
+NE: "#TRAVEL"
+
+NORTH: "#TRAVEL"
+
+NORTHEAST: "#TRAVEL"
+
+NORTHWEST: "#TRAVEL"
+
+NW: "#TRAVEL"
+
+REMOVE: "#UNEQUIP"
+
+ROOM: "tbc"
+
+ROOMS: "#ROOM"
+
+RUN: "#TRAVEL"
+
+S: "#TRAVEL"
+
+SA: "#STANCE"
+
+SB: "#STANCE"
+
+SC: "#SCORE"
+
+SCORE: "tbc"
+
+SD: "#STANCE"
+
+SE: "#TRAVEL"
+
+SOUTH: "#TRAVEL"
+
+SOUTHEAST: "#TRAVEL"
+
+SOUTHWEST: "#TRAVEL"
+
+STANCE: "tbc"
+
+SW: "#TRAVEL"
+
+TAKE: "tbc"
+
+TEMP: "#WEATHER"
+
+TEMPERATURE: "#WEATHER"
+
+TIME: "tbc"
+
+TRAVEL: "tbc"
+
+U: "#TRAVEL"
+
+UNEQ: "#UNEQUIP"
+
+UNEQUIP: "tbc"
+
+UNLOCK: "tbc"
+
+UP: "#TRAVEL"
+
+W: "#TRAVEL"
+
+WAIT: "tbc"
+
+WALK: "#TRAVEL"
+
+WEAR: "#EQUIP"
+
+WEATHER: "tbc"
+
+WEST: "#TRAVEL"
+
+WIELD: "#EQUIP"
