@@ -1,5 +1,5 @@
 // core/filex.cpp -- Various utility functions that deal with creating, deleting, and manipulating files.
-// Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+// Copyright (c) 2020-2021 Raine "Gravecat" Simmons and the Greave contributors. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #include "core/filex.hpp"
 
