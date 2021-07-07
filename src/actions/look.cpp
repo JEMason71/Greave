@@ -113,7 +113,12 @@ void ActionLook::examine_item(std::shared_ptr<Mobile>, std::shared_ptr<Item> tar
     else if (block_mod < 0) stat_string += "It {Y}reduces your chance to shield-block {w}by {R}" + std::to_string(-block_mod) + "%{w}. ";
 
     uint32_t weight = MathX::fuzz(target->weight());
-    stat_string += "{w}It weighs around {U}" + StrX::intostr_pretty(weight) + (weight == 1 ? " pac{w}. " : " pacs{w}. ");
+    stat_string += "{w}It weighs around {U}" + StrX::intostr_pretty(weight) + (weight == 1 ? " pac" : " pacs");
+    const int actual_value = target->value();
+    const int appraised_value = MathX::fuzz(actual_value);
+    if (!appraised_value) stat_string += "{w}, and {y}isn't worth anything{w}.";
+    else stat_string += "{w}, and is worth around {U}" + StrX::mgsc_string(appraised_value, StrX::MGSC::LONG) + "{w}. ";
+
     if (stat_string.size())
     {
         stat_string.pop_back();

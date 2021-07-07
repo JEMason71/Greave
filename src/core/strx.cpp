@@ -295,7 +295,7 @@ std::string StrX::mgsc_string(uint32_t coin, StrX::MGSC mode)
         if (gold) result_vec.push_back(std::to_string(gold) + " gold");
         if (silver) result_vec.push_back(std::to_string(silver) + " silver");
         if (copper) result_vec.push_back(std::to_string(copper) + " copper");
-        if (result_vec.size()) return comma_list(result_vec);
+        if (result_vec.size()) return comma_list(result_vec, CL_FLAG_USE_AND);
         else return "zero";
     }
 }
