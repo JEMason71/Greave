@@ -52,6 +52,7 @@ set(GREAVE_CPPS
   actions/doors.cpp
   actions/inventory.cpp
   actions/look.cpp
+  actions/status.cpp
   actions/travel.cpp
   core/core.cpp
   core/filex.cpp

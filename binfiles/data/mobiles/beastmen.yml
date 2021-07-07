@@ -5,5 +5,6 @@ GOBLIN_SCOUT:
   gear: GEAR_GOBLIN_SCOUT
   hp: 70
   name: goblin scout
+  score: 50
   species: humanoid
   tags: [ AggroOnSight, Agile, Puny, RandomGender ]

@@ -6,6 +6,7 @@
 #include "actions/doors.hpp"
 #include "actions/inventory.hpp"
 #include "actions/look.hpp"
+#include "actions/status.hpp"
 #include "actions/travel.hpp"
 #include "core/core.hpp"
 #include "core/parser.hpp"
@@ -40,6 +41,7 @@ Parser::Parser() : m_special_state(SpecialState::NONE)
     add_command("[quit|exit]", ParserCommand::QUIT);
     add_command("save", ParserCommand::SAVE);
     add_command("[sa|sb|sd]", ParserCommand::STANCE);
+    add_command("[score|sc]", ParserCommand::SCORE);
     add_command("stance <txt>", ParserCommand::STANCE);
     add_command("[take|get] <item:r>", ParserCommand::TAKE);
     add_command("[time|date]", ParserCommand::TIME);
@@ -433,6 +435,9 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             return; // not break
         case ParserCommand::SAVE:
             core()->save();
+            break;
+        case ParserCommand::SCORE:
+            ActionStatus::score();
             break;
         case ParserCommand::SPAWN_ITEM:
             if (!words.size()) core()->message("{y}Please specify an {Y}item ID{y}.");

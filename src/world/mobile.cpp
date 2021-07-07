@@ -32,7 +32,7 @@ const std::string   Buff::SQL_BUFFS =       "CREATE TABLE buffs ( owner INTEGER,
 
 // The SQL table construction string for Mobiles.
 const std::string   Mobile::SQL_MOBILES =   "CREATE TABLE mobiles ( action_timer REAL, equipment INTEGER UNIQUE, gender INTEGER, hostility TEXT, hp INTEGER NOT NULL, "
-    "hp_max INTEGER NOT NULL, id INTEGER UNIQUE NOT NULL, inventory INTEGER UNIQUE, location INTEGER NOT NULL, name TEXT, parser_id INTEGER, spawn_room INTEGER, "
+    "hp_max INTEGER NOT NULL, id INTEGER UNIQUE NOT NULL, inventory INTEGER UNIQUE, location INTEGER NOT NULL, name TEXT, parser_id INTEGER, score INTEGER, spawn_room INTEGER, "
     "species TEXT NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, stance INTEGER, tags TEXT )";
 
 
@@ -61,7 +61,7 @@ void Buff::save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id)
 
 // Constructor, sets default values.
 Mobile::Mobile() : m_action_timer(0), m_equipment(std::make_shared<Inventory>()), m_gender(Gender::IT), m_id(0), m_inventory(std::make_shared<Inventory>()), m_location(0),
-    m_parser_id(0), m_spawn_room(0), m_stance(CombatStance::BALANCED)
+    m_parser_id(0), m_score(0), m_spawn_room(0), m_stance(CombatStance::BALANCED)
 {
     m_hp[0] = m_hp[1] = 100;
 }
@@ -79,6 +79,9 @@ void Mobile::add_hostility(uint32_t mob_id)
 
 // Adds a second to this Mobile's action timer.
 void Mobile::add_second() { if (++m_action_timer > ACTION_TIMER_CAP_MAX) m_action_timer = ACTION_TIMER_CAP_MAX; }
+
+// Adds to this Mobile's score.
+void Mobile::add_score(int score) { m_score += score; }
 
 // Returns the number of seconds needed for this Mobile to make an attack.
 float Mobile::attack_speed() const
@@ -265,6 +268,7 @@ uint32_t Mobile::load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id
         m_location = query.getColumn("location").getUInt();
         if (!query.isColumnNull("name")) m_name = query.getColumn("name").getString();
         if (!query.isColumnNull("parser_id")) m_parser_id = query.getColumn("parser_id").getInt();
+        if (!query.isColumnNull("score")) m_score = query.getColumn("score").getUInt();
         if (!query.isColumnNull("spawn_room")) m_spawn_room = query.getColumn("spawn_room").getUInt();
         m_species = query.getColumn("species").getString();
         if (!query.isColumnNull("stance")) m_stance = static_cast<CombatStance>(query.getColumn("stance").getInt());
@@ -362,6 +366,7 @@ void Mobile::reduce_hp(int amount)
         else death_message += " is slain!";
         core()->message(death_message);
     }
+    core()->world()->player()->add_score(m_score);
     if (m_spawn_room) core()->world()->get_room(m_spawn_room)->clear_tag(RoomTag::MobSpawned);
     core()->world()->remove_mobile(m_id);
 }
@@ -382,8 +387,8 @@ uint32_t Mobile::save(std::shared_ptr<SQLite::Database> save_db)
     const uint32_t equipment_id = m_equipment->save(save_db);
 
     const uint32_t sql_id = core()->sql_unique_id();
-    SQLite::Statement query(*save_db, "INSERT INTO mobiles ( action_timer, equipment, gender, hostility, hp, hp_max, id, inventory, location, name, parser_id, spawn_room, "
-        "species, sql_id, stance, tags ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
+    SQLite::Statement query(*save_db, "INSERT INTO mobiles ( action_timer, equipment, gender, hostility, hp, hp_max, id, inventory, location, name, parser_id, score, spawn_room, "
+        "species, sql_id, stance, tags ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
     if (m_action_timer) query.bind(1, m_action_timer);
     if (equipment_id) query.bind(2, equipment_id);
     if (m_gender != Gender::IT) query.bind(3, static_cast<int>(m_gender));
@@ -395,12 +400,13 @@ uint32_t Mobile::save(std::shared_ptr<SQLite::Database> save_db)
     query.bind(9, m_location);
     if (m_name.size()) query.bind(10, m_name);
     if (m_parser_id) query.bind(11, m_parser_id);
-    if (m_spawn_room) query.bind(12, m_spawn_room);
-    query.bind(13, m_species);
-    query.bind(14, sql_id);
-    if (m_stance != CombatStance::BALANCED) query.bind(15, static_cast<int>(m_stance));
+    if (m_score) query.bind(12, m_score);
+    if (m_spawn_room) query.bind(13, m_spawn_room);
+    query.bind(14, m_species);
+    query.bind(15, sql_id);
+    if (m_stance != CombatStance::BALANCED) query.bind(16, static_cast<int>(m_stance));
     const std::string tags = StrX::tags_to_string(m_tags);
-    if (tags.size()) query.bind(16, tags);
+    if (tags.size()) query.bind(17, tags);
     query.exec();
 
     // Save any and all buffs/debuffs.
@@ -409,6 +415,9 @@ uint32_t Mobile::save(std::shared_ptr<SQLite::Database> save_db)
 
     return sql_id;
 }
+
+// Checks this Mobile's score.
+uint32_t Mobile::score() const { return m_score; }
 
 // Sets a specified buff/debuff on the Actor, or extends an existing buff/debuff.
 void Mobile::set_buff(Buff::Type type, uint16_t time, uint32_t power, bool additive_power)

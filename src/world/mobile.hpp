@@ -75,6 +75,7 @@ public:
                         Mobile();                                   // Constructor, sets default values.
     void                add_hostility(uint32_t mob_id);             // Adds a Mobile (or the player, with ID 0) to this Mobile's hostility list.
     void                add_second();                               // Adds a second to this Mobile's action timer.
+    void                add_score(int score);                       // Adds to this Mobile's score.
     float               attack_speed() const;                       // Returns the number of seconds needed for this Mobile to make an attack.
     float               block_mod() const;                          // Returns the modified chance to block for this Mobile, based on equipped gear.
     uint32_t            buff_power(Buff::Type type) const;          // Returns the power level of the specified buff/debuff.
@@ -108,6 +109,7 @@ public:
     int                 restore_hp(int amount);                     // Restores a specified amount of hit points.
     virtual uint32_t    save(std::shared_ptr<SQLite::Database> save_db);    // Saves this Mobile.
                         // Sets a specified buff/debuff on the Actor, or extends an existing buff/debuff.
+    uint32_t            score() const;                              // Checks this Mobile's score.
     void                set_buff(Buff::Type type, uint16_t time = USHRT_MAX, uint32_t power = 0, bool additive_power = false);
     void                set_gender(Gender gender);                  // Sets the gender of this Mobile.
     void                set_hp(int hp, int hp_max = 0);             // Sets the current (and, optionally, maximum) HP of this Mobile.
@@ -143,6 +145,7 @@ protected:
     uint32_t                            m_location;     // The Room that this Mobile is currently located in.
     std::string                         m_name;         // The name of this Mobile.
     uint16_t                            m_parser_id;    // The semi-unique ID of this Mobile, for parser differentiation.
+    uint32_t                            m_score;        // Either the score value for killing this Mobile; or, for the Player, their current total score.
     uint32_t                            m_spawn_room;   // The Room that spawned this Mobile.
     std::string                         m_species;      // Ths species type of this Mobile.
     CombatStance                        m_stance;       // The Mobile's current combat stance.

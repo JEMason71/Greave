@@ -87,7 +87,7 @@ const std::set<std::string>     World::VALID_YAML_KEYS_ITEMS = { "block_mod", "c
     "speed", "stack", "tags", "type", "value", "warmth", "weight" };
 
 // A list of all valid keys in mobile YAML files.
-const std::set<std::string>     World::VALID_YAML_KEYS_MOBS = { "gear", "hp", "name", "species", "tags" };
+const std::set<std::string>     World::VALID_YAML_KEYS_MOBS = { "gear", "hp", "name", "score", "species", "tags" };
 
 
 // Constructor, loads the room YAML data.
@@ -555,6 +555,9 @@ void World::load_mob_pool()
             // The Mobile's hit points.
             if (!mobile_data["hp"]) core()->guru()->nonfatal("Missing mobile hit points: "+ mobile_id_str, Guru::ERROR);
             else new_mob->set_hp(mobile_data["hp"].as<int>(), mobile_data["hp"].as<int>());
+
+            // The Mobile's score, if any.
+            if (mobile_data["score"]) new_mob->add_score(mobile_data["score"].as<int>());
 
             // The Mobile's species.
             if (!mobile_data["species"]) core()->guru()->nonfatal("Missing species: " + mobile_id_str, Guru::CRITICAL);
