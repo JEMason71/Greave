@@ -1,5 +1,5 @@
 // core/filex.cpp -- Various utility functions that deal with creating, deleting, and manipulating files.
-// Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+// Copyright (c) 2020-2021 Raine "Gravecat" Simmons and the Greave contributors. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #include "core/filex.hpp"
 
@@ -70,6 +70,8 @@ bool FileX::is_read_only(const std::string &file)
 #ifdef GREAVE_TARGET_WINDOWS
     DWORD attributes = GetFileAttributes(file.c_str());
     if (attributes != INVALID_FILE_ATTRIBUTES) return (attributes & FILE_ATTRIBUTE_READONLY);
+#elif GREAVE_TARGET_LINUX
+    if(access(file.c_str(), R_OK) == 0 && access(file.c_str(), W_OK) != 0) return true;
 #endif
     return false;
 }
