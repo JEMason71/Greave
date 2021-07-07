@@ -4,9 +4,13 @@
 #pragma once
 #include "core/greave.hpp"
 
+class Mobile;   // defined in world/mobile.hpp
+
 
 class ActionStatus
 {
 public:
-    static void score();    // Check the player's current total score.
+    static void score();                                // Check the player's current total score.
+    static void time(std::shared_ptr<Mobile> mob);      // Determines the current time of day.
+    static void weather(std::shared_ptr<Mobile> mob);   // Checks the nearby weather.
 };

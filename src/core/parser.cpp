@@ -485,7 +485,7 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             else ActionCheat::teleport(collapsed_words);
             break;
         case ParserCommand::TIME:
-            ActionLook::time(player);
+            ActionStatus::time(player);
             break;
         case ParserCommand::UNEQUIP:
             if (!words.size()) core()->message("{y}Please specify {Y}what you want to unequip{y}.");
@@ -497,7 +497,7 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             core()->world()->player()->pass_time(TimeWeather::HOUR);
             break;
         case ParserCommand::WEATHER:
-            ActionLook::weather(player);
+            ActionStatus::weather(player);
             break;
         case ParserCommand::XYZZY:
             core()->message("{u}A hollow voice says, {m}\"Fool.\"");
