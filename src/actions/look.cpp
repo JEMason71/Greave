@@ -248,10 +248,35 @@ void ActionLook::weather(std::shared_ptr<Mobile> mob)
     const std::shared_ptr<Room> room = core()->world()->get_room(mob->location());
     const bool indoors = room->tag(RoomTag::Indoors);
     const bool can_see_outside = room->tag(RoomTag::CanSeeOutside);
-    if (indoors && !can_see_outside)
+    if (indoors && !can_see_outside) core()->message("{y}You {Y}can't see {y}the weather outside from here.");
+    else core()->message(core()->world()->time_weather()->weather_message_colour() + core()->world()->time_weather()->weather_desc());
+
+    const int player_temp = room->temperature(Room::TEMPERATURE_FLAG_WITH_PLAYER_BUFFS);
+    const int room_temp = room->temperature(Room::TEMPERATURE_FLAG_IGNORE_PLAYER_CLOTHES);
+    std::string temp_str = "{U}The temperature is ";
+    switch (room_temp)
     {
-        core()->message("{y}You {Y}can't see {y}the weather outside from here.");
-        return;
+        case 0: case 1: temp_str += "{C}freezing"; break;
+        case 2: temp_str += "{C}cold"; break;
+        case 3: temp_str += "{C}chilly"; break;
+        case 4: case 5: temp_str += "{G}pleasant"; break;
+        case 6: temp_str += "{Y}warm"; break;
+        case 7: temp_str += "{Y}toasty"; break;
+        case 8: temp_str += "{R}hot"; break;
+        case 9: temp_str += "{R}searing"; break;
     }
-    core()->message(core()->world()->time_weather()->weather_message_colour() + core()->world()->time_weather()->weather_desc());
+    temp_str += "{U}, and you feel ";
+    switch (player_temp)
+    {
+        case 0: case 1: temp_str += "{C}frozen"; break;
+        case 2: temp_str += "{C}cold"; break;
+        case 3: temp_str += "{C}chilly"; break;
+        case 4: case 5: temp_str += "{G}fine"; break;
+        case 6: temp_str += "{Y}warm"; break;
+        case 7: temp_str += "{Y}toasty"; break;
+        case 8: temp_str += "{R}hot"; break;
+        case 9: temp_str += "{R}sweltering"; break;
+    }
+    temp_str += "{U}.";
+    core()->message(temp_str);
 }

@@ -46,7 +46,7 @@ Parser::Parser() : m_special_state(SpecialState::NONE)
     add_command("[unequip|uneq|remove] <item:e>", ParserCommand::UNEQUIP);
     add_command("unlock <dir>", ParserCommand::UNLOCK);
     add_command("wait", ParserCommand::WAIT);
-    add_command("weather", ParserCommand::WEATHER);
+    add_command("[weather|temperature|temp]", ParserCommand::WEATHER);
     add_command("[xyzzy|frotz|plugh|plover]", ParserCommand::XYZZY);
     add_command("yes", ParserCommand::YES);
     add_command("#hash <txt>", ParserCommand::HASH);

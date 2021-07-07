@@ -93,7 +93,7 @@ enum class RoomTag : uint16_t {
     NoExploreCredit,        // This room does not count towards the number of 'explored' rooms in the player's stats. [CURRENTLY UNUSED]
     Trees,                  // There are trees in this area.
     SleepOK,                // Environmental noises will affect the player much less here. [CURRENTLY UNUSED]
-    HeatedInterior,         // Is this interior area heated? [CURRENTLY UNUSED]
+    HeatedInterior,         // Is this interior area heated?
     PermaCampfire,          // Treat this room like it always has a campfire burning.
     HideCampfireScar,       // This is a bit specific. It's for rooms with PermaCampfire, where we don't want the campfire 'scar' text showing.
 
@@ -131,9 +131,14 @@ public:
     static const uint32_t       BLOCKED;                // Hashed value for BLOCKED, which is used to mark exits as impassible.
     static const uint32_t       FALSE_ROOM;             // Hashed value for FALSE_ROOM, which is used to make 'fake' impassible room exits.
     static const uint8_t        LIGHT_VISIBLE;          // Any light level below this is considered too dark to see.
+    static const size_t         NO_CAMPFIRE;            // Special variable to indicate there is no campfire present here.
     static const int            ROOM_LINKS_MAX = 10;    // The maximum amount of exit links from one Room to another.
     static const std::string    SQL_ROOMS;              // The SQL table construction string for the saved rooms.
     static const uint32_t       UNFINISHED;             // Hashed value for UNFINISHED, which is used to mark room exits as unfinished and to be completed later.
+
+    static const uint32_t       TEMPERATURE_FLAG_WITH_PLAYER_BUFFS;     // Apply the Player's buffs to the result of the room's temperature() calculations.
+    static const uint32_t       TEMPERATURE_FLAG_IGNORE_LINKED_ROOMS;   // Calculate a room's temperature() without taking adjacent rooms into account.
+    static const uint32_t       TEMPERATURE_FLAG_IGNORE_PLAYER_CLOTHES; // Ignore the Player's clothing when calculating temperature.
 
                 Room(std::string new_id = "");                          // Constructor, sets the Room's ID hash.
     void        activate();                                             // This Room was previously inactive, and has now become active.
@@ -151,6 +156,7 @@ public:
     std::string door_name(uint8_t dir) const;                           // As above, but for non-enum integer directions.
     bool        fake_link(Direction dir) const;                         // Checks if a room link is fake (e.g. to FALSE_ROOM or UNFINISHED).
     bool        fake_link(uint8_t dir) const;                           // As above, but takes an integer link instead of an enum.
+    size_t      has_campfire() const;                                   // Checks if this room has a campfire, and if so, returns the vector position.
     uint32_t    id() const;                                             // Retrieves the unique hashed ID of this Room.
     const std::shared_ptr<Inventory>    inv() const;                    // Returns a pointer to the Room's Inventory.
     bool        key_can_unlock(std::shared_ptr<Item> key, Direction dir);   // Checks if a key can unlock a door in the specified direction.
@@ -174,10 +180,32 @@ public:
     void        set_security(Security sec);                             // Sets the security level of this Room.
     void        set_tag(RoomTag the_tag);                               // Sets a tag on this Room.
     bool        tag(RoomTag the_tag) const;                             // Checks if a tag is set on this Room.
+    int         temperature(uint32_t flags = 0) const;                  // Returns the room's current temperature level.
 
 private:
-    static const int    RESPAWN_INTERVAL;   // The minimum respawn time, in seconds, for Mobiles.
+    static const int    RESPAWN_INTERVAL;                   // The minimum respawn time, in seconds, for Mobiles.
     static const std::vector<std::vector<std::string>>  ROOM_SCAR_DESCS;    // The descriptions for different types of room scars.
+    static const int    SEASON_BASE_TEMPERATURE_AUTUMN;     // The base temperature for the autumn season.
+    static const int    SEASON_BASE_TEMPERATURE_SPRING;     // The base temperature for the spring season.
+    static const int    SEASON_BASE_TEMPERATURE_SUMMER;     // The base temperature for the summer season.
+    static const int    SEASON_BASE_TEMPERATURE_WINTER;     // The base temperature for the winter season.
+    static const int    WEATHER_TEMPERATURE_MOD_BLIZZARD;   // The temperature modification for blizzard weather.
+    static const int    WEATHER_TEMPERATURE_MOD_CLEAR;      // The temperature modification for clear weather.
+    static const int    WEATHER_TEMPERATURE_MOD_FAIR;       // The temperature modification for fair weather.
+    static const int    WEATHER_TEMPERATURE_MOD_FOG;        // The temperature modification for fog weather.
+    static const int    WEATHER_TEMPERATURE_MOD_LIGHTSNOW;  // The temperature modification for light snow weather.
+    static const int    WEATHER_TEMPERATURE_MOD_OVERCAST;   // The temperature modification for overcast weather.
+    static const int    WEATHER_TEMPERATURE_MOD_RAIN;       // The temperature modification for rain weather.
+    static const int    WEATHER_TEMPERATURE_MOD_SLEET;      // The temperature modification for sleet weather.
+    static const int    WEATHER_TEMPERATURE_MOD_STORMY;     // The temperature modification for stormy weather.
+    static const int    WEATHER_TIME_MOD_DAWN;              // The temperature modification for dawn.
+    static const int    WEATHER_TIME_MOD_DUSK;              // The temperature modification for dusk.
+    static const int    WEATHER_TIME_MOD_MIDNIGHT;          // The temperature modification for midnight.
+    static const int    WEATHER_TIME_MOD_MORNING;           // The temperature modification for morning.
+    static const int    WEATHER_TIME_MOD_NIGHT;             // The temperature modification for night.
+    static const int    WEATHER_TIME_MOD_NOON;              // The temperature modification for noon.
+    static const int    WEATHER_TIME_MOD_SUNRISE;           // The temperature modification for sunrise.
+    static const int    WEATHER_TIME_MOD_SUNSET;            // The temperature modification for sunset.
 
     std::string                 m_desc;                         // The Room's description.
     uint32_t                    m_id;                           // The Room's unique ID, hashed from its YAML name.

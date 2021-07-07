@@ -4,6 +4,8 @@
 #include "3rdparty/SQLiteCpp/SQLiteCpp.h"
 #include "core/core.hpp"
 #include "core/guru.hpp"
+#include "world/inventory.hpp"
+#include "world/item.hpp"
 #include "world/world.hpp"
 #include "world/player.hpp"
 
@@ -25,6 +27,15 @@ void Player::add_money(uint32_t amount)
         m_money = UINT32_MAX;
     }
     else m_money += amount;
+}
+
+// Gets the clothing warmth level from the Player.
+int Player::clothes_warmth() const
+{
+    int warmth = 0;
+    for (size_t i = 0; i < m_equipment->count(); i++)
+        warmth += m_equipment->get(i)->warmth();
+    return warmth;
 }
 
 // Returns true if this Mobile is a Player, false if not.

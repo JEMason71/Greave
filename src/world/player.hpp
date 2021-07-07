@@ -12,6 +12,7 @@ public:
 
                 Player();                           // Constructor, sets default values.
     void        add_money(uint32_t amount);         // Adds money to the player's wallet.
+    int         clothes_warmth() const;             // Gets the clothing warmth level from the Player.
     bool        is_player() const override;         // Returns true if this Mobile is a Player, false if not.
     uint32_t    load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id) override;  // Loads the Player data.
     uint32_t    mob_target();                       // Retrieves the Mobile target if it's still valid, or sets it to 0 if not.

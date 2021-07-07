@@ -16,12 +16,37 @@
 #include "world/world.hpp"
 
 
-const uint32_t  Room::BLOCKED =             538012167;  // Hashed value for BLOCKED, which is used to mark exits as impassible.
-const uint32_t  Room::FALSE_ROOM =          3399618268; // Hashed value for FALSE_ROOM, which is used to make 'fake' impassible room exits.
-const uint8_t   Room::LIGHT_VISIBLE =       3;          // Any light level below this is considered too dark to see.
-const uint32_t  Room::UNFINISHED =          1909878064; // Hashed value for UNFINISHED, which is used to mark room exits as unfinished and to be completed later.
+const uint32_t  Room::BLOCKED =                             538012167;  // Hashed value for BLOCKED, which is used to mark exits as impassible.
+const uint32_t  Room::FALSE_ROOM =                          3399618268; // Hashed value for FALSE_ROOM, which is used to make 'fake' impassible room exits.
+const uint8_t   Room::LIGHT_VISIBLE =                       3;          // Any light level below this is considered too dark to see.
+const size_t    Room::NO_CAMPFIRE =                         -1;         // Special variable to indicate there is no campfire present here.
+const int       Room::RESPAWN_INTERVAL =                    300;        // The minimum respawn time, in seconds, for Mobiles.
+const int       Room::SEASON_BASE_TEMPERATURE_AUTUMN =      5;          // The base temperature for the autumn season.
+const int       Room::SEASON_BASE_TEMPERATURE_SPRING =      4;          // The base temperature for the spring season.
+const int       Room::SEASON_BASE_TEMPERATURE_SUMMER =      6;          // The base temperature for the summer season.
+const int       Room::SEASON_BASE_TEMPERATURE_WINTER =      3;          // The base temperature for the winter season.
+const uint32_t  Room::UNFINISHED =                          1909878064; // Hashed value for UNFINISHED, which is used to mark room exits as unfinished and to be completed later.
+const int       Room::WEATHER_TEMPERATURE_MOD_BLIZZARD =    -3;         // The temperature modification for blizzard weather.
+const int       Room::WEATHER_TEMPERATURE_MOD_CLEAR =       1;          // The temperature modification for clear weather.
+const int       Room::WEATHER_TEMPERATURE_MOD_FAIR =        0;          // The temperature modification for fair weather.
+const int       Room::WEATHER_TEMPERATURE_MOD_FOG =         -1;         // The temperature modification for fog weather.
+const int       Room::WEATHER_TEMPERATURE_MOD_LIGHTSNOW =   -2;         // The temperature modification for light snow weather.
+const int       Room::WEATHER_TEMPERATURE_MOD_OVERCAST =    -1;         // The temperature modification for overcast weather.
+const int       Room::WEATHER_TEMPERATURE_MOD_RAIN =        -1;         // The temperature modification for rain weather.
+const int       Room::WEATHER_TEMPERATURE_MOD_SLEET =       -2;         // The temperature modification for sleet weather.
+const int       Room::WEATHER_TEMPERATURE_MOD_STORMY =      -2;         // The temperature modification for stormy weather.
+const int       Room::WEATHER_TIME_MOD_DAWN =               -1;         // The temperature modification for dawn.
+const int       Room::WEATHER_TIME_MOD_DUSK =               -1;         // The temperature modification for dusk.
+const int       Room::WEATHER_TIME_MOD_MIDNIGHT =           -2;         // The temperature modification for midnight.
+const int       Room::WEATHER_TIME_MOD_MORNING =            0;          // The temperature modification for morning.
+const int       Room::WEATHER_TIME_MOD_NIGHT =              -2;         // The temperature modification for night.
+const int       Room::WEATHER_TIME_MOD_NOON =               1;          // The temperature modification for noon.
+const int       Room::WEATHER_TIME_MOD_SUNRISE =            0;          // The temperature modification for sunrise.
+const int       Room::WEATHER_TIME_MOD_SUNSET =             0;          // The temperature modification for sunset.
 
-const int       Room::RESPAWN_INTERVAL =    300;        // The minimum respawn time, in seconds, for Mobiles.
+const uint32_t  Room::TEMPERATURE_FLAG_WITH_PLAYER_BUFFS =      1;  // Apply the Player's buffs to the result of the room's temperature() calculations.
+const uint32_t  Room::TEMPERATURE_FLAG_IGNORE_LINKED_ROOMS =    2;  // Calculate a room's temperature() without taking adjacent rooms into account.
+const uint32_t  Room::TEMPERATURE_FLAG_IGNORE_PLAYER_CLOTHES =  4;  // Ignore the Player's clothing when calculating temperature.
 
 // The descriptions for different types of room scars.
 const std::vector<std::vector<std::string>> Room::ROOM_SCAR_DESCS = {
@@ -225,6 +250,14 @@ bool Room::fake_link(Direction dir) const
 
 // As above, but takes an integer link instead of an enum.
 bool Room::fake_link(uint8_t dir) const { return fake_link(static_cast<Direction>(dir)); }
+
+// Checks if this room has a campfire, and if so, returns the vector position.
+size_t Room::has_campfire() const
+{
+    for (size_t i = 0; i < m_scar_type.size(); i++)
+        if (m_scar_type.at(i) == ScarType::CAMPFIRE) return i;
+    return NO_CAMPFIRE;
+}
 
 // Retrieves the unique hashed ID of this Room.
 uint32_t Room::id() const { return m_id; }
@@ -493,3 +526,88 @@ void Room::set_tag(RoomTag the_tag)
 
 // Checks if a tag is set on this Room.
 bool Room::tag(RoomTag the_tag) const { return (m_tags.count(the_tag) > 0); }
+
+// Returns the room's current temperature level.
+int Room::temperature(uint32_t flags) const
+{
+    //const bool with_player_buffs = ((flags & TEMPERATURE_FLAG_WITH_PLAYER_BUFFS) == TEMPERATURE_FLAG_WITH_PLAYER_BUFFS);
+    //const bool ignore_linked_rooms = ((flags & TEMPERATURE_FLAG_IGNORE_LINKED_ROOMS) == TEMPERATURE_FLAG_IGNORE_LINKED_ROOMS);
+    const bool ignore_player_clothes = ((flags & TEMPERATURE_FLAG_IGNORE_PLAYER_CLOTHES) == TEMPERATURE_FLAG_IGNORE_PLAYER_CLOTHES);
+    int temp = 0;
+    const TimeWeather::Weather weather = core()->world()->time_weather()->get_weather();
+
+    // First, get the base temperature per season.
+    switch (core()->world()->time_weather()->current_season())
+    {
+        case TimeWeather::Season::AUTUMN: temp = SEASON_BASE_TEMPERATURE_AUTUMN; break;
+        case TimeWeather::Season::SPRING: temp = SEASON_BASE_TEMPERATURE_SPRING; break;
+        case TimeWeather::Season::SUMMER: temp = SEASON_BASE_TEMPERATURE_SUMMER; break;
+        case TimeWeather::Season::WINTER: temp = SEASON_BASE_TEMPERATURE_WINTER; break;
+        case TimeWeather::Season::AUTO: break;  // This should be impossible; we're just including this to avoid compiler warnings.
+    }
+
+    // The current weather affects the temperature.
+    if (!tag(RoomTag::Indoors))
+    {
+        switch (weather)
+        {
+            case TimeWeather::Weather::BLIZZARD: temp += WEATHER_TEMPERATURE_MOD_BLIZZARD; break;
+            case TimeWeather::Weather::CLEAR: temp += WEATHER_TEMPERATURE_MOD_CLEAR; break;
+            case TimeWeather::Weather::FAIR: temp += WEATHER_TEMPERATURE_MOD_FAIR; break;
+            case TimeWeather::Weather::FOG: temp += WEATHER_TEMPERATURE_MOD_FOG; break;
+            case TimeWeather::Weather::LIGHTSNOW: temp += WEATHER_TEMPERATURE_MOD_LIGHTSNOW; break;
+            case TimeWeather::Weather::OVERCAST: temp += WEATHER_TEMPERATURE_MOD_OVERCAST; break;
+            case TimeWeather::Weather::RAIN: temp += WEATHER_TEMPERATURE_MOD_RAIN; break;
+            case TimeWeather::Weather::SLEET: temp += WEATHER_TEMPERATURE_MOD_SLEET; break;
+            case TimeWeather::Weather::STORMY: temp += WEATHER_TEMPERATURE_MOD_STORMY; break;
+        }
+    }
+
+    // The time of day also makes a difference.
+    switch (core()->world()->time_weather()->time_of_day(true))
+    {
+        case TimeWeather::TimeOfDay::DAWN: temp += WEATHER_TIME_MOD_DAWN; break;
+        case TimeWeather::TimeOfDay::DUSK: temp += WEATHER_TIME_MOD_DUSK; break;
+        case TimeWeather::TimeOfDay::MIDNIGHT: temp += WEATHER_TIME_MOD_MIDNIGHT; break;
+        case TimeWeather::TimeOfDay::MORNING: temp += WEATHER_TIME_MOD_MORNING; break;
+        case TimeWeather::TimeOfDay::NIGHT: temp += WEATHER_TIME_MOD_NIGHT; break;
+        case TimeWeather::TimeOfDay::NOON: temp += WEATHER_TIME_MOD_NOON; break;
+        case TimeWeather::TimeOfDay::SUNRISE: temp += WEATHER_TIME_MOD_SUNRISE; break;
+        case TimeWeather::TimeOfDay::SUNSET: temp += WEATHER_TIME_MOD_SUNSET; break;
+        case TimeWeather::TimeOfDay::DAY: break;    // Does not exist when calling time_of_day(true).
+    }
+
+    // Being indoors helps normalize the temperature a fair bit...
+    if (tag(RoomTag::Indoors))
+    {
+        const bool heated = tag(RoomTag::HeatedInterior);
+        for (int i = 0; i < 2; i++)
+            if (temp < 5 && heated) temp++; else if (temp > 5) temp--;
+
+        // ...however, it's always colder underground.
+        const bool underground = tag(RoomTag::Underground);
+        if (underground) temp--;
+    }
+
+    // Check if a campfire is burning nearby.
+    size_t campfire = has_campfire();
+    if (campfire != NO_CAMPFIRE)
+    {
+        const int intensity = m_scar_intensity.at(campfire);
+        if (intensity >= 20) temp += (temp >= 4 ? 2 : 3);
+        else if (intensity >= 10) temp += (temp >= 4 ? 1 : 2);
+        else if (intensity >= 5) temp += (temp >= 5 ? 0 : 1);
+    }
+    else if (tag(RoomTag::PermaCampfire)) temp += (temp >= 4 ? 2 : 3);
+
+    if (!ignore_player_clothes)
+    {
+        // Adjust relative warmth based on player clothing.
+        int player_warmth_offset = static_cast<int>(std::round(static_cast<float>(core()->world()->player()->clothes_warmth()) / 5.0f)) - 3;
+        temp += player_warmth_offset;
+    }
+
+    if (temp < 0) temp = 0;
+    else if (temp > 9) temp = 9;
+    return temp;
+}
