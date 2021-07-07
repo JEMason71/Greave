@@ -50,6 +50,7 @@ set(GREAVE_CPPS
   actions/combat/combat.cpp
   actions/combat/melee.cpp
   actions/doors.cpp
+  actions/help.cpp
   actions/inventory.cpp
   actions/look.cpp
   actions/status.cpp

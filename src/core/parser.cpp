@@ -4,6 +4,7 @@
 #include "actions/cheat.hpp"
 #include "actions/combat/melee.hpp"
 #include "actions/doors.hpp"
+#include "actions/help.hpp"
 #include "actions/inventory.hpp"
 #include "actions/look.hpp"
 #include "actions/status.hpp"
@@ -31,6 +32,7 @@ Parser::Parser() : m_special_state(SpecialState::NONE)
     add_command("exits", ParserCommand::EXITS);
     add_command("[fuck|shit|piss|bastard] *", ParserCommand::SWEAR);
     add_command("[go|travel|walk|run|move] <dir>", ParserCommand::GO);
+    add_command("help *", ParserCommand::HELP);
     add_command("[inventory|invent|inv|i]", ParserCommand::INVENTORY);
     add_command("lock <dir>", ParserCommand::LOCK);
     add_command("[look|l]", ParserCommand::LOOK);
@@ -127,7 +129,7 @@ void Parser::parse(std::string input)
         }
     }
 
-    std::string msg = "{y}I'm sorry, I don't understand.";
+    std::string msg = "{y}I'm sorry, I don't understand. Type {Y}HELP {y}for help.";
     if (m_special_state == SpecialState::DISAMBIGUATION) msg += " If you wanted to {Y}clarify your choice{y}, please {Y}type the entire command{y}.";
     core()->message(msg);
     m_special_state = SpecialState::NONE;
@@ -416,6 +418,9 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
                 const std::string hash_word = StrX::str_toupper(collapsed_words);
                 core()->message("{G}" + hash_word + " {g}hashes to {G}" + std::to_string(StrX::hash(hash_word)) + "{g}.");
             }
+            break;
+        case ParserCommand::HELP:
+            ActionHelp::help(StrX::collapse_vector(words));
             break;
         case ParserCommand::INVENTORY:
             ActionInventory::check_inventory(player);

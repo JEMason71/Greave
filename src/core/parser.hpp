@@ -18,7 +18,7 @@ public:
     void    parse(std::string input);   // Parses input from the player!
 
 private:
-    enum class ParserCommand : uint16_t { NONE, ADD_MONEY, ATTACK, CLOSE, DIRECTION, DROP, EQUIP, EQUIPMENT, EXAMINE, EXITS, GO, HASH, INVENTORY, LOCK, LOOK, NO, OPEN, SAVE,
+    enum class ParserCommand : uint16_t { NONE, ADD_MONEY, ATTACK, CLOSE, DIRECTION, DROP, EQUIP, EQUIPMENT, EXAMINE, EXITS, GO, HASH, HELP, INVENTORY, LOCK, LOOK, NO, OPEN, SAVE,
         SCORE, SPAWN_ITEM, SPAWN_MOBILE, STANCE, SWEAR, TAKE, TELEPORT, TIME, UNEQUIP, UNLOCK, WAIT, WEATHER, XYZZY, YES, QUIT };
     enum class SpecialState : uint8_t { NONE, QUIT_CONFIRM, DISAMBIGUATION };
 

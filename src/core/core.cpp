@@ -2,6 +2,7 @@
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #include "3rdparty/SQLiteCpp/SQLiteCpp.h"
+#include "actions/help.hpp"
 #include "actions/look.hpp"
 #include "core/bones.hpp"
 #include "core/core.hpp"
@@ -131,6 +132,9 @@ void Core::init()
 
     // Sets up the bones file.
     Bones::init_bones();
+
+    // Load the help files.
+    ActionHelp::load_pages();
 }
 
 // Loads a specified slot's saved game.
