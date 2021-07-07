@@ -12,7 +12,7 @@ If the commit history and development direction seems like a completely random m
 
 # COPYRIGHT & LICENSE
 
-Greave is copyright © 2021 Raine "Gravecat" Simmons and the Greave contributors. The game is free and open-source, licensed under the [GNU Affero General Public License v3 or any later version](https://www.gnu.org/licenses/agpl-3.0.en.html).
+Greave is copyright © 2021 [Raine "Gravecat" Simmons](https://github.com/Gravecat) and [the Greave contributors](https://github.com/Gravecat/Greave/graphs/contributors). The game is free and open-source, licensed under the [GNU Affero General Public License v3 or any later version](https://www.gnu.org/licenses/agpl-3.0.en.html).
 
 [Application icon](https://github.com/malcolmriley/unused-textures) copyright © 2020 Malcolm Riley.
 
