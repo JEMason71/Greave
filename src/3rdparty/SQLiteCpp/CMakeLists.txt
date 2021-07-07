@@ -1,5 +1,5 @@
 # CMake build file for Greave, intended for use with MinGW/GCC on Windows and GCC on Linux.
-# Copyright (c) 2020 Raine "Gravecat" Simmons and the Greave contributors. Licensed under the GNU Affero General Public License v3 or any later version.
+# Copyright (c) 2020-2021 Raine "Gravecat" Simmons and the Greave contributors. Licensed under the GNU Affero General Public License v3 or any later version.
 
 # SQLiteCpp source files.
 set(SQLITE_CPP_CPPS
@@ -28,7 +28,7 @@ if(TARGET_WINDOWS)
   set(SQLITE_LIBRARIES sqlite3.dll)
 else()
   set(SQLITE_LIBRARIES sqlite3 dl)
-  find_package(SQLite3 REQUIRED)
+  find_package(SQLite3)
   if(SQLite3_VERSION VERSION_LESS "3.19")
     set_target_properties(greave PROPERTIES COMPILE_FLAGS "-DSQLITECPP_HAS_MEM_STRUCT")
   endif()
