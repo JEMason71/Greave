@@ -10,6 +10,7 @@ ARMOUR_BANDED_MAIL:
   slot: armour
   type: [ armour, heavy ]
   value: 15g
+  warmth: 8
   weight: 4800
 
 ARMOUR_BRIGANDINE:
@@ -21,6 +22,7 @@ ARMOUR_BRIGANDINE:
   slot: armour
   type: [ armour, medium ]
   value: 2g 50s
+  warmth: 8
   weight: 2600
 
 ARMOUR_FULL_PLATE:
@@ -33,6 +35,7 @@ ARMOUR_FULL_PLATE:
   tags: [ NoA ]
   type: [ armour, heavy ]
   value: 22g
+  warmth: 8
   weight: 5500
 
 ARMOUR_HIDE:
@@ -44,6 +47,7 @@ ARMOUR_HIDE:
   slot: armour
   type: [ armour, light ]
   value: 1g 20s
+  warmth: 9
   weight: 1300
 
 ARMOUR_HIDE_BARBARIC_SMALL:
@@ -55,6 +59,7 @@ ARMOUR_HIDE_BARBARIC_SMALL:
   slot: armour
   type: [ armour, light ]
   value: 8c
+  warmth: 6
   weight: 410
 
 ARMOUR_LAMELLAR:
@@ -66,6 +71,7 @@ ARMOUR_LAMELLAR:
   slot: armour
   type: [ armour, heavy ]
   value: 4g
+  warmth: 8
   weight: 3500
 
 ARMOUR_LEATHER:
@@ -77,6 +83,7 @@ ARMOUR_LEATHER:
   slot: armour
   type: [ armour, medium ]
   value: 3g
+  warmth: 8
   weight: 940
 
 ARMOUR_RING_MAIL:
@@ -88,6 +95,7 @@ ARMOUR_RING_MAIL:
   slot: armour
   type: [ armour, medium ]
   value: 1g
+  warmth: 8
   weight: 3100
 
 ARMOUR_SCALE_MAIL:
@@ -99,6 +107,7 @@ ARMOUR_SCALE_MAIL:
   slot: armour
   type: [ armour, heavy ]
   value: 5g
+  warmth: 8
   weight: 3600
 
 ARMOUR_SPLINT_MAIL:
@@ -110,4 +119,5 @@ ARMOUR_SPLINT_MAIL:
   slot: armour
   type: [ armour, heavy ]
   value: 7g
+  warmth: 8
   weight: 3700

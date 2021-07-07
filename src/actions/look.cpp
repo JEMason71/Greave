@@ -57,7 +57,10 @@ void ActionLook::examine_item(std::shared_ptr<Mobile>, std::shared_ptr<Item> tar
                 case EquipSlot::HEAD: slot = "on your head"; break;
                 default: break;
             }
-            stat_string += " {U}" + slot + "{w}. It has an armour value of {U}" + std::to_string(target->power()) + "{w}. ";
+            stat_string += " {U}" + slot + "{w}. It has an armour value of {U}" + std::to_string(target->power());
+            const int warmth = target->warmth();
+            if (warmth) stat_string += "{w}, and a warmth rating of {U}" + std::to_string(warmth);
+            stat_string += "{w}. ";
             break;
         }
         case ItemType::KEY: stat_string = "This is a {U}key {w}which can unlock certain doors. "; break;

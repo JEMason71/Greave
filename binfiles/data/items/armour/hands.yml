@@ -12,6 +12,7 @@ BRACERS_FUR_SMALL:
   tags: [ PluralName ]
   type: [ armour, light ]
   value: 3c
+  warmth: 3
   weight: 20
 
 GAUNTLETS_LEATHER:
@@ -25,6 +26,7 @@ GAUNTLETS_LEATHER:
   tags: [ PluralName ]
   type: [ armour, light ]
   value: 15s
+  warmth: 2
   weight: 30
 
 GAUNTLETS_LEATHER_PLATED:
@@ -38,6 +40,7 @@ GAUNTLETS_LEATHER_PLATED:
   tags: [ PluralName ]
   type: [ armour, medium ]
   value: 1g
+  warmth: 2
   weight: 90
 
 GLOVES_MAIL:
@@ -51,4 +54,5 @@ GLOVES_MAIL:
   tags: [ PluralName ]
   type: [ armour, heavy ]
   value: 4g
+  warmth: 2
   weight: 60

@@ -344,5 +344,8 @@ ItemType Item::type() const { return m_type; }
 // The Item's value in money.
 uint32_t Item::value() const { return m_value; }
 
+// The Item's warmth rating, if any.
+int Item::warmth() const { return meta_int("warmth"); }
+
 // The Item's weight, in pacs.
 uint32_t Item::weight() const { return m_weight; }

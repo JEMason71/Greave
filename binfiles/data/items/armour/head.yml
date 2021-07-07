@@ -9,6 +9,7 @@ CAP_LEATHER:
   slot: head
   type: [ armour, light ]
   value: 20s
+  warmth: 2
   weight: 90
 
 COIF_MAIL:
@@ -19,6 +20,7 @@ COIF_MAIL:
   slot: head
   type: [ armour, medium ]
   value: 1g 50s
+  warmth: 1
   weight: 760
 
 CERVELLIERE_STEEL:
@@ -29,4 +31,5 @@ CERVELLIERE_STEEL:
   slot: head
   type: [ armour, heavy ]
   value: 90s
+  warmth: 1
   weight: 410

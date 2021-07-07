@@ -89,6 +89,7 @@ public:
     bool        tag(ItemTag the_tag) const;         // Checks if a tag is set on this Item.
     ItemType    type() const;                       // Returns the ItemType of this Item.
     uint32_t    value() const;                      // The Item's value in money.
+    int         warmth() const;                     // The Item's warmth rating, if any.
     uint32_t    weight() const;                     // The Item's weight, in pacs.
 
 private:

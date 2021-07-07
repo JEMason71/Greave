@@ -83,7 +83,7 @@ const std::set<std::string>     World::VALID_YAML_KEYS_AREAS = { "desc", "exits"
 
 // A list of all valid keys in item YAML files.
 const std::set<std::string>     World::VALID_YAML_KEYS_ITEMS = { "block_mod", "crit", "damage_type", "desc", "dodge_mod", "metadata", "name", "parry_mod", "power", "rare", "slot",
-    "speed", "stack", "tags", "type", "value", "weight" };
+    "speed", "stack", "tags", "type", "value", "warmth", "weight" };
 
 // A list of all valid keys in mobile YAML files.
 const std::set<std::string>     World::VALID_YAML_KEYS_MOBS = { "gear", "hp", "name", "species", "tags" };
@@ -429,6 +429,9 @@ void World::load_item_pool()
 
             // The Item's power, if any.
             if (item_data["power"]) new_item->set_meta("power", item_data["power"].as<int>());
+
+            // The Item's warmth rating, if any.
+            if (item_data["warmth"]) new_item->set_meta("warmth", item_data["warmth"].as<int>());
 
             // The Item's description, if any.
             if (!item_data["desc"]) core()->guru()->nonfatal("Missing description for item " + item_id_str, Guru::WARN);

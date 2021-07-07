@@ -10,6 +10,7 @@ ARMOUR_CHAIN_MAIL:
   slot: body
   type: [ armour, medium ]
   value: 6g
+  warmth: 8
   weight: 2200
 
 ARMOUR_CLOTH:
@@ -20,6 +21,7 @@ ARMOUR_CLOTH:
   slot: body
   type: [ armour, light ]
   value: 40s
+  warmth: 9
   weight: 640
 
 ARMOUR_PADDED:
@@ -31,4 +33,5 @@ ARMOUR_PADDED:
   slot: body
   type: [ armour, light ]
   value: 90s
+  warmth: 9
   weight: 750

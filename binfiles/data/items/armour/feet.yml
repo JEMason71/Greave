@@ -11,6 +11,7 @@ BOOTS_LEATHER:
   tags: [ PluralName ]
   type: [ armour, light ]
   value: 40s
+  warmth: 2
   weight: 130
 
 BOOTS_LEATHER_HIGH:
@@ -23,6 +24,7 @@ BOOTS_LEATHER_HIGH:
   tags: [ PluralName ]
   type: [ armour, medium ]
   value: 60s
+  warmth: 3
   weight: 170
 
 BOOTS_LEATHER_PLATED:
@@ -35,6 +37,7 @@ BOOTS_LEATHER_PLATED:
   tags: [ PluralName ]
   type: [ armour, heavy ]
   value: 1g 20s
+  warmth: 2
   weight: 170
 
 GREAVES_FUR_SMALL:
@@ -47,4 +50,5 @@ GREAVES_FUR_SMALL:
   tags: [ PluralName ]
   type: [ armour, light ]
   value: 4c
+  warmth: 3
   weight: 40
