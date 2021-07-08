@@ -15,5 +15,6 @@
 
 cmake_modules/* linguist-vendored
 src/3rdparty/**/* linguist-vendored
+src/3rdparty/LodePNG/CMakeLists.txt -linguist-vendored
 src/3rdparty/readme.txt -linguist-vendored
 src/3rdparty/SQLiteCpp/CMakeLists.txt -linguist-vendored

@@ -16,6 +16,8 @@ Greave is copyright © 2021 [Raine "Gravecat" Simmons](https://github.com/Gravec
 
 [Application icon](https://github.com/malcolmriley/unused-textures) copyright © 2020 Malcolm Riley.
 
+[LodePNG](https://github.com/lvandeve/lodepng) copyright © 2005-2021 Lode Vandevenne.
+
 [PCG](https://github.com/imneme/pcg-cpp) copyright © 2014-2017 Melissa O'Neill  and PCG Project contributors.
 
 [PDCurses](https://github.com/wmcbrine/PDCurses) maintained by William McBrine.

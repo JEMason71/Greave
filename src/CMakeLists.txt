@@ -14,6 +14,7 @@ set(CMAKE_CXX_FLAGS_DEBUG "-g -Og")
 set(CMAKE_CXX_FLAGS_RELEASE  "-O2")
 set(CMAKE_EXE_LINKER_FLAGS_RELEASE "-s")
 set(SQLITECPP_LIBRARIES sqlite_cpp)
+set(LODEPNG_LIBRARIES lodepng)
 
 
 # Main platform-specific settings.
@@ -126,6 +127,7 @@ target_link_libraries(greave
   ${YAMLCPP_LIBRARIES}
   ${SDL2_LIBRARIES}
   ${SDL2_EXTRA_LIBRARIES}
+  ${LODEPNG_LIBRARIES}
 )
 
 
@@ -136,5 +138,6 @@ add_custom_command(TARGET greave POST_BUILD
 )
 
 
-# SQLiteCpp comes with source files as well as headers, so we'll compile it separately.
+# LodePNG and SQLiteCpp come with source files as well as headers, so we'll compile them separately.
+add_subdirectory(3rdparty/LodePNG)
 add_subdirectory(3rdparty/SQLiteCpp)

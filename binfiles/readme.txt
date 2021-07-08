@@ -16,6 +16,9 @@ OF SUCH DAMAGE.
 Application icon copyright © 2020 Malcolm Riley.
 https://github.com/malcolmriley/unused-textures
 
+LodePNG copyright © 2005-2021 Lode Vandevenne.
+https://github.com/lvandeve/lodepng
+
 PCG copyright © 2014-2017 Melissa O'Neill and PCG Project contributors.
 https://github.com/imneme/pcg-cpp
 
