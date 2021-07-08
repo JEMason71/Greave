@@ -25,7 +25,7 @@ if(TARGET_WINDOWS)
   add_definitions(-DGREAVE_TOLK)
   set(YAMLCPP_LIBRARIES yaml-cpp.dll)
   set(CURSES_LIBRARIES pdcurses)
-  set(SDL2_EXTRA_LIBRARIES SDL2.dll)
+  set(SDL2_EXTRA_LIBRARIES SDL2.dll SDL2_ttf.dll)
 
   # Application icon
   enable_language(RC)
@@ -37,11 +37,13 @@ elseif(TARGET_LINUX)
 
   # Platform-specific libraries.
   find_package(SDL2 REQUIRED)
+  find_package(SDL2_ttf REQUIRED)
   find_package(Threads REQUIRED)
   find_package(X11 REQUIRED)
   set(OS_LIBRARIES ${X11_LIBRARIES})
   set(YAMLCPP_LIBRARIES yaml-cpp)
   set(CURSES_LIBRARIES ncurses)
+  set(SDL2_EXTRA_LIBRARIES SDL2_ttf)
   set(CMAKE_EXE_LINKER_FLAGS_RELEASE "-s -Wl,-rpath='${ORIGIN}'")
 
 else()

@@ -20,11 +20,15 @@ Greave is copyright © 2021 [Raine "Gravecat" Simmons](https://github.com/Gravec
 
 [PDCurses](https://github.com/wmcbrine/PDCurses) maintained by William McBrine.
 
+Portions of this software are copyright © 2013 [The FreeType Project](https://www.freetype.org/). All rights reserved.
+
 [Random-Number Utilities](https://gist.github.com/imneme/540829265469e673d045) copyright © 2015 Melissa E. O'Neill.
 
 [Roboto Mono Font](https://fonts.google.com/specimen/Roboto+Mono) copyright © 2015 Google Inc.
 
 [SDL2](https://www.libsdl.org/) copyright © 1997-2020 Sam Lantinga.
+
+[SDL_ttf](https://www.libsdl.org/projects/SDL_ttf/) copyright © 2001-2019 Sam Lantinga.
 
 [SQLite](https://github.com/sqlite/sqlite) by SQLite Consortium.
 

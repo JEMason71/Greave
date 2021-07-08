@@ -22,6 +22,9 @@ https://github.com/imneme/pcg-cpp
 PDCurses maintained by William McBrine.
 https://github.com/wmcbrine/PDCurses
 
+Portions of this software are copyright © 2013 The FreeType Project.
+All rights reserved. https://www.freetype.org/
+
 Random-Number Utilities copyright © 2015 Melissa E. O'Neill.
 https://gist.github.com/imneme/540829265469e673d045
 
@@ -30,6 +33,9 @@ https://fonts.google.com/specimen/Roboto+Mono
 
 SDL2 copyright © 1997-2020 Sam Lantinga.
 https://www.libsdl.org/
+
+SDL_ttf copyright © 2001-2019 Sam Lantinga.
+https://www.libsdl.org/projects/SDL_ttf/
 
 SQLite by SQLite Consortium.
 https://github.com/sqlite/sqlite
