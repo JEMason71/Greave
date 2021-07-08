@@ -92,11 +92,7 @@ void Guru::halt(const std::string &error)
 
     core()->message("{r}Critical Error: " + error);
     core()->message("{r}Halting execution.");
-    do
-    {
-        core()->messagelog()->render_message_log();
-        core()->terminal()->refresh();
-    } while (m_console_ready && !core()->terminal()->wants_to_close());
+    core()->messagelog()->render_message_log();
     exit(EXIT_FAILURE);
 }
 
