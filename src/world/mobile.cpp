@@ -323,6 +323,14 @@ int Mobile::meta_int(const std::string &key) const
     else return std::stoi(key_str);
 }
 
+// Retrieves metadata, in unsigned 32-bit integer format.
+uint32_t Mobile::meta_uint(const std::string &key) const
+{
+    const std::string key_str = meta(key);
+    if (!key_str.size()) return 0;
+    else return std::stoul(key_str);
+}
+
 // Accesses the metadata map directly. Use with caution!
 std::map<std::string, std::string>* Mobile::meta_raw() { return &m_metadata; }
 
@@ -512,6 +520,9 @@ void Mobile::set_meta(const std::string &key, int value) { set_meta(key, std::to
 
 // As above again, but this time for floats.
 void Mobile::set_meta(const std::string &key, float value) { set_meta(key, StrX::ftos(value, 1)); }
+
+// As above, but with an unsigned 32-bit integer.
+void Mobile::set_meta_uint(const std::string &key, uint32_t value) { set_meta(key, std::to_string(value)); }
 
 // Sets the name of this Mobile.
 void Mobile::set_name(const std::string &name) { m_name = name; }

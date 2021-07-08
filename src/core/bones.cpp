@@ -7,6 +7,7 @@
 #include "core/filex.hpp"
 #include "core/guru.hpp"
 #include "core/message.hpp"
+#include "core/random.hpp"
 #include "core/strx.hpp"
 #include "world/player.hpp"
 #include "world/world.hpp"
@@ -17,9 +18,26 @@ const uint32_t      Bones::BONES_VERSION =  1;  // The expected version format f
 const int           Bones::MAX_HIGHSCORES = 10; // The maximum amount of highscores to store.
 
 // SQL table construction string.
-const std::string   Bones::SQL_BONES =  "CREATE TABLE highscores ( death_reason TEXT NOT NULL, id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL, name TEXT NOT NULL, "
+const std::string   Bones::SQL_BONES =  "CREATE TABLE highscores ( death_reason TEXT NOT NULL, id INTEGER PRIMARY KEY UNIQUE NOT NULL, name TEXT NOT NULL, "
     "score INTEGER NOT NULL )";
 
+
+// Checks the version of the bones file, 0 if the file doesn't exist or version cannot be determined.
+uint32_t Bones::bones_version()
+{
+    try
+    {
+        if (!FileX::file_exists(BONES_FILENAME)) return 0;
+        SQLite::Database bones_db(BONES_FILENAME, SQLite::OPEN_READONLY);
+        SQLite::Statement version_query(bones_db, "PRAGMA user_version");
+        if (version_query.executeStep()) return version_query.getColumn(0).getUInt();
+        else return 0;
+    }
+    catch (std::exception &e)
+    {
+        return 0;
+    }
+}
 
 // Displays the Hall of Legends highscore table.
 void Bones::hall_of_legends()
@@ -62,26 +80,8 @@ void Bones::hall_of_legends()
 // Initializes the bones file, creating a new file if needed.
 void Bones::init_bones()
 {
-    bool recreate_bones_file = false;
-    if (!FileX::file_exists(BONES_FILENAME)) recreate_bones_file = true;
-    else
-    {
-        // Check if an existing bones file is valid and the correct version.
-        core()->guru()->log("Validating bones file.");
-        try
-        {
-            uint32_t version = 0;
-            SQLite::Database bones_db(BONES_FILENAME, SQLite::OPEN_READONLY);
-            SQLite::Statement version_query(bones_db, "PRAGMA user_version");
-            if (version_query.executeStep()) version = version_query.getColumn(0).getUInt();
-            if (version != BONES_VERSION) recreate_bones_file = true;
-        }
-        catch(const std::exception &e)
-        {
-            recreate_bones_file = true;
-        }
-    }
-    if (!recreate_bones_file) return;
+    core()->guru()->log("Validating bones file.");
+    if (bones_version() == BONES_VERSION) return;
 
     // If the old file exists, delete it. If it doesn't want to be deleted, we'll have to just error out.
     if (FileX::file_exists(BONES_FILENAME))
@@ -108,32 +108,77 @@ bool Bones::record_death()
         try
         {
             SQLite::Database bones_db(BONES_FILENAME, SQLite::OPEN_READWRITE);
-            int scores_checked = 0;
-            SQLite::Statement query(bones_db, "SELECT score FROM highscores ORDER BY score DESC LIMIT " + std::to_string(MAX_HIGHSCORES));
-            while (query.executeStep())
+
+            // First, check if this player ID is already present on the scoreboard.
+            SQLite::Statement duplicate_query(bones_db, "SELECT id FROM highscores WHERE id = ?");
+            duplicate_query.bind(1, player->meta_uint("bones_id"));
+            if (duplicate_query.executeStep())
             {
-                scores_checked++;
-                if (!belongs_in_hall_of_legends && query.getColumn("score").getUInt() < player->score()) belongs_in_hall_of_legends = scores_checked;
+                SQLite::Statement update(bones_db, "UPDATE highscores SET death_reason = ?, name = ?, score = ? WHERE id = ?");
+                update.bind(1, player->death_reason());
+                update.bind(2, player->name());
+                update.bind(3, player->score());
+                update.bind(4, player->meta_uint("bones_id"));
+                update.exec();
+                belongs_in_hall_of_legends = 1;
             }
-            if (!scores_checked) belongs_in_hall_of_legends = 1;
-            else if (scores_checked < MAX_HIGHSCORES && !belongs_in_hall_of_legends) belongs_in_hall_of_legends = scores_checked + 1;
-            if (belongs_in_hall_of_legends)
+            else
             {
-                SQLite::Statement insert(bones_db, "INSERT INTO highscores ( death_reason, name, score ) VALUES ( ?, ?, ? )");
-                insert.bind(1, player->death_reason());
-                insert.bind(2, player->name());
-                insert.bind(3, player->score());
-                insert.exec();
-                if (scores_checked >= MAX_HIGHSCORES)
-                    bones_db.exec("DELETE FROM highscores WHERE ID NOT IN (SELECT id FROM highscores ORDER BY score DESC LIMIT " + std::to_string(MAX_HIGHSCORES) + ")");
+                int scores_checked = 0;
+                SQLite::Statement query(bones_db, "SELECT score FROM highscores ORDER BY score DESC LIMIT " + std::to_string(MAX_HIGHSCORES));
+                while (query.executeStep())
+                {
+                    scores_checked++;
+                    if (!belongs_in_hall_of_legends && query.getColumn("score").getUInt() < player->score()) belongs_in_hall_of_legends = scores_checked;
+                }
+                if (!scores_checked) belongs_in_hall_of_legends = 1;
+                else if (scores_checked < MAX_HIGHSCORES && !belongs_in_hall_of_legends) belongs_in_hall_of_legends = scores_checked + 1;
+                if (belongs_in_hall_of_legends)
+                {
+                    SQLite::Transaction transaction(bones_db);
+                    SQLite::Statement insert(bones_db, "INSERT INTO highscores ( death_reason, id, name, score ) VALUES ( ?, ?, ?, ? )");
+                    insert.bind(1, player->death_reason());
+                    insert.bind(2, player->meta_uint("bones_id"));
+                    insert.bind(3, player->name());
+                    insert.bind(4, player->score());
+                    insert.exec();
+                    if (scores_checked >= MAX_HIGHSCORES)
+                        bones_db.exec("DELETE FROM highscores WHERE ID NOT IN (SELECT id FROM highscores ORDER BY score DESC LIMIT " + std::to_string(MAX_HIGHSCORES) + ")");
+                    transaction.commit();
+                }
             }
         }
         catch (std::exception &e)
         {
-            core()->guru()->nonfatal("Could not record player death in bones file!", Guru::ERROR);
+            core()->guru()->nonfatal("Could not record player death in bones file! " + std::string(e.what()), Guru::ERROR);
             return false;
         }
     }
     if (belongs_in_hall_of_legends) core()->message("{G}Your name was recorded in the {R}H{Y}a{G}l{C}l {U}o{M}f {R}L{Y}e{G}g{C}e{U}n{M}d{R}s{G}!");
     return belongs_in_hall_of_legends;
+}
+
+// Returns a random player ID which isn't already present in the bones file.
+uint32_t Bones::unique_id()
+{
+    try
+    {
+        if (bones_version() == BONES_VERSION)
+        {
+            bool valid = true;
+            uint32_t choice;
+            SQLite::Database bones_db(BONES_FILENAME, SQLite::OPEN_READONLY);
+            do
+            {
+                choice = core()->rng()->rnd(UINT32_MAX);
+                SQLite::Statement query(bones_db, "SELECT id FROM highscores WHERE id = ?");
+                query.bind(1, choice);
+                if (query.executeStep()) valid = false;
+                else valid = true;
+            } while (!valid);
+            return choice;
+        }
+    }
+    catch (std::exception&) { }
+    return core()->rng()->rnd(UINT32_MAX);
 }

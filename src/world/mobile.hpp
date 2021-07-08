@@ -104,6 +104,7 @@ public:
     std::string         meta(const std::string &key) const;         // Retrieves Mobile metadata.
     float               meta_float(const std::string &key) const;   // Retrieves metadata, in float format.
     int                 meta_int(const std::string &key) const;     // Retrieves metadata, in int format.
+    uint32_t            meta_uint(const std::string &key) const;    // Retrieves metadata, in unsigned 32-bit integer format.
     std::map<std::string, std::string>* meta_raw();                 // Accesses the metadata map directly. Use with caution!
     std::string         name(int flags = 0) const;                  // Retrieves the name of this Mobile.
     void                new_parser_id();                            // Generates a new parser ID for this Mobile.
@@ -124,6 +125,7 @@ public:
     void                set_meta(const std::string &key, std::string value);    // Adds Item metadata.
     void                set_meta(const std::string &key, int value);            // As above, but with an integer value.
     void                set_meta(const std::string &key, float value);          // As above again, but this time for floats.
+    void                set_meta_uint(const std::string &key, uint32_t value);  // As above, but with an unsigned 32-bit integer.
     void                set_name(const std::string &name);          // Sets the name of this Mobile.
     void                set_spawn_room(uint32_t id);                // Sets this Mobile's spawn room.
     void                set_species(const std::string &species);    // Sets the species of this Mobile.

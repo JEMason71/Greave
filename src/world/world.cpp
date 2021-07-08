@@ -4,6 +4,7 @@
 #include "3rdparty/SQLiteCpp/SQLiteCpp.h"
 #include "3rdparty/yaml-cpp/yaml.h"
 #include "actions/look.hpp"
+#include "core/bones.hpp"
 #include "core/core.hpp"
 #include "core/filex.hpp"
 #include "core/guru.hpp"
@@ -803,6 +804,7 @@ const std::shared_ptr<Mobile> World::mob_vec(size_t vec_pos) const
 // Sets up for a new game.
 void World::new_game()
 {
+    m_player->set_meta_uint("bones_id", Bones::unique_id());
     m_player->set_location("OUTSIDE_QUEENS_GATE");
     ActionLook::look(m_player);
 }
