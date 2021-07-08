@@ -36,8 +36,9 @@ if(TARGET_WINDOWS)
 elseif(TARGET_LINUX)
 
   # Platform-specific libraries.
+  set(CMAKE_MODULE_PATH ../cmake_modules)
   find_package(SDL2 REQUIRED)
-  find_package(SDL2_ttf REQUIRED)
+  find_package(SDL2TTF REQUIRED)
   find_package(Threads REQUIRED)
   find_package(X11 REQUIRED)
   set(OS_LIBRARIES ${X11_LIBRARIES})

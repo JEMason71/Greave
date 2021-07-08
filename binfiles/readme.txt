@@ -16,6 +16,8 @@ OF SUCH DAMAGE.
 Application icon copyright © 2020 Malcolm Riley.
 https://github.com/malcolmriley/unused-textures
 
+FindSDL2TTF CMake module copyright © 2003-2009 Kitware, Inc.
+
 PCG copyright © 2014-2017 Melissa O'Neill and PCG Project contributors.
 https://github.com/imneme/pcg-cpp
 
