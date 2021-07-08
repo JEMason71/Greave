@@ -97,7 +97,7 @@ void Core::init()
     // Sets up the random number generator.
     m_rng = std::make_shared<Random>();
 
-    // Set up the tune settings.
+    // Set up the user preferences.
     m_prefs = std::make_shared<Prefs>();
 
 #ifdef GREAVE_TOLK
@@ -119,7 +119,7 @@ void Core::init()
     // Set up our terminal emulator.
     if (terminal_choice == "blt") m_terminal = std::make_shared<TerminalBLT>();
     else if (terminal_choice == "curses") m_terminal = std::make_shared<TerminalCurses>();
-    else m_guru_meditation->halt("Invalid terminal specified in tune.yml");
+    else m_guru_meditation->halt("Invalid terminal specified in prefs.yml");
 
     // Sets up the main message log window.
     m_message_log = std::make_shared<MessageLog>();
