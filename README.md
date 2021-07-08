@@ -24,6 +24,8 @@ Greave is copyright © 2021 [Raine "Gravecat" Simmons](https://github.com/Gravec
 
 [Roboto Mono Font](https://fonts.google.com/specimen/Roboto+Mono) copyright © 2015 Google Inc.
 
+[SDL2](https://www.libsdl.org/) copyright © 1997-2020 Sam Lantinga.
+
 [SQLite](https://github.com/sqlite/sqlite) by SQLite Consortium.
 
 [SQLiteCpp](https://github.com/SRombauts/SQLiteCpp) copyright © 2012-2020 Sebastien Rombauts.

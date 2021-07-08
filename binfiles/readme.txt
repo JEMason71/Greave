@@ -28,6 +28,9 @@ https://gist.github.com/imneme/540829265469e673d045
 Roboto Mono Font copyright © 2015 Google Inc.
 https://fonts.google.com/specimen/Roboto+Mono
 
+SDL2 copyright © 1997-2020 Sam Lantinga.
+https://www.libsdl.org/
+
 SQLite by SQLite Consortium.
 https://github.com/sqlite/sqlite
 

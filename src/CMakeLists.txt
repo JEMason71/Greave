@@ -20,11 +20,12 @@ set(SQLITECPP_LIBRARIES sqlite_cpp)
 if(TARGET_WINDOWS)
 
   # Platform-specific libraries.
-  set(OS_LIBRARIES mingw32)
+  set(OS_LIBRARIES mingw32 SDL2main)
   set(TOLK_LIBRARIES Tolk)
   add_definitions(-DGREAVE_TOLK)
   set(YAMLCPP_LIBRARIES yaml-cpp.dll)
   set(CURSES_LIBRARIES pdcurses)
+  set(SDL2_EXTRA_LIBRARIES SDL2.dll)
 
   # Application icon
   enable_language(RC)
@@ -32,13 +33,20 @@ if(TARGET_WINDOWS)
   set(CMAKE_RC_COMPILE_OBJECT "<CMAKE_RC_COMPILER> <FLAGS> -O coff <DEFINES> -i <SOURCE> -o <OBJECT>")
   set(GREAVE_RC core/app-icon.rc)
 
-else()
+elseif(TARGET_LINUX)
 
   # Platform-specific libraries.
+  find_package(SDL2 REQUIRED)
+  find_package(Threads REQUIRED)
+  find_package(X11 REQUIRED)
   set(OS_LIBRARIES ${X11_LIBRARIES})
   set(YAMLCPP_LIBRARIES yaml-cpp)
   set(CURSES_LIBRARIES ncurses)
   set(CMAKE_EXE_LINKER_FLAGS_RELEASE "-s -Wl,-rpath='${ORIGIN}'")
+
+else()
+
+    message([FATAL_ERROR] "Greave is not currently supported on this platform.")
 
 endif(TARGET_WINDOWS)
 
@@ -111,6 +119,8 @@ target_link_libraries(greave
   ${SQLITECPP_LIBRARIES}
   ${TOLK_LIBRARIES}
   ${YAMLCPP_LIBRARIES}
+  ${SDL2_LIBRARIES}
+  ${SDL2_EXTRA_LIBRARIES}
 )
 
 
