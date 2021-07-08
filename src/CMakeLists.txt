@@ -76,7 +76,9 @@ set(GREAVE_CPPS
   core/prefs.cpp
   core/random.cpp
   core/strx.cpp
+  core/terminal.cpp
   core/terminal-curses.cpp
+  core/terminal-sdl2.cpp
   world/inventory.cpp
   world/item.cpp
   world/room.cpp

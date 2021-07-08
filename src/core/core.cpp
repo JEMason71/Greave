@@ -15,6 +15,7 @@
 #include "core/random.hpp"
 #include "core/strx.hpp"
 #include "core/terminal-curses.hpp"
+#include "core/terminal-sdl2.hpp"
 #include "world/player.hpp"
 #include "world/room.hpp"
 #include "world/world.hpp"
@@ -116,7 +117,8 @@ void Core::init()
 #endif
 
     // Set up our terminal emulator.
-    if (terminal_choice == "curses") m_terminal = std::make_shared<TerminalCurses>();
+    if (terminal_choice == "sdl" || terminal_choice == "sdl2") m_terminal = std::make_shared<TerminalSDL2>();
+    else if (terminal_choice == "curses") m_terminal = std::make_shared<TerminalCurses>();
     else m_guru_meditation->halt("Invalid terminal specified in prefs.yml");
 
     // Sets up the main message log window.

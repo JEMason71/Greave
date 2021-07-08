@@ -10,12 +10,6 @@ class Prefs
 public:
                     Prefs();                // Constructor, loads data from prefs.yml
 
-    std::string blt_console_size;       // The number of columns and rows the window should be sized to by default.
-    std::string blt_font;               // The TTF font used in the game (must be monospace).
-    int         blt_font_size;          // The size of the main font.
-    std::string blt_log_file;           // The filename for the BearLibTerminal log file in the userdata folder.
-    std::string blt_log_level;          // The minimum level of logging for BearLibTerminal.
-    bool        blt_vsync;              // Should the game use vsync?
     std::string colour_black;           // Hex colour definition for black.
     std::string colour_blue;            // Hex colour definition for bold blue.
     std::string colour_blue_dark;       // Hex colour definition for dark blue.
@@ -25,6 +19,7 @@ public:
     std::string colour_green_dark;      // Hex colour definition for dark green.
     std::string colour_grey;            // Hex colour definition for grey.
     std::string colour_grey_dark;       // Hex colour definition for dark grey.
+    std::string colour_grey_darkest;    // This colour is used for the background of the console window on SDL.
     std::string colour_magenta;         // Hex colour definition for bold magenta.
     std::string colour_magenta_dark;    // Hex colour definition for dark magenta.
     std::string colour_red;             // Hex colour definition for bold red.
@@ -46,5 +41,9 @@ public:
     bool        screen_reader_process_square_brackets;  // This setting can improve narration on screen readers for square brackets.
     bool        screen_reader_sapi;     // Enable this to default to Microsoft SAPI text-to-speech, without using any external screen-reader software.
 #endif
-    std::string terminal;               // Set this to blt for BearLibTerminal, or curses for PDCurses/NCurses.
+    std::string sdl_console_size;       // The number of columns and rows the window should be sized to by default.
+    std::string sdl_font;               // The TTF font used in the game (must be monospace).
+    int         sdl_font_size;          // The size of the main font.
+    bool        sdl_vsync;              // Should the game use vsync?
+    std::string terminal;               // Set this to sdl2 for SDL2, or curses for PDCurses/NCurses.
 };

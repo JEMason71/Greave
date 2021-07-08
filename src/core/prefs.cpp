@@ -45,12 +45,6 @@ Prefs::Prefs()
         return yaml_pref[value].as<std::string>();
     };
 
-    blt_console_size = get_pref_string("blt_console_size");
-    blt_font = get_pref_string("blt_font");
-    blt_font_size = get_pref("blt_font_size");
-    blt_log_file = get_pref_string("blt_log_file");
-    blt_log_level = get_pref_string("blt_log_level");
-    blt_vsync = get_pref_bool("blt_vsync");
     colour_black = get_pref_string("colour_black");
     colour_blue = get_pref_string("colour_blue");
     colour_blue_dark = get_pref_string("colour_blue_dark");
@@ -60,6 +54,7 @@ Prefs::Prefs()
     colour_green_dark = get_pref_string("colour_green_dark");
     colour_grey = get_pref_string("colour_grey");
     colour_grey_dark = get_pref_string("colour_grey_dark");
+    colour_grey_darkest = get_pref_string("colour_grey_darkest");
     colour_magenta = get_pref_string("colour_magenta");
     colour_magenta_dark = get_pref_string("colour_magenta_dark");
     colour_red = get_pref_string("colour_red");
@@ -81,5 +76,9 @@ Prefs::Prefs()
     screen_reader_process_square_brackets = get_pref_bool("screen_reader_process_square_brackets");
     screen_reader_sapi = get_pref_bool("screen_reader_sapi");
 #endif
+    sdl_console_size = get_pref_string("sdl_console_size");
+    sdl_font = get_pref_string("sdl_font");
+    sdl_font_size = get_pref("sdl_font_size");
+    sdl_vsync = get_pref_bool("sdl_vsync");
     terminal = get_pref_string("terminal");
 }

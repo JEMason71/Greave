@@ -16,13 +16,9 @@ Greave is copyright © 2021 [Raine "Gravecat" Simmons](https://github.com/Gravec
 
 [Application icon](https://github.com/malcolmriley/unused-textures) copyright © 2020 Malcolm Riley.
 
-FindSDL2TTF CMake module copyright © 2003-2009 Kitware, Inc.
-
 [PCG](https://github.com/imneme/pcg-cpp) copyright © 2014-2017 Melissa O'Neill  and PCG Project contributors.
 
 [PDCurses](https://github.com/wmcbrine/PDCurses) maintained by William McBrine.
-
-Portions of this software are copyright © 2013 [The FreeType Project](https://www.freetype.org/). All rights reserved.
 
 [Random-Number Utilities](https://gist.github.com/imneme/540829265469e673d045) copyright © 2015 Melissa E. O'Neill.
 
@@ -36,10 +32,16 @@ Portions of this software are copyright © 2013 [The FreeType Project](https://w
 
 [SQLiteCpp](https://github.com/SRombauts/SQLiteCpp) copyright © 2012-2020 Sebastien Rombauts.
 
-Time and weather system adapted from [Keran's MUSH/MUX Weather and Time Code Package Version 4.0 beta](http://www.mushcode.com/File/Kerans-Weather-System-And-Time-Code-4-0-(PennMUSH)), copyright © 1996-1998 Keran.
-
 [Tolk](https://github.com/ndarilek/tolk) copyright © 2014-2016 Davy Kager.
 
 [yaml-cpp](https://github.com/jbeder/yaml-cpp) copyright © 2008-2015 Jesse Beder.
+
+Message log and input window code originally based on [BearLibTerminal](https://github.com/cfyzium/bearlibterminal) sample code, copyright © 2014 Cfyz.
+
+Time and weather system adapted from [Keran's MUSH/MUX Weather and Time Code Package Version 4.0 beta](http://www.mushcode.com/File/Kerans-Weather-System-And-Time-Code-4-0-(PennMUSH)), copyright © 1996-1998 Keran.
+
+FindSDL2TTF CMake module copyright © 2003-2009 Kitware, Inc.
+
+Portions of this software are copyright © 2013 [The FreeType Project](https://www.freetype.org/). All rights reserved.
 
 GCC runtime library DLLs and any embedded GCC library code is copyright © Free Software Foundation, Inc., distrubuted under the GCC Runtime Library Exception, version 3.1 of the GNU General Public License version 3.

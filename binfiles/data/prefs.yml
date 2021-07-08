@@ -6,12 +6,6 @@
 # newer versions of the game overwriting your settings with the latest data files. You only need to include the
 # values that have changed, so just copy-paste the lines you want to change, not the entire file.
 
-blt_console_size:       80x25                   # The number of columns and rows the window should be sized to by default.
-blt_font:               RobotoMono-Regular.ttf  # The TTF font used in the game (must be monospace).
-blt_font_size:          14                      # The size of the main font.
-blt_log_file:           log-blt.txt             # The filename for the BearLibTerminal log file in the userdata folder.
-blt_log_level:          warning                 # The minimum level of logging for BearLibTerminal.
-blt_vsync:              true                    # Should the game use vsync?
 colour_black:           000000                  # Hex colour definition for black.
 colour_blue:            80befa                  # Hex colour definition for bold blue.
 colour_blue_dark:       2c4c96                  # Hex colour definition for dark blue.
@@ -21,6 +15,7 @@ colour_green:           5bf050                  # Hex colour definition for bold
 colour_green_dark:      28961e                  # Hex colour definition for dark green.
 colour_grey:            bfbfbf                  # Hex colour definition for grey.
 colour_grey_dark:       606060                  # Hex colour definition for dark grey.
+colour_grey_darkest:    101010                  # This colour is used for the background of the console window on SDL.
 colour_magenta:         f064f0                  # Hex colour definition for bold magenta.
 colour_magenta_dark:    920e9e                  # Hex colour definition for dark magenta.
 colour_red:             f04b4b                  # Hex colour definition for bold red.
@@ -40,4 +35,8 @@ save_file_slots:        5                       # The total amount of saved game
 screen_reader_external: true                    # Enable automatic screen-reader support? Screen readers supported: JAWS, NVDA, SuperNova, System Access, Window-Eyes, ZoomText.
 screen_reader_process_square_brackets: true     # This setting can improve narration on screen readers for square brackets.
 screen_reader_sapi:     false                   # Enable this to default to Microsoft SAPI text-to-speech, without using any external screen-reader software.
-terminal:               curses                  # Set this to curses for PDCurses/NCurses.
+sdl_console_size:       80x25                   # The number of columns and rows the window should be sized to by default.
+sdl_font:               RobotoMono-Regular.ttf  # The TTF font used in the game (must be monospace).
+sdl_font_size:          18                      # The size of the main font.
+sdl_vsync:              true                    # Should the game use vsync?
+terminal:               sdl2                    # Set this to sdl2 for SDL2, or curses for PDCurses/NCurses.

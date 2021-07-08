@@ -16,16 +16,11 @@ OF SUCH DAMAGE.
 Application icon copyright © 2020 Malcolm Riley.
 https://github.com/malcolmriley/unused-textures
 
-FindSDL2TTF CMake module copyright © 2003-2009 Kitware, Inc.
-
 PCG copyright © 2014-2017 Melissa O'Neill and PCG Project contributors.
 https://github.com/imneme/pcg-cpp
 
 PDCurses maintained by William McBrine.
 https://github.com/wmcbrine/PDCurses
-
-Portions of this software are copyright © 2013 The FreeType Project.
-All rights reserved. https://www.freetype.org/
 
 Random-Number Utilities copyright © 2015 Melissa E. O'Neill.
 https://gist.github.com/imneme/540829265469e673d045
@@ -45,15 +40,23 @@ https://github.com/sqlite/sqlite
 SQLiteCpp copyright © 2012-2020 Sebastien Rombauts.
 https://github.com/SRombauts/SQLiteCpp
 
-Time and weather system adapted from Keran's MUSH/MUX Weather and Time Code
-Package Version 4.0 beta, copyright © 1996-1998 Keran.
-http://www.mushcode.com/File/Kerans-Weather-System-And-Time-Code-4-0-(PennMUSH)
-
 Tolk copyright © 2014-2016 Davy Kager.
 https://github.com/ndarilek/tolk
 
 yaml-cpp copyright © 2008-2015 Jesse Beder.
 https://github.com/jbeder/yaml-cpp
+
+Message log and input window code originally based on BearLibTerminal sample code, copyright © 2014 Cfyz.
+https://github.com/cfyzium/bearlibterminal
+
+Time and weather system adapted from Keran's MUSH/MUX Weather and Time Code
+Package Version 4.0 beta, copyright © 1996-1998 Keran.
+http://www.mushcode.com/File/Kerans-Weather-System-And-Time-Code-4-0-(PennMUSH)
+
+FindSDL2TTF CMake module copyright © 2003-2009 Kitware, Inc.
+
+Portions of this software are copyright © 2013 The FreeType Project.
+All rights reserved. https://www.freetype.org/
 
 GCC runtime library DLLs and any embedded GCC library code is copyright (c)
 Free Software Foundation, Inc., distrubuted under the GCC Runtime Library

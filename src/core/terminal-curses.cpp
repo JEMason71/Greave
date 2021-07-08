@@ -171,7 +171,7 @@ int TerminalCurses::get_mouse_y() const { return 0; }
 int TerminalCurses::get_mouse_y_pixel() const { return 0; }
 
 // Gets keyboard input from the terminal.
-int TerminalCurses::get_key() const
+int TerminalCurses::get_key()
 {
     int key = getch();
     switch(key)
@@ -204,74 +204,14 @@ void TerminalCurses::get_size(int *w, int *h) const
 void TerminalCurses::move_cursor(int x, int y) { move(y, x); }
 
 // Prints a string at a given coordinate on the screen.
-void TerminalCurses::print(std::string str, int x, int y, Colour col)
+void TerminalCurses::print_internal(std::string str, int x, int y, Colour col)
 {
-    if (!str.size()) return;
-
-    size_t nbsp_pos;
-    while ((nbsp_pos = str.find("`")) != std::string::npos)
-        str.at(nbsp_pos) = ' ';
-
-    if (str.find("{") == std::string::npos)
-    {
-        // If no colour codes are present, this is fairly easy.
-        const unsigned long ansi_code = colour(col);
-        attron(ansi_code);
-        mvprintw(y, x, str.c_str());
-        attroff(ansi_code);
-        return;
-    }
-
-    // Colour codes need to be parsed. Curses doesn't support multiple colour codes in a single printw(), so we're gonna have to get creative.
-
-    while (str.size())
-    {
-        std::string first_word;
-        size_t tag_pos = str.substr(1).find_first_of('{');  // We skip ahead one char, to ignore the opening brace. We want to find the *next* opening brace.
-        if (tag_pos != std::string::npos)
-        {
-            first_word = str.substr(0, tag_pos + 1);
-            str = str.substr(tag_pos + 1);
-        }
-        else
-        {
-            first_word = str;
-            str = "";
-        }
-
-        while (first_word.size() >= 3 && first_word[0] == '{' && first_word[2] == '}')
-        {
-            const std::string tag = first_word.substr(0, 3);
-            first_word = first_word.substr(3);
-            switch(tag[1])
-            {
-                case 'b': col = Colour::BLACK; break;
-                case 'B': col = Colour::BLACK_BOLD; break;
-                case 'r': col = Colour::RED; break;
-                case 'R': col = Colour::RED_BOLD; break;
-                case 'g': col = Colour::GREEN; break;
-                case 'G': col = Colour::GREEN_BOLD; break;
-                case 'y': col = Colour::YELLOW; break;
-                case 'Y': col = Colour::YELLOW_BOLD; break;
-                case 'u': col = Colour::BLUE; break;
-                case 'U': col = Colour::BLUE_BOLD; break;
-                case 'm': col = Colour::MAGENTA; break;
-                case 'M': col = Colour::MAGENTA_BOLD; break;
-                case 'c': col = Colour::CYAN; break;
-                case 'C': col = Colour::CYAN_BOLD; break;
-                case 'w': col = Colour::WHITE; break;
-                case 'W': col = Colour::WHITE_BOLD; break;
-            }
-        }
-
-        const unsigned long ansi_code = colour(col);
-        attron(ansi_code);
-        const size_t first_word_size = first_word.size();
-        StrX::find_and_replace(first_word, "%", "%%");
-        mvprintw(y, x, first_word.c_str());
-        attroff(ansi_code);
-        x += first_word_size;
-    }
+    const unsigned long ansi_code = colour(col);
+    StrX::find_and_replace(str, "%", "%%");
+    attron(ansi_code);
+    mvprintw(y, x, str.c_str());
+    attroff(ansi_code);
+    return;
 }
 
 // Prints a character at a given coordinate on the screen.
@@ -286,9 +226,6 @@ void TerminalCurses::put(uint16_t letter, int x, int y, Colour col)
 
 // Refreshes the screen with changes made.
 void TerminalCurses::refresh() { ::refresh(); }
-
-// Sets the text background colour. Currently nonfunctional on Curses.
-void TerminalCurses::set_background(Colour) { }
 
 // Returns true if the player uses Ctrl-C, Ctrl-D or escape.
 bool TerminalCurses::wants_to_close() const

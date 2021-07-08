@@ -92,9 +92,8 @@ std::string MessageLog::render_message_log(bool accept_blank_input)
     {
         // Clear the screen, fill in dark gray areas for the input and output areas.
         core()->terminal()->cls();
-        core()->terminal()->fill(m_output_window_x, m_output_window_y, m_output_window_width, m_output_window_height, Terminal::Colour::BLACK_BOLD);
-        core()->terminal()->fill(m_input_window_x, m_input_window_y, m_input_window_width, 1, Terminal::Colour::BLACK_BOLD);
-        core()->terminal()->set_background(Terminal::Colour::BLACK_BOLD);
+        core()->terminal()->fill(m_output_window_x, m_output_window_y, m_output_window_width, m_output_window_height, Terminal::Colour::DARKEST_GREY);
+        core()->terminal()->fill(m_input_window_x, m_input_window_y, m_input_window_width, 1, Terminal::Colour::DARKEST_GREY);
 
         // Render the visible part of the output window.
         int start = m_offset, end = m_output_processed.size();
@@ -144,7 +143,6 @@ std::string MessageLog::render_message_log(bool accept_blank_input)
         int scrollbar_offset;
         if (!(m_output_processed.size() - m_output_window_height)) scrollbar_offset = (prefs->log_padding_top + (m_output_window_height - scrollbar_height));
         else scrollbar_offset = (prefs->log_padding_top + (m_output_window_height - scrollbar_height) * (static_cast<float>(m_offset) / static_cast<float>(m_output_processed.size() - m_output_window_height)));
-        core()->terminal()->set_background(Terminal::Colour::BLACK);
         for (unsigned int i = 0; i < m_output_window_height; i++)
             core()->terminal()->put('|', scrollbar_x, prefs->log_padding_top + i, Terminal::Colour::WHITE);
         for (int i = 0; i < scrollbar_height; i++)
@@ -153,7 +151,6 @@ std::string MessageLog::render_message_log(bool accept_blank_input)
         // Render the cursor on the input buffer.
         if (input_buf_len < m_input_window_width)
         {
-            core()->terminal()->set_background(Terminal::Colour::BLACK_BOLD);
             core()->terminal()->cursor(true);
             core()->terminal()->move_cursor(m_input_window_x + input_buf_len, m_input_window_y);
         }
