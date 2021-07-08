@@ -30,9 +30,11 @@ public:
 private:
     struct RGB { uint8_t r, g, b; };
 
-    void    colour_to_rgb(Colour col, uint8_t *r, uint8_t *g, uint8_t *b);  // Converts a colour code into a more useful form.
-    void    init_colours(); // Loads the colours from prefs.yml into RGB values.
-    void    print_internal(std::string str, int x, int y, Colour col) override; // Internal rendering code, after print() has parsed the colour tags.
+    void    colour_to_rgb(Colour col, uint8_t *r, uint8_t *g, uint8_t *b) const;    // Converts a colour code into a more useful form.
+
+    void    init_colours();     // Loads the colours from prefs.yml into RGB values.
+    void    print_internal(std::string str, int x, int y, Colour col) override;     // Internal rendering code, after print() has parsed the colour tags.
+    void    screenshot();       // Takes a screenshot!
 
     std::map<Colour, RGB>   m_colour_map;           // Maps hex colours (e.g. FF2060) into individual RGB values.
     bool                    m_cursor_visible;       // Is the fake cursor visible?
@@ -43,6 +45,8 @@ private:
     int                     m_mouse_x;              // The X pixel coordinate of the mouse cursor's last location.
     int                     m_mouse_y;              // The Y pixel coordinate of the mouse cursor's last location.
     SDL_Renderer*           m_renderer;             // The SDL2 hardware renderer.
+    time_t                  m_screenshot_msg_time;  // The timer for the screenshot message.
+    int                     m_screenshot_taken;     // The last screenshot number taken.
     SDL_Window*             m_window;               // The one and only window the game uses.
     int                     m_window_h;             // The height of the window, in pixels.
     int                     m_window_w;             // The width of the window, in pixels.

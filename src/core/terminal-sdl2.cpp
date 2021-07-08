@@ -1,15 +1,20 @@
 // core/terminal-sdl2.cpp -- Terminal interface for SDL2/SDL_ttf. See core/terminal.hpp for a full description of the Terminal class.
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
+#include "3rdparty/LodePNG/bmp2png.h"
 #include "core/core.hpp"
+#include "core/filex.hpp"
 #include "core/prefs.hpp"
 #include "core/strx.hpp"
 #include "core/terminal-sdl2.hpp"
 
-#include "core/guru.hpp"    // temp
+#include <ctime>
+#include <thread>
+
 
 // Constructor, sets up SDL2.
-TerminalSDL2::TerminalSDL2() : m_cursor_visible(false), m_cursor_x(0), m_cursor_y(0), m_font(nullptr), m_mouse_x(0), m_mouse_y(0), m_renderer(nullptr), m_window(nullptr)
+TerminalSDL2::TerminalSDL2() : m_cursor_visible(false), m_cursor_x(0), m_cursor_y(0), m_font(nullptr), m_mouse_x(0), m_mouse_y(0), m_renderer(nullptr), m_screenshot_msg_time(0),
+    m_screenshot_taken(0), m_window(nullptr)
 {
     const std::shared_ptr<Prefs> prefs = core()->prefs();
     if (SDL_Init(SDL_INIT_VIDEO) < 0) throw std::runtime_error("Could not initialize SDL: " + std::string(SDL_GetError()));
@@ -78,7 +83,7 @@ void TerminalSDL2::cls()
 }
 
 // Converts a colour code into a more useful form.
-void TerminalSDL2::colour_to_rgb(Colour col, uint8_t *r, uint8_t *g, uint8_t *b)
+void TerminalSDL2::colour_to_rgb(Colour col, uint8_t *r, uint8_t *g, uint8_t *b) const
 {
     const auto it = m_colour_map.find(col);
     if (it == m_colour_map.end()) throw std::runtime_error("Invalid colour!");
@@ -136,6 +141,7 @@ int TerminalSDL2::get_key()
                     case SDLK_END: case SDLK_KP_1: return Key::END;
                     case SDLK_PAGEUP: case SDLK_KP_9: return Key::PAGE_UP;
                     case SDLK_PAGEDOWN: case SDLK_KP_3: return Key::PAGE_DOWN;
+                    case SDLK_PRINTSCREEN: screenshot(); return Key::RESIZED;
                 }
                 break;
             case SDL_TEXTINPUT:
@@ -249,7 +255,49 @@ void TerminalSDL2::refresh()
         fill(m_cursor_x, m_cursor_y, 1, 1, Colour::DARKEST_GREY);
         put('_', m_cursor_x, m_cursor_y, Colour::WHITE_BOLD);
     }
+
+    if (m_screenshot_taken)
+    {
+        if (m_screenshot_msg_time > std::time(nullptr))
+        {
+            const std::string sshot_text = "Screenshot taken: greave" + std::to_string(m_screenshot_taken) + ".png";
+            fill(0, 0, sshot_text.size(), 1, Colour::BLACK);
+            print(sshot_text, 0, 0, Colour::GREEN_BOLD);
+        }
+        else m_screenshot_taken = 0;
+    }
+
     SDL_RenderPresent(m_renderer);
+}
+
+// Takes a screenshot!
+void TerminalSDL2::screenshot()
+{
+    FileX::make_dir("userdata/screenshots");
+
+    // Determine the filename for the screenshot.
+    int sshot = 0;
+    std::string filename;
+    while(true)
+    {
+        filename = "userdata/screenshots/greave" + std::to_string(++sshot);
+        if (!(FileX::file_exists(filename + ".png") || FileX::file_exists(filename + ".bmp") || FileX::file_exists(filename + ".tmp"))) break;
+        if (sshot > 1000000) return;    // Just give up if we have an absurd amount of files.
+    }
+
+    // Take a screenshot in BMP format (SDL_image can do PNG exports directly, but that's a lot of extra overhead). Using LodePNG is way more lightweight.
+    SDL_Surface* temp_surf = SDL_CreateRGBSurface(0, m_window_w, m_window_h, 32, 0, 0, 0, 0);
+    SDL_RenderReadPixels(m_renderer, nullptr, temp_surf->format->format, temp_surf->pixels, temp_surf->pitch);
+    SDL_SaveBMP(temp_surf, (filename + ".tmp").c_str());
+    SDL_FreeSurface(temp_surf);
+
+    // Convert the BMP screenshot to PNG format.
+    std::thread(convert_png, filename).detach();
+
+    // Display the screenshot taken message.
+    m_screenshot_taken = sshot;
+    m_screenshot_msg_time = std::time(nullptr) + 2;
+    refresh();
 }
 
 // Returns true if the player has tried to close the SDL window.
