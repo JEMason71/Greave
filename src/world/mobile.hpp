@@ -83,6 +83,7 @@ public:
     bool                can_perform_action(float time) const;       // Checks if this Mobile has enough action timer built up to perform an action.
     uint32_t            carry_weight() const;                       // Checks how much weight this Mobile is carrying.
     void                clear_buff(Buff::Type type);                // Clears a specified buff/debuff from the Actor, if it exists.
+    void                clear_meta(const std::string &key);         // Clears a metatag from a Mobile. Use with caution!
     void                clear_tag(MobileTag the_tag);               // Clears an MobileTag from this Mobile.
     float               dodge_mod() const;                          // Returns the modified chance to dodge for this Mobile, based on equipped gear.
     const std::shared_ptr<Inventory>    equ() const;                // Returns a pointer to the Movile's equipment.
@@ -100,6 +101,10 @@ public:
     virtual uint32_t    load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id);   // Loads a Mobile.
     uint32_t            location() const;                           // Retrieves the location of this Mobile, in the form of a Room ID.
     uint32_t            max_carry() const;                          // The maximum weight this Mobile can carry.
+    std::string         meta(const std::string &key) const;         // Retrieves Mobile metadata.
+    float               meta_float(const std::string &key) const;   // Retrieves metadata, in float format.
+    int                 meta_int(const std::string &key) const;     // Retrieves metadata, in int format.
+    std::map<std::string, std::string>* meta_raw();                 // Accesses the metadata map directly. Use with caution!
     std::string         name(int flags = 0) const;                  // Retrieves the name of this Mobile.
     void                new_parser_id();                            // Generates a new parser ID for this Mobile.
     float               parry_mod() const;                          // Returns the modified chance to parry for this Mobile, based on equipped gear.
@@ -116,6 +121,9 @@ public:
     void                set_id(uint32_t new_id);                    // Sets this Mobile's unique ID.
     void                set_location(uint32_t room_id);             // Sets the location of this Mobile with a Room ID.
     void                set_location(const std::string &room_id);   // As above, but with a string Room ID.
+    void                set_meta(const std::string &key, std::string value);    // Adds Item metadata.
+    void                set_meta(const std::string &key, int value);            // As above, but with an integer value.
+    void                set_meta(const std::string &key, float value);          // As above again, but this time for floats.
     void                set_name(const std::string &name);          // Sets the name of this Mobile.
     void                set_spawn_room(uint32_t id);                // Sets this Mobile's spawn room.
     void                set_species(const std::string &species);    // Sets the species of this Mobile.
@@ -143,6 +151,7 @@ protected:
     uint32_t                            m_id;           // The Mobile's unique ID.
     std::shared_ptr<Inventory>          m_inventory;    // The Items being carried by this Mobile.
     uint32_t                            m_location;     // The Room that this Mobile is currently located in.
+    std::map<std::string, std::string>  m_metadata;     // The Mobile's metadata, if any.
     std::string                         m_name;         // The name of this Mobile.
     uint16_t                            m_parser_id;    // The semi-unique ID of this Mobile, for parser differentiation.
     uint32_t                            m_score;        // Either the score value for killing this Mobile; or, for the Player, their current total score.

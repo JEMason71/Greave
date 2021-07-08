@@ -32,8 +32,8 @@ const std::string   Buff::SQL_BUFFS =       "CREATE TABLE buffs ( owner INTEGER,
 
 // The SQL table construction string for Mobiles.
 const std::string   Mobile::SQL_MOBILES =   "CREATE TABLE mobiles ( action_timer REAL, equipment INTEGER UNIQUE, gender INTEGER, hostility TEXT, hp INTEGER NOT NULL, "
-    "hp_max INTEGER NOT NULL, id INTEGER UNIQUE NOT NULL, inventory INTEGER UNIQUE, location INTEGER NOT NULL, name TEXT, parser_id INTEGER, score INTEGER, spawn_room INTEGER, "
-    "species TEXT NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, stance INTEGER, tags TEXT )";
+    "hp_max INTEGER NOT NULL, id INTEGER UNIQUE NOT NULL, inventory INTEGER UNIQUE, location INTEGER NOT NULL, metadata TEXT, name TEXT, parser_id INTEGER, score INTEGER, "
+    "spawn_room INTEGER, species TEXT NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, stance INTEGER, tags TEXT )";
 
 
 // Loads this Buff from a save file.
@@ -166,6 +166,9 @@ void Mobile::clear_buff(Buff::Type type)
     }
 }
 
+// Clears a metatag from an Mobile. Use with caution!
+void Mobile::clear_meta(const std::string &key) { m_metadata.erase(key); }
+
 // Clears a MobileTag from this Mobile.
 void Mobile::clear_tag(MobileTag the_tag)
 {
@@ -266,6 +269,7 @@ uint32_t Mobile::load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id
         m_id = query.getColumn("id").getUInt();
         if (!query.isColumnNull("inventory")) inventory_id = query.getColumn("inventory").getUInt();
         m_location = query.getColumn("location").getUInt();
+        if (!query.getColumn("metadata").isNull()) StrX::string_to_metadata(query.getColumn("metadata").getString(), m_metadata);
         if (!query.isColumnNull("name")) m_name = query.getColumn("name").getString();
         if (!query.isColumnNull("parser_id")) m_parser_id = query.getColumn("parser_id").getInt();
         if (!query.isColumnNull("score")) m_score = query.getColumn("score").getUInt();
@@ -293,6 +297,34 @@ uint32_t Mobile::location() const { return m_location; }
 
 // The maximum weight this Mobile can carry.
 uint32_t Mobile::max_carry() const { return BASE_CARRY_WEIGHT; }
+
+// Retrieves Mobile metadata.
+std::string Mobile::meta(const std::string &key) const
+{
+    if (m_metadata.find(key) == m_metadata.end()) return "";
+    std::string result = m_metadata.at(key);
+    StrX::find_and_replace(result, "_", " ");
+    return result;
+}
+
+// Retrieves metadata, in float format.
+float Mobile::meta_float(const std::string &key) const
+{
+    const std::string key_str = meta(key);
+    if (!key_str.size()) return 0.0f;
+    else return std::stof(key_str);
+}
+
+// Retrieves metadata, in int format.
+int Mobile::meta_int(const std::string &key) const
+{
+    const std::string key_str = meta(key);
+    if (!key_str.size()) return 0;
+    else return std::stoi(key_str);
+}
+
+// Accesses the metadata map directly. Use with caution!
+std::map<std::string, std::string>* Mobile::meta_raw() { return &m_metadata; }
 
 // Retrieves the name of this Mobile.
 std::string Mobile::name(int flags) const
@@ -387,8 +419,8 @@ uint32_t Mobile::save(std::shared_ptr<SQLite::Database> save_db)
     const uint32_t equipment_id = m_equipment->save(save_db);
 
     const uint32_t sql_id = core()->sql_unique_id();
-    SQLite::Statement query(*save_db, "INSERT INTO mobiles ( action_timer, equipment, gender, hostility, hp, hp_max, id, inventory, location, name, parser_id, score, spawn_room, "
-        "species, sql_id, stance, tags ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
+    SQLite::Statement query(*save_db, "INSERT INTO mobiles ( action_timer, equipment, gender, hostility, hp, hp_max, id, inventory, location, metadata, name, parser_id, score, "
+        "spawn_room, species, sql_id, stance, tags ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
     if (m_action_timer) query.bind(1, m_action_timer);
     if (equipment_id) query.bind(2, equipment_id);
     if (m_gender != Gender::IT) query.bind(3, static_cast<int>(m_gender));
@@ -398,15 +430,16 @@ uint32_t Mobile::save(std::shared_ptr<SQLite::Database> save_db)
     query.bind(7, m_id);
     if (inventory_id) query.bind(8, inventory_id);
     query.bind(9, m_location);
-    if (m_name.size()) query.bind(10, m_name);
-    if (m_parser_id) query.bind(11, m_parser_id);
-    if (m_score) query.bind(12, m_score);
-    if (m_spawn_room) query.bind(13, m_spawn_room);
-    query.bind(14, m_species);
-    query.bind(15, sql_id);
-    if (m_stance != CombatStance::BALANCED) query.bind(16, static_cast<int>(m_stance));
+    if (m_metadata.size()) query.bind(10, StrX::metadata_to_string(m_metadata));
+    if (m_name.size()) query.bind(11, m_name);
+    if (m_parser_id) query.bind(12, m_parser_id);
+    if (m_score) query.bind(13, m_score);
+    if (m_spawn_room) query.bind(14, m_spawn_room);
+    query.bind(15, m_species);
+    query.bind(16, sql_id);
+    if (m_stance != CombatStance::BALANCED) query.bind(17, static_cast<int>(m_stance));
     const std::string tags = StrX::tags_to_string(m_tags);
-    if (tags.size()) query.bind(17, tags);
+    if (tags.size()) query.bind(18, tags);
     query.exec();
 
     // Save any and all buffs/debuffs.
@@ -465,6 +498,20 @@ void Mobile::set_location(const std::string &room_id)
     if (!room_id.size()) set_location(0);
     else set_location(StrX::hash(room_id));
 }
+
+// Adds Mobile metadata.
+void Mobile::set_meta(const std::string &key, std::string value)
+{
+    StrX::find_and_replace(value, " ", "_");
+    if (m_metadata.find(key) == m_metadata.end()) m_metadata.insert(std::pair<std::string, std::string>(key, value));
+    else m_metadata.at(key) = value;
+}
+
+// As above, but with an integer value.
+void Mobile::set_meta(const std::string &key, int value) { set_meta(key, std::to_string(value)); }
+
+// As above again, but this time for floats.
+void Mobile::set_meta(const std::string &key, float value) { set_meta(key, StrX::ftos(value, 1)); }
 
 // Sets the name of this Mobile.
 void Mobile::set_name(const std::string &name) { m_name = name; }
