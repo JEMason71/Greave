@@ -40,4 +40,4 @@ save_file_slots:        5                       # The total amount of saved game
 screen_reader_external: true                    # Enable automatic screen-reader support? Screen readers supported: JAWS, NVDA, SuperNova, System Access, Window-Eyes, ZoomText.
 screen_reader_process_square_brackets: true     # This setting can improve narration on screen readers for square brackets.
 screen_reader_sapi:     false                   # Enable this to default to Microsoft SAPI text-to-speech, without using any external screen-reader software.
-terminal:               blt                     # Set this to blt for BearLibTerminal, or curses for PDCurses/NCurses.
+terminal:               curses                  # Set this to curses for PDCurses/NCurses.

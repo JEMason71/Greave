@@ -32,17 +32,3 @@ add_custom_target(licenses ALL
   COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/licenses" "${CMAKE_BINARY_DIR}/bin/licenses"
   COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/binfiles/readme.txt" "${CMAKE_BINARY_DIR}/bin/"
 )
-
-if(TARGET_LINUX)
-  if(TARGET_64)
-    add_custom_target(so ALL
-	  DEPENDS greave
-      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/lib/lin64/libBearLibTerminal.so" "${CMAKE_BINARY_DIR}/bin"
-    )
-  else()
-    add_custom_target(so ALL
-	  DEPENDS greave
-      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/lib/lin32/libBearLibTerminal.so" "${CMAKE_BINARY_DIR}/bin"
-    )
-  endif(TARGET_64)
-endif(TARGET_LINUX)

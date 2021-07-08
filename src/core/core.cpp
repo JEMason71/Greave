@@ -14,7 +14,6 @@
 #include "core/prefs.hpp"
 #include "core/random.hpp"
 #include "core/strx.hpp"
-#include "core/terminal-blt.hpp"
 #include "core/terminal-curses.hpp"
 #include "world/player.hpp"
 #include "world/room.hpp"
@@ -117,8 +116,7 @@ void Core::init()
 #endif
 
     // Set up our terminal emulator.
-    if (terminal_choice == "blt") m_terminal = std::make_shared<TerminalBLT>();
-    else if (terminal_choice == "curses") m_terminal = std::make_shared<TerminalCurses>();
+    if (terminal_choice == "curses") m_terminal = std::make_shared<TerminalCurses>();
     else m_guru_meditation->halt("Invalid terminal specified in prefs.yml");
 
     // Sets up the main message log window.

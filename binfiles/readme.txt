@@ -16,24 +16,11 @@ OF SUCH DAMAGE.
 Application icon copyright © 2020 Malcolm Riley.
 https://github.com/malcolmriley/unused-textures
 
-BearLibTerminal copyright © 2013-2017 Cfyz.
-https://github.com/cfyzium/bearlibterminal
-
-FreeType copyright © 1996-2002, 2006 David Turner, Robert Wilhelm,
-and Werner Lemberg.
-https://www.freetype.org/
-
-NanoJpeg copyright © 2009 Martin J. Fiedler.
-http://h4ck3r.net/2009/12/02/mini-jpeg-decoder/
-
 PCG copyright © 2014-2017 Melissa O'Neill and PCG Project contributors.
 https://github.com/imneme/pcg-cpp
 
 PDCurses maintained by William McBrine.
 https://github.com/wmcbrine/PDCurses
-
-PicoPNG copyright © 2005-2010 Lode Vandevenne.
-https://lodev.org/lodepng/
 
 Random-Number Utilities copyright © 2015 Melissa E. O'Neill.
 https://gist.github.com/imneme/540829265469e673d045

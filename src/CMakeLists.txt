@@ -14,7 +14,6 @@ set(CMAKE_CXX_FLAGS_DEBUG "-g -Og")
 set(CMAKE_CXX_FLAGS_RELEASE  "-O2")
 set(CMAKE_EXE_LINKER_FLAGS_RELEASE "-s")
 set(SQLITECPP_LIBRARIES sqlite_cpp)
-set(BLT_LIBRARIES BearLibTerminal)
 
 
 # Main platform-specific settings.
@@ -66,7 +65,6 @@ set(GREAVE_CPPS
   core/prefs.cpp
   core/random.cpp
   core/strx.cpp
-  core/terminal-blt.cpp
   core/terminal-curses.cpp
   world/inventory.cpp
   world/item.cpp
@@ -113,7 +111,6 @@ target_link_libraries(greave
   ${SQLITECPP_LIBRARIES}
   ${TOLK_LIBRARIES}
   ${YAMLCPP_LIBRARIES}
-  ${BLT_LIBRARIES}
 )
 
 
