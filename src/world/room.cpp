@@ -94,8 +94,8 @@ const std::vector<std::vector<std::string>> Room::ROOM_SCAR_DESCS = {
 };
 
 // The SQL table construction string for the saved rooms.
-const std::string   Room::SQL_ROOMS =   "CREATE TABLE rooms ( sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, id INTEGER UNIQUE NOT NULL, last_spawned_mobs INTEGER, scars TEXT, "
-    "spawn_mobs TEXT, tags TEXT, link_tags TEXT, inventory INTEGER UNIQUE )";
+const std::string   Room::SQL_ROOMS =   "CREATE TABLE rooms ( sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, id INTEGER UNIQUE NOT NULL, last_spawned_mobs INTEGER, "
+    "metadata TEXT, scars TEXT, spawn_mobs TEXT, tags TEXT, link_tags TEXT, inventory INTEGER UNIQUE )";
 
 
 Room::Room(std::string new_id) : m_inventory(std::make_shared<Inventory>()), m_last_spawned_mobs(0), m_light(0), m_security(Security::ANARCHY)
@@ -152,6 +152,13 @@ void Room::clear_link_tag(uint8_t id, LinkTag the_tag)
 
 // As above, but with a Direction enum.
 void Room::clear_link_tag(Direction dir, LinkTag the_tag) { clear_link_tag(static_cast<uint8_t>(dir), the_tag); }
+
+// Clears a metatag from an Room. Use with caution!
+void Room::clear_meta(const std::string &key)
+{
+    m_metadata.erase(key);
+    set_tag(RoomTag::MetaChanged);
+}
 
 // Clears a tag on this Room.
 void Room::clear_tag(RoomTag the_tag)
@@ -374,6 +381,7 @@ void Room::load(std::shared_ptr<SQLite::Database> save_db)
                     m_tags_link[e].insert(static_cast<LinkTag>(StrX::htoi(tag)));
             }
         }
+        if (!query.getColumn("metadata").isNull()) StrX::string_to_metadata(query.getColumn("metadata").getString(), m_metadata);
         if (!query.isColumnNull("scars"))
         {
             std::string scar_str = query.getColumn("scars").getString();
@@ -396,6 +404,15 @@ void Room::load(std::shared_ptr<SQLite::Database> save_db)
         }
     }
     if (inventory_id) m_inventory->load(save_db, inventory_id);
+}
+
+// Retrieves Room metadata.
+std::string Room::meta(const std::string &key) const
+{
+    if (m_metadata.find(key) == m_metadata.end()) return "";
+    std::string result = m_metadata.at(key);
+    StrX::find_and_replace(result, "_", " ");
+    return result;
 }
 
 // Returns the Room's full or short name.
@@ -440,11 +457,13 @@ void Room::save(std::shared_ptr<SQLite::Database> save_db)
 
     if (!tags.size() && link_tags == ",,,,,,,,," && !m_scar_type.size()) return;
 
-    SQLite::Statement room_query(*save_db, "INSERT INTO rooms (id, inventory, last_spawned_mobs, link_tags, scars, spawn_mobs, sql_id, tags) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    SQLite::Statement room_query(*save_db, "INSERT INTO rooms (id, inventory, last_spawned_mobs, link_tags, metadata, scars, spawn_mobs, sql_id, tags) "
+        "VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ? )");
     room_query.bind(1, m_id);
     if (inventory_id) room_query.bind(2, inventory_id);
     if (m_last_spawned_mobs) room_query.bind(3, m_last_spawned_mobs);
     if (link_tags != ",,,,,,,,,") room_query.bind(4, link_tags);
+    if (tag(RoomTag::MetaChanged)) room_query.bind(5, StrX::metadata_to_string(m_metadata));
     if (m_scar_type.size())
     {
         std::string scar_str;
@@ -453,11 +472,11 @@ void Room::save(std::shared_ptr<SQLite::Database> save_db)
             scar_str += StrX::itoh(static_cast<int>(m_scar_type.at(i)), 1) + ";" + StrX::itoh(m_scar_intensity.at(i), 1);
             if (i < m_scar_type.size() - 1) scar_str += ",";
         }
-        room_query.bind(5, scar_str);
+        room_query.bind(6, scar_str);
     }
-    if (tag(RoomTag::MobSpawnListChanged) && m_spawn_mobs.size()) room_query.bind(6, StrX::collapse_vector(m_spawn_mobs));
-    room_query.bind(7, core()->sql_unique_id());
-    if (tags.size()) room_query.bind(8, tags);
+    if (tag(RoomTag::MobSpawnListChanged) && m_spawn_mobs.size()) room_query.bind(7, StrX::collapse_vector(m_spawn_mobs));
+    room_query.bind(8, core()->sql_unique_id());
+    if (tags.size()) room_query.bind(9, tags);
     room_query.exec();
 }
 
@@ -506,6 +525,15 @@ void Room::set_link_tag(uint8_t id, LinkTag the_tag)
 
 // As above, but with a Direction enum.
 void Room::set_link_tag(Direction dir, LinkTag the_tag) { set_link_tag(static_cast<uint8_t>(dir), the_tag); }
+
+// Adds Room metadata.
+void Room::set_meta(const std::string &key, std::string value)
+{
+    StrX::find_and_replace(value, " ", "_");
+    if (m_metadata.find(key) == m_metadata.end()) m_metadata.insert(std::pair<std::string, std::string>(key, value));
+    else m_metadata.at(key) = value;
+    set_tag(RoomTag::MetaChanged);
+}
 
 // Sets the long and short name of this room.
 void Room::set_name(const std::string &new_name, const std::string &new_short_name)

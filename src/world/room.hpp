@@ -73,6 +73,7 @@ enum class RoomTag : uint16_t {
     _None = 0,              // Do not use this tag, it's just a marker to start the tags below counting from 1.
 
     Explored,               // The player has visited this room before.
+    MetaChanged,            // The metadata on this room has changed.
     MobSpawned,             // This room has spawned a mob already.
     MobSpawnListChanged,    // The mob spawn list on this room has changed.
     SaveActive,             // An extra-temporary tag used by the save system, to keep track of active rooms when saving/loading the game.
@@ -146,6 +147,7 @@ public:
     void        add_mob_spawn(const std::string &id);                   // Adds a Mobile or List to the mobile spawn list.
     void        clear_link_tag(uint8_t id, LinkTag the_tag);            // Clears a tag on this Room's link.
     void        clear_link_tag(Direction dir, LinkTag the_tag);         // As above, but with a Direction enum.
+    void        clear_meta(const std::string &key);                     // Clears a metatag from a Room. Use with caution!
     void        clear_tag(RoomTag the_tag);                             // Clears a tag on this Room.
     bool        dangerous_link(Direction dir);                          // Checks if a room link is dangerous (e.g. a sky link).
     bool        dangerous_link(uint8_t dir);                            // As above, but using an integer instead of an enum.
@@ -166,6 +168,7 @@ public:
     bool        link_tag(uint8_t id, LinkTag the_tag) const;            // Checks if a tag is set on this Room's link.
     bool        link_tag(Direction dir, LinkTag the_tag) const;         // As above, but with a Direction enum.
     void        load(std::shared_ptr<SQLite::Database> save_db);        // Loads the Room and anything it contains.
+    std::string meta(const std::string &key) const;                     // Retrieves Room metadata.
     std::string name(bool short_name = false) const;                    // Returns the Room's full or short name.
     void        respawn_mobs();                                         // Respawn Mobiles in this Room, if possible.
     void        save(std::shared_ptr<SQLite::Database> save_db);        // Saves the Room and anything it contains.
@@ -176,6 +179,7 @@ public:
     void        set_link(Direction dir, uint32_t room_id);              // As above, but with an already-hashed Room ID.
     void        set_link_tag(uint8_t id, LinkTag the_tag);              // Sets a tag on this Room's link.
     void        set_link_tag(Direction dir, LinkTag the_tag);           // As above, but with a Direction enum.
+    void        set_meta(const std::string &key, std::string value);    // Adds Room metadata.
     void        set_name(const std::string &new_name, const std::string &new_short_name);   // Sets the long and short name of this room.
     void        set_security(Security sec);                             // Sets the security level of this Room.
     void        set_tag(RoomTag the_tag);                               // Sets a tag on this Room.
@@ -213,6 +217,7 @@ private:
     uint32_t                    m_last_spawned_mobs;            // The timer for when this Room last spawned Mobiles.
     uint8_t                     m_light;                        // The default light level of this Room.
     uint32_t                    m_links[ROOM_LINKS_MAX];        // Links to other Rooms.
+    std::map<std::string, std::string>  m_metadata;             // The Room's metadata, if any.
     std::string                 m_name;                         // The Room's title.
     std::string                 m_name_short;                   // The Room's short name, for exit listings.
     std::vector<uint8_t>        m_scar_intensity;               // The intensity of the room scars, if any.
