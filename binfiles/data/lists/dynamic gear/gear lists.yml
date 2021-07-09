@@ -1,4 +1,6 @@
 # data/lists/dynamic gear/gear lists.yml -- Dynamic gear/clothing assignments for NPCs.
 # Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
+GEAR_CAT: [ MONSTER_BITE, -1, MONSTER_CLAW, -1 ]
+
 GEAR_GOBLIN_SCOUT: [ "+ARMOUR_GOBLIN_LIGHT", "#WEAPON_GOBLIN_1H" ]

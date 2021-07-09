@@ -1,0 +1,10 @@
+# data/mobiles/wildlife.yml -- Animals and beasts that are part of the wildlife of the world.
+# Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+
+WILD_CAT:
+  gear: GEAR_CAT
+  hp: 20
+  name: wild cat
+  score: 10
+  species: cat
+  tags: [ Agile, Anemic, RandomGender ]

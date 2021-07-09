@@ -1,0 +1,29 @@
+# data/items/monster/weapons.yml -- Body parts of monsters used as weapons, such as biting or clawing.
+# Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+
+MONSTER_BITE:
+  crit: 3
+  damage_type: piercing
+  desc: "-"
+  name: bite
+  power: 16
+  rare: 1
+  slot: held
+  speed: 1.0
+  type: [ weapon, melee ]
+  value: 0
+  weight: 0
+
+MONSTER_CLAW:
+  bleed: 13
+  crit: 10
+  damage_type: rending
+  desc: "-"
+  name: sharp claw
+  power: 11
+  rare: 1
+  slot: held
+  speed: 0.8
+  type: [ weapon, melee ]
+  value: 0
+  weight: 0
