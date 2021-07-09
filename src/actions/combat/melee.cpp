@@ -323,6 +323,6 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
         }
         if (bleed) weapon_bleed_effect(defender, damage);
         if (poison) weapon_poison_effect(defender, damage);
-        defender->reduce_hp(damage);
+        defender->reduce_hp(damage, false);
     }
 }

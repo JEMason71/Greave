@@ -112,7 +112,7 @@ public:
     float               parry_mod() const;                          // Returns the modified chance to parry for this Mobile, based on equipped gear.
     uint16_t            parser_id() const;                          // Retrieves the current ID of this Mobile, for parser differentiation.
     bool                pass_time(float seconds = 0.0f, bool interruptable = true); // Causes time to pass for this Mobile.
-    void                reduce_hp(int amount);                      // Reduces this Mobile's hit points.
+    void                reduce_hp(int amount, bool death_message = true);   // Reduces this Mobile's hit points.
     int                 restore_hp(int amount);                     // Restores a specified amount of hit points.
     virtual uint32_t    save(std::shared_ptr<SQLite::Database> save_db);    // Saves this Mobile.
                         // Sets a specified buff/debuff on the Actor, or extends an existing buff/debuff.

@@ -394,14 +394,14 @@ bool Mobile::pass_time(float seconds, bool interruptable)
 }
 
 // Reduces this Mobile's hit points.
-void Mobile::reduce_hp(int amount)
+void Mobile::reduce_hp(int amount, bool death_message)
 {
     m_hp[0] -= amount;
     if (is_player()) return;                // The player character's death is handled elsewhere.
     clear_buff(Buff::Type::RECENTLY_FLED);  // Cowardly NPCs fleeing in fear should be able to flee again when taking damage.
     if (m_hp[0] > 0) return;                // Everything below this point deals with the Mobile dying.
 
-    if (m_location == core()->world()->player()->location())
+    if (death_message && m_location == core()->world()->player()->location())
     {
         std::string death_message = "{U}" + name(NAME_FLAG_CAPITALIZE_FIRST | NAME_FLAG_THE);
         if (tag(MobileTag::Unliving)) death_message += " is destroyed!";
