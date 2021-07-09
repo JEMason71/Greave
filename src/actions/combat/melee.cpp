@@ -218,7 +218,7 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
             damage *= 3;
         }
         const float poison_chance = 0;
-        const float bleed_chance = 0;
+        const float bleed_chance = weapon_ptr->bleed();
         if (poison_chance >= 100.0f || core()->rng()->frnd(100) <= poison_chance) poison = true;
         if (bleed_chance >= 100.0f || core()->rng()->frnd(100) <= bleed_chance) bleed = true;
 

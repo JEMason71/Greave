@@ -35,6 +35,9 @@ float Item::armour(int bonus_power) const
     return std::pow(power() + bonus_power + 4, 1.2) / 100.0f;
 }
 
+// Returns thie bleed chance of this Item, if any.
+int Item::bleed() const { return meta_int("bleed"); }
+
 // Returns the block modifier% for this Item, if any.
 int Item::block_mod() const { return meta_int("block_mod"); }
 
