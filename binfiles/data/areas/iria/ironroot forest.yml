@@ -321,7 +321,8 @@ IRONROOT_CLEARING_N:
   light: wilderness
   name: [ Forest Clearing, clearing ]
   security: anarchy
-  tags: [ DigOK, EastDoubleLength, NorthDoubleLength, SouthDoubleLength, SoutheastDoubleLength, SouthwestDoubleLength, Trees, VeryWide, WestDoubleLength ]
+  tags: [ DigOK, EastDoubleLength, NorthDoubleLength, SouthDoubleLength, SoutheastDoubleLength, SouthwestDoubleLength, Trees, VeryWide, WestDoubleLength, Wilderness ]
+  wilderness: forest_edge
 
 IRONROOT_CLEARING_S:
   desc: The southern side of this wide clearing stretches out to the north and west, the soft grass dappled with wildflowers and tiny mushrooms. The forest surrounds you in all other directions, hoary trees reaching their crooked branches into the sky high above. An old stone well stands nearby, the wood rotten and the stones mossy, a grimy old rope dangling down into the gloom below.
@@ -337,7 +338,8 @@ IRONROOT_CLEARING_S:
   light: wilderness
   name: [ Forest Clearing, clearing ]
   security: anarchy
-  tags: [ DigOK, DownDoubleLength, DownNoMobRoam, EastDoubleLength, NorthDoubleLength, NortheastDoubleLength, NorthwestDoubleLength, SouthDoubleLength, SouthwestDoubleLength, Trees, VeryWide, WaterTainted, WestDoubleLength ]
+  tags: [ DigOK, DownDoubleLength, DownNoMobRoam, EastDoubleLength, NorthDoubleLength, NortheastDoubleLength, NorthwestDoubleLength, SouthDoubleLength, SouthwestDoubleLength, Trees, VeryWide, WaterTainted, WestDoubleLength, Wilderness ]
+  wilderness: forest_edge
 
 IRONROOT_CLEARING_W:
   desc: The western side of this wide clearing is flanked by trees curving around in a roughly semicircle shape, their crooked branches reaching menacingly inward. The clearing widens to the east and you can see some sort of small structure amidst the wild, overgrown grasses.
@@ -351,7 +353,8 @@ IRONROOT_CLEARING_W:
   light: wilderness
   name: [ Forest Clearing, clearing ]
   security: anarchy
-  tags: [ DigOK, EastDoubleLength, NorthDoubleLength, NortheastDoubleLength, SouthDoubleLength, SoutheastDoubleLength, Trees, VeryWide, WestDoubleLength ]
+  tags: [ DigOK, EastDoubleLength, NorthDoubleLength, NortheastDoubleLength, SouthDoubleLength, SoutheastDoubleLength, Trees, VeryWide, WestDoubleLength, Wilderness ]
+  wilderness: forest_edge
 
 IRONROOT_FOREST_E:
   desc: The trail here leads eastward, while curving between trees to the northwest as it winds its way through an ancient forest, the gnarled trees reaching their branches high into the sky above. The foliage is thick and wild, and there's no clear way to proceed in any direction aside from the path.
@@ -361,7 +364,8 @@ IRONROOT_FOREST_E:
   light: wilderness
   name: [ Eastern Ironroot Forest, trail ]
   security: anarchy
-  tags: [ DigOK, EastDoubleLength, NorthwestDoubleLength, Trees, Wide ]
+  tags: [ DigOK, EastDoubleLength, NorthwestDoubleLength, Trees, Wide, Wilderness ]
+  wilderness: forest_edge
 
 IRONROOT_FOREST_S:
   desc: You stand at the southern edge of a mighty forest, the ancient trees thick and heavy to the north, wild grasses and rugged wildflowers underfoot. A fairly well-traveled path leads northwest through the aged woods, disappearing as it curves out of sight.
@@ -371,7 +375,8 @@ IRONROOT_FOREST_S:
   light: wilderness
   name: [ Southern Ironroot Forest, trail ]
   security: anarchy
-  tags: [ DigOK, NorthwestDoubleLength, SouthDoubleLength, Trees, Wide ]
+  tags: [ DigOK, NorthwestDoubleLength, SouthDoubleLength, Trees, Wide, Wilderness ]
+  wilderness: forest_edge
 
 IRONROOT_MAZE_A:
   desc: "$MAZE_IRONROOT"
@@ -558,7 +563,8 @@ IRONROOT_TRAIL:
   light: wilderness
   name: [ Forest Trail Junction, trail ]
   security: anarchy
-  tags: [ DigOK, EastDoubleLength, SouthDoubleLength, Trees, WestDoubleLength, Wide ]
+  tags: [ DigOK, EastDoubleLength, SouthDoubleLength, Trees, WestDoubleLength, Wide, Wilderness ]
+  wilderness: forest_edge
 
 IRONROOT_TRAIL_2:
   desc: Tall trees and dense bushes seem to close in on the north and south sides of this well-worn trail, offering reasonable passage only along the east-west length of this well-worn, yet grassy route.

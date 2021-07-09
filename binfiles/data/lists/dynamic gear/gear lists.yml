@@ -1,6 +1,8 @@
 # data/lists/dynamic gear/gear lists.yml -- Dynamic gear/clothing assignments for NPCs.
 # Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
+GEAR_BADGER: [ MONSTER_BITE, -1, MONSTER_HIDE_1, -1 ]
+
 GEAR_CAT: [ MONSTER_BITE, -1, MONSTER_CLAW, -1 ]
 
 GEAR_DEER: [ MONSTER_BITE, -1, MONSTER_HIDE_1, -1 ]
@@ -14,3 +16,5 @@ GEAR_PAPIO: [ MONSTER_BITE, -1, MONSTER_CLAW, -1, MONSTER_HIDE_1, -1 ]
 GEAR_RODENT: [ MONSTER_BITE, -1 ]
 
 GEAR_SNAKE: [ MONSTER_BITE_2H_VENOM, -1, MONSTER_SCALES_1, -1 ]
+
+GEAR_WOLF: [ MONSTER_BITE_2H, -1, MONSTER_HIDE_2, -1 ]

@@ -9,6 +9,14 @@ FALLOW_DEER:
   species: deer
   tags: [ Agile, Beast, Coward, RandomGender ]
 
+FOREST_BADGER:
+  gear: GEAR_BADGER
+  hp: 45
+  name: forest badger
+  score: 12
+  species: badger
+  tags: [ Anemic, Beast, RandomGender ]
+
 GIANT_SPIDER:
   gear: GEAR_GIANT_SPIDER
   hp: 255
@@ -56,3 +64,11 @@ WILD_CAT:
   score: 9
   species: cat
   tags: [ Agile, Anemic, Beast, RandomGender ]
+
+WOLF_GRAY:
+  gear: GEAR_WOLF
+  hp: 99
+  name: gray wolf
+  score: 55
+  species: wolf
+  tags: [ Agile, Beast, RandomGender ]

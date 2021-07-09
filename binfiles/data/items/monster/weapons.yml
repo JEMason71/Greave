@@ -14,6 +14,21 @@ MONSTER_BITE:
   value: 0
   weight: 0
 
+MONSTER_BITE_2H:
+  bleed: 10
+  crit: 10
+  damage_type: crushing
+  desc: "-"
+  name: powerful bite
+  power: 26
+  rare: 1
+  slot: held
+  speed: 1.2
+  tags: [ TwoHanded ]
+  type: [ weapon, melee ]
+  value: 0
+  weight: 0
+
 MONSTER_BITE_2H_PIERCE:
   bleed: 10
   crit: 10
