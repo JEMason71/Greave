@@ -954,12 +954,13 @@ void World::wilderness_spawns()
     const auto room = get_room(room_vec.at(core()->rng()->rnd(room_vec.size()) - 1));
 
     // Determine what kind of wildlife to spawn.
-    const std::string wilderness_type = StrX::str_toupper(room->meta("wilderness"));
+    std::string wilderness_type = StrX::str_toupper(room->meta("wilderness"));
     if (!wilderness_type.size())
     {
         core()->guru()->nonfatal("Unable to determine wilderness spawn type on room " + room->name() + "!", Guru::ERROR);
         return;
     }
+    StrX::find_and_replace(wilderness_type, " ", "_");
     const std::string mob_id = get_list("SPAWN_WILDERNESS_" + wilderness_type)->rnd().str;
     auto mob = get_mob(mob_id);
     mob->set_location(room->id());

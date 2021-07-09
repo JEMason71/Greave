@@ -1,6 +1,16 @@
 # data/items/monster/armour.yml -- 'Armour' that represents the hides, scales, etc. of beasts.
 # Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
+MONSTER_CHITIN_1:
+  desc: "-"
+  name: chitin
+  power: 3
+  rare: 1
+  slot: body
+  type: [ armour, heavy ]
+  value: 0
+  weight: 0
+
 MONSTER_CHITIN_2:
   desc: "-"
   name: hard chitin
