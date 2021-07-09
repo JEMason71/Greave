@@ -6,7 +6,7 @@ MONSTER_BITE:
   damage_type: piercing
   desc: "-"
   name: bite
-  power: 16
+  power: 13
   rare: 1
   slot: held
   speed: 1.0
@@ -19,8 +19,8 @@ MONSTER_CLAW:
   crit: 10
   damage_type: rending
   desc: "-"
-  name: sharp claw
-  power: 11
+  name: rending claw
+  power: 9
   rare: 1
   slot: held
   speed: 0.8

@@ -6,7 +6,7 @@ MACE:
   damage_type: crushing
   desc: Simple yet brutally effective, a sturdy wooden haft topped with a flanged iron head.
   name: flanged mace
-  power: 15
+  power: 13
   rare: 3
   slot: held
   speed: 1.0
@@ -19,7 +19,7 @@ MACE_GOBLIN:
   damage_type: crushing
   desc: A leather-wrapped wooden handle topped with a crudely-forged, rusting iron head.
   name: goblin mace
-  power: 12
+  power: 10
   rare: 1
   slot: held
   speed: 1.0
