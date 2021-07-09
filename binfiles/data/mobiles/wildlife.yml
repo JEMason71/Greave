@@ -3,32 +3,32 @@
 
 FALLOW_DEER:
   gear: GEAR_DEER
-  hp: 40
+  hp: 49
   name: fallow deer
-  score: 10
+  score: 14
   species: deer
   tags: [ Agile, Beast, Coward, RandomGender ]
 
 JABA:
   gear: GEAR_RODENT
-  hp: 10
+  hp: 7
   name: jaba
-  score: 2
+  score: 3
   species: jaba
   tags: [ Anemic, Beast, Coward, RandomGender ]
 
 PIT_VIPER:
   gear: GEAR_SNAKE
-  hp: 20
+  hp: 27
   name: pit viper
-  score: 25
+  score: 18
   species: snake
   tags: [ Agile, Anemic, Beast, RandomGender ]
 
 WILD_CAT:
   gear: GEAR_CAT
-  hp: 20
+  hp: 21
   name: wild cat
-  score: 10
+  score: 9
   species: cat
   tags: [ Agile, Anemic, Beast, RandomGender ]
