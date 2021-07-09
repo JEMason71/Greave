@@ -184,8 +184,35 @@ MONSTER_BITE_CRUSH:
   crit: 10
   damage_type: crushing
   desc: "-"
-  name: bite
+  name: crushing bite
   power: 11
+  rare: 1
+  slot: held
+  speed: 1.0
+  type: [ weapon, melee ]
+  value: 0
+  weight: 0
+
+MONSTER_BITE_CRUSH_0:
+  crit: 3
+  damage_type: crushing
+  desc: "-"
+  name: strong bite
+  power: 10
+  rare: 1
+  slot: held
+  speed: 1.0
+  type: [ weapon, melee ]
+  value: 0
+  weight: 0
+
+MONSTER_BITE_CRUSH_2:
+  bleed: 21
+  crit: 21
+  damage_type: crushing
+  desc: "-"
+  name: macerating bite
+  power: 12
   rare: 1
   slot: held
   speed: 1.0
@@ -235,6 +262,48 @@ MONSTER_CLAW_2:
   value: 0
   weight: 0
 
+MONSTER_GORE:
+  bleed: 20
+  crit: 20
+  damage_type: piercing
+  desc: "-"
+  name: piercing gore
+  power: 9
+  rare: 1
+  slot: held
+  speed: 1.0
+  type: [ weapon, melee ]
+  value: 0
+  weight: 0
+
+MONSTER_GORE_0:
+  bleed: 10
+  crit: 9
+  damage_type: piercing
+  desc: "-"
+  name: stabbing gore
+  power: 8
+  rare: 1
+  slot: held
+  speed: 1.0
+  type: [ weapon, melee ]
+  value: 0
+  weight: 0
+
+MONSTER_GORE_2:
+  bleed: 36
+  crit: 35
+  damage_type: piercing
+  desc: "-"
+  name: lacerating gore
+  power: 10
+  rare: 1
+  slot: held
+  speed: 1.0
+  type: [ weapon, melee ]
+  value: 0
+  weight: 0
+
 MONSTER_SPIT:
   crit: 0
   damage_type: acid
@@ -273,5 +342,92 @@ MONSTER_SPIT_2:
   slot: held
   speed: 1.5
   type: [ weapon, ranged ]
+  value: 0
+  weight: 0
+
+MONSTER_STING:
+  crit: 25
+  damage_type: poison
+  desc: "-"
+  name: poisonous sting
+  poison: 20
+  power: 9
+  rare: 1
+  slot: held
+  speed: 1.1
+  type: [ weapon, melee ]
+  value: 0
+  weight: 0
+
+MONSTER_STING_0:
+  crit: 8
+  damage_type: poison
+  desc: "-"
+  name: toxic sting
+  poison: 25
+  power: 7
+  rare: 1
+  slot: held
+  speed: 1.1
+  type: [ weapon, melee ]
+  value: 0
+  weight: 0
+
+MONSTER_STING_2:
+  crit: 35
+  damage_type: poison
+  desc: "-"
+  name: poisonous sting
+  poison: 50
+  power: 9
+  rare: 1
+  slot: held
+  speed: 1.1
+  type: [ weapon, melee ]
+  value: 0
+  weight: 0
+
+MONSTER_STING_2H:
+  crit: 25
+  damage_type: poison
+  desc: "-"
+  name: deadly sting
+  poison: 25
+  power: 21
+  rare: 1
+  slot: held
+  speed: 1.3
+  tags: [ TwoHanded ]
+  type: [ weapon, melee ]
+  value: 0
+  weight: 0
+
+MONSTER_STING_2H_0:
+  crit: 8
+  damage_type: poison
+  desc: "-"
+  name: poisoned sting
+  poison: 19
+  power: 18
+  rare: 1
+  slot: held
+  speed: 1.3
+  tags: [ TwoHanded ]
+  type: [ weapon, melee ]
+  value: 0
+  weight: 0
+
+MONSTER_STING_2H_2:
+  crit: 35
+  damage_type: poison
+  desc: "-"
+  name: noxious sting
+  poison: 50
+  power: 21
+  rare: 1
+  slot: held
+  speed: 1.3
+  tags: [ TwoHanded ]
+  type: [ weapon, melee ]
   value: 0
   weight: 0
