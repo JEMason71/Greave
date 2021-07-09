@@ -2,6 +2,7 @@
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #pragma once
+#ifdef GREAVE_INCLUDE_SDL
 #include "core/terminal.hpp"
 #include "3rdparty/SDL2/SDL.h"
 #include "3rdparty/SDL2/SDL_ttf.h"
@@ -51,3 +52,4 @@ private:
     int                     m_window_h;             // The height of the window, in pixels.
     int                     m_window_w;             // The width of the window, in pixels.
 };
+#endif  // GREAVE_INCLUDE_SDL

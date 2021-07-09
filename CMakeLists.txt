@@ -13,6 +13,12 @@ if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
   set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release")
 endif()
 
+# Option to disable SDL when compiling.
+option(INCLUDE_SDL "INCLUDE_SDL" ON)
+if(INCLUDE_SDL)
+  add_definitions(-DGREAVE_INCLUDE_SDL)
+endif(INCLUDE_SDL)
+
 # Platform-specific defaults/overrides
 if(WIN32)
   set(TARGET_WINDOWS 1)

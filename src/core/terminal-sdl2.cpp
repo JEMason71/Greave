@@ -1,6 +1,7 @@
 // core/terminal-sdl2.cpp -- Terminal interface for SDL2/SDL_ttf. See core/terminal.hpp for a full description of the Terminal class.
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
+#ifdef GREAVE_INCLUDE_SDL
 #include "3rdparty/LodePNG/bmp2png.h"
 #include "core/core.hpp"
 #include "core/filex.hpp"
@@ -302,3 +303,4 @@ void TerminalSDL2::screenshot()
 
 // Returns true if the player has tried to close the SDL window.
 bool TerminalSDL2::wants_to_close() const { return false; }
+#endif  // GREAVE_INCLUDE_SDL

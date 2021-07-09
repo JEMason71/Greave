@@ -10,6 +10,8 @@ The build directory can be anywhere, but for the purposes of this example, use t
 
 **MSYS2:** `cmake -G"MSYS Makefiles" ..`
 
+To compile without SDL2 (PDCurses only), add `-DINCLUDE_SDL:BOOL=OFF` before `..` (please note, the SDL, SDL_ttf, FreeType and zlib DLLs will still be copied to the `bin` folder, but they will no longer be required and can be safely deleted).
+
 Assuming there are no errors, run `mingw32-make -j` (or `make -j` for MSYS2) once the CMake configuration is complete. The binary should appear within the `bin` subfolder, along with its required DLLs and static data files.
 
 To run the game in PDCurses (console mode), make a `userdata` folder within the `bin` folder if one does not yet exist, then create the file `bin\userdata\prefs.yml`. Within this file, write: `terminal: curses`. The next time you run `greave.exe`, it should now be in a text console.
@@ -21,6 +23,8 @@ To run the game in PDCurses (console mode), make a `userdata` folder within the 
 **Requirements:** [CMake](https://cmake.org/) version 3.13 or newer, and the development packages `libncurses5-dev`, `libsdl2-dev`, `libsdl2-ttf-dev`, `libsqlite3-dev`, and `libx11-dev` (or the equivalent packages for your distro).
 
 The build directory can be anywhere, but for the purposes of this example, use the `build` folder within the project's root directory. From within the `build` folder, run the following command: `cmake ..`
+
+To compile without SDL2 (NCurses only), add `-DINCLUDE_SDL:BOOL=OFF` before `..`
 
 Assuming there are no errors, run `make -j` once the CMake configuration is complete. The binary should appear within the `bin` subfolder, along with its static data files.
 

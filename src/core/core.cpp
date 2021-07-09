@@ -116,10 +116,13 @@ void Core::init()
     if (terminal_choice != "curses") FreeConsole();
 #endif
 
-    // Set up our terminal emulator.
-    if (terminal_choice == "sdl" || terminal_choice == "sdl2") m_terminal = std::make_shared<TerminalSDL2>();
-    else if (terminal_choice == "curses") m_terminal = std::make_shared<TerminalCurses>();
-    else m_guru_meditation->halt("Invalid terminal specified in prefs.yml");
+        // Set up our terminal emulator.
+#ifdef GREAVE_INCLUDE_SDL
+        if (terminal_choice == "sdl" || terminal_choice == "sdl2") m_terminal = std::make_shared<TerminalSDL2>();
+        else
+#endif
+        if (terminal_choice == "curses") m_terminal = std::make_shared<TerminalCurses>();
+        else m_guru_meditation->halt("Invalid terminal specified in prefs.yml");
 
     // Sets up the main message log window.
     m_message_log = std::make_shared<MessageLog>();

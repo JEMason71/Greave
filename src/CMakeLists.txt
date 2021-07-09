@@ -21,12 +21,15 @@ set(LODEPNG_LIBRARIES lodepng)
 if(TARGET_WINDOWS)
 
   # Platform-specific libraries.
-  set(OS_LIBRARIES mingw32 SDL2main)
+  set(OS_LIBRARIES mingw32)
   set(TOLK_LIBRARIES Tolk)
   add_definitions(-DGREAVE_TOLK)
   set(YAMLCPP_LIBRARIES yaml-cpp.dll)
   set(CURSES_LIBRARIES pdcurses)
-  set(SDL2_EXTRA_LIBRARIES SDL2.dll SDL2_ttf.dll)
+  if(INCLUDE_SDL)
+    set(OS_LIBRARIES ${OS_LIBRARIES} SDL2main)
+    set(SDL2_EXTRA_LIBRARIES SDL2.dll SDL2_ttf.dll)
+  endif(INCLUDE_SDL)
 
   # Application icon
   enable_language(RC)
@@ -38,15 +41,17 @@ elseif(TARGET_LINUX)
 
   # Platform-specific libraries.
   set(CMAKE_MODULE_PATH ../cmake_modules)
-  find_package(SDL2 REQUIRED)
-  find_package(SDL2TTF REQUIRED)
   find_package(Threads REQUIRED)
   find_package(X11 REQUIRED)
   set(OS_LIBRARIES ${X11_LIBRARIES})
   set(YAMLCPP_LIBRARIES yaml-cpp)
   set(CURSES_LIBRARIES ncurses)
-  set(SDL2_EXTRA_LIBRARIES ${SDL2TTF_LIBRARY})
   set(CMAKE_EXE_LINKER_FLAGS_RELEASE "-s -Wl,-rpath='${ORIGIN}'")
+  if(INCLUDE_SDL)
+    find_package(SDL2 REQUIRED)
+    find_package(SDL2TTF REQUIRED)
+    set(SDL2_EXTRA_LIBRARIES ${SDL2TTF_LIBRARY})
+  endif(INCLUDE_SDL)
 
 else()
 
