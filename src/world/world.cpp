@@ -9,6 +9,7 @@
 #include "core/filex.hpp"
 #include "core/guru.hpp"
 #include "core/list.hpp"
+#include "core/mathx.hpp"
 #include "core/message.hpp"
 #include "core/random.hpp"
 #include "core/strx.hpp"
@@ -216,6 +217,10 @@ const std::shared_ptr<Mobile> World::get_mob(const std::string &mob_id) const
             }
         }
     }
+
+    // Mixes up this mobile's stats.
+    int hp = MathX::mixup(new_mob->hp());
+    new_mob->set_hp(hp, hp);
 
     return new_mob;
 }
