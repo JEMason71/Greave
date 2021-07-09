@@ -1,6 +1,14 @@
 # data/mobiles/wildlife.yml -- Animals and beasts that are part of the wildlife of the world.
 # Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
+BEAR_BLACK:
+  gear: GEAR_BEAR
+  hp: 203
+  name: black bear
+  score: 109
+  species: bear
+  tags: [ Beast, RandomGender, Strong ]
+
 FALLOW_DEER:
   gear: GEAR_DEER
   hp: 49
@@ -64,6 +72,14 @@ WILD_CAT:
   score: 9
   species: cat
   tags: [ Agile, Anemic, Beast, RandomGender ]
+
+WOLF_DIRE:
+  gear: GEAR_WOLF_DIRE
+  hp: 340
+  name: dire wolf
+  score: 263
+  species: wolf
+  tags: [ Agile, Beast, RandomGender, Strong ]
 
 WOLF_GRAY:
   gear: GEAR_WOLF

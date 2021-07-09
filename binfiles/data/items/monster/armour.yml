@@ -3,7 +3,7 @@
 
 MONSTER_CHITIN_2:
   desc: "-"
-  name: chitin
+  name: hard chitin
   power: 5
   rare: 1
   slot: body
@@ -23,7 +23,7 @@ MONSTER_HIDE_1:
 
 MONSTER_HIDE_2:
   desc: "-"
-  name: hide
+  name: tough hide
   power: 5
   rare: 1
   slot: body
@@ -33,7 +33,7 @@ MONSTER_HIDE_2:
 
 MONSTER_HIDE_3:
   desc: "-"
-  name: hide
+  name: tough hide
   power: 8
   rare: 1
   slot: body

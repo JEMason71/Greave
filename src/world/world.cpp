@@ -37,7 +37,7 @@ const std::map<std::string, EquipSlot>  World::EQUIP_SLOT_MAP = { { "about", Equ
 
 // Lookup table for converting ItemSub text names into enums.
 const std::map<std::string, ItemSub>    World::ITEM_SUBTYPE_MAP = { { "clothing", ItemSub::CLOTHING }, { "heavy", ItemSub::HEAVY }, { "light", ItemSub::LIGHT },
-    { "medium", ItemSub::MEDIUM }, { "melee", ItemSub::MELEE }, { "none", ItemSub::NONE }, { "unarmed", ItemSub::UNARMED } };
+    { "medium", ItemSub::MEDIUM }, { "melee", ItemSub::MELEE }, { "none", ItemSub::NONE }, { "ranged", ItemSub::RANGED }, { "unarmed", ItemSub::UNARMED } };
 
 // Lookup table for converting ItemTag text names into enums.
 const std::map<std::string, ItemTag>    World::ITEM_TAG_MAP = { { "handandahalf", ItemTag::HandAndAHalf }, { "noa", ItemTag::NoA }, { "offhandonly", ItemTag::OffHandOnly },

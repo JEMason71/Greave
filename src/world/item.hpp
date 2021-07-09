@@ -19,7 +19,7 @@ enum class ItemType : uint16_t { NONE, ARMOUR, KEY, LIGHT, SHIELD, WEAPON };
 // ItemSub is for sub-types of items, e.g. a tool could sub-classify itself here.
 enum class ItemSub : uint16_t { NONE,
     CLOTHING, HEAVY, LIGHT, MEDIUM, // Armour subtypes.
-    MELEE, UNARMED, // Weapon subtypes.
+    MELEE, RANGED, UNARMED,         // Weapon subtypes.
     };
 
 enum class ItemTag : uint16_t { _None = 0,  // Do not use this tag, it's just a marker to start the tags below counting from 1.

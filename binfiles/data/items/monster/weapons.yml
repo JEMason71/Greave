@@ -2,11 +2,39 @@
 # Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 MONSTER_BITE:
-  crit: 3
+  bleed: 15
+  crit: 10
   damage_type: piercing
   desc: "-"
   name: bite
-  power: 13
+  power: 10
+  rare: 1
+  slot: held
+  speed: 1.0
+  type: [ weapon, melee ]
+  value: 0
+  weight: 0
+
+MONSTER_BITE_0:
+  crit: 3
+  damage_type: piercing
+  desc: "-"
+  name: weak bite
+  power: 10
+  rare: 1
+  slot: held
+  speed: 1.0
+  type: [ weapon, melee ]
+  value: 0
+  weight: 0
+
+MONSTER_BITE_2:
+  bleed: 21
+  crit: 21
+  damage_type: piercing
+  desc: "-"
+  name: piercing bite
+  power: 12
   rare: 1
   slot: held
   speed: 1.0
@@ -29,13 +57,72 @@ MONSTER_BITE_2H:
   value: 0
   weight: 0
 
+MONSTER_BITE_2H_0:
+  crit: 3
+  damage_type: crushing
+  desc: "-"
+  name: heavy bite
+  power: 23
+  rare: 1
+  slot: held
+  speed: 1.2
+  tags: [ TwoHanded ]
+  type: [ weapon, melee ]
+  value: 0
+  weight: 0
+
+MONSTER_BITE_2H_2:
+  bleed: 21
+  crit: 22
+  damage_type: crushing
+  desc: "-"
+  name: splintering bite
+  power: 29
+  rare: 1
+  slot: held
+  speed: 1.2
+  tags: [ TwoHanded ]
+  type: [ weapon, melee ]
+  value: 0
+  weight: 0
+
 MONSTER_BITE_2H_PIERCE:
-  bleed: 10
+  bleed: 15
   crit: 10
   damage_type: piercing
   desc: "-"
   name: sharp bite
-  power: 26
+  power: 25
+  rare: 1
+  slot: held
+  speed: 1.2
+  tags: [ TwoHanded ]
+  type: [ weapon, melee ]
+  value: 0
+  weight: 0
+
+MONSTER_BITE_2H_PIERCE_0:
+  bleed: 5
+  crit: 3
+  damage_type: piercing
+  desc: "-"
+  name: keen bite
+  power: 21
+  rare: 1
+  slot: held
+  speed: 1.2
+  tags: [ TwoHanded ]
+  type: [ weapon, melee ]
+  value: 0
+  weight: 0
+
+MONSTER_BITE_2H_PIERCE_2:
+  bleed: 21
+  crit: 22
+  damage_type: piercing
+  desc: "-"
+  name: razor-sharp bite
+  power: 29
   rare: 1
   slot: held
   speed: 1.2
@@ -60,16 +147,131 @@ MONSTER_BITE_2H_VENOM:
   value: 0
   weight: 0
 
+MONSTER_BITE_2H_VENOM_0:
+  bleed: 3
+  crit: 10
+  damage_type: poison
+  desc: "-"
+  name: toxic bite
+  poison: 20
+  power: 15
+  rare: 1
+  slot: held
+  speed: 1.2
+  tags: [ TwoHanded ]
+  type: [ weapon, melee ]
+  value: 0
+  weight: 0
+
+MONSTER_BITE_2H_VENOM_2:
+  bleed: 17
+  crit: 17
+  damage_type: poison
+  desc: "-"
+  name: venomous bite
+  poison: 60
+  power: 17
+  rare: 1
+  slot: held
+  speed: 1.2
+  tags: [ TwoHanded ]
+  type: [ weapon, melee ]
+  value: 0
+  weight: 0
+
+MONSTER_BITE_CRUSH:
+  bleed: 10
+  crit: 10
+  damage_type: crushing
+  desc: "-"
+  name: bite
+  power: 11
+  rare: 1
+  slot: held
+  speed: 1.0
+  type: [ weapon, melee ]
+  value: 0
+  weight: 0
+
 MONSTER_CLAW:
-  bleed: 13
+  bleed: 20
   crit: 10
   damage_type: rending
   desc: "-"
   name: rending claw
-  power: 9
+  power: 8
   rare: 1
   slot: held
   speed: 0.8
   type: [ weapon, melee ]
+  value: 0
+  weight: 0
+
+MONSTER_CLAW_0:
+  bleed: 12
+  crit: 10
+  damage_type: rending
+  desc: "-"
+  name: sharp claw
+  power: 6
+  rare: 1
+  slot: held
+  speed: 0.8
+  type: [ weapon, melee ]
+  value: 0
+  weight: 0
+
+MONSTER_CLAW_2:
+  bleed: 40
+  crit: 40
+  damage_type: rending
+  desc: "-"
+  name: lacerating claw
+  power: 7
+  rare: 1
+  slot: held
+  speed: 0.8
+  type: [ weapon, melee ]
+  value: 0
+  weight: 0
+
+MONSTER_SPIT:
+  crit: 0
+  damage_type: acid
+  desc: "-"
+  name: acidic spit
+  poison: 10
+  power: 19
+  rare: 1
+  slot: held
+  speed: 1.5
+  type: [ weapon, ranged ]
+  value: 0
+  weight: 0
+
+MONSTER_SPIT_0:
+  crit: 0
+  damage_type: acid
+  desc: "-"
+  name: caustic spit
+  power: 16
+  rare: 1
+  slot: held
+  speed: 1.5
+  type: [ weapon, ranged ]
+  value: 0
+  weight: 0
+
+MONSTER_SPIT_2:
+  crit: 0
+  damage_type: acid
+  desc: "-"
+  name: corrosive spit
+  poison: 30
+  power: 19
+  rare: 1
+  slot: held
+  speed: 1.5
+  type: [ weapon, ranged ]
   value: 0
   weight: 0
