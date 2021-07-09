@@ -27,6 +27,9 @@ protected:
     static const int    BLEED_SEVERITY_BASE;                    // The base value of bleed severity, used in the bleed calculations.
     static const int    BLEED_SEVERITY_RANGE;                   // The range of variation on the bleed severity.
     static const int    BLEED_TIME_RANGE;                       // The range of time (1 - X) that a weapon bleed effect can cause.
+    static const int    POISON_SEVERITY_BASE;                   // The base value of poison severity, used in the poison calculations.
+    static const int    POISON_SEVERITY_RANGE;                  // The range of variation on the poison severity.
+    static const int    POISON_TIME_RANGE;                      // The range of time (1 - X) that a weapon poison effect can cause.
     static const int    SCAR_BLEED_INTENSITY_FROM_BLEED_ATTACK; // Blood type scar intensity for attacks that cause bleeding.
 
     // Weapon type damage modifiers to unarmoured, light, medium and heavy armour targets.
@@ -45,5 +48,6 @@ protected:
     static int          stance_compare(CombatStance atk, CombatStance def); // Compares two combat stances; returns -1 for an unfavourable match-up, 0 for neutral, 1 for favourable.
                         // Returns a threshold string, if a damage threshold has been passed.
     static std::string  threshold_str(std::shared_ptr<Mobile> defender, uint32_t damage, const std::string& good_colour, const std::string& bad_colour);
-    static void         weapon_bleed_effect(std::shared_ptr<Mobile> defender, uint32_t damage); // Applies a weapon bleed debuff and applies room scars.
+    static void         weapon_bleed_effect(std::shared_ptr<Mobile> defender, uint32_t damage);     // Applies a weapon bleed debuff and applies room scars.
+    static void         weapon_poison_effect(std::shared_ptr<Mobile> defender, uint32_t damage);    // Applies a weapon poison debuff.
 };

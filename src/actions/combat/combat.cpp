@@ -15,6 +15,9 @@ const float Combat::BASE_ATTACK_SPEED_MULTIPLIER =              10.0f;  // The b
 const int   Combat::BLEED_SEVERITY_BASE =                       6;      // The base value of bleed severity, used in the bleed calculations.
 const int   Combat::BLEED_SEVERITY_RANGE=                       4;      // The range of variation on the bleed severity.
 const int   Combat::BLEED_TIME_RANGE =                          10;     // The range of time (1 - X) that a weapon bleed effect can cause.
+const int   Combat::POISON_SEVERITY_BASE =                      4;      // The base value of poison severity, used in the poison calculations.
+const int   Combat::POISON_SEVERITY_RANGE =                     6;      // The range of variation on the poison severity.
+const int   Combat::POISON_TIME_RANGE =                         5;      // The range of time (1 - X) that a weapon poison effect can cause.
 const int   Combat::SCAR_BLEED_INTENSITY_FROM_BLEED_ATTACK =    2;      // Blood type scar intensity for attacks that cause bleeding.
 const float Combat::STANCE_CHANGE_TIME =                        1.0f;   // The time it takes to change combat stances.
 
@@ -296,4 +299,14 @@ void Combat::weapon_bleed_effect(std::shared_ptr<Mobile> defender, uint32_t dama
     if (!bleed_severity) bleed_severity = 1;
     defender->set_buff(Buff::Type::BLEED, bleed_time, bleed_severity, false);
     core()->world()->get_room(defender->location())->add_scar(ScarType::BLOOD, SCAR_BLEED_INTENSITY_FROM_BLEED_ATTACK);
+}
+
+// Applies a weapon poison debuff.
+void Combat::weapon_poison_effect(std::shared_ptr<Mobile> defender, uint32_t damage)
+{
+    if (defender->tag(MobileTag::ImmunityPoison)) return;
+    const int poison_time = core()->rng()->rnd(POISON_TIME_RANGE);
+    int poison_severity = damage / (POISON_SEVERITY_BASE + core()->rng()->rnd(POISON_SEVERITY_RANGE));
+    if (!poison_severity) poison_severity = 1;
+    defender->set_buff(Buff::Type::POISON, poison_time, poison_severity, true);
 }

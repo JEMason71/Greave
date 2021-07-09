@@ -69,6 +69,7 @@ public:
     void        new_parser_id();                    // Generates a new parser ID for this Item.
     int         parry_mod() const;                  // Returns the parry% modifier of this Item, if any.
     uint16_t    parser_id() const;                  // Retrieves the current ID of this Item, for parser differentiation.
+    int         poison() const;                     // Returns the poison chance of this item, if any.
     int         power() const;                      // Retrieves this Item's power.
     int         rare() const;                       // Retrieves this Item's rarity.
     void        save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id); // Saves the Item to the save file.

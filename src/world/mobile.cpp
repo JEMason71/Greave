@@ -578,7 +578,7 @@ bool Mobile::tick_bleed(uint32_t power, uint16_t time)
             core()->message("{r}" + name(NAME_FLAG_CAPITALIZE_FIRST | NAME_FLAG_THE) + " {r}is {R}bleeding {r}rather badly. {w}[{R}-" + std::to_string(power) + "{w}]");
     }
     reduce_hp(power);
-    if (!fatal && is_player() && time == 1) core()->message("{g}Your wounds stop bleeding.");
+    if (!fatal && is_player() && time == 1) core()->message("{r}Your wounds stop bleeding.");
     return !fatal;
 }
 
@@ -594,10 +594,40 @@ void Mobile::tick_buffs()
             case Buff::Type::BLEED:
                 if (!tick_bleed(m_buffs.at(i)->power, m_buffs.at(i)->time)) return;
                 break;
+            case Buff::Type::POISON:
+                if (!tick_poison(m_buffs.at(i)->power, m_buffs.at(i)->time)) return;
+                break;
             default: break;
         }
 
         if (!--m_buffs.at(i)->time)
             m_buffs.erase(m_buffs.begin() + i--);
     }
+}
+
+// Triggers a single poison tick.
+bool Mobile::tick_poison(uint32_t power, uint16_t time)
+{
+    if (!power || tag(MobileTag::ImmunityPoison)) return true;
+    const auto room = core()->world()->get_room(m_location);
+    const bool fatal = (static_cast<int>(power) >= m_hp[0]);
+
+    if (is_player())
+    {
+        core()->message("{g}You feel deathly ill from the {G}poison {g}in your veins. {w}[{G}-" + std::to_string(power) + "{w}]");
+        if (fatal)
+        {
+            core()->message("{0}{G}The poison running through your veins is too much, and your body shuts down.");
+            core()->world()->player()->set_death_reason("succumbed to poison");
+        }
+    }
+    else
+    {
+        const std::shared_ptr<Player> player = core()->world()->player();
+        if (player->location() == m_location && room->light(player) >= Room::LIGHT_VISIBLE)
+            core()->message("{g}" + name(NAME_FLAG_CAPITALIZE_FIRST | NAME_FLAG_THE) + " {g}takes damage from {G}poison{g}. {w}[{G}-" + std::to_string(power) + "{w}]");
+    }
+    reduce_hp(power);
+    if (!fatal && is_player() && time == 1) core()->message("{g}You feel much better as the poison fades from your system.");
+    return !fatal;
 }

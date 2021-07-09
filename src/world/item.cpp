@@ -244,6 +244,9 @@ int Item::parry_mod() const { return meta_int("parry_mod"); }
 // Retrieves the current ID of this Item, for parser differentiation.
 uint16_t Item::parser_id() const { return m_parser_id; }
 
+// Returns thie poison chance of this Item, if any.
+int Item::poison() const { return meta_int("poison"); }
+
 // Retrieves this Item's power.
 int Item::power() const { return meta_int("power"); }
 

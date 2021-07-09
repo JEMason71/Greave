@@ -53,7 +53,7 @@ struct BodyPart
 
 struct Buff
 {
-    enum class Type : uint8_t { NONE, BLEED, RECENTLY_FLED };
+    enum class Type : uint8_t { NONE, BLEED, POISON, RECENTLY_FLED };
 
     static const std::string    SQL_BUFFS;  // The SQL table construction string for Buffs.
 
@@ -137,6 +137,7 @@ public:
     bool                tag(MobileTag the_tag) const;               // Checks if a MobileTag is set on this Mobile.
     bool                tick_bleed(uint32_t power, uint16_t time);  // Triggers a single bleed tick.
     void                tick_buffs();                               // Reduce the timer on all buffs.
+    bool                tick_poison(uint32_t power, uint16_t time); // Triggers a single poison tick.
 
 protected:
     static const float  ACTION_TIMER_CAP_MAX;   // The maximum value the action timer can ever reach.
