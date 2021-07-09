@@ -10,6 +10,7 @@
 #include "actions/status.hpp"
 #include "actions/travel.hpp"
 #include "core/core.hpp"
+#include "core/mathx.hpp"
 #include "core/parser.hpp"
 #include "core/strx.hpp"
 #include "world/inventory.hpp"
@@ -53,7 +54,9 @@ Parser::Parser() : m_special_state(SpecialState::NONE)
     add_command("[weather|temperature|temp]", ParserCommand::WEATHER);
     add_command("[xyzzy|frotz|plugh|plover]", ParserCommand::XYZZY);
     add_command("yes", ParserCommand::YES);
+    add_command("#bix <txt>", ParserCommand::MIXUP_BIG);
     add_command("#hash <txt>", ParserCommand::HASH);
+    add_command("#mix <txt>", ParserCommand::MIXUP);
     add_command("#money <txt>", ParserCommand::ADD_MONEY);
     add_command("[#spawnitem|#si] <txt>", ParserCommand::SPAWN_ITEM);
     add_command("[#spawnmobile|#spawnmob|#sm] <txt>", ParserCommand::SPAWN_MOBILE);
@@ -430,6 +433,16 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             else ActionDoors::lock_or_unlock(player, parsed_direction, pcd.command == ParserCommand::UNLOCK);
             break;
         case ParserCommand::LOOK: ActionLook::look(player); break;
+        case ParserCommand::MIXUP:
+        case ParserCommand::MIXUP_BIG:
+            if (!words.size() || !StrX::is_number(words.at(0))) core()->message("{y}Please specify a {Y}number to mix up{y}.");
+            else
+            {
+                const bool big_mix = (pcd.command == ParserCommand::MIXUP_BIG);
+                core()->message("{G}" + words.at(0) + " {g}mixes to {G}" + std::to_string(MathX::mixup(parse_int(words.at(0)), (big_mix ? 2 : 10))) + "{g}.");
+                break;
+            }
+            break;
         case ParserCommand::OPEN: case ParserCommand::CLOSE:
             if (parsed_direction == Direction::NONE) core()->message("{y}Please specify a {Y}direction {y}to " + first_word + ".");
             else ActionDoors::open_or_close(player, parsed_direction, pcd.command == ParserCommand::OPEN);
