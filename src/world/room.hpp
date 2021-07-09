@@ -97,6 +97,7 @@ enum class RoomTag : uint16_t {
     HeatedInterior,         // Is this interior area heated?
     PermaCampfire,          // Treat this room like it always has a campfire burning.
     HideCampfireScar,       // This is a bit specific. It's for rooms with PermaCampfire, where we don't want the campfire 'scar' text showing.
+    Wilderness,             // Is this a wilderness room, where random beasts can spawn?
 
     // Tags regarding the presence of water in this room.
     WaterClean,             // There is a source of clean water nearby. [CURRENTLY UNUSED]
@@ -169,6 +170,7 @@ public:
     bool        link_tag(Direction dir, LinkTag the_tag) const;         // As above, but with a Direction enum.
     void        load(std::shared_ptr<SQLite::Database> save_db);        // Loads the Room and anything it contains.
     std::string meta(const std::string &key) const;                     // Retrieves Room metadata.
+    std::map<std::string, std::string>* meta_raw();                     // Accesses the metadata map directly. Use with caution!
     std::string name(bool short_name = false) const;                    // Returns the Room's full or short name.
     void        respawn_mobs();                                         // Respawn Mobiles in this Room, if possible.
     void        save(std::shared_ptr<SQLite::Database> save_db);        // Saves the Room and anything it contains.

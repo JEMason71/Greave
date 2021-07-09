@@ -29,6 +29,7 @@ const uint32_t TimeWeather::HEARTBEAT_TIMERS[TimeWeather::Heartbeat::_TOTAL] = {
     30 * Time::MINUTE,  // MOBILE_SPAWN, used to trigger Mobiles (re)spawning.
     10 * Time::MINUTE,  // ROOM_SCARS, for decreasing the intensity of room scars.
     10 * Time::SECOND,  // BUFFS, for ticking down buffs/debuffs on Mobiles and the Player.
+    5 * Time::MINUTE,   // WILDERNESS_SPAWN, for spawning beasts in the wilderness.
 };
 
 
@@ -275,6 +276,9 @@ bool TimeWeather::pass_time(float seconds, bool interruptable)
                 room->respawn_mobs();
             }
         }
+
+        // Spawn mobiles in wilderness rooms.
+        if (heartbeat_ready(Heartbeat::WILDERNESS_SPAWN)) core()->world()->wilderness_spawns();
 
         // Reduce room scars on active rooms.
         if (heartbeat_ready(Heartbeat::ROOM_SCARS))

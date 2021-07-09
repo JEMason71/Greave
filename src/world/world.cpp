@@ -75,14 +75,14 @@ const std::map<std::string, RoomTag>    World::ROOM_TAG_MAP = { { "canseeoutside
     { "shopbuyscontraband", RoomTag::ShopBuysContraband }, { "shoprespawningowner", RoomTag::ShopRespawningOwner }, { "sleepok", RoomTag::SleepOK },
     { "sludgepit", RoomTag::SludgePit }, { "smelly", RoomTag::Smelly }, { "trees", RoomTag::Trees }, { "underground", RoomTag::Underground }, { "verywide", RoomTag::VeryWide },
     { "waterclean", RoomTag::WaterClean }, { "waterdeep", RoomTag::WaterDeep }, { "watersalt", RoomTag::WaterSalt }, { "watershallow", RoomTag::WaterShallow },
-    { "watertainted", RoomTag::WaterTainted }, { "wide", RoomTag::Wide } };
+    { "watertainted", RoomTag::WaterTainted }, { "wide", RoomTag::Wide }, { "wilderness", RoomTag::Wilderness } };
 
 // Lookup table for converting textual room security (e.g. "anarchy") to enum values.
 const std::map<std::string, Security>   World::SECURITY_MAP = { { "anarchy", Security::ANARCHY }, { "low", Security::LOW }, { "high", Security::HIGH },
     { "sanctuary", Security::SANCTUARY }, { "inaccessible", Security::INACCESSIBLE } };
 
 // A list of all valid keys in area YAML files.
-const std::set<std::string>     World::VALID_YAML_KEYS_AREAS = { "desc", "exits", "light", "name", "security", "spawn_mobs", "tags" };
+const std::set<std::string>     World::VALID_YAML_KEYS_AREAS = { "desc", "exits", "light", "name", "security", "spawn_mobs", "tags", "wilderness" };
 
 // A list of all valid keys in item YAML files.
 const std::set<std::string>     World::VALID_YAML_KEYS_ITEMS = { "bleed", "block_mod", "crit", "damage_type", "desc", "dodge_mod", "metadata", "name", "parry_mod", "poison", "power",
@@ -817,6 +817,15 @@ void World::load_room_pool()
                 else new_room->add_mob_spawn(room_data["spawn_mobs"].as<std::string>());
             }
 
+            // The Room's metadata, if any.
+            if (room_data["metadata"]) StrX::string_to_metadata(room_data["metadata"].as<std::string>(), *new_room->meta_raw());
+
+            // Wilderness type for this room, if any.
+            if (room_data["wilderness"]) new_room->set_meta("wilderness", room_data["wilderness"].as<std::string>());
+
+            // Clear the meta changed tag, since this is static data.
+            new_room->clear_tag(RoomTag::MetaChanged);
+
             // Add the new Room to the room pool.
             m_room_pool.insert(std::make_pair(new_room->id(), new_room));
         }
@@ -918,3 +927,41 @@ void World::save(std::shared_ptr<SQLite::Database> save_db)
 
 // Gets a pointer to the TimeWeather object.
 const std::shared_ptr<TimeWeather> World::time_weather() const { return m_time_weather; }
+
+// Triggers wilderness respawns near the player.
+void World::wilderness_spawns()
+{
+    // Get a list of all rooms adjacent to the player, and count any mobiles in those rooms.
+    int rooms = 0, mobiles = 0;
+    std::vector<uint32_t> room_vec;
+    const std::shared_ptr<Room> player_room = get_room(m_player->location());
+    for (int i = 0; i < Room::ROOM_LINKS_MAX; i++)
+    {
+        if (player_room->fake_link(i)) continue;        // Skip any invalid links.
+        const uint32_t link = player_room->link(i);
+        const auto room = get_room(link);
+        if (!room->tag(RoomTag::Wilderness)) continue;  // Skip any non-wilderness rooms.
+        rooms++;
+        room_vec.push_back(link);
+        for (auto mob : m_mobiles)
+            if (mob->location() == link) mobiles++;
+    }
+
+    // If there are too many mobiles in nearby wilderness rooms, just do nothing.
+    if (!room_vec.size() || mobiles > std::min(1, rooms / 2)) return;
+
+    // Pick a room at random.
+    const auto room = get_room(room_vec.at(core()->rng()->rnd(room_vec.size()) - 1));
+
+    // Determine what kind of wildlife to spawn.
+    const std::string wilderness_type = StrX::str_toupper(room->meta("wilderness"));
+    if (!wilderness_type.size())
+    {
+        core()->guru()->nonfatal("Unable to determine wilderness spawn type on room " + room->name() + "!", Guru::ERROR);
+        return;
+    }
+    const std::string mob_id = get_list("SPAWN_WILDERNESS_" + wilderness_type)->rnd().str;
+    auto mob = get_mob(mob_id);
+    mob->set_location(room->id());
+    add_mobile(mob);
+}

@@ -56,7 +56,8 @@ UYOGA_ISLAND_5:
   light: wilderness
   name: [ Western Trail, trail ]
   security: anarchy
-  tags: [ WaterClean, Wide ]
+  tags: [ WaterClean, Wide, Wilderness ]
+  wilderness: grassland
 
 UYOGA_ISLAND_6:
   desc: Following the rocky decline to the west, the deep blue ocean lapping waves against the weather-beaten rocks, this grassy path stretches north towards a smaller outcrop and rope bridge, and south towards a couple of wooden fishing huts on the south side of the island. A well-worn, branching trail leads east, past a small freshwater lake and towards a large house occupying the middle of the island.
@@ -68,7 +69,8 @@ UYOGA_ISLAND_6:
   light: wilderness
   name: [ Western Trail, trail ]
   security: low
-  tags: [ EastDoubleLength, SouthTripleLength, WaterClean, Wide ]
+  tags: [ EastDoubleLength, SouthTripleLength, WaterClean, Wide, Wilderness ]
+  wilderness: grassland
 
 UYOGA_ISLAND_7:
   desc: A large two-storey house stands before you, a simple yet sturdy-looking construction of wood and stone, unevenly patched and repaired from past damage. A heavy oak door leads inward to the east, while a grassy trail leads in the opposite direction to the west side of the island, curving around a clear freshwater lake to the northwest.
@@ -92,7 +94,8 @@ UYOGA_ISLAND_8:
   light: wilderness
   name: [ Western Trail, trail ]
   security: anarchy
-  tags: [ NorthTripleLength, WaterClean ]
+  tags: [ NorthTripleLength, WaterClean, Wilderness ]
+  wilderness: grassland
 
 UYOGA_ISLAND_LAKE_NW:
   desc: Just what reason compelled you to stand waist-deep in a lake of [springsummer:chilly][autumnwinter:freezing cold] freshwater is yours alone to know, but here you stand. The surface of the lake is clear and still, a grassy trail working around it to the south and west. Craggy cliffs give way to the ocean to the north, while a large building is visible close to the southeast.

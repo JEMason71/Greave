@@ -415,6 +415,9 @@ std::string Room::meta(const std::string &key) const
     return result;
 }
 
+// Accesses the metadata map directly. Use with caution!
+std::map<std::string, std::string>* Room::meta_raw() { return &m_metadata; }
+
 // Returns the Room's full or short name.
 std::string Room::name(bool short_name) const { return (short_name ? m_name_short : m_name); }
 

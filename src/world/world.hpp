@@ -49,6 +49,7 @@ public:
     bool            room_exists(const std::string &str) const;                  // Checks if a specified room ID exists.
     void            save(std::shared_ptr<SQLite::Database> save_db);            // Saves the World and all things within it.
     const std::shared_ptr<TimeWeather> time_weather() const;                    // Gets a pointer to the TimeWeather object.
+    void            wilderness_spawns();                                        // Triggers wilderness respawns near the player.
 
 private:
     static const std::map<std::string, DamageType>  DAMAGE_TYPE_MAP;        // Lookup table for converting DamageType text names into enums.
