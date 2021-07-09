@@ -17,6 +17,7 @@ MONSTER_SCALES_1:
   power: 3
   rare: 1
   slot: body
+  tags: [ PluralName ]
   type: [ armour, medium ]
   value: 0
   weight: 0
