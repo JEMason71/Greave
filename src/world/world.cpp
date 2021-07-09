@@ -446,7 +446,11 @@ void World::load_item_pool()
 
             // The Item's description, if any.
             if (!item_data["desc"]) core()->guru()->nonfatal("Missing description for item " + item_id_str, Guru::WARN);
-            else new_item->set_description(item_data["desc"].as<std::string>());
+            else
+            {
+                const std::string desc = item_data["desc"].as<std::string>();
+                if (desc != "-") new_item->set_description(desc);
+            }
 
             // The Item's value.
             unsigned int item_value = 0;
@@ -639,7 +643,11 @@ void World::load_room_pool()
 
             // The Room's description.
             if (!room_data["desc"]) core()->guru()->nonfatal("Missing room description: " + room_id, Guru::WARN);
-            else new_room->set_desc(room_data["desc"].as<std::string>());
+            else
+            {
+                const std::string desc = room_data["desc"].as<std::string>();
+                if (desc != "-") new_room->set_desc(desc);
+            }
 
             // Links to other Rooms.
             if (room_data["exits"])
