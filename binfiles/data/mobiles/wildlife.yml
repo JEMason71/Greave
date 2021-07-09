@@ -1,6 +1,14 @@
 # data/mobiles/wildlife.yml -- Animals and beasts that are part of the wildlife of the world.
 # Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
+FALLOW_DEER:
+  gear: GEAR_DEER
+  hp: 40
+  name: fallow deer
+  score: 10
+  species: deer
+  tags: [ Agile, Coward ]
+
 WILD_CAT:
   gear: GEAR_CAT
   hp: 20

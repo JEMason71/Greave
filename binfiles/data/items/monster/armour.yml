@@ -1,0 +1,12 @@
+# data/items/monster/armour.yml -- 'Armour' that represents the hides, scales, etc. of beasts.
+# Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+
+MONSTER_HIDE_1:
+  desc: "-"
+  name: hide
+  power: 3
+  rare: 1
+  slot: body
+  type: [ armour, light ]
+  value: 0
+  weight: 0
