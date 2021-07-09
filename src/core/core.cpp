@@ -44,13 +44,24 @@ int main(int argc, char* argv[])
 {
     // Check command-line parameters.
     std::vector<std::string> parameters(argv, argv + argc);
+    bool dry_run = false;
+    if (parameters.size() >= 2)
+        for (auto param : parameters)
+            if (!param.compare("-dry-run")) dry_run = true;
 
     greave = std::make_shared<Core>();
     try
     {
-        greave->init();
-        greave->title();
-        greave->main_loop();
+        greave->init(dry_run);
+        if (dry_run)
+        {
+            auto new_world =std::make_shared<World>();
+        }
+        else
+        {
+            greave->title();
+            greave->main_loop();
+        }
         greave->cleanup();
     }
     catch (std::exception& e)
@@ -86,7 +97,7 @@ const std::shared_ptr<Guru> Core::guru() const
 }
 
 // Sets up the core game classes and data.
-void Core::init()
+void Core::init(bool dry_run)
 {
     FileX::make_dir("userdata");
     FileX::make_dir("userdata/save");
@@ -112,8 +123,10 @@ void Core::init()
 #endif
 
     std::string terminal_choice = StrX::str_tolower(m_prefs->terminal);
+    if (!dry_run)
+    {
 #ifdef GREAVE_TARGET_WINDOWS
-    if (terminal_choice != "curses") FreeConsole();
+        if (terminal_choice != "curses") FreeConsole();
 #endif
 
         // Set up our terminal emulator.
@@ -124,11 +137,12 @@ void Core::init()
         if (terminal_choice == "curses") m_terminal = std::make_shared<TerminalCurses>();
         else m_guru_meditation->halt("Invalid terminal specified in prefs.yml");
 
-    // Sets up the main message log window.
-    m_message_log = std::make_shared<MessageLog>();
+        // Sets up the main message log window.
+        m_message_log = std::make_shared<MessageLog>();
 
-    // Tell the Guru system we're finished setting up the terminal and message window.
-    guru()->console_ready();
+        // Tell the Guru system we're finished setting up the terminal and message window.
+        guru()->console_ready();
+    }
 
     // Sets up the text parser.
     m_parser = std::make_shared<Parser>();

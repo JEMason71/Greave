@@ -187,6 +187,7 @@ void Guru::nonfatal(std::string error, int type)
         case Guru::ERROR: error = "{R}Error: " + error; break;
         case Guru::CRITICAL: error = "{M}Critical Error: " + error; break;
     }
-    core()->message(error);
+    if (core()->messagelog() != nullptr) core()->message(error);
+    else throw std::runtime_error(error);
     if (m_cache_nonfatal) m_nonfatal_cache.push_back(error);
 }

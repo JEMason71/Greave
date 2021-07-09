@@ -19,7 +19,7 @@ public:
                                         Core();                 // Constructor, doesn't do too much aside from setting default values for member variables. Use init() to set things up.
     void                                cleanup();              // Cleans up after we're done.
     const std::shared_ptr<Guru>         guru() const;           // Returns a pointer to the Guru Meditation object.
-    void                                init();                 // Sets up the core game classes and data.
+    void                                init(bool dry_run);     // Sets up the core game classes and data.
     void                                load(int save_slot);    // Loads a specified slot's saved game.
     void                                main_loop();            // The main game loop.
     void                                message(std::string msg, bool interrupt = false);   // Prints a message.
