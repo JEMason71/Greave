@@ -9,13 +9,29 @@ FALLOW_DEER:
   species: deer
   tags: [ Agile, Beast, Coward, RandomGender ]
 
+GIANT_SPIDER:
+  gear: GEAR_GIANT_SPIDER
+  hp: 255
+  name: giant spider
+  score: 268
+  species: giant_spider
+  tags: [ AggroOnSight, Agile, Beast, RandomGender, Strong ]
+
 JABA:
   gear: GEAR_RODENT
   hp: 7
   name: jaba
-  score: 3
+  score: 1
   species: jaba
   tags: [ Anemic, Beast, Coward, RandomGender ]
+
+PAPIO_BROWN:
+  gear: GEAR_PAPIO
+  hp: 19
+  name: brown papio
+  score: 10
+  species: papio
+  tags: [ Agile, Beast, Puny, RandomGender ]
 
 PIT_VIPER:
   gear: GEAR_SNAKE

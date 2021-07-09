@@ -1,10 +1,40 @@
 # data/items/monster/armour.yml -- 'Armour' that represents the hides, scales, etc. of beasts.
 # Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
+MONSTER_CHITIN_2:
+  desc: "-"
+  name: chitin
+  power: 5
+  rare: 1
+  slot: body
+  type: [ armour, heavy ]
+  value: 0
+  weight: 0
+
 MONSTER_HIDE_1:
   desc: "-"
   name: hide
   power: 3
+  rare: 1
+  slot: body
+  type: [ armour, light ]
+  value: 0
+  weight: 0
+
+MONSTER_HIDE_2:
+  desc: "-"
+  name: hide
+  power: 5
+  rare: 1
+  slot: body
+  type: [ armour, light ]
+  value: 0
+  weight: 0
+
+MONSTER_HIDE_3:
+  desc: "-"
+  name: hide
+  power: 8
   rare: 1
   slot: body
   type: [ armour, light ]
