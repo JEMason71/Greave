@@ -7,7 +7,15 @@ FALLOW_DEER:
   name: fallow deer
   score: 10
   species: deer
-  tags: [ Agile, Beast, Coward ]
+  tags: [ Agile, Beast, Coward, RandomGender ]
+
+JABA:
+  gear: GEAR_RODENT
+  hp: 10
+  name: jaba
+  score: 2
+  species: jaba
+  tags: [ Anemic, Beast, Coward, RandomGender ]
 
 WILD_CAT:
   gear: GEAR_CAT
