@@ -17,6 +17,14 @@ JABA:
   species: jaba
   tags: [ Anemic, Beast, Coward, RandomGender ]
 
+PIT_VIPER:
+  gear: GEAR_SNAKE
+  hp: 20
+  name: pit viper
+  score: 25
+  species: snake
+  tags: [ Agile, Anemic, Beast, RandomGender ]
+
 WILD_CAT:
   gear: GEAR_CAT
   hp: 20

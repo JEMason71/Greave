@@ -10,3 +10,13 @@ MONSTER_HIDE_1:
   type: [ armour, light ]
   value: 0
   weight: 0
+
+MONSTER_SCALES_1:
+  desc: "-"
+  name: scales
+  power: 3
+  rare: 1
+  slot: body
+  type: [ armour, medium ]
+  value: 0
+  weight: 0

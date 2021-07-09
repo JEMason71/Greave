@@ -14,6 +14,22 @@ MONSTER_BITE:
   value: 0
   weight: 0
 
+MONSTER_BITE_2H_VENOM:
+  bleed: 10
+  crit: 10
+  damage_type: poison
+  desc: "-"
+  name: poisonous bite
+  poison: 40
+  power: 16
+  rare: 1
+  slot: held
+  speed: 1.2
+  tags: [ TwoHanded ]
+  type: [ weapon, melee ]
+  value: 0
+  weight: 0
+
 MONSTER_CLAW:
   bleed: 13
   crit: 10
