@@ -25,6 +25,14 @@ PIT_VIPER:
   species: snake
   tags: [ Agile, Anemic, Beast, RandomGender ]
 
+WANDERING_ELK:
+  gear: GEAR_DEER
+  hp: 136
+  name: wandering elk
+  score: 47
+  species: deer
+  tags: [ Beast, RandomGender, Strong ]
+
 WILD_CAT:
   gear: GEAR_CAT
   hp: 21

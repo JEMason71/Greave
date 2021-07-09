@@ -1,4 +1,4 @@
 # data/lists/dynamic spawns/wildlife.yml -- Dynamic spawns for wildlife in the wilderness.
 # Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-SPAWN_WILDERNESS_GRASSLAND: [ FALLOW_DEER, 0, JABA, 0, PIT_VIPER, 0, WILD_CAT, 0 ]
+SPAWN_WILDERNESS_GRASSLAND: [ FALLOW_DEER, 0, JABA, 0, PIT_VIPER, 0, WANDERING_ELK, 1, WILD_CAT, 0 ]
