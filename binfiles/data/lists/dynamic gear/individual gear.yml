@@ -1,6 +1,6 @@
 # data/lists/dynamic gear/individual gear.yml -- Sub-lists used for dynamic gear/clothing assignments for NPCs.
 # Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-ARMOUR_GOBLIN_LIGHT: [ ARMOUR_HIDE_BARBARIC_SMALL, BRACERS_FUR_SMALL, GREAVES_FUR_SMALL ]
+ARMOUR_GOBLIN_LIGHT: [ ARMOUR_HIDE_BARBARIC_SMALL, -1, BRACERS_FUR_SMALL, -1, GREAVES_FUR_SMALL, -1 ]
 
-WEAPON_GOBLIN_1H: [ MACE_GOBLIN ]
+WEAPON_GOBLIN_1H: [ MACE_GOBLIN, -1 ]

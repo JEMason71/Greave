@@ -507,19 +507,29 @@ void World::load_lists()
             if (!yaml_list.IsSequence()) throw std::runtime_error("Invalid list data for list " + list_id);
 
             auto new_list = std::make_shared<List>();
+            bool is_count = false;
+            ListEntry new_list_entry;
             for (auto le : yaml_list)
             {
-                ListEntry new_list_entry;
-                if (le.IsSequence())
+                if (is_count)
                 {
-                    if (le.size() < 1 || le.size() > 2) throw std::runtime_error("Invalid list data for list " + list_id);
-                    new_list_entry.str = le[0].as<std::string>();
-                    if (le.size() == 2) new_list_entry.count = le[1].as<int>();
+                    new_list_entry.count = le.as<int>();
+                    new_list->push_back(new_list_entry);
+                    is_count = false;
                 }
-                else new_list_entry.str = le.as<std::string>();
-                if (new_list_entry.str.size() && new_list_entry.str[0] == '#') new_list_entry.count = 0;    // If the string begins with #, it's treated as a link to another list.
-                new_list->push_back(new_list_entry);
+                else
+                {
+                    const std::string str = le.as<std::string>();
+                    new_list_entry.str = str;
+                    if (str.size() && (str[0] == '#' || str[0] == '+' || str[0] == '&'))
+                    {
+                        new_list_entry.count = -1;
+                        new_list->push_back(new_list_entry);
+                    }
+                    else is_count = true;
+                }
             }
+            if (is_count) throw std::runtime_error("Invalid list length: " + list_id);
             m_list_pool.insert(std::pair<std::string, std::shared_ptr<List>>(list_id, new_list));
         }
     }
