@@ -196,6 +196,7 @@ const std::shared_ptr<Mobile> World::get_mob(const std::string &mob_id) const
     if (gear_list_str.size())
     {
         auto gear_list = get_list(gear_list_str);
+        bool main_hand_used = false;
         for (size_t i = 0; i < gear_list->size(); i++)
         {
             std::string gear_str = gear_list->at(i).str;
@@ -208,6 +209,11 @@ const std::shared_ptr<Mobile> World::get_mob(const std::string &mob_id) const
             }
             const auto new_item = get_item(gear_str, gear_list->at(i).count);
             new_mob->equ()->add_item(new_item);
+            if (new_item->equip_slot() == EquipSlot::HAND_MAIN)
+            {
+                if (main_hand_used) new_item->set_equip_slot(EquipSlot::HAND_OFF);
+                else main_hand_used = true;
+            }
         }
     }
 
