@@ -7,7 +7,7 @@ FALLOW_DEER:
   name: fallow deer
   score: 10
   species: deer
-  tags: [ Agile, Coward ]
+  tags: [ Agile, Beast, Coward ]
 
 WILD_CAT:
   gear: GEAR_CAT
@@ -15,4 +15,4 @@ WILD_CAT:
   name: wild cat
   score: 10
   species: cat
-  tags: [ Agile, Anemic, RandomGender ]
+  tags: [ Agile, Anemic, Beast, RandomGender ]

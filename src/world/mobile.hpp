@@ -33,6 +33,7 @@ enum class MobileTag : uint16_t { None = 0,
     Mighty,         // Mighty Mobiles deal more damage with melee attacks (2x).
 
     // Tags that determine the Mobile's general state of being.
+    Beast,          // This Mobile is a beast or creature; it has body-parts rather than equipment.
     ImmunityBleed,  // This Mobile is unable to bleed.
     ImmunityPoison, // This Mobile is immune to being poisoned.
     RandomGender,   // This Mobile can be assigned a random gender.

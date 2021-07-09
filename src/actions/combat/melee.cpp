@@ -246,9 +246,11 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
         }
         else
         {
-            const std::shared_ptr<Item> armour_piece_hit = defender->equ()->get(def_location_hit_es);
+            EquipSlot hit_loc = def_location_hit_es;
+            if (defender->tag(MobileTag::Beast)) hit_loc = EquipSlot::BODY;
+            const std::shared_ptr<Item> armour_piece_hit = defender->equ()->get(hit_loc);
             if (armour_piece_hit) damage_blocked = damage * armour_piece_hit->armour();
-            damage_blocked = apply_damage_modifiers(damage_blocked, weapon_ptr, defender, def_location_hit_es);
+            damage_blocked = apply_damage_modifiers(damage_blocked, weapon_ptr, defender, hit_loc);
         }
         if (blocked)
         {
@@ -273,7 +275,8 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
             std::string absorb_str, block_str, death_str;
             if (damage_blocked)
             {
-                std::shared_ptr<Item> armour_piece_hit = defender->equ()->get(blocked ? EquipSlot::HAND_OFF : def_location_hit_es);
+                std::shared_ptr<Item> armour_piece_hit = defender->equ()->get(blocked ? EquipSlot::HAND_OFF :
+                    (defender->tag(MobileTag::Beast) ? EquipSlot::BODY : def_location_hit_es));
                 if (def_location_hit_es == EquipSlot::BODY && !blocked && defender->equ()->get(EquipSlot::ARMOUR))
                     armour_piece_hit = defender->equ()->get(EquipSlot::ARMOUR);
                 std::string lessens_str, lessens_plural_str, lessening_str;
