@@ -13,9 +13,10 @@ enum ParserTarget : uint8_t { TARGET_NONE = 0, TARGET_EQUIPMENT = 1, TARGET_INVE
 class Parser
 {
 public:
-            Parser();                   // Constructor, sets up the parser.
-    void    confirm_message();          // Tells the player how to confirm a command.
-    void    parse(std::string input);   // Parses input from the player!
+            Parser();                           // Constructor, sets up the parser.
+    void    confirm_message();                  // Tells the player how to confirm a command.
+    void    parse(std::string input);           // Parses input from the player!
+    int32_t parse_int(const std::string &s);    // Wrapper function to check for out of range values.
 
 private:
     enum class ParserCommand : uint16_t { NONE, ADD_MONEY, ATTACK, CLOSE, DIRECTION, DROP, EQUIP, EQUIPMENT, EXAMINE, EXITS, GO, HASH, HELP, INVENTORY, LOCK, LOOK, MIXUP, MIXUP_BIG,
@@ -44,7 +45,6 @@ private:
 
     void                add_command(const std::string &text, ParserCommand cmd);    // Adds a command to the parser.
     Direction           parse_direction(const std::string &dir) const;  // Parses a string into a Direction enum.
-    int32_t             parse_int(const std::string &s);    // Wrapper function to check for out of range values.
     ParserSearchResult  parse_target(std::vector<std::string> input, ParserTarget target);   // Attempts to match a name to a given target.
     void                parse_pcd(const std::string &first_word, const std::vector<std::string> &words, ParserCommandData pcd, bool confirm);   // Parses a known command.
 

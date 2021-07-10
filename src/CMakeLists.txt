@@ -69,6 +69,7 @@ set(GREAVE_CPPS
   actions/help.cpp
   actions/inventory.cpp
   actions/look.cpp
+  actions/rest.cpp
   actions/status.cpp
   actions/travel.cpp
   core/bones.cpp
