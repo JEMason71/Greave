@@ -138,7 +138,7 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
         {
             case WieldType::NONE: case WieldType::SHIELD_ONLY: case WieldType::UNARMED: case WieldType::UNARMED_PLUS_SHIELD:
                 weapon_skill = "UNARMED"; break;
-            case WieldType::DUAL_WIELD: weapon_skill = "DUAL_WIELDING"; break;
+            case WieldType::DUAL_WIELD: weapon_skill = "DUAL_WIELD"; break;
             case WieldType::ONE_HAND_PLUS_EXTRA: case WieldType::ONE_HAND_PLUS_SHIELD: case WieldType::SINGLE_WIELD: weapon_skill = "ONE_HANDED"; break;
             case WieldType::TWO_HAND: case WieldType::HAND_AND_A_HALF_2H: weapon_skill = "TWO_HANDED"; break;
         }
@@ -185,7 +185,7 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
         if (can_parry)
         {
             float parry_chance = BASE_PARRY_CHANCE;
-            if (defender_is_player) parry_chance += (PARRY_SKILL_BONUS_PER_LEVEL * player->skill_level("PARRYING"));
+            if (defender_is_player) parry_chance += (PARRY_SKILL_BONUS_PER_LEVEL * player->skill_level("PARRY"));
             parry_chance *= defender->parry_mod();
             if (defender->tag(MobileTag::Agile) || attacker->tag(MobileTag::Clumsy)) parry_chance *= DEFENDER_PARRY_MODIFIER_AGILE;
             else if (defender->tag(MobileTag::Clumsy) || attacker->tag(MobileTag::Agile)) parry_chance *= DEFENDER_PARRY_MODIFIER_CLUMSY;
@@ -197,7 +197,7 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
         if (!parried && can_block)
         {
             float block_chance = BASE_BLOCK_CHANCE_MELEE;
-            if (defender_is_player) block_chance += (BLOCK_SKILL_BONUS_PER_LEVEL * player->skill_level("BLOCKING"));
+            if (defender_is_player) block_chance += (BLOCK_SKILL_BONUS_PER_LEVEL * player->skill_level("BLOCK"));
             block_chance *= defender->block_mod();
             if (rng->frnd(100) <= block_chance) blocked = true;
         }
@@ -218,7 +218,7 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
                 if (defender_is_player) core()->message("{G}You parry the " + attacker_your_string + " " + weapon_name + "!");
                 else core()->message((attacker_is_player ? "{Y}" : "{U}") + attacker_your_string_c + " " + weapon_name + " is parried by " + defender_name + ".");
             }
-            if (defender_is_player) player->gain_skill_xp("PARRYING", XP_PER_PARRY);
+            if (defender_is_player) player->gain_skill_xp("PARRY", XP_PER_PARRY);
         }
         else
         {
@@ -362,6 +362,6 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
         if (poison) weapon_poison_effect(defender, damage);
         defender->reduce_hp(damage, false);
         if (attacker_is_player) player->gain_skill_xp(weapon_skill, (critical_hit ? XP_PER_CRITICAL_HIT : XP_PER_SUCCESSFUL_HIT));
-        else if (defender_is_player && blocked) player->gain_skill_xp("BLOCKING", XP_PER_BLOCK);
+        else if (defender_is_player && blocked) player->gain_skill_xp("BLOCK", XP_PER_BLOCK);
     }
 }
