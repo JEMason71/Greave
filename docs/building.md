@@ -4,7 +4,7 @@
 
 **Requirements:** [CMake](https://cmake.org/) version 3.13 or newer, MinGW ([MinGW-w64](https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/) recommended, [MSYS2](https://www.msys2.org/) should also work).
 
-The build directory can be anywhere, but for the purposes of this example, use the `build` folder within the project's root directory. From a command prompt or MinGW shell (*not* MSYS shell) within the `build` folder, run the following command:
+The build directory can be anywhere, but for the purposes of this example, create a folder called `build` within the project's root directory. From a command prompt or MinGW shell (*not* MSYS shell) within the `build` folder, run the following command:
 
 **MinGW-w64:** `cmake -G"MinGW Makefiles" ..`
 
