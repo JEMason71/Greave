@@ -22,7 +22,7 @@ for something to add to it, please feel free to contact me first - either here o
 have in mind, or have plans to implement something of the sort in the future. I'd much rather work with folks in expanding the
 game together, rather than people writing code only to discover I've already started coding the same feature.
 
-4. As mentioned in the [readme](../README.md), Greave is currently in a *very* early
+4. As mentioned in the [readme](README.md), Greave is currently in a *very* early
 pre-alpha state, and development is rather chaotic as I'm currently combining mechanics, code and other elements from several
 other former, personal game projects, most of which were previously closed-source. The current plan is to try to reach feature
 parity with my old projects - salvaging as much as possible to combine into this one single game project - before I then start
