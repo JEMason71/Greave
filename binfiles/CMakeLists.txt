@@ -13,17 +13,10 @@ add_custom_target(greave_data ALL
 
 # Windows needs a whole mess of DLLs.
 if(TARGET_WINDOWS)
-  if(TARGET_64)
-    add_custom_target(dll ALL
-      DEPENDS greave
-      COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/binfiles/win64" "${CMAKE_BINARY_DIR}/bin"
-    )
-  else()
-    add_custom_target(dll ALL
-      DEPENDS greave
-      COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/binfiles/win32" "${CMAKE_BINARY_DIR}/bin"
-    )
-  endif(TARGET_64)
+  add_custom_target(dll ALL
+    DEPENDS greave
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/binfiles/win64" "${CMAKE_BINARY_DIR}/bin"
+  )
 endif(TARGET_WINDOWS)
 
 # Copy the license files across, so we can easily just zip up the bin folder for distribution.

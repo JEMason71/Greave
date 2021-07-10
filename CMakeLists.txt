@@ -30,9 +30,7 @@ endif(WIN32)
 
 # Detect 32-bit or 64-bit build
 if("${CMAKE_SIZEOF_VOID_P}" STREQUAL "4")
-  set(TARGET_32 1)
-else()
-  set(TARGET_64 1)
+  message([FATAL_ERROR] "This project requires a 64-bit architecture to build.")
 endif()
 
 add_subdirectory(src)

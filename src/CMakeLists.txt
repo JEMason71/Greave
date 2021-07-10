@@ -108,17 +108,9 @@ target_include_directories(greave PRIVATE
 
 # Platform-specific library directories.
 if(TARGET_WINDOWS)
-  if(TARGET_32)
-    target_link_directories(greave PRIVATE "${CMAKE_SOURCE_DIR}/lib/win32")
-  else()
-    target_link_directories(greave PRIVATE "${CMAKE_SOURCE_DIR}/lib/win64")
-  endif(TARGET_32)
+  target_link_directories(greave PRIVATE "${CMAKE_SOURCE_DIR}/lib/win64")
 else()
-  if(TARGET_32)
-    target_link_directories(greave PRIVATE "${CMAKE_SOURCE_DIR}/lib/lin32")
-  else()
-    target_link_directories(greave PRIVATE "${CMAKE_SOURCE_DIR}/lib/lin64")
-  endif(TARGET_32)
+  target_link_directories(greave PRIVATE "${CMAKE_SOURCE_DIR}/lib/lin64")
 endif(TARGET_WINDOWS)
 
 
