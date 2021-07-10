@@ -2,17 +2,17 @@
 
 [![development status](https://img.shields.io/badge/development%20status-prealpha-red.svg)](https://github.com/Gravecat/Greave)
 [![last commit](https://img.shields.io/github/last-commit/Gravecat/Greave/main)](https://github.com/Gravecat/Greave/commits/main)
-[![license](https://img.shields.io/github/license/Gravecat/Greave)](https://github.com/Gravecat/Greave/blob/main/LICENSE)
-[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.0-4baaaa.svg)](https://github.com/Gravecat/Greave/blob/main/.github/CODE_OF_CONDUCT.md)
+[![license](https://img.shields.io/github/license/Gravecat/Greave)](LICENSE)
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.0-4baaaa.svg)](.github/CODE_OF_CONDUCT.md)
 
-Greave is an open-source, text-based, fantasy-themed role-playing game currently in the very, *very* early stages of development. [See here](https://github.com/Gravecat/Greave/blob/main/build/README.md) for build instructions, and if you're interested in contributing to the project, please also see the [code of conduct](https://github.com/Gravecat/Greave/blob/main/.github/CODE_OF_CONDUCT.md), [contributing guidelines](https://github.com/Gravecat/Greave/blob/main/.github/CONTRIBUTING.md) and [information regarding the repo's branches](https://github.com/Gravecat/Greave/blob/main/docs/branches.md).
+Greave is an open-source, text-based, fantasy-themed role-playing game currently in the very, *very* early stages of development. [See here](docs/building.md) for build instructions, and if you're interested in contributing to the project, please also see the [code of conduct](.github/CODE_OF_CONDUCT.md), [contributing guidelines](.github/CONTRIBUTING.md) and [information regarding the repo's branches](docs/branches.md).
 
 If the commit history and development direction seems like a completely random mess, there's a good reason for that: Greave is largely a remake from the ground up of a previous, closed-source personal game project, Krasten, while also incorporating changes and improvements to certain elements from other abandoned personal projects. Once it's reached feature parity with the older projects, the development direction will likely seems less chaotic and random.
 
 
 # COPYRIGHT & LICENSE
 
-Greave is copyright © 2021 [Raine "Gravecat" Simmons](https://github.com/Gravecat) and [the Greave contributors](https://github.com/Gravecat/Greave/graphs/contributors). The game is free and open-source, licensed under the [GNU Affero General Public License v3 or any later version](https://www.gnu.org/licenses/agpl-3.0.en.html).
+Greave is copyright © 2021 [Raine "Gravecat" Simmons](https://github.com/Gravecat) and [the Greave contributors](graphs/contributors). The game is free and open-source, licensed under the [GNU Affero General Public License v3 or any later version](https://www.gnu.org/licenses/agpl-3.0.en.html).
 
 [Application icon](https://github.com/malcolmriley/unused-textures) copyright © 2020 Malcolm Riley.
 
