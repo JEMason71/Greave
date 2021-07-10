@@ -32,6 +32,7 @@ const float Melee::DEFENDER_PARRY_MODIFIER_AGILE =              1.5f;   // The m
 const float Melee::DEFENDER_PARRY_MODIFIER_CLUMSY =             0.5f;   // The multiplier to the parry chance of a Mobile with the Clumsy tag.
 const float Melee::DEFENDER_TO_HIT_MODIFIER_AGILE =             0.8f;   // The to-hit multiplier when attempting to hit a Mobile with the Agile tag.
 const float Melee::DEFENDER_TO_HIT_MODIFIER_CLUMSY =            1.25f;  // The to-hit multiplier when attempting to hit a Mobile with the Clumsy tag.
+const float Melee::EVASION_SKILL_BONUS_PER_LEVEL =              0.5f;   // The bonus % chance to dodge attacks per level of evasion skill.
 const float Melee::HIT_CHANCE_MULTIPLIER_DUAL_WIELD =           0.9f;   // The multiplier to accuracy% for dual-wielding.
 const float Melee::HIT_CHANCE_MULTIPLIER_SINGLE_WIELD =         1.2f;   // The multiplier to accuracy% for single-wielding.
 const float Melee::HIT_CHANCE_MULTIPLIER_SWORD_AND_BOARD =      1.1f;   // The multiplier to accuracy% for wielding 1h+shield or 1h+extra.
@@ -46,6 +47,7 @@ const float Melee::WEAPON_SKILL_DAMAGE_MODIFIER =               0.05f;  // The d
 const float Melee::WEAPON_SKILL_TO_HIT_PER_LEVEL =              1.0f;   // The bonus % chance to hit per point of weapon skill.
 const float Melee::XP_PER_BLOCK =                               1.0f;   // Experience gained for a successful shield block in combat.
 const float Melee::XP_PER_CRITICAL_HIT =                        3.0f;   // Weapon experience gainer per critical hit in combat.
+const float Melee::XP_PER_EVADE =                               1.0f;   // Experience gained for evading an attack in combat.
 const float Melee::XP_PER_SUCCESSFUL_HIT =                      0.7f;   // Weapon experience gained per successful weapon attack in combat.
 
 
@@ -152,6 +154,7 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
     }
     float to_hit = BASE_HIT_CHANCE_MELEE;
     if (attacker_is_player) to_hit += (WEAPON_SKILL_TO_HIT_PER_LEVEL * player->skill_level(weapon_skill));
+    else if (defender_is_player) to_hit -= (EVASION_SKILL_BONUS_PER_LEVEL * player->skill_level("EVASION"));
     to_hit *= hit_multiplier;
 
     // Check if the defender can attempt to block or parry.
@@ -216,6 +219,7 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
         {
             if (player_can_see_attacker || player_can_see_defender)
                 core()->message((attacker_is_player ? "{Y}" : (defender_is_player ? "{U}" : "{U}")) + attacker_your_string_c + " " + weapon_name + " misses " + defender_name + ".");
+            if (defender_is_player) player->gain_skill_xp("EVASION", XP_PER_EVADE);
         }
     }
     else

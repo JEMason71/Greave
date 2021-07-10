@@ -33,6 +33,7 @@ private:
     static const float  DEFENDER_PARRY_MODIFIER_CLUMSY;             // The multiplier to the parry chance of a Mobile with the Clumsy tag.
     static const float  DEFENDER_TO_HIT_MODIFIER_AGILE;             // The to-hit multiplier when attempting to hit a Mobile with the Agile tag.
     static const float  DEFENDER_TO_HIT_MODIFIER_CLUMSY;            // The to-hit multiplier when attempting to hit a Mobile with the Clumsy tag.
+    static const float  EVASION_SKILL_BONUS_PER_LEVEL;              // The bonus % chance to dodge attacks per level of evasion skill.
     static const float  HIT_CHANCE_MULTIPLIER_DUAL_WIELD;           // The multiplier to accuracy% for dual-wielding.
     static const float  HIT_CHANCE_MULTIPLIER_SINGLE_WIELD;         // The multiplier to accuracy% for single-wielding.
     static const float  HIT_CHANCE_MULTIPLIER_SWORD_AND_BOARD;      // The multiplier to accuracy% for wielding 1h+shield or 1h+extra.
@@ -47,6 +48,7 @@ private:
     static const float  WEAPON_SKILL_TO_HIT_PER_LEVEL;              // The bonus % chance to hit per point of weapon skill.
     static const float  XP_PER_BLOCK;                               // Experience gained for a successful shield block in combat.
     static const float  XP_PER_CRITICAL_HIT;                        // Weapon experience gainer per critical hit in combat.
+    static const float  XP_PER_EVADE;                               // Experience gained for evading an attack in combat.
     static const float  XP_PER_SUCCESSFUL_HIT;                      // Weapon experience gained per successful weapon attack in combat.
 
                 // Performs an attack with a single weapon.
