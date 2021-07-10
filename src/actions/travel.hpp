@@ -36,4 +36,6 @@ private:
     static const int    FALL_BLEED_DIVISOR_MAX;     // The maximum amount of HP damage division from falling applied to each bleed tick.
     static const int    FALL_BLEED_DIVISOR_MIN;     // The minimum amount of HP damage division from falling applied to each bleed tick.
     static const int    FALL_BLEED_INTENSITY_RANGE; // The variance range of the length of bleeds from falling.
+    static const float  XP_PER_SAFE_FALL_FAIL;      // As below, but for failed attempts.
+    static const float  XP_PER_SAFE_FALL_SUCCESS;   // How much base XP is gained from a successful safe-fall (multiplied by distance fallen).
 };

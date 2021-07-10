@@ -15,27 +15,29 @@
 #include "world/world.hpp"
 
 
-const int ActionTravel::FALL_1_STOREY_BLEED =           5;      // Intensity for the bleed room scar from a one-storey fall.
-const int ActionTravel::FALL_1_STOREY_MIN_PERC =        20;     // Minimum % damage taken from falling one storey.
-const int ActionTravel::FALL_1_STOREY_RNG_PERC =        50;     // Extra RNG % damage from one-storey fall.
-const int ActionTravel::FALL_2_STOREY_BLEED =           10;
-const int ActionTravel::FALL_2_STOREY_MIN_PERC =        50;
-const int ActionTravel::FALL_2_STOREY_RNG_PERC =        70;
-const int ActionTravel::FALL_3_STOREY_BLEED =           20;
-const int ActionTravel::FALL_3_STOREY_MIN_PERC =        70;
-const int ActionTravel::FALL_3_STOREY_RNG_PERC =        100;
-const int ActionTravel::FALL_4_STOREY_BLEED =           25;
-const int ActionTravel::FALL_4_STOREY_MIN_PERC =        90;
-const int ActionTravel::FALL_4_STOREY_RNG_PERC =        00;
-const int ActionTravel::FALL_5_STOREY_BLEED =           30;
-const int ActionTravel::FALL_5_STOREY_MIN_PERC =        100;
-const int ActionTravel::FALL_5_STOREY_RNG_PERC =        500;
-const int ActionTravel::FALL_BLEED_DIVISOR_MAX =        20;     // The maximum amount of HP damage division from falling applied to each bleed tick.
-const int ActionTravel::FALL_BLEED_DIVISOR_MIN =        10;     // The minimum amount of HP damage division from falling applied to each bleed tick.
-const int ActionTravel::FALL_BLEED_INTENSITY_RANGE =    3;      // The variance range of the length of bleeds from falling.
+const int   ActionTravel::FALL_1_STOREY_BLEED =         5;      // Intensity for the bleed room scar from a one-storey fall.
+const int   ActionTravel::FALL_1_STOREY_MIN_PERC =      20;     // Minimum % damage taken from falling one storey.
+const int   ActionTravel::FALL_1_STOREY_RNG_PERC =      50;     // Extra RNG % damage from one-storey fall.
+const int   ActionTravel::FALL_2_STOREY_BLEED =         10;
+const int   ActionTravel::FALL_2_STOREY_MIN_PERC =      50;
+const int   ActionTravel::FALL_2_STOREY_RNG_PERC =      70;
+const int   ActionTravel::FALL_3_STOREY_BLEED =         20;
+const int   ActionTravel::FALL_3_STOREY_MIN_PERC =      70;
+const int   ActionTravel::FALL_3_STOREY_RNG_PERC =      100;
+const int   ActionTravel::FALL_4_STOREY_BLEED =         25;
+const int   ActionTravel::FALL_4_STOREY_MIN_PERC =      90;
+const int   ActionTravel::FALL_4_STOREY_RNG_PERC =      00;
+const int   ActionTravel::FALL_5_STOREY_BLEED =         30;
+const int   ActionTravel::FALL_5_STOREY_MIN_PERC =      100;
+const int   ActionTravel::FALL_5_STOREY_RNG_PERC =      500;
+const int   ActionTravel::FALL_BLEED_DIVISOR_MAX =      20;     // The maximum amount of HP damage division from falling applied to each bleed tick.
+const int   ActionTravel::FALL_BLEED_DIVISOR_MIN =      10;     // The minimum amount of HP damage division from falling applied to each bleed tick.
+const int   ActionTravel::FALL_BLEED_INTENSITY_RANGE =  3;      // The variance range of the length of bleeds from falling.
 const float ActionTravel::TRAVEL_TIME_DOUBLE =          120.0f; // The time (in seconds) it takes to travel across a double-length room link.
 const float ActionTravel::TRAVEL_TIME_NORMAL =          30.0f;  // The time (in seconds) it takes to travel across a normal room link.
 const float ActionTravel::TRAVEL_TIME_TRIPLE =          480.0f; // The time (in seconds) it takes to travel across a triple-length room link.
+const float ActionTravel::XP_PER_SAFE_FALL_FAIL =       3.0f;   // As below, but for failed attempts.
+const float ActionTravel::XP_PER_SAFE_FALL_SUCCESS =    8.0f;   // How much base XP is gained from a successful safe-fall (multiplied by distance fallen).
 
 
 // Attempts to move from one Room to another.
@@ -107,33 +109,41 @@ bool ActionTravel::travel(std::shared_ptr<Mobile> mob, Direction dir, bool confi
 
     if (sky || sky2 || sky3)
     {
-        int min_perc = 0, rng_perc = 0, blood_intensity = 0;
+        int min_perc = 0, rng_perc = 0, blood_intensity = 0, fallen_dist = 0;
         if (sky3)
         {
             min_perc = FALL_3_STOREY_MIN_PERC;
             rng_perc = FALL_3_STOREY_RNG_PERC;
             blood_intensity = FALL_3_STOREY_BLEED;
+            fallen_dist = 3;
         }
         else if (sky2)
         {
             min_perc = FALL_2_STOREY_MIN_PERC;
             rng_perc = FALL_2_STOREY_RNG_PERC;
             blood_intensity = FALL_2_STOREY_BLEED;
+            fallen_dist = 2;
         }
         else
         {
             min_perc = FALL_1_STOREY_MIN_PERC;
             rng_perc = FALL_1_STOREY_RNG_PERC;
             blood_intensity = FALL_1_STOREY_BLEED;
+            fallen_dist = 1;
         }
         float damage_perc = static_cast<float>(min_perc + core()->rng()->rnd(rng_perc)) / 100.0f;
+        const int safe_fall = (is_player ? core()->world()->player()->skill_level("SAFE_FALL") : 0);
+        if (safe_fall > 0) damage_perc -= (static_cast<float>(core()->rng()->rnd(safe_fall)) / 100.0f);
 
         if (damage_perc > 0)
         {
             uint32_t hp_damage = std::round(static_cast<float>(mob->hp(true)) * damage_perc);
             mob->reduce_hp(hp_damage);
-            if (is_player) core()->message("{R}You land badly, and the impact " + Combat::damage_str(hp_damage, mob, false) + " {R}you! {W}<{R}-" + StrX::intostr_pretty(hp_damage) +
-                "{W}>");
+            if (is_player)
+            {
+                core()->message("{R}You land badly, and the impact " + Combat::damage_str(hp_damage, mob, false) + " {R}you! {W}<{R}-" + StrX::intostr_pretty(hp_damage) + "{W}>");
+                if (mob->hp() > 0) core()->world()->player()->gain_skill_xp("SAFE_FALL", XP_PER_SAFE_FALL_FAIL * fallen_dist);
+            }
             else
             {
                 if (room_link == player_loc)
@@ -157,7 +167,11 @@ bool ActionTravel::travel(std::shared_ptr<Mobile> mob, Direction dir, bool confi
                 else if (player_can_see && room_link == player_loc) core()->message("{U}" + mob_name_the + " is slain instantly from the impact!");
             }
         }
-        else if (is_player) core()->message("{g}Despite the distance fallen, you manage to land safely on your feet.");
+        else if (is_player)
+        {
+            core()->message("{g}Despite the distance fallen, you manage to land safely on your feet.");
+            core()->world()->player()->gain_skill_xp("SAFE_FALL", XP_PER_SAFE_FALL_SUCCESS * fallen_dist);
+        }
     }
 
     return true;

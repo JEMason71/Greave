@@ -21,6 +21,10 @@ PARRY:
   name: parry
   xp_multi: 8
 
+SAFE_FALL:
+  name: safe fall
+  xp_multi: 2
+
 TWO_HANDED:
   name: two-handed weapons
   xp_multi: 6.5
