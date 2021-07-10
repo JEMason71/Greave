@@ -36,6 +36,8 @@ public:
     const std::shared_ptr<Mobile>   get_mob(const std::string &mob_id) const;   // Retrieves a specified Mobile by ID.
     const std::shared_ptr<Room>     get_room(uint32_t room_id) const;           // Retrieves a specified Room by ID.
     const std::shared_ptr<Room>     get_room(const std::string &room_id) const; // As above, but with a Room ID string.
+    float           get_skill_multiplier(const std::string &skill);             // Retrieves the XP gain multiplier for a specified skill.
+    std::string     get_skill_name(const std::string &skill);                   // Retrieves the name of a specified skill.
     bool            item_exists(const std::string &str) const;                  // Checks if a specified item ID exists.
     void            load(std::shared_ptr<SQLite::Database> save_db);            // Loads the World and all things within it.
     size_t          mob_count() const;                                          // Returns the number of Mobiles currently active.
@@ -52,6 +54,12 @@ public:
     void            wilderness_spawns();                                        // Triggers wilderness respawns near the player.
 
 private:
+    struct SkillData
+    {
+        std::string name;       // The name of this skill.
+        float       xp_multi;   // The multiplier applied to the XP gained when using this skill.
+    };
+
     static const std::map<std::string, DamageType>  DAMAGE_TYPE_MAP;        // Lookup table for converting DamageType text names into enums.
     static const std::map<std::string, EquipSlot>   EQUIP_SLOT_MAP;         // Lookup table for converting EquipSlot text names into enums.
     static const std::map<std::string, ItemSub>     ITEM_SUBTYPE_MAP;       // Lookup table for converting ItemSub text names into enums.
@@ -79,6 +87,7 @@ private:
     std::vector<std::shared_ptr<Mobile>>            m_mobiles;          // All the Mobiles currently active in the game.
     std::shared_ptr<Player>                         m_player;           // The player character.
     std::map<uint32_t, std::shared_ptr<Room>>       m_room_pool;        // All the Room templates in the game.
+    std::map<std::string, SkillData>                m_skills;           // The skills the player can use.
     std::shared_ptr<TimeWeather>                    m_time_weather;     // The World's TimeWeather object, for tracking... well, the time and weather.
 
     void    active_room_scan(uint32_t target, uint32_t depth);  // Attempts to scan a room for the active rooms list. Only for internal use with recalc_active_rooms().
@@ -88,4 +97,5 @@ private:
     void    load_lists();           // Loads the List YAML data into memory.
     void    load_mob_pool();        // Loads the Mobile YAML data into memory.
     void    load_room_pool();       // Loads the Room YAML data into memory.
+    void    load_skills();          // Laods the skills YAML data into memory.
 };

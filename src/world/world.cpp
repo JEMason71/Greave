@@ -101,6 +101,7 @@ World::World() : m_mob_unique_id(0), m_player(std::make_shared<Player>()), m_tim
     load_anatomy_pool();
     load_generic_descs();
     load_lists();
+    load_skills();
 }
 
 // Attempts to scan a room for the active rooms list. Only for internal use with recalc_active_rooms().
@@ -238,6 +239,30 @@ const std::shared_ptr<Room> World::get_room(const std::string &room_id) const
 {
     if (!room_id.size()) throw std::runtime_error("Blank room ID requested.");
     else return get_room(StrX::hash(room_id));
+}
+
+// Retrieves the XP gain multiplier for a specified skill.
+float World::get_skill_multiplier(const std::string &skill)
+{
+    const auto it = m_skills.find(skill);
+    if (it == m_skills.end())
+    {
+        core()->guru()->nonfatal("Invalid skill requested: " + skill, Guru::ERROR);
+        return 0;
+    }
+    return it->second.xp_multi;
+}
+
+// Retrieves the name of a specified skill.
+std::string World::get_skill_name(const std::string &skill)
+{
+    const auto it = m_skills.find(skill);
+    if (it == m_skills.end())
+    {
+        core()->guru()->nonfatal("Invalid skill requested: " + skill, Guru::ERROR);
+        return "[error]";
+    }
+    return it->second.name;
 }
 
 // Checks if a specified item ID exists.
@@ -832,6 +857,21 @@ void World::load_room_pool()
     }
 }
 
+// Laods the skills YAML data into memory.
+void World::load_skills()
+{
+    const YAML::Node skills_yaml = YAML::LoadFile("data/misc/skills.yml");
+    for (const auto skill : skills_yaml)
+    {
+        const std::string skill_id = skill.first.as<std::string>();
+        const YAML::Node skill_data = skill.second;
+        if (!skill_data["name"]) throw std::runtime_error("Skill name not specified: " + skill_id);
+        if (!skill_data["xp_multi"]) throw std::runtime_error("Skill XP multiplier not specified: " + skill_id);
+        SkillData new_skill = { skill_data["name"].as<std::string>(), skill_data["xp_multi"].as<float>() };
+        m_skills.insert(std::make_pair(skill_id, new_skill));
+    }
+}
+
 // Returns the number of Mobiles currently active.
 size_t World::mob_count() const { return m_mobiles.size(); }
 
@@ -900,6 +940,7 @@ void World::save(std::shared_ptr<SQLite::Database> save_db)
     save_db->exec(MessageLog::SQL_MSGLOG);
     save_db->exec(Mobile::SQL_MOBILES);
     save_db->exec(Player::SQL_PLAYER);
+    save_db->exec(Player::SQL_SKILLS);
     save_db->exec(Room::SQL_ROOMS);
     save_db->exec(TimeWeather::SQL_HEARTBEATS);
     save_db->exec(TimeWeather::SQL_TIME_WEATHER);

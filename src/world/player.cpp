@@ -10,8 +10,14 @@
 #include "world/player.hpp"
 
 
+const int Player:: BASE_SKILL_COST_LEVEL_OFFSET =   0;      // The skill XP cost formula is offset by this many levels.
+const float Player::BASE_SKILL_COST_MULTIPLIER =    2.0f;   // The higher this number, the slower player skill levels increase.
+
 // The SQL table construction string for the player data.
-const std::string   Player::SQL_PLAYER = "CREATE TABLE player ( mob_target INTEGER, money INTEGER NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL )";
+const std::string Player::SQL_PLAYER = "CREATE TABLE player ( mob_target INTEGER, money INTEGER NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL )";
+
+// The SQL table construction string for the player skills data.
+const std::string Player::SQL_SKILLS = "CREATE TABLE skills ( id TEXT PRIMARY KEY UNIQUE NOT NULL, level INTEGER NOT NULL, xp REAL )";
 
 
 // Constructor, sets default values.
@@ -45,6 +51,44 @@ int Player::clothes_warmth() const
 // Retrieves the player's death reason.
 std::string Player::death_reason() const { return m_death_reason; }
 
+// Gains experience in a skill.
+void Player::gain_skill_xp(const std::string& skill_id, float xp)
+{
+    xp *= core()->world()->get_skill_multiplier(skill_id);
+	if (xp <= 0)
+	{
+		if (xp < 0) core()->guru()->nonfatal("Attempt to give negative XP in " + skill_id, Guru::WARN);
+		return;
+	}
+    auto it = m_skill_xp.find(skill_id);
+    if (it == m_skill_xp.end())
+    {
+        m_skill_xp.insert(std::pair<std::string, float>(skill_id, xp));
+        it = m_skill_xp.find(skill_id); // We'll need to refer to this in the level-up code below.
+    }
+    else it->second += xp;
+
+    int current_level = skill_level(skill_id);
+    if (!current_level) m_skill_levels.insert(std::pair<std::string, int>(skill_id, 0));
+    bool level_increased = false;
+    while (it->second > 0)
+    {
+        const float xp_to_next_level = BASE_SKILL_COST_MULTIPLIER * std::pow(current_level + BASE_SKILL_COST_LEVEL_OFFSET, 2);
+        while (it->second > 0)
+        {
+            if (it->second >= xp_to_next_level)
+            {
+                it->second -= xp_to_next_level;
+                current_level++;
+                level_increased = true;
+                m_skill_levels.find(skill_id)->second = current_level;
+            }
+            else break;
+        }
+    }
+    if (level_increased) core()->message("{G}Your skill in {C}" + core()->world()->get_skill_name(skill_id) + " {G}has increased to {C}" + std::to_string(current_level) + "{G}!");
+}
+
 // Returns true if this Mobile is a Player, false if not.
 bool Player::is_player() const { return true; }
 
@@ -59,6 +103,15 @@ uint32_t Player::load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id
         sql_id = query.getColumn("sql_id").getUInt();
     }
     else throw std::runtime_error("Could not load player data!");
+
+    SQLite::Statement skill_query(*save_db, "SELECT * FROM skills");
+    while (skill_query.executeStep())
+    {
+        const std::string skill_id = skill_query.getColumn("id").getString();
+        m_skill_levels.insert(std::make_pair(skill_id, skill_query.getColumn("level").getInt()));
+        if (!skill_query.isColumnNull("xp")) m_skill_xp.insert(std::make_pair(skill_id, skill_query.getColumn("xp").getDouble()));
+    }
+
     return Mobile::load(save_db, sql_id);
 }
 
@@ -104,6 +157,17 @@ uint32_t Player::save(std::shared_ptr<SQLite::Database> save_db)
     query.bind(2, m_money);
     query.bind(3, sql_id);
     query.exec();
+
+    for (const auto &kv : m_skill_levels)
+    {
+        SQLite::Statement skill_query(*save_db, "INSERT INTO skills ( id, level, xp ) VALUES ( ?, ?, ?)");
+        skill_query.bind(1, kv.first);
+        skill_query.bind(2, kv.second);
+        const auto it = m_skill_xp.find(kv.first);
+        if (it != m_skill_xp.end()) skill_query.bind(3, it->second);
+        skill_query.exec();
+    }
+
     return sql_id;
 }
 
@@ -112,3 +176,11 @@ void Player::set_death_reason(const std::string &reason) { m_death_reason = reas
 
 // Sets a new Mobile target.
 void Player::set_mob_target(uint32_t target) { m_mob_target = target; }
+
+// Returns the skill level of a specified skill of this Player.
+int Player::skill_level(const std::string &skill_id) const
+{
+    const auto it = m_skill_levels.find(skill_id);
+    if (it == m_skill_levels.end()) return 0;
+    else return it->second;
+}
