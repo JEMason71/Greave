@@ -17,6 +17,10 @@ ONE_HANDED:
   name: one-handed weapons
   xp_multi: 6.5
 
+PARRYING:
+  name: parrying
+  xp_multi: 8
+
 TWO_HANDED:
   name: two-handed weapons
   xp_multi: 6.5

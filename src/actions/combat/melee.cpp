@@ -36,6 +36,7 @@ const float Melee::EVASION_SKILL_BONUS_PER_LEVEL =              0.5f;   // The b
 const float Melee::HIT_CHANCE_MULTIPLIER_DUAL_WIELD =           0.9f;   // The multiplier to accuracy% for dual-wielding.
 const float Melee::HIT_CHANCE_MULTIPLIER_SINGLE_WIELD =         1.2f;   // The multiplier to accuracy% for single-wielding.
 const float Melee::HIT_CHANCE_MULTIPLIER_SWORD_AND_BOARD =      1.1f;   // The multiplier to accuracy% for wielding 1h+shield or 1h+extra.
+const float Melee::PARRY_SKILL_BONUS_PER_LEVEL =                0.5f;   // The bonus % chance to parry per level of parry skill.
 const float Melee::STANCE_DAMAGE_MULTIPLIER_AGGRESSIVE =        1.2f;   // The multiplier to melee damage when in an aggressive stance.
 const float Melee::STANCE_DAMAGE_MULTIPLIER_DEFENSIVE =         0.8f;   // The multiplier to melee damage when in a defensive stance.
 const float Melee::STANCE_DAMAGE_TAKEN_MULTIPLIER_AGGRESSIVE =  1.2f;   // The multiplier to melee damage *taken* when in an aggressive stance.
@@ -48,6 +49,7 @@ const float Melee::WEAPON_SKILL_TO_HIT_PER_LEVEL =              1.0f;   // The b
 const float Melee::XP_PER_BLOCK =                               1.0f;   // Experience gained for a successful shield block in combat.
 const float Melee::XP_PER_CRITICAL_HIT =                        3.0f;   // Weapon experience gainer per critical hit in combat.
 const float Melee::XP_PER_EVADE =                               1.0f;   // Experience gained for evading an attack in combat.
+const float Melee::XP_PER_PARRY =                               1.0f;   // Experience gained for a successful parry in combat.
 const float Melee::XP_PER_SUCCESSFUL_HIT =                      0.7f;   // Weapon experience gained per successful weapon attack in combat.
 
 
@@ -182,7 +184,9 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
         // Now to check if the defender can successfully parry this attack.
         if (can_parry)
         {
-            float parry_chance = BASE_PARRY_CHANCE * defender->parry_mod();
+            float parry_chance = BASE_PARRY_CHANCE;
+            if (defender_is_player) parry_chance += (PARRY_SKILL_BONUS_PER_LEVEL * player->skill_level("PARRYING"));
+            parry_chance *= defender->parry_mod();
             if (defender->tag(MobileTag::Agile) || attacker->tag(MobileTag::Clumsy)) parry_chance *= DEFENDER_PARRY_MODIFIER_AGILE;
             else if (defender->tag(MobileTag::Clumsy) || attacker->tag(MobileTag::Agile)) parry_chance *= DEFENDER_PARRY_MODIFIER_CLUMSY;
             if (rng->frnd(100) <= parry_chance) parried = true;
@@ -214,6 +218,7 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
                 if (defender_is_player) core()->message("{G}You parry the " + attacker_your_string + " " + weapon_name + "!");
                 else core()->message((attacker_is_player ? "{Y}" : "{U}") + attacker_your_string_c + " " + weapon_name + " is parried by " + defender_name + ".");
             }
+            if (defender_is_player) player->gain_skill_xp("PARRYING", XP_PER_PARRY);
         }
         else
         {

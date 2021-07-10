@@ -37,6 +37,7 @@ private:
     static const float  HIT_CHANCE_MULTIPLIER_DUAL_WIELD;           // The multiplier to accuracy% for dual-wielding.
     static const float  HIT_CHANCE_MULTIPLIER_SINGLE_WIELD;         // The multiplier to accuracy% for single-wielding.
     static const float  HIT_CHANCE_MULTIPLIER_SWORD_AND_BOARD;      // The multiplier to accuracy% for wielding 1h+shield or 1h+extra.
+    static const float  PARRY_SKILL_BONUS_PER_LEVEL;                // The bonus % chance to parry per level of parry skill.
     static const float  STANCE_DAMAGE_MULTIPLIER_AGGRESSIVE;        // The multiplier to melee damage when in an aggressive stance.
     static const float  STANCE_DAMAGE_MULTIPLIER_DEFENSIVE;         // The multiplier to melee damage when in a defensive stance.
     static const float  STANCE_DAMAGE_TAKEN_MULTIPLIER_AGGRESSIVE;  // The multiplier to melee damage *taken* when in an aggressive stance.
@@ -49,6 +50,7 @@ private:
     static const float  XP_PER_BLOCK;                               // Experience gained for a successful shield block in combat.
     static const float  XP_PER_CRITICAL_HIT;                        // Weapon experience gainer per critical hit in combat.
     static const float  XP_PER_EVADE;                               // Experience gained for evading an attack in combat.
+    static const float  XP_PER_PARRY;                               // Experience gained for a successful parry in combat.
     static const float  XP_PER_SUCCESSFUL_HIT;                      // Weapon experience gained per successful weapon attack in combat.
 
                 // Performs an attack with a single weapon.
