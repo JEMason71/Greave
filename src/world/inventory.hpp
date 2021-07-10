@@ -24,7 +24,7 @@ public:
     uint32_t    save(std::shared_ptr<SQLite::Database> save_db);    // Saves this Inventory, returns its SQL ID.
 
 private:
-    bool            parser_id_exists(uint16_t id);          // Checks if a given parser ID already exists on an Item in this Inventory.
+    bool        parser_id_exists(uint16_t id);          // Checks if a given parser ID already exists on an Item in this Inventory.
 
     std::vector<std::shared_ptr<Item>>  m_items;            // The Items stored in this Inventory.
 };

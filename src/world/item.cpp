@@ -331,11 +331,49 @@ void Item::set_weight(uint32_t pacs) { m_weight = pacs; }
 // Retrieves the speed of this Item.
 float Item::speed() const { return meta_float("speed"); }
 
+// Splits an Item into a stack.
+std::shared_ptr<Item> Item::split(int split_count)
+{
+    const bool stackable = tag(ItemTag::Stackable);
+    if (split_count < 0) throw std::runtime_error("Invalid item stack split: " + m_name);
+    if (!split_count || (split_count == 1 && !stackable) || static_cast<int64_t>(split_count) == m_stack) return nullptr;
+    if (!stackable) throw std::runtime_error("Attempt to split unstackable item: " + m_name);
+    if (static_cast<unsigned int>(split_count) > m_stack) throw std::runtime_error("Invalid stack split size: " + m_name);
+    auto new_item = std::make_shared<Item>(*this);
+    new_item->m_stack = split_count;
+    m_stack -= split_count;
+    return new_item;
+}
+
 // Retrieves the stack size of this Item.
 uint32_t Item::stack() const
 {
     if (!tag(ItemTag::Stackable)) core()->guru()->nonfatal("Attempt to check stack size of non-stackable item: " + m_name, Guru::WARN);
     return m_stack;
+}
+
+// Like name(), but provides an appropriate name for a given stack size. Works on non-stackable items too.
+std::string Item::stack_name(int stack_size, int flags)
+{
+    if (!tag(ItemTag::Stackable) || stack_size == -1 || stack_size == static_cast<int>(m_stack)) return name(flags);
+    if (stack_size == 1) return name(NAME_FLAG_NO_COUNT | flags);
+
+    std::string the_str;
+    if ((flags & NAME_FLAG_THE) == NAME_FLAG_THE)
+    {
+        if (!tag(ItemTag::ProperNoun))
+        {
+            the_str = "the ";
+            if ((flags & NAME_FLAG_CAPITALIZE_FIRST) == NAME_FLAG_CAPITALIZE_FIRST)
+            {
+                the_str = "The ";
+                flags ^= NAME_FLAG_CAPITALIZE_FIRST;
+            }
+        }
+        flags ^= NAME_FLAG_THE;
+    }
+
+    return the_str + StrX::number_to_word(stack_size) + " " + name(NAME_FLAG_PLURAL | NAME_FLAG_NO_COUNT | flags);
 }
 
 // Returns the ItemSub (sub-type) of this Item.

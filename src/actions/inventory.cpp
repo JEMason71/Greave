@@ -47,11 +47,39 @@ void ActionInventory::check_inventory(std::shared_ptr<Mobile> mob)
     weight_and_money(mob);
 }
 
+// Checks that a player-input count is a valid number.
+bool ActionInventory::count_check(std::shared_ptr<Item> item, int count)
+{
+    if (count == -1) return true;
+    if (count < 1)
+    {
+        core()->message("{y}That isn't a valid number.");
+        return false;
+    }
+    if (!item->tag(ItemTag::Stackable))
+    {
+        if (count != 1)
+        {
+            core()->message("{y}" + item->name(Item::NAME_FLAG_THE | Item::NAME_FLAG_CAPITALIZE_FIRST) + " {y}isn't something you can stack!");
+            return false;
+        }
+        return true;
+    }
+    if (item->stack() < static_cast<unsigned int>(count))
+    {
+        core()->message("{y}There aren't that many " + item->name(Item::NAME_FLAG_PLURAL | Item::NAME_FLAG_NO_COUNT) + "{y}.");
+        return false;
+    }
+    return true;
+}
+
 // Drops an item on the ground.
-void ActionInventory::drop(std::shared_ptr<Mobile> mob, size_t item_pos)
+void ActionInventory::drop(std::shared_ptr<Mobile> mob, size_t item_pos, int count)
 {
     const std::shared_ptr<Item> item = mob->inv()->get(item_pos);
     const std::shared_ptr<Room> room = core()->world()->get_room(mob->location());
+    const bool stackable = item->tag(ItemTag::Stackable);
+    if (!count_check(item, count)) return;
 
     if (!mob->pass_time(TIME_DROP_ITEM))
     {
@@ -59,9 +87,18 @@ void ActionInventory::drop(std::shared_ptr<Mobile> mob, size_t item_pos)
         return;
     }
 
-    mob->inv()->erase(item_pos);
-    room->inv()->add_item(item);
-    if (mob->is_player()) core()->message("{u}You drop " + item->name() + " {u}on the ground.");
+    const bool drop_all = (!stackable) || (count == -1 || count == static_cast<int>(item->stack()));
+    if (drop_all)
+    {
+        mob->inv()->erase(item_pos);
+        room->inv()->add_item(item);
+    }
+    else
+    {
+        auto split = item->split(count);
+        room->inv()->add_item(split);
+    }
+    if (mob->is_player()) core()->message("{u}You drop " + item->stack_name(count, Item::NAME_FLAG_THE) + " {u}on the ground.");
     // todo: add message for NPCs dropping items
 }
 
@@ -238,10 +275,12 @@ void ActionInventory::equipment(std::shared_ptr<Mobile> mob)
 }
 
 // Takes an item from the ground.
-void ActionInventory::take(std::shared_ptr<Mobile> mob, size_t item_pos)
+void ActionInventory::take(std::shared_ptr<Mobile> mob, size_t item_pos, int count)
 {
     const std::shared_ptr<Room> room = core()->world()->get_room(mob->location());
     const std::shared_ptr<Item> item = room->inv()->get(item_pos);
+    const bool stackable = item->tag(ItemTag::Stackable);
+    if (!count_check(item, count)) return;
 
     if (mob->carry_weight() + item->weight() > mob->max_carry())
     {
@@ -252,13 +291,22 @@ void ActionInventory::take(std::shared_ptr<Mobile> mob, size_t item_pos)
 
     if (!mob->pass_time(TIME_GET_ITEM))
     {
-        core()->message("{R}You are interrupted while trying to pick up " + item->name() + "{R}!");
+        core()->message("{R}You are interrupted while trying to pick up " + item->stack_name(count, Item::NAME_FLAG_THE) + "{R}!");
         return;
     }
 
-    room->inv()->erase(item_pos);
-    mob->inv()->add_item(item);
-    if (mob->is_player()) core()->message("{u}You pick up " + item->name() + "{u}.");
+    const bool get_all = (!stackable) || (count == -1 || count == static_cast<int>(item->stack()));
+    if (get_all)
+    {
+        room->inv()->erase(item_pos);
+        mob->inv()->add_item(item);
+    }
+    else
+    {
+        auto split = item->split(count);
+        mob->inv()->add_item(split);
+    }
+    if (mob->is_player()) core()->message("{u}You pick up " + item->stack_name(count, Item::NAME_FLAG_THE) + "{u}.");
     // todo: add message for NPCs taking items
 }
 

@@ -86,7 +86,9 @@ public:
     void        set_value(uint32_t val);            // Sets this Item's value.
     void        set_weight(uint32_t pacs);          // Sets this Item's weight.
     float       speed() const;                      // Retrieves the speed of this Item.
+    std::shared_ptr<Item>    split(int split_count);    // Splits an Item into a stack.
     uint32_t    stack() const;                      // Retrieves the stack size of this Item.
+    std::string stack_name(int stack_size, int flags = 0);  // Like name(), but provides an appropriate name for a given stack size. Works on non-stackable items too.
     ItemSub     subtype() const;                    // Returns the ItemSub (sub-type) of this Item.
     bool        tag(ItemTag the_tag) const;         // Checks if a tag is set on this Item.
     ItemType    type() const;                       // Returns the ItemType of this Item.

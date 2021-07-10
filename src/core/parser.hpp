@@ -39,12 +39,13 @@ private:
         uint32_t        parser_id;
         uint32_t        target;
         ParserTarget    type;
+        int             count;
     };
 
     void                add_command(const std::string &text, ParserCommand cmd);    // Adds a command to the parser.
     Direction           parse_direction(const std::string &dir) const;  // Parses a string into a Direction enum.
     int32_t             parse_int(const std::string &s);    // Wrapper function to check for out of range values.
-    ParserSearchResult  parse_target(const std::vector<std::string> &input, ParserTarget target);   // Attempts to match a name to a given target.
+    ParserSearchResult  parse_target(std::vector<std::string> input, ParserTarget target);   // Attempts to match a name to a given target.
     void                parse_pcd(const std::string &first_word, const std::vector<std::string> &words, ParserCommandData pcd, bool confirm);   // Parses a known command.
 
     std::vector<ParserCommandData>  m_commands;         // The commands the parser can understand.
