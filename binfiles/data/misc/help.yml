@@ -10,7 +10,7 @@ COMMAND: "#COMMANDS"
 COMMANDS: [ "{W}Combat commands: {C}ATTACK{w}, {C}STANCE",
             "{W}Item interaction: {C}DROP{w}, {C}EQUIP{w}, {C}EQUIPMENT{w}, {C}EXAMINE{w}, {C}INVENTORY{w}, {C}TAKE{w}, {C}UNEQUIP",
             "{W}Room interaction: {C}CLOSE{w}, {C}EXITS{w}, {C}LOCK{w}, {C}LOOK{w}, {C}OPEN{w}, {C}TRAVEL{w}, {C}UNLOCK",
-            "{W}Status commands: {C}SCORE{w}, {C}TIME{w}, {C}WEATHER",
+            "{W}Status commands: {C}SCORE{w}, {C}SKILLS{w}, {C}TIME{w}, {C}WEATHER",
             "{W}Misc: {C}HELP{w}, {C}QUIT{w}, {C}SAVE{c}, {C}WAIT" ]
 
 CYAN: "According to Wikipedia, {C}cyan {w}is the colour between {G}green {w}and {U}blue {w}on the visible spectrum of light."
@@ -45,6 +45,8 @@ HELP: [ "Welcome to the in-game manual! Please type {C}HELP {w}followed by anoth
 HOLD: "#EQUIP"
 
 I: "#INVENTORY"
+
+INDEX: "#COMMANDS"
 
 INV: "#INVENTORY"
 
@@ -110,6 +112,12 @@ SCORE: "tbc"
 SD: "#STANCE"
 
 SE: "#TRAVEL"
+
+SK: "#SKILLS"
+
+SKILL: "#SKILLS"
+
+SKILLS: "tbc"
 
 SOUTH: "#TRAVEL"
 
