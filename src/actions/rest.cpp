@@ -33,6 +33,7 @@ void ActionRest::rest(const std::string&, const std::vector<std::string> &words)
             return;
         }
     }
+    if (time_rest > TimeWeather::HOUR * 24) time_rest = TimeWeather::HOUR * 24;
     core()->message("{u}Time passes....");
     core()->world()->player()->set_tag(MobileTag::Resting);
     core()->world()->player()->pass_time(time_rest);
