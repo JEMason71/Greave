@@ -27,6 +27,7 @@ private:
     static const float  BASE_HIT_CHANCE_MELEE;                      // The base hit chance in melee combat.
     static const float  BASE_MELEE_DAMAGE_MULTIPLIER;               // The base damage multiplier for melee weapons.
     static const float  BASE_PARRY_CHANCE;                          // The base parry chance in melee combat.
+    static const float  BLOCK_SKILL_BONUS_PER_LEVEL;                // The bonus % chance to block per level of block skill.
     static const float  CRIT_CHANCE_MULTIPLIER_SINGLE_WIELD;        // The multiplier to crit% for single-wielding.
     static const float  DEFENDER_PARRY_MODIFIER_AGILE;              // The multiplier to the parry chance of a Mobile with the Agile tag.
     static const float  DEFENDER_PARRY_MODIFIER_CLUMSY;             // The multiplier to the parry chance of a Mobile with the Clumsy tag.
@@ -44,6 +45,7 @@ private:
     static const float  WEAPON_DAMAGE_MODIFIER_HAAH_2H;             // The damage modifier for wielding a hand-and-a-half weapon in two hands.
     static const float  WEAPON_SKILL_DAMAGE_MODIFIER;               // The damage modifier, based on weapon skill level.
     static const float  WEAPON_SKILL_TO_HIT_PER_LEVEL;              // The bonus % chance to hit per point of weapon skill.
+    static const float  XP_PER_BLOCK;                               // Experience gained for a successful shield block in combat.
     static const float  XP_PER_CRITICAL_HIT;                        // Weapon experience gainer per critical hit in combat.
     static const float  XP_PER_SUCCESSFUL_HIT;                      // Weapon experience gained per successful weapon attack in combat.
 

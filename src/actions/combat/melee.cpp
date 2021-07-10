@@ -26,6 +26,7 @@ const float Melee::BASE_DAMAGE_VARIANCE =                       3;      // The v
 const float Melee::BASE_HIT_CHANCE_MELEE =                      75.0f;  // The base hit chance in melee combat.
 const float Melee::BASE_MELEE_DAMAGE_MULTIPLIER =               1.2f;   // The base damage multiplier for melee weapons.
 const float Melee::BASE_PARRY_CHANCE =                          10.0f;  // The base parry chance in melee combat.
+const float Melee::BLOCK_SKILL_BONUS_PER_LEVEL =                0.6f;   // The bonus % chance to block per level of block skill.
 const float Melee::CRIT_CHANCE_MULTIPLIER_SINGLE_WIELD =        1.1f;   // The multiplier to crit% for single-wielding.
 const float Melee::DEFENDER_PARRY_MODIFIER_AGILE =              1.5f;   // The multiplier to the parry chance of a Mobile with the Agile tag.
 const float Melee::DEFENDER_PARRY_MODIFIER_CLUMSY =             0.5f;   // The multiplier to the parry chance of a Mobile with the Clumsy tag.
@@ -43,6 +44,7 @@ const float Melee::STANCE_TO_HIT_MODIFIER_UNFAVOURABLE =        -10;    // The t
 const float Melee::WEAPON_DAMAGE_MODIFIER_HAAH_2H =             1.8f;   // The damage modifier for wielding a hand-and-a-half weapon in two hands.
 const float Melee::WEAPON_SKILL_DAMAGE_MODIFIER =               0.05f;  // The damage modifier, based on weapon skill level.
 const float Melee::WEAPON_SKILL_TO_HIT_PER_LEVEL =              1.0f;   // The bonus % chance to hit per point of weapon skill.
+const float Melee::XP_PER_BLOCK =                               1.0f;   // Experience gained for a successful shield block in combat.
 const float Melee::XP_PER_CRITICAL_HIT =                        3.0f;   // Weapon experience gainer per critical hit in combat.
 const float Melee::XP_PER_SUCCESSFUL_HIT =                      0.7f;   // Weapon experience gained per successful weapon attack in combat.
 
@@ -86,22 +88,25 @@ bool Melee::attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mobile> def
 // Performs an attack with a single weapon.
 void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mobile> defender, EquipSlot weapon, WieldType wield_type_attacker, WieldType wield_type_defender)
 {
+    const auto world = core()->world();
+    const auto player = world->player();
+    const auto rng = core()->rng();
     if (defender->is_player())
     {
         // If the player does not yet have an automatic mob target, set it now.
-        if (!core()->world()->player()->mob_target()) core()->world()->player()->set_mob_target(attacker->id());
+        if (!player->mob_target()) player->set_mob_target(attacker->id());
     }
     else defender->add_hostility(attacker->id());   // Only do this on NON-player defenders, because obviously the player doesn't use the hostility vector.
 
     std::shared_ptr<Item> weapon_ptr = attacker->equ()->get(weapon);
-    if (!weapon_ptr) weapon_ptr = core()->world()->get_item("UNARMED_ATTACK");
+    if (!weapon_ptr) weapon_ptr = world->get_item("UNARMED_ATTACK");
     const std::shared_ptr<Item> def_weapon_main = defender->equ()->get(EquipSlot::HAND_MAIN);
     const std::shared_ptr<Item> def_weapon_off = defender->equ()->get(EquipSlot::HAND_OFF);
 
     const bool attacker_is_player = attacker->is_player();
     const bool defender_is_player = defender->is_player();
-    const bool player_is_here = (core()->world()->player()->location() == attacker->location());
-    const bool is_dark_here = core()->world()->get_room(attacker->location())->light(core()->world()->player()) < Room::LIGHT_VISIBLE;
+    const bool player_is_here = (player->location() == attacker->location());
+    const bool is_dark_here = world->get_room(attacker->location())->light(player) < Room::LIGHT_VISIBLE;
     const bool player_can_see_attacker = attacker_is_player || !is_dark_here;
     const bool player_can_see_defender = defender_is_player || !is_dark_here;
     const bool defender_melee = (wield_type_defender != WieldType::UNARMED && wield_type_defender != WieldType::UNARMED_PLUS_SHIELD) &&
@@ -146,7 +151,7 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
         default: break;
     }
     float to_hit = BASE_HIT_CHANCE_MELEE;
-    if (attacker_is_player) to_hit += (WEAPON_SKILL_TO_HIT_PER_LEVEL * core()->world()->player()->skill_level(weapon_skill));
+    if (attacker_is_player) to_hit += (WEAPON_SKILL_TO_HIT_PER_LEVEL * player->skill_level(weapon_skill));
     to_hit *= hit_multiplier;
 
     // Check if the defender can attempt to block or parry.
@@ -169,7 +174,7 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
     else to_hit *= defender->dodge_mod();
 
     bool evaded = false, blocked = false, parried = false;
-    if (core()->rng()->frnd(100) <= to_hit)  // Evasion failed; the target was hit.
+    if (rng->frnd(100) <= to_hit)  // Evasion failed; the target was hit.
     {
         // Now to check if the defender can successfully parry this attack.
         if (can_parry)
@@ -177,15 +182,17 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
             float parry_chance = BASE_PARRY_CHANCE * defender->parry_mod();
             if (defender->tag(MobileTag::Agile) || attacker->tag(MobileTag::Clumsy)) parry_chance *= DEFENDER_PARRY_MODIFIER_AGILE;
             else if (defender->tag(MobileTag::Clumsy) || attacker->tag(MobileTag::Agile)) parry_chance *= DEFENDER_PARRY_MODIFIER_CLUMSY;
-            if (core()->rng()->frnd(100) <= parry_chance) parried = true;
+            if (rng->frnd(100) <= parry_chance) parried = true;
         }
 
         // If evasion and parry both fail, we can try to block. Parrying is better than blocking (parrying negates damage entirely) so there's no reason to run a block check
         // after a successful parry.
         if (!parried && can_block)
         {
-            const float block_chance = BASE_BLOCK_CHANCE_MELEE * defender->block_mod();
-            if (core()->rng()->frnd(100) <= block_chance) blocked = true;
+            float block_chance = BASE_BLOCK_CHANCE_MELEE;
+            if (defender_is_player) block_chance += (BLOCK_SKILL_BONUS_PER_LEVEL * player->skill_level("BLOCKING"));
+            block_chance *= defender->block_mod();
+            if (rng->frnd(100) <= block_chance) blocked = true;
         }
     }
     else evaded = true;
@@ -214,7 +221,7 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
     else
     {
         float damage = weapon_ptr->power() * BASE_MELEE_DAMAGE_MULTIPLIER;
-        if (attacker_is_player) damage += (damage * (WEAPON_SKILL_DAMAGE_MODIFIER * core()->world()->player()->skill_level(weapon_skill)));
+        if (attacker_is_player) damage += (damage * (WEAPON_SKILL_DAMAGE_MODIFIER * player->skill_level(weapon_skill)));
         switch (attacker_stance)
         {
             case CombatStance::AGGRESSIVE: damage *= STANCE_DAMAGE_MULTIPLIER_AGGRESSIVE; break;
@@ -232,7 +239,7 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
         bool critical_hit = false, bleed = false, poison = false;
         float crit_chance = weapon_ptr->crit();
         if (wield_type_attacker == WieldType::SINGLE_WIELD) crit_chance *= CRIT_CHANCE_MULTIPLIER_SINGLE_WIELD;
-        if (crit_chance >= 100.0f || core()->rng()->frnd(100) <= crit_chance)
+        if (crit_chance >= 100.0f || rng->frnd(100) <= crit_chance)
         {
             critical_hit = true;
             bleed = true;
@@ -240,8 +247,8 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
         }
         const float poison_chance = weapon_ptr->poison();
         const float bleed_chance = weapon_ptr->bleed();
-        if (poison_chance >= 100.0f || core()->rng()->frnd(100) <= poison_chance) poison = true;
-        if (bleed_chance >= 100.0f || core()->rng()->frnd(100) <= bleed_chance) bleed = true;
+        if (poison_chance >= 100.0f || rng->frnd(100) <= poison_chance) poison = true;
+        if (bleed_chance >= 100.0f || rng->frnd(100) <= bleed_chance) bleed = true;
 
         if (attacker->tag(MobileTag::Anemic)) damage *= ATTACKER_DAMAGE_MODIFIER_ANEMIC;
         else if (attacker->tag(MobileTag::Feeble)) damage *= ATTACKER_DAMAGE_MODIFIER_FEEBLE;
@@ -307,7 +314,7 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
                     lessens_plural_str = "absorb";
                     lessening_str = "absorbing";
                 }
-                else switch (core()->rng()->rnd(10))
+                else switch (rng->rnd(10))
                 {
                     case 1: lessens_str = "mitigates"; lessens_plural_str = "mitigate"; lessening_str = "mitigating"; break;
                     case 2: lessens_str = "diminishes"; lessens_plural_str = "diminish"; lessening_str = "diminishing"; break;
@@ -334,7 +341,7 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
                 if (defender_is_player)
                 {
                     death_str = " {M}You are slain!";
-                    core()->world()->player()->set_death_reason("slain by " + attacker->name(Mobile::NAME_FLAG_A | Mobile::NAME_FLAG_NO_COLOUR));
+                    player->set_death_reason("slain by " + attacker->name(Mobile::NAME_FLAG_A | Mobile::NAME_FLAG_NO_COLOUR));
                 }
                 else death_str = " {U}" + defender_name_c + (defender->tag(MobileTag::Unliving) ? " is destroyed!" : " is slain!");
             }
@@ -345,6 +352,7 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
         if (bleed) weapon_bleed_effect(defender, damage);
         if (poison) weapon_poison_effect(defender, damage);
         defender->reduce_hp(damage, false);
-        if (attacker_is_player) core()->world()->player()->gain_skill_xp(weapon_skill, (critical_hit ? XP_PER_CRITICAL_HIT : XP_PER_SUCCESSFUL_HIT));
+        if (attacker_is_player) player->gain_skill_xp(weapon_skill, (critical_hit ? XP_PER_CRITICAL_HIT : XP_PER_SUCCESSFUL_HIT));
+        else if (defender_is_player && blocked) player->gain_skill_xp("BLOCKING", XP_PER_BLOCK);
     }
 }
