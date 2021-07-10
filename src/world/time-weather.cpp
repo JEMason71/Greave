@@ -209,6 +209,7 @@ bool TimeWeather::pass_time(float seconds, bool interruptable)
     const std::shared_ptr<Room> room = core()->world()->get_room(player->location());
     const bool indoors = room->tag(RoomTag::Indoors);
     const bool can_see_outside = room->tag(RoomTag::CanSeeOutside);
+    const bool player_is_resting = player->tag(MobileTag::Resting);
 
     // Determine how many seconds to pass.
     m_subsecond += seconds;
@@ -259,7 +260,7 @@ bool TimeWeather::pass_time(float seconds, bool interruptable)
             trigger_event(current_season(), &weather_msg, !show_weather_messages);
             change_happened = show_weather_messages;
         }
-        if (change_happened) core()->message(weather_message_colour() + weather_msg.substr(1));
+        if (change_happened && !player_is_resting) core()->message(weather_message_colour() + weather_msg.substr(1));
 
         // Runs the AI on all active mobiles.
         AI::tick_mobs();

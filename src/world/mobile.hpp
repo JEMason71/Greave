@@ -42,6 +42,7 @@ enum class MobileTag : uint16_t { None = 0,
     // Tags regarding the Mobile's AI and behaviour.
     AggroOnSight,   // This Mobile will attack the player on sight.
     Coward,         // This Mobile will try to run rather than fight.
+    Resting,        // This Mobile is currently resting.
 };
 
 struct BodyPart

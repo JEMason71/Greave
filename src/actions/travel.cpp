@@ -44,10 +44,12 @@ const float ActionTravel::XP_PER_SAFE_FALL_SUCCESS =    8.0f;   // How much base
 bool ActionTravel::travel(std::shared_ptr<Mobile> mob, Direction dir, bool confirm)
 {
     const uint32_t mob_loc = mob->location();
-    const uint32_t player_loc = core()->world()->player()->location();
+    const auto player = core()->world()->player();
+    const uint32_t player_loc = player->location();
     const std::shared_ptr<Room> room = core()->world()->get_room(mob_loc);
     const bool is_player = mob->is_player();
     const uint32_t room_link = room->link(dir);
+    const bool player_resting = player->tag(MobileTag::Resting);
 
     if (!room_link)
     {
@@ -92,20 +94,23 @@ bool ActionTravel::travel(std::shared_ptr<Mobile> mob, Direction dir, bool confi
         return false;
     }
 
-    const bool player_can_see = room->light(core()->world()->player());
+    const bool player_can_see = room->light(player);
     const std::string mob_name_the = (player_can_see ? mob->name(Mobile::NAME_FLAG_THE | Mobile::NAME_FLAG_CAPITALIZE_FIRST) : "Something");
     const std::string mob_name_a = (player_can_see ? mob->name(Mobile::NAME_FLAG_A | Mobile::NAME_FLAG_CAPITALIZE_FIRST) : "Something");
 
     if (sky || sky2 || sky3)
     {
         if (is_player) core()->message("{C}You take a {U}leap of faith{C}!");
-        else if (mob_loc == player_loc) core()->message("{U}" + mob_name_the + " {U}takes a leap of faith " + StrX::dir_to_name(dir, StrX::DirNameType::TO_THE_ALT) + "!");
+        else if (mob_loc == player_loc && !player_resting)
+            core()->message("{U}" + mob_name_the + " {U}takes a leap of faith " + StrX::dir_to_name(dir, StrX::DirNameType::TO_THE_ALT) + "!");
     }
-    else if (!is_player && mob_loc == player_loc) core()->message("{U}" + mob_name_the + " {U}leaves " + StrX::dir_to_name(dir, StrX::DirNameType::TO_THE_ALT) + ".");
+    else if (!is_player && mob_loc == player_loc && !player_resting)
+        core()->message("{U}" + mob_name_the + " {U}leaves " + StrX::dir_to_name(dir, StrX::DirNameType::TO_THE_ALT) + ".");
 
     mob->set_location(room_link);
     if (is_player) ActionLook::look(mob);
-    else if (room_link == player_loc) core()->message("{U}" + mob_name_a + " {U}arrives " + StrX::dir_to_name(MathX::dir_invert(dir), StrX::DirNameType::FROM_THE_ALT) + ".");
+    else if (room_link == player_loc && !player_resting)
+        core()->message("{U}" + mob_name_a + " {U}arrives " + StrX::dir_to_name(MathX::dir_invert(dir), StrX::DirNameType::FROM_THE_ALT) + ".");
 
     if (sky || sky2 || sky3)
     {
@@ -132,7 +137,7 @@ bool ActionTravel::travel(std::shared_ptr<Mobile> mob, Direction dir, bool confi
             fallen_dist = 1;
         }
         float damage_perc = static_cast<float>(min_perc + core()->rng()->rnd(rng_perc)) / 100.0f;
-        const int safe_fall = (is_player ? core()->world()->player()->skill_level("SAFE_FALL") : 0);
+        const int safe_fall = (is_player ? player->skill_level("SAFE_FALL") : 0);
         if (safe_fall > 0) damage_perc -= (static_cast<float>(core()->rng()->rnd(safe_fall)) / 100.0f);
 
         if (damage_perc > 0)
@@ -142,11 +147,11 @@ bool ActionTravel::travel(std::shared_ptr<Mobile> mob, Direction dir, bool confi
             if (is_player)
             {
                 core()->message("{R}You land badly, and the impact " + Combat::damage_str(hp_damage, mob, false) + " {R}you! {W}<{R}-" + StrX::intostr_pretty(hp_damage) + "{W}>");
-                if (mob->hp() > 0) core()->world()->player()->gain_skill_xp("SAFE_FALL", XP_PER_SAFE_FALL_FAIL * fallen_dist);
+                if (mob->hp() > 0) player->gain_skill_xp("SAFE_FALL", XP_PER_SAFE_FALL_FAIL * fallen_dist);
             }
             else
             {
-                if (room_link == player_loc)
+                if (room_link == player_loc && !player_resting)
                 {
                     if (player_can_see) core()->message("{U}" + mob_name_a + " {U}lands badly nearby with a painful crunch!");
                     else core()->message("{U}You hear the loud crunch of something landing badly nearby!");
@@ -162,15 +167,15 @@ bool ActionTravel::travel(std::shared_ptr<Mobile> mob, Direction dir, bool confi
                 if (is_player)
                 {
                     core()->message("{0}{M}Your bones are shattered from the impact, death is mercifully quick.");
-                    core()->world()->player()->set_death_reason("took a short walk and a long fall");
+                    player->set_death_reason("took a short walk and a long fall");
                 }
-                else if (player_can_see && room_link == player_loc) core()->message("{U}" + mob_name_the + " is slain instantly from the impact!");
+                else if (player_can_see && room_link == player_loc && !player_resting) core()->message("{U}" + mob_name_the + " is slain instantly from the impact!");
             }
         }
         else if (is_player)
         {
             core()->message("{g}Despite the distance fallen, you manage to land safely on your feet.");
-            core()->world()->player()->gain_skill_xp("SAFE_FALL", XP_PER_SAFE_FALL_SUCCESS * fallen_dist);
+            player->gain_skill_xp("SAFE_FALL", XP_PER_SAFE_FALL_SUCCESS * fallen_dist);
         }
     }
 

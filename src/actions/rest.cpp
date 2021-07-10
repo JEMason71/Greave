@@ -34,5 +34,7 @@ void ActionRest::rest(const std::string&, const std::vector<std::string> &words)
         }
     }
     core()->message("{u}Time passes....");
+    core()->world()->player()->set_tag(MobileTag::Resting);
     core()->world()->player()->pass_time(time_rest);
+    core()->world()->player()->clear_tag(MobileTag::Resting);
 }
