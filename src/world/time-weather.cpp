@@ -233,7 +233,7 @@ bool TimeWeather::pass_time(float seconds, bool interruptable)
         {
             const int hp = player->hp();
             const int hunger = player->hunger();
-            if (hp < old_hp || (hunger < old_hunger && hunger <= 4)) return false;
+            if (hp < old_hp || (hunger < old_hunger && hunger <= 6)) return false;
             old_hp = hp;
             old_hunger = hunger;
         }

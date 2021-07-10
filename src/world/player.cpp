@@ -98,13 +98,13 @@ void Player::hunger_tick()
             core()->message("{y}You collapse from starvation, too weak to keep going.");
             set_death_reason("starved to death");
             break;
-        case 1: core()->message("{Y}You are starving to death!"); break;
-        case 2: core()->message("{Y}You almost collapse from the hunger pain!"); break;
-        case 3: core()->message("{Y}You are desperately hungry!"); break;
-        case 4: core()->message("{Y}You are ravenously hungry!"); break;
-        case 5: core()->message("{y}Your stomach rumbles loudly!"); break;
-        case 6: core()->message("{y}Your stomach rumbles quietly."); break;
-        case 7: core()->message("{y}You're starting to feel peckish."); break;
+        case 1: case 2: core()->message("{Y}You are starving to death!"); break;
+        case 3: case 4: core()->message("{Y}You almost collapse from the hunger pain!"); break;
+        case 5: case 6: core()->message("{Y}You are desperately hungry!"); break;
+        case 7: case 8: core()->message("{Y}You are ravenously hungry!"); break;
+        case 9: case 10: core()->message("{y}Your stomach rumbles loudly!"); break;
+        case 11: case 12: core()->message("{y}Your stomach rumbles quietly."); break;
+        case 14: core()->message("{y}You're starting to feel peckish."); break;
     }
 }
 
