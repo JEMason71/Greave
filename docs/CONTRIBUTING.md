@@ -6,10 +6,10 @@ Greave, here are the things to bear in mind:
 
 1. **Be cool.** I can't stress this one enough. We're all friends here, so please behave. More specifically, I expect everyone
 interacting with this project on GitHub to abide by the
-[Code of Conduct](https://github.com/Gravecat/Greave/blob/master/.github/CODE_OF_CONDUCT.md).
+[Code of Conduct](CODE_OF_CONDUCT.md).
 
 2. This project is open-source (licensed under the
-[GNU Affero General Public License v3.0](https://github.com/Gravecat/Greave/blob/main/LICENSE)), so you are of course welcome to
+[GNU Affero General Public License v3.0](../LICENSE)), so you are of course welcome to
 take the existing code, modify it to your heart's content, and release your own modified versions of what you think the game
 should be like! With that in mind, I'm *very* open to suggestions and improvements, and I'd be much happier working with the
 community to include new features and changes you folks think would be cool. While I reserve the right to have the final word in
@@ -22,7 +22,7 @@ for something to add to it, please feel free to contact me first - either here o
 have in mind, or have plans to implement something of the sort in the future. I'd much rather work with folks in expanding the
 game together, rather than people writing code only to discover I've already started coding the same feature.
 
-4. As mentioned in the [readme](https://github.com/Gravecat/Greave/blob/master/README.md), Greave is currently in a *very* early
+4. As mentioned in the [readme](../README.md), Greave is currently in a *very* early
 pre-alpha state, and development is rather chaotic as I'm currently combining mechanics, code and other elements from several
 other former, personal game projects, most of which were previously closed-source. The current plan is to try to reach feature
 parity with my old projects - salvaging as much as possible to combine into this one single game project - before I then start
