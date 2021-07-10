@@ -3,9 +3,9 @@
 [![development status](https://img.shields.io/badge/development%20status-prealpha-red.svg)](https://github.com/Gravecat/Greave)
 [![last commit](https://img.shields.io/github/last-commit/Gravecat/Greave/main)](https://github.com/Gravecat/Greave/commits/main)
 [![license](https://img.shields.io/github/license/Gravecat/Greave)](LICENSE)
-[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.0-4baaaa.svg)](.github/CODE_OF_CONDUCT.md)
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.0-4baaaa.svg)](docs/CODE_OF_CONDUCT.md)
 
-Greave is an open-source, text-based, fantasy-themed role-playing game currently in the very, *very* early stages of development. [See here](docs/building.md) for build instructions, and if you're interested in contributing to the project, please also see the [code of conduct](.github/CODE_OF_CONDUCT.md), [contributing guidelines](.github/CONTRIBUTING.md) and [information regarding the repo's branches](docs/branches.md).
+Greave is an open-source, text-based, fantasy-themed role-playing game currently in the very, *very* early stages of development. [See here](docs/building.md) for build instructions, and if you're interested in contributing to the project, please also see the [code of conduct](docs/CODE_OF_CONDUCT.md), [contributing guidelines](docs/CONTRIBUTING.md) and [information regarding the repo's branches](docs/branches.md).
 
 If the commit history and development direction seems like a completely random mess, there's a good reason for that: Greave is largely a remake from the ground up of a previous, closed-source personal game project, Krasten, while also incorporating changes and improvements to certain elements from other abandoned personal projects. Once it's reached feature parity with the older projects, the development direction will likely seems less chaotic and random.
 
