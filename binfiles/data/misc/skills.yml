@@ -1,2 +1,18 @@
 # data/misc/skills.yml -- Defines the skills the player can use in the game, along with the offsets and multipliers for XP gain.
 # Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+
+DUAL_WIELDING:
+  name: dual-wielding
+  xp_multi: 3.25
+
+ONE_HANDED:
+  name: one-handed weapons
+  xp_multi: 6.5
+
+TWO_HANDED:
+  name: two-handed weapons
+  xp_multi: 6.5
+
+UNARMED:
+  name: hand-to-hand combat
+  xp_multi: 4

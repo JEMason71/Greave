@@ -25,6 +25,7 @@ public:
     void        set_death_reason(const std::string &reason);    // Sets the reason for this Player dying.
     void        set_mob_target(uint32_t target);    // Sets a new Mobile target.
     int         skill_level(const std::string &skill_id) const; // Returns the skill level of a specified skill of this Player.
+    const std::map<std::string, int>&   skill_map() const;      // Returns read-only access to the player's skill levels.
 
 private:
     static const float  BASE_SKILL_COST_MULTIPLIER;     // The higher this number, the slower player skill levels increase.

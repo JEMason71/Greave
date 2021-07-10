@@ -11,6 +11,7 @@ class ActionStatus
 {
 public:
     static void score();                                // Check the player's current total score.
+    static void skills();                               // Checks the player's skill levels.
     static void time(std::shared_ptr<Mobile> mob);      // Determines the current time of day.
     static void weather(std::shared_ptr<Mobile> mob);   // Checks the nearby weather.
 };

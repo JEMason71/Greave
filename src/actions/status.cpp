@@ -16,6 +16,63 @@ void ActionStatus::score()
     core()->message("{U}Your current score is {C}" + StrX::intostr_pretty(core()->world()->player()->score()) + "{U}.");
 }
 
+// Checks the player's skill levels.
+void ActionStatus::skills()
+{
+    const auto player = core()->world()->player();
+    const auto skill_map = player->skill_map();
+    std::vector<std::string> skill_names;
+    std::vector<int> skill_levels;
+
+    for (auto const &skill : skill_map)
+    {
+        if (skill.second)
+        {
+            skill_names.push_back(core()->world()->get_skill_name(skill.first));
+            skill_levels.push_back(skill.second);
+        }
+    }
+    if (!skill_levels.size())
+    {
+        core()->message("{y}You have no particular skills.");
+        return;
+    }
+
+    // Sort the list of skills with the highest-level skill first. There's probably a better way to do this (feel free to improve this code if the urge takes you),
+    // but for now I'm going to just go with a lazy and simple method and bubble-sort it by hand.
+    if (skill_levels.size() > 1)
+    {
+        bool rearranged;
+        do
+        {
+            rearranged = false;
+            for (unsigned int i = 0; i < skill_levels.size() - 1; i++)
+            {
+                if (skill_levels.at(i + 1) > skill_levels.at(i))
+                {
+                    const int temp_level = skill_levels.at(i);
+                    const std::string temp_name = skill_names.at(i);
+                    skill_levels.at(i) = skill_levels.at(i + 1);
+                    skill_levels.at(i + 1) = temp_level;
+                    skill_names.at(i) = skill_names.at(i + 1);
+                    skill_names.at(i + 1) = temp_name;
+                    rearranged = true;
+                }
+            }
+        }
+        while (rearranged);
+    }
+
+    std::string skill_str;
+    for (unsigned int i = 0; i < skill_levels.size(); i++)
+    {
+        if (i == skill_levels.size() - 1 && skill_levels.size() > 1) skill_str += " and ";
+        else if (i > 0) skill_str += ", ";
+        skill_str += "{C}" + skill_names.at(i) + " {U}(" + std::to_string(skill_levels.at(i)) + ")";
+    }
+    core()->message("{U}Your skills include " + skill_str + ".");
+}
+
 // Determines the current time of day.
 void ActionStatus::time(std::shared_ptr<Mobile> mob)
 {

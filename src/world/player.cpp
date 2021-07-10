@@ -74,17 +74,14 @@ void Player::gain_skill_xp(const std::string& skill_id, float xp)
     while (it->second > 0)
     {
         const float xp_to_next_level = BASE_SKILL_COST_MULTIPLIER * std::pow(current_level + BASE_SKILL_COST_LEVEL_OFFSET, 2);
-        while (it->second > 0)
+        if (it->second >= xp_to_next_level)
         {
-            if (it->second >= xp_to_next_level)
-            {
-                it->second -= xp_to_next_level;
-                current_level++;
-                level_increased = true;
-                m_skill_levels.find(skill_id)->second = current_level;
-            }
-            else break;
+            it->second -= xp_to_next_level;
+            current_level++;
+            level_increased = true;
+            m_skill_levels.find(skill_id)->second = current_level;
         }
+        else break;
     }
     if (level_increased) core()->message("{G}Your skill in {C}" + core()->world()->get_skill_name(skill_id) + " {G}has increased to {C}" + std::to_string(current_level) + "{G}!");
 }
@@ -184,3 +181,6 @@ int Player::skill_level(const std::string &skill_id) const
     if (it == m_skill_levels.end()) return 0;
     else return it->second;
 }
+
+// Returns read-only access to the player's skill levels.
+const std::map<std::string, int>& Player::skill_map() const { return m_skill_levels; }

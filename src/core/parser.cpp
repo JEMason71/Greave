@@ -45,6 +45,7 @@ Parser::Parser() : m_special_state(SpecialState::NONE)
     add_command("save", ParserCommand::SAVE);
     add_command("[sa|sb|sd]", ParserCommand::STANCE);
     add_command("[score|sc]", ParserCommand::SCORE);
+    add_command("[skills|skill|sk]", ParserCommand::SKILLS);
     add_command("stance <txt>", ParserCommand::STANCE);
     add_command("[take|get] <item:r>", ParserCommand::TAKE);
     add_command("[time|date]", ParserCommand::TIME);
@@ -456,6 +457,9 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             break;
         case ParserCommand::SCORE:
             ActionStatus::score();
+            break;
+        case ParserCommand::SKILLS:
+            ActionStatus::skills();
             break;
         case ParserCommand::SPAWN_ITEM:
             if (!words.size()) core()->message("{y}Please specify an {Y}item ID{y}.");

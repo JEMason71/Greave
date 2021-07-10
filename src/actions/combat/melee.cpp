@@ -41,6 +41,10 @@ const float Melee::STANCE_DAMAGE_TAKEN_MULTIPLIER_DEFENSIVE =   0.8f;   // The m
 const float Melee::STANCE_TO_HIT_MODIFIER_FAVOURABLE =          20;     // The to-hit % bonus when the attacker's stance is favourable vs the defender's.
 const float Melee::STANCE_TO_HIT_MODIFIER_UNFAVOURABLE =        -10;    // The to-hit % penalty when the attacker's stance is unfavourable vs the defender's.
 const float Melee::WEAPON_DAMAGE_MODIFIER_HAAH_2H =             1.8f;   // The damage modifier for wielding a hand-and-a-half weapon in two hands.
+const float Melee::WEAPON_SKILL_DAMAGE_MODIFIER =               0.05f;  // The damage modifier, based on weapon skill level.
+const float Melee::WEAPON_SKILL_TO_HIT_PER_LEVEL =              1.0f;   // The bonus % chance to hit per point of weapon skill.
+const float Melee::XP_PER_CRITICAL_HIT =                        3.0f;   // Weapon experience gainer per critical hit in combat.
+const float Melee::XP_PER_SUCCESSFUL_HIT =                      0.7f;   // Weapon experience gained per successful weapon attack in combat.
 
 
 // A basic attack, no special moves being used.
@@ -117,6 +121,20 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
     const CombatStance attacker_stance = attacker->stance();
     const CombatStance defender_stance = defender->stance();
 
+    std::string weapon_skill;   // If the player is involved in this fight, they will be using combat skills.
+    if (attacker_is_player || defender_is_player)
+    {
+        const WieldType wt = (attacker_is_player ? wield_type_attacker : wield_type_defender);
+        switch (wt)
+        {
+            case WieldType::NONE: case WieldType::SHIELD_ONLY: case WieldType::UNARMED: case WieldType::UNARMED_PLUS_SHIELD:
+                weapon_skill = "UNARMED"; break;
+            case WieldType::DUAL_WIELD: weapon_skill = "DUAL_WIELDING"; break;
+            case WieldType::ONE_HAND_PLUS_EXTRA: case WieldType::ONE_HAND_PLUS_SHIELD: case WieldType::SINGLE_WIELD: weapon_skill = "ONE_HANDED"; break;
+            case WieldType::TWO_HAND: case WieldType::HAND_AND_A_HALF_2H: weapon_skill = "TWO_HANDED"; break;
+        }
+    }
+
     // Roll to hit!
     float hit_multiplier = 1.0f;
     switch (wield_type_attacker)
@@ -127,7 +145,9 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
             hit_multiplier = HIT_CHANCE_MULTIPLIER_SWORD_AND_BOARD; break;
         default: break;
     }
-    float to_hit = BASE_HIT_CHANCE_MELEE * hit_multiplier;
+    float to_hit = BASE_HIT_CHANCE_MELEE;
+    if (attacker_is_player) to_hit += (WEAPON_SKILL_TO_HIT_PER_LEVEL * core()->world()->player()->skill_level(weapon_skill));
+    to_hit *= hit_multiplier;
 
     // Check if the defender can attempt to block or parry.
     bool can_block = (wield_type_defender == WieldType::ONE_HAND_PLUS_SHIELD || wield_type_defender == WieldType::SHIELD_ONLY ||
@@ -194,6 +214,7 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
     else
     {
         float damage = weapon_ptr->power() * BASE_MELEE_DAMAGE_MULTIPLIER;
+        if (attacker_is_player) damage += (damage * (WEAPON_SKILL_DAMAGE_MODIFIER * core()->world()->player()->skill_level(weapon_skill)));
         switch (attacker_stance)
         {
             case CombatStance::AGGRESSIVE: damage *= STANCE_DAMAGE_MULTIPLIER_AGGRESSIVE; break;
@@ -324,5 +345,6 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
         if (bleed) weapon_bleed_effect(defender, damage);
         if (poison) weapon_poison_effect(defender, damage);
         defender->reduce_hp(damage, false);
+        if (attacker_is_player) core()->world()->player()->gain_skill_xp(weapon_skill, (critical_hit ? XP_PER_CRITICAL_HIT : XP_PER_SUCCESSFUL_HIT));
     }
 }

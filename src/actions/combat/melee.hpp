@@ -42,6 +42,10 @@ private:
     static const float  STANCE_TO_HIT_MODIFIER_FAVOURABLE;          // The to-hit % bonus when the attacker's stance is favourable vs the defender's.
     static const float  STANCE_TO_HIT_MODIFIER_UNFAVOURABLE;        // The to-hit % penalty when the attacker's stance is unfavourable vs the defender's.
     static const float  WEAPON_DAMAGE_MODIFIER_HAAH_2H;             // The damage modifier for wielding a hand-and-a-half weapon in two hands.
+    static const float  WEAPON_SKILL_DAMAGE_MODIFIER;               // The damage modifier, based on weapon skill level.
+    static const float  WEAPON_SKILL_TO_HIT_PER_LEVEL;              // The bonus % chance to hit per point of weapon skill.
+    static const float  XP_PER_CRITICAL_HIT;                        // Weapon experience gainer per critical hit in combat.
+    static const float  XP_PER_SUCCESSFUL_HIT;                      // Weapon experience gained per successful weapon attack in combat.
 
                 // Performs an attack with a single weapon.
     static void perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mobile> defender, EquipSlot weapon, WieldType wield_type_attacker, WieldType wield_type_defender);
