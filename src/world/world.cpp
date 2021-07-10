@@ -277,7 +277,7 @@ void World::load(std::shared_ptr<SQLite::Database> save_db)
 // Loads the anatomy YAML data into memory.
 void World::load_anatomy_pool()
 {
-    const YAML::Node yaml_anatomies = YAML::LoadFile("data/anatomy.yml");
+    const YAML::Node yaml_anatomies = YAML::LoadFile("data/misc/anatomy.yml");
     for (auto a : yaml_anatomies)
     {
         // First, determine the species ID.
@@ -316,7 +316,7 @@ void World::load_anatomy_pool()
 // Loads the generic descriptions YAML data into memory.
 void World::load_generic_descs()
 {
-    const YAML::Node yaml_descs = YAML::LoadFile("data/generic descriptions.yml");
+    const YAML::Node yaml_descs = YAML::LoadFile("data/misc/generic descriptions.yml");
     for (auto desc : yaml_descs)
         m_generic_descs.insert(std::make_pair(desc.first.as<std::string>(), desc.second.as<std::string>()));
 }

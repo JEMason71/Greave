@@ -8,7 +8,7 @@
 #include "core/strx.hpp"
 
 
-std::map<std::string, std::string> ActionHelp::m_help_pages;    // Help pages loaded from data/help.yml
+std::map<std::string, std::string> ActionHelp::m_help_pages;    // Help pages loaded from data/misc/help.yml
 
 
 // Asks for help on a specific topic.
@@ -27,12 +27,12 @@ void ActionHelp::help(std::string topic)
     else core()->message(it->second);
 }
 
-// Loads the help pages from data/help.yml
+// Loads the help pages from data/misc/help.yml
 void ActionHelp::load_pages()
 {
     try
     {
-        const YAML::Node help_pages = YAML::LoadFile("data/help.yml");
+        const YAML::Node help_pages = YAML::LoadFile("data/misc/help.yml");
         for (const auto help_entry : help_pages)
         {
             std::string help_word = help_entry.first.as<std::string>(), help_text;

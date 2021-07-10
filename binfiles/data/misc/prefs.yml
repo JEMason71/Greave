@@ -1,4 +1,4 @@
-# data/prefs.yml -- Various values that can be adjusted to tweak gameplay and other elements.
+# data/misc/prefs.yml -- Various values that can be adjusted to tweak gameplay and other elements.
 # Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 # If you create a file called prefs.yml in your Greave userdata folder, it will look for these settings there first.

@@ -1,4 +1,4 @@
-# data/help.yml -- Strings for the in-game help command.
+# data/misc/help.yml -- Strings for the in-game help command.
 # Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 ATTACK: "tbc"

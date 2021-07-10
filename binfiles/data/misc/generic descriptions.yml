@@ -1,4 +1,4 @@
-# data/generic descriptions.yml -- Generic description strings for rooms and items that share descriptions, such as jail cells or keys.
+# data/misc/generic descriptions.yml -- Generic description strings for rooms and items that share descriptions, such as jail cells or keys.
 # Copyright (c) 2016-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 INN_ROOM_RD: This unremarkable inn room is small yet cozy, large enough to house two beds, a table and a couple of wooden stools, and a small wooden cabinet. A small window looks out onto the city streets, yet is too small to escape through - the only exit lies through the door in which you entered.

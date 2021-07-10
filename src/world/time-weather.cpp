@@ -37,7 +37,7 @@ const uint32_t TimeWeather::HEARTBEAT_TIMERS[TimeWeather::Heartbeat::_TOTAL] = {
 TimeWeather::TimeWeather() : m_day(80), m_moon(1), m_time(39660), m_time_passed(0), m_subsecond(0), m_weather(Weather::FAIR)
 {
     m_weather_change_map.resize(9);
-    const YAML::Node yaml_weather = YAML::LoadFile("data/weather.yml");
+    const YAML::Node yaml_weather = YAML::LoadFile("data/misc/weather.yml");
     for (auto w : yaml_weather)
     {
         const std::string id = w.first.as<std::string>();

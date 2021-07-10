@@ -9,8 +9,8 @@ class ActionHelp
 {
 public:
     static void help(std::string topic);    // Asks for help on a specific topic.
-    static void load_pages();               // Loads the help pages from data/help.yml
+    static void load_pages();               // Loads the help pages from data/misc/help.yml
 
 private:
-    static std::map<std::string, std::string>   m_help_pages;   // Help pages loaded from data/help.yml
+    static std::map<std::string, std::string>   m_help_pages;   // Help pages loaded from data/misc/help.yml
 };

@@ -64,6 +64,6 @@ private:
     float       m_subsecond;    // For counting time passed in amounts of time less than a second.
     Weather     m_weather;      // The current weather.
 
-    std::map<std::string, std::string>  m_tw_string_map;        // The time and weather strings from data/weather.yml
+    std::map<std::string, std::string>  m_tw_string_map;        // The time and weather strings from data/misc/weather.yml
     std::vector<std::string>            m_weather_change_map;   // Weather change maps, to determine odds of changing to different weather types.
 };

@@ -1,4 +1,4 @@
-# data/anatomy.yml -- Body part definitions for various creature types.
+# data/misc/anatomy.yml -- Body part definitions for various creature types.
 # Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 # Any number of body parts can be specified here, they should be listed in order of hit % chance, with the highest at the top.

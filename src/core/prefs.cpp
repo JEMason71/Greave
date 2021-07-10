@@ -14,7 +14,7 @@ Prefs::Prefs()
     const std::shared_ptr<Guru> guru = core()->guru();
 
     guru->log("Loading user preferences from prefs.yml...");
-    const YAML::Node yaml_pref = YAML::LoadFile("data/prefs.yml");
+    const YAML::Node yaml_pref = YAML::LoadFile("data/misc/prefs.yml");
     YAML::Node yaml_override;
     bool override = false;
     if (FileX::file_exists("userdata/prefs.yml"))
