@@ -57,7 +57,7 @@ void ActionCheat::teleport(std::string dest)
     {
         core()->message("{U}The world around you {M}s{C}h{M}i{C}m{M}m{C}e{M}r{C}s{U}!");
         core()->world()->player()->set_location(StrX::hash(dest));
-        ActionLook::look(core()->world()->player());
+        ActionLook::look();
     }
     else core()->message("{R}" + dest + " {y}is not a valid room ID.");
 }

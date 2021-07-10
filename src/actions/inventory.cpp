@@ -31,9 +31,10 @@ const float ActionInventory::TIME_UNEQUIP_WEAPON =  0.5f;   // The time taken (i
 
 
 // Checks to see what's being carried.
-void ActionInventory::check_inventory(std::shared_ptr<Mobile> mob)
+void ActionInventory::check_inventory()
 {
-    const auto inventory = mob->inv();
+    const auto player = core()->world()->player();
+    const auto inventory = player->inv();
     const size_t inv_size = inventory->count();
 
     if (inv_size)
@@ -44,7 +45,7 @@ void ActionInventory::check_inventory(std::shared_ptr<Mobile> mob)
     }
     else core()->message("{y}You are not carrying anything.");
 
-    weight_and_money(mob);
+    weight_and_money();
 }
 
 // Checks that a player-input count is a valid number.
@@ -234,9 +235,10 @@ bool ActionInventory::equip(std::shared_ptr<Mobile> mob, size_t item_pos)
 }
 
 // Checks to see what's wielded and/or worn.
-void ActionInventory::equipment(std::shared_ptr<Mobile> mob)
+void ActionInventory::equipment()
 {
-    const auto equ = mob->equ();
+    const auto player = core()->world()->player();
+    const auto equ = player->equ();
     if (!equ->count())
     {
         core()->message("{y}You aren't {Y}wearing or wielding {y}anything.");
@@ -271,7 +273,7 @@ void ActionInventory::equipment(std::shared_ptr<Mobile> mob)
         core()->message("{0}" + item->name(Item::NAME_FLAG_FULL_STATS | Item::NAME_FLAG_ID) + " {B}(" + slot_name + ")");
     }
 
-    weight_and_money(mob);
+    weight_and_money();
 }
 
 // Takes an item from the ground.
@@ -369,13 +371,12 @@ bool ActionInventory::unequip(std::shared_ptr<Mobile> mob, EquipSlot slot)
 }
 
 // Shows the total carry weight and currency the Mobile is carrying.
-void ActionInventory::weight_and_money(std::shared_ptr<Mobile> mob)
+void ActionInventory::weight_and_money()
 {
-    if (mob->carry_weight() || mob->inv()->count())
-        core()->message("{0}{c}Total weight: {C}" + StrX::intostr_pretty(mob->carry_weight()) + "{c}/{C}" + StrX::intostr_pretty(mob->max_carry()) + " {c}pacs.");
-
-    if (!mob->is_player()) return;
     const auto player = core()->world()->player();
+    if (player->carry_weight() || player->inv()->count())
+        core()->message("{0}{c}Total weight: {C}" + StrX::intostr_pretty(player->carry_weight()) + "{c}/{C}" + StrX::intostr_pretty(player->max_carry()) + " {c}pacs.");
+
     if (!player->money()) return;
     core()->message("{0}{c}Money carried: " + StrX::mgsc_string(player->money(), StrX::MGSC::SHORT) + "{c}.");
 }

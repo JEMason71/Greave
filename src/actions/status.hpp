@@ -10,8 +10,8 @@ class Mobile;   // defined in world/mobile.hpp
 class ActionStatus
 {
 public:
-    static void score();                                // Check the player's current total score.
-    static void skills();                               // Checks the player's skill levels.
-    static void time(std::shared_ptr<Mobile> mob);      // Determines the current time of day.
-    static void weather(std::shared_ptr<Mobile> mob);   // Checks the nearby weather.
+    static void score();    // Check the player's current total score.
+    static void skills();   // Checks the player's skill levels.
+    static void time();     // Determines the current time of day.
+    static void weather();  // Checks the nearby weather.
 };

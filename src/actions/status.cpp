@@ -74,10 +74,11 @@ void ActionStatus::skills()
 }
 
 // Determines the current time of day.
-void ActionStatus::time(std::shared_ptr<Mobile> mob)
+void ActionStatus::time()
 {
+    const auto player = core()->world()->player();
     const auto time_weather = core()->world()->time_weather();
-    const std::shared_ptr<Room> room = core()->world()->get_room(mob->location());
+    const auto room = core()->world()->get_room(player->location());
     const bool indoors = room->tag(RoomTag::Indoors);
     const bool can_see_outside = room->tag(RoomTag::CanSeeOutside);
     const std::string date = time_weather->day_name() + ", the " + time_weather->day_of_month_string() + " day of " +  time_weather->month_name();
@@ -94,9 +95,10 @@ void ActionStatus::time(std::shared_ptr<Mobile> mob)
 }
 
 // Checks the nearby weather.
-void ActionStatus::weather(std::shared_ptr<Mobile> mob)
+void ActionStatus::weather()
 {
-    const std::shared_ptr<Room> room = core()->world()->get_room(mob->location());
+    const auto player = core()->world()->player();
+    const auto room = core()->world()->get_room(player->location());
     const bool indoors = room->tag(RoomTag::Indoors);
     const bool can_see_outside = room->tag(RoomTag::CanSeeOutside);
     if (indoors && !can_see_outside) core()->message("{y}You {Y}can't see {y}the weather outside from here.");

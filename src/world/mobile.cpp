@@ -574,7 +574,7 @@ bool Mobile::tick_bleed(uint32_t power, uint16_t time)
     else
     {
         const std::shared_ptr<Player> player = core()->world()->player();
-        if (player->location() == m_location && room->light(player) >= Room::LIGHT_VISIBLE)
+        if (player->location() == m_location && room->light() >= Room::LIGHT_VISIBLE)
             core()->message("{r}" + name(NAME_FLAG_CAPITALIZE_FIRST | NAME_FLAG_THE) + " {r}is {R}bleeding {r}rather badly. {w}[{R}-" + std::to_string(power) + "{w}]");
     }
     reduce_hp(power);
@@ -624,7 +624,7 @@ bool Mobile::tick_poison(uint32_t power, uint16_t time)
     else
     {
         const std::shared_ptr<Player> player = core()->world()->player();
-        if (player->location() == m_location && room->light(player) >= Room::LIGHT_VISIBLE)
+        if (player->location() == m_location && room->light() >= Room::LIGHT_VISIBLE)
             core()->message("{g}" + name(NAME_FLAG_CAPITALIZE_FIRST | NAME_FLAG_THE) + " {g}takes damage from {G}poison{g}. {w}[{G}-" + std::to_string(power) + "{w}]");
     }
     reduce_hp(power);

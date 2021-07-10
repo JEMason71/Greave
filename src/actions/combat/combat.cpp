@@ -78,7 +78,7 @@ void Combat::change_stance(std::shared_ptr<Mobile> mob, CombatStance stance)
         case CombatStance::DEFENSIVE: stance_str = "a {U}defensive stance"; break;
     }
     if (mob->is_player()) core()->message("{W}You assume " + stance_str + "{W}.");
-    else if (mob->location() == core()->world()->player()->location() && core()->world()->get_room(mob->location())->light(core()->world()->player()) >= Room::LIGHT_VISIBLE)
+    else if (mob->location() == core()->world()->player()->location() && core()->world()->get_room(mob->location())->light() >= Room::LIGHT_VISIBLE)
         core()->message("{W}" + mob->name(Mobile::NAME_FLAG_THE | Mobile::NAME_FLAG_CAPITALIZE_FIRST) + " {W}assumes " + stance_str + "{W}!");
     mob->pass_time(STANCE_CHANGE_TIME, false);
 }

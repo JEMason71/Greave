@@ -94,7 +94,7 @@ bool ActionTravel::travel(std::shared_ptr<Mobile> mob, Direction dir, bool confi
         return false;
     }
 
-    const bool player_can_see = room->light(player);
+    const bool player_can_see = room->light();
     const std::string mob_name_the = (player_can_see ? mob->name(Mobile::NAME_FLAG_THE | Mobile::NAME_FLAG_CAPITALIZE_FIRST) : "Something");
     const std::string mob_name_a = (player_can_see ? mob->name(Mobile::NAME_FLAG_A | Mobile::NAME_FLAG_CAPITALIZE_FIRST) : "Something");
 
@@ -108,7 +108,7 @@ bool ActionTravel::travel(std::shared_ptr<Mobile> mob, Direction dir, bool confi
         core()->message("{U}" + mob_name_the + " {U}leaves " + StrX::dir_to_name(dir, StrX::DirNameType::TO_THE_ALT) + ".");
 
     mob->set_location(room_link);
-    if (is_player) ActionLook::look(mob);
+    if (is_player) ActionLook::look();
     else if (room_link == player_loc && !player_resting)
         core()->message("{U}" + mob_name_a + " {U}arrives " + StrX::dir_to_name(MathX::dir_invert(dir), StrX::DirNameType::FROM_THE_ALT) + ".");
 

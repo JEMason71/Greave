@@ -9,26 +9,28 @@
 #include "core/strx.hpp"
 #include "world/inventory.hpp"
 #include "world/item.hpp"
-#include "world/mobile.hpp"
+#include "world/player.hpp"
 #include "world/room.hpp"
 #include "world/world.hpp"
 
 
 // Examines an Item or Mobile.
-void ActionLook::examine(std::shared_ptr<Mobile> mob, ParserTarget target_type, size_t target)
+void ActionLook::examine(ParserTarget target_type, size_t target)
 {
+    const auto world = core()->world();
+    const auto player = world->player();
     switch (target_type)
     {
-        case ParserTarget::TARGET_EQUIPMENT: examine_item(mob, mob->equ()->get(target)); break;
-        case ParserTarget::TARGET_INVENTORY: examine_item(mob, mob->inv()->get(target)); break;
-        case ParserTarget::TARGET_MOBILE: examine_mobile(mob, core()->world()->mob_vec(target)); break;
-        case ParserTarget::TARGET_ROOM: examine_item(mob, core()->world()->get_room(mob->location())->inv()->get(target)); break;
+        case ParserTarget::TARGET_EQUIPMENT: examine_item(player->equ()->get(target)); break;
+        case ParserTarget::TARGET_INVENTORY: examine_item(player->inv()->get(target)); break;
+        case ParserTarget::TARGET_MOBILE: examine_mobile(world->mob_vec(target)); break;
+        case ParserTarget::TARGET_ROOM: examine_item(world->get_room(player->location())->inv()->get(target)); break;
         default: core()->guru()->nonfatal("Invalid examine target.", Guru::ERROR);
     }
 }
 
 // Examines an Item.
-void ActionLook::examine_item(std::shared_ptr<Mobile>, std::shared_ptr<Item> target)
+void ActionLook::examine_item(std::shared_ptr<Item> target)
 {
     core()->message("You are looking at: " + target->name(Item::NAME_FLAG_FULL_STATS | Item::NAME_FLAG_ID | Item::NAME_FLAG_RARE));
     if (target->desc().size()) core()->message("{0}" + target->desc());
@@ -127,19 +129,18 @@ void ActionLook::examine_item(std::shared_ptr<Mobile>, std::shared_ptr<Item> tar
 }
 
 // Examines a Mobile.
-void ActionLook::examine_mobile(std::shared_ptr<Mobile>, std::shared_ptr<Mobile> target)
+void ActionLook::examine_mobile(std::shared_ptr<Mobile> target)
 {
     core()->message("You are looking at: " + target->name());
 }
 
 // Take a look around at your surroundings.
-void ActionLook::look(std::shared_ptr<Mobile> mob)
+void ActionLook::look()
 {
-    // We're going to just assume the Mobile specified is the player. If not... we'll look around anyway, from the Mobile's point of view. Why? Because even if it doesn't make much
-    // sense right now, you never know, this code might be used in the future for some sort of "see through the target's eyes" spell or something.
-    const std::shared_ptr<Room> room = core()->world()->get_room(mob->location());
+    const auto player = core()->world()->player();
+    const auto room = core()->world()->get_room(player->location());
 
-    if (room->light(mob) < Room::LIGHT_VISIBLE)
+    if (room->light() < Room::LIGHT_VISIBLE)
     {
         core()->message("{U}Darkness");
         core()->message("{0}```{u}It is {B}pitch black{u}, and you can see {B}nothing{u}. You are likely to be eaten by a grue.");
@@ -157,7 +158,7 @@ void ActionLook::look(std::shared_ptr<Mobile> mob)
     if (scar_desc.size()) core()->message("{0}```" + scar_desc);
 
     // Show the obvious exits.
-    obvious_exits(mob, true);
+    obvious_exits(true);
 
     // Items nearby.
     if (room->inv()->count())
@@ -174,17 +175,18 @@ void ActionLook::look(std::shared_ptr<Mobile> mob)
     {
         const auto world_mob = core()->world()->mob_vec(i);
         if (!world_mob) continue; // Ignore any nullptr Mobiles.
-        if (world_mob->location() != mob->location()) continue; // Ignore any Mobiles not in this Room.
+        if (world_mob->location() != player->location()) continue;  // Ignore any Mobiles not in this Room.
         mobs_nearby.push_back((world_mob->is_hostile() ? "{R}" : "{Y}") + world_mob->name(Mobile::NAME_FLAG_NO_COLOUR) + "{w}");
     }
     if (mobs_nearby.size()) core()->message("{0}{g}```Nearby: {w}" + StrX::comma_list(mobs_nearby, StrX::CL_FLAG_USE_AND));
 }
 
 // Lists the exits from this area.
-void ActionLook::obvious_exits(std::shared_ptr<Mobile> mob, bool indent)
+void ActionLook::obvious_exits(bool indent)
 {
-    const std::shared_ptr<Room> room = core()->world()->get_room(mob->location());
-    if (room->light(mob) < Room::LIGHT_VISIBLE)
+    const auto player = core()->world()->player();
+    const auto room = core()->world()->get_room(player->location());
+    if (room->light() < Room::LIGHT_VISIBLE)
     {
         core()->message(std::string(indent ? "{0}" : "") + "{u}It's so {B}dark{u}, you can't see where the exits are!");
         return;

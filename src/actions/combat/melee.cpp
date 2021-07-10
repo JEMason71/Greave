@@ -110,7 +110,7 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
     const bool attacker_is_player = attacker->is_player();
     const bool defender_is_player = defender->is_player();
     const bool player_is_here = (player->location() == attacker->location());
-    const bool is_dark_here = world->get_room(attacker->location())->light(player) < Room::LIGHT_VISIBLE;
+    const bool is_dark_here = world->get_room(attacker->location())->light() < Room::LIGHT_VISIBLE;
     const bool player_can_see_attacker = attacker_is_player || !is_dark_here;
     const bool player_can_see_defender = defender_is_player || !is_dark_here;
     const bool defender_melee = (wield_type_defender != WieldType::UNARMED && wield_type_defender != WieldType::UNARMED_PLUS_SHIELD) &&

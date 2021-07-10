@@ -172,7 +172,7 @@ void Core::main_loop()
         // For checking if the light level has changed due to something that happened this turn.
         const uint32_t location = player->location();
         const auto room = m_world->get_room(location);
-        int old_light = room->light(player);
+        int old_light = room->light();
 
         const std::string input = m_message_log->render_message_log();
         m_parser->parse(input);
@@ -180,12 +180,12 @@ void Core::main_loop()
         // Check to see if the light level has changed.
         if (player->location() == location)
         {
-            int new_light = room->light(player);
+            int new_light = room->light();
             if (old_light >= Room::LIGHT_VISIBLE && new_light < Room::LIGHT_VISIBLE) message("{u}You are plunged into {B}darkness{u}!");
             else if (old_light < Room::LIGHT_VISIBLE && new_light >= Room::LIGHT_VISIBLE)
             {
                 message("{U}You can now see {W}clearly{U}!");
-                ActionLook::look(player);
+                ActionLook::look();
             }
         }
     } while (!player->is_dead());

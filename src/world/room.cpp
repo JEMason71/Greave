@@ -294,10 +294,11 @@ bool Room::key_can_unlock(std::shared_ptr<Item> key, Direction dir)
 }
 
 // Gets the light level of this Room, adjusted by dynamic lights, and optionally including darkvision etc.
-int Room::light(std::shared_ptr<Mobile> mob) const
+int Room::light() const
 {
     int dynamic_light = m_light;
-    const auto equ = mob->equ();
+    const auto player = core()->world()->player();
+    const auto equ = player->equ();
 
     // Check for equipped light sources.
     for (unsigned int i = 0; i < equ->count(); i++)

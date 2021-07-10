@@ -29,7 +29,7 @@ bool ActionDoors::lock_or_unlock(std::shared_ptr<Mobile> mob, Direction dir, boo
     const bool is_unlocked = !room->link_tag(dir, LinkTag::Locked);
     const std::string lock_unlock_str = (unlock ? "unlock" : "lock");
     const std::string locked_unlocked_str = (unlock ? "unlocked" : "locked");
-    const bool player_can_see = room->light(player);
+    const bool player_can_see = room->light();
     const std::string mob_name_the = (player_can_see ? mob->name(Mobile::NAME_FLAG_THE | Mobile::NAME_FLAG_CAPITALIZE_FIRST) : "Something");
     const uint32_t other_side = room->link(dir);
     const Direction dir_invert = MathX::dir_invert(dir);
@@ -143,7 +143,7 @@ bool ActionDoors::open_or_close(std::shared_ptr<Mobile> mob, Direction dir, bool
     const bool is_open = room->link_tag(dir, LinkTag::Open);
     const std::string open_close_str = (open ? "open" : "close");
     const std::string open_closed_str = (open ? "open" : "closed");
-    const bool player_can_see = room->light(player);
+    const bool player_can_see = room->light();
     const std::string mob_name_the = (player_can_see ? mob->name(Mobile::NAME_FLAG_THE | Mobile::NAME_FLAG_CAPITALIZE_FIRST) : "Something");
     const uint32_t other_side = room->link(dir);
     const Direction dir_invert = MathX::dir_invert(dir);

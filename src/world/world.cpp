@@ -890,7 +890,7 @@ void World::new_game()
 {
     m_player->set_meta_uint("bones_id", Bones::unique_id());
     m_player->set_location("OUTSIDE_QUEENS_GATE");
-    ActionLook::look(m_player);
+    ActionLook::look();
 }
 
 // Retrieves a pointer to the Player object.

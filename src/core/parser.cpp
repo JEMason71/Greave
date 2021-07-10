@@ -432,15 +432,15 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             else if (parsed_target_type == ParserTarget::TARGET_INVENTORY) ActionInventory::equip(player, parsed_target);
             break;
         case ParserCommand::EQUIPMENT:
-            ActionInventory::equipment(player);
+            ActionInventory::equipment();
             break;
         case ParserCommand::EXAMINE:
             if (!words.size()) core()->message("{y}Please specify {Y}what you want to examine{y}.");
             else if (parsed_target_type == ParserTarget::TARGET_NONE) core()->message("{y}You don't see any such {Y}" + collapsed_words + "{y} here.");
-            else if (parsed_target_type != ParserTarget::TARGET_UNCLEAR) ActionLook::examine(player, parsed_target_type, parsed_target);
+            else if (parsed_target_type != ParserTarget::TARGET_UNCLEAR) ActionLook::examine(parsed_target_type, parsed_target);
             break;
         case ParserCommand::EXITS:
-            ActionLook::obvious_exits(player, false);
+            ActionLook::obvious_exits(false);
             break;
         case ParserCommand::GO:
             if (parsed_direction == Direction::NONE) core()->message("{y}Please specify a {Y}direction {y}to travel.");
@@ -458,13 +458,13 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             ActionHelp::help(StrX::collapse_vector(words));
             break;
         case ParserCommand::INVENTORY:
-            ActionInventory::check_inventory(player);
+            ActionInventory::check_inventory();
             break;
         case ParserCommand::LOCK: case ParserCommand::UNLOCK:
             if (parsed_direction == Direction::NONE) core()->message("{y}Please specify a {Y}direction {y}to " + first_word + ".");
             else ActionDoors::lock_or_unlock(player, parsed_direction, pcd.command == ParserCommand::UNLOCK);
             break;
-        case ParserCommand::LOOK: ActionLook::look(player); break;
+        case ParserCommand::LOOK: ActionLook::look(); break;
         case ParserCommand::MIXUP:
         case ParserCommand::MIXUP_BIG:
             if (!words.size() || !StrX::is_number(words.at(0))) core()->message("{y}Please specify a {Y}number to mix up{y}.");
@@ -538,7 +538,7 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             else ActionCheat::teleport(collapsed_words);
             break;
         case ParserCommand::TIME:
-            ActionStatus::time(player);
+            ActionStatus::time();
             break;
         case ParserCommand::UNEQUIP:
             if (!words.size()) core()->message("{y}Please specify {Y}what you want to unequip{y}.");
@@ -549,7 +549,7 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             ActionRest::rest(first_word, words);
             break;
         case ParserCommand::WEATHER:
-            ActionStatus::weather(player);
+            ActionStatus::weather();
             break;
         case ParserCommand::XYZZY:
             core()->message("{u}A hollow voice says, {m}\"Fool.\"");
