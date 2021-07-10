@@ -23,7 +23,7 @@ TerminalSDL2::TerminalSDL2() : m_cursor_visible(false), m_cursor_x(0), m_cursor_
     SDL_StartTextInput();
 
     // Load the font!
-    m_font = TTF_OpenFont(("data/" + prefs->sdl_font).c_str(), prefs->sdl_font_size);
+    m_font = TTF_OpenFont(("data/fonts/" + prefs->sdl_font).c_str(), prefs->sdl_font_size);
     if (!m_font) throw std::runtime_error("Could not load TTF font!");
 
     // Determine the size, in pixels, of the chosen font. I very much hope this is fixed-width, or weird shit is gonna happen here.
