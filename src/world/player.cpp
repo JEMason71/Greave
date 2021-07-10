@@ -14,14 +14,14 @@ const int Player:: BASE_SKILL_COST_LEVEL_OFFSET =   0;      // The skill XP cost
 const float Player::BASE_SKILL_COST_MULTIPLIER =    2.0f;   // The higher this number, the slower player skill levels increase.
 
 // The SQL table construction string for the player data.
-const std::string Player::SQL_PLAYER = "CREATE TABLE player ( mob_target INTEGER, money INTEGER NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL )";
+const std::string Player::SQL_PLAYER = "CREATE TABLE player ( hunger INTEGER NOT NULL, mob_target INTEGER, money INTEGER NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL )";
 
 // The SQL table construction string for the player skills data.
 const std::string Player::SQL_SKILLS = "CREATE TABLE skills ( id TEXT PRIMARY KEY UNIQUE NOT NULL, level INTEGER NOT NULL, xp REAL )";
 
 
 // Constructor, sets default values.
-Player::Player() : m_death_reason("the will of the gods"), m_mob_target(0), m_money(0)
+Player::Player() : m_death_reason("the will of the gods"), m_hunger(20), m_mob_target(0), m_money(0)
 {
     set_species("humanoid");
     set_name("Player");
@@ -86,6 +86,35 @@ void Player::gain_skill_xp(const std::string& skill_id, float xp)
     if (level_increased) core()->message("{G}Your skill in {C}" + core()->world()->get_skill_name(skill_id) + " {G}has increased to {C}" + std::to_string(current_level) + "{G}!");
 }
 
+// Checks the current hunger level.
+int Player::hunger() const { return m_hunger; }
+
+// The player gets a little more hungry.
+void Player::hunger_tick()
+{
+    switch (--m_hunger)
+    {
+        case 0:
+            core()->message("{y}You collapse from starvation, too weak to keep going.");
+            set_death_reason("starved to death");
+            break;
+        case 1: core()->message("{Y}You are starving to death!"); break;
+        case 2: core()->message("{Y}You almost collapse from the hunger pain!"); break;
+        case 3: core()->message("{Y}You are desperately hungry!"); break;
+        case 4: core()->message("{Y}You are ravenously hungry!"); break;
+        case 5: core()->message("{y}Your stomach rumbles loudly!"); break;
+        case 6: core()->message("{y}Your stomach rumbles quietly."); break;
+        case 7: core()->message("{y}You're starting to feel peckish."); break;
+    }
+}
+
+// Checks if this Player is dead.
+bool Player::is_dead() const
+{
+    if (m_hunger < 1) return true;
+    return Mobile::is_dead();
+}
+
 // Returns true if this Mobile is a Player, false if not.
 bool Player::is_player() const { return true; }
 
@@ -95,6 +124,7 @@ uint32_t Player::load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id
     SQLite::Statement query(*save_db, "SELECT * FROM player");
     if (query.executeStep())
     {
+        m_hunger = query.getColumn("hunger").getInt();
         if (!query.isColumnNull("mob_target")) m_mob_target = query.getColumn("mob_target").getUInt();
         m_money = query.getColumn("money").getUInt();
         sql_id = query.getColumn("sql_id").getUInt();
@@ -149,10 +179,11 @@ void Player::remove_money(uint32_t amount)
 uint32_t Player::save(std::shared_ptr<SQLite::Database> save_db)
 {
     const uint32_t sql_id = Mobile::save(save_db);
-    SQLite::Statement query(*save_db, "INSERT INTO player ( mob_target, money, sql_id ) VALUES ( ?, ?, ? )");
-    if (m_mob_target) query.bind(1, m_mob_target);
-    query.bind(2, m_money);
-    query.bind(3, sql_id);
+    SQLite::Statement query(*save_db, "INSERT INTO player ( hunger, mob_target, money, sql_id ) VALUES ( ?, ?, ?, ? )");
+    query.bind(1, m_hunger);
+    if (m_mob_target) query.bind(2, m_mob_target);
+    query.bind(3, m_money);
+    query.bind(4, sql_id);
     query.exec();
 
     for (const auto &kv : m_skill_levels)

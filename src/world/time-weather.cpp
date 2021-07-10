@@ -30,6 +30,7 @@ const uint32_t TimeWeather::HEARTBEAT_TIMERS[TimeWeather::Heartbeat::_TOTAL] = {
     10 * Time::MINUTE,  // ROOM_SCARS, for decreasing the intensity of room scars.
     10 * Time::SECOND,  // BUFFS, for ticking down buffs/debuffs on Mobiles and the Player.
     5 * Time::MINUTE,   // WILDERNESS_SPAWN, for spawning beasts in the wilderness.
+    432 * Time::MINUTE, // HUNGER. Pretty slow, as you can live for a long time without food.
 };
 
 
@@ -205,8 +206,9 @@ TimeWeather::LunarPhase TimeWeather::moon_phase() const
 bool TimeWeather::pass_time(float seconds, bool interruptable)
 {
     if (seconds <= UNINTERRUPTABLE_TIME) interruptable = false;
-    const std::shared_ptr<Player> player = core()->world()->player();
-    const std::shared_ptr<Room> room = core()->world()->get_room(player->location());
+    const auto world = core()->world();
+    const auto player = world->player();
+    const auto room = world->get_room(player->location());
     const bool indoors = room->tag(RoomTag::Indoors);
     const bool can_see_outside = room->tag(RoomTag::CanSeeOutside);
     const bool player_is_resting = player->tag(MobileTag::Resting);
@@ -221,6 +223,7 @@ bool TimeWeather::pass_time(float seconds, bool interruptable)
     }
 
     int old_hp = player->hp();
+    int old_hunger = player->hunger();
     while (seconds_to_add--)
     {
         if (player->is_dead()) return false;    // Don't pass time if the player is dead.
@@ -229,8 +232,10 @@ bool TimeWeather::pass_time(float seconds, bool interruptable)
         if (interruptable)
         {
             const int hp = player->hp();
-            if (hp < old_hp) return false;
+            const int hunger = player->hunger();
+            if (hp < old_hp || (hunger < old_hunger && hunger <= 4)) return false;
             old_hp = hp;
+            old_hunger = hunger;
         }
 
         m_time_passed++;    // The total time passed in the game. This will loop every 136 years, but that's not a problem; see time_passed().
@@ -264,30 +269,31 @@ bool TimeWeather::pass_time(float seconds, bool interruptable)
 
         // Runs the AI on all active mobiles.
         AI::tick_mobs();
+        if (player->is_dead()) return true;
 
         std::set<uint32_t> active_rooms;    // This starts empty, but can be re-used if multiple heartbeats need to check active rooms.
 
         // Scan through all active rooms, respawning NPCs if needed.
         if (heartbeat_ready(Heartbeat::MOBILE_SPAWN))
         {
-            if (!active_rooms.size()) active_rooms = core()->world()->active_rooms();
+            if (!active_rooms.size()) active_rooms = world->active_rooms();
             for (auto room_id : active_rooms)
             {
-                const auto room = core()->world()->get_room(room_id);
+                const auto room = world->get_room(room_id);
                 room->respawn_mobs();
             }
         }
 
         // Spawn mobiles in wilderness rooms.
-        if (heartbeat_ready(Heartbeat::WILDERNESS_SPAWN)) core()->world()->wilderness_spawns();
+        if (heartbeat_ready(Heartbeat::WILDERNESS_SPAWN)) world->wilderness_spawns();
 
         // Reduce room scars on active rooms.
         if (heartbeat_ready(Heartbeat::ROOM_SCARS))
         {
-            if (!active_rooms.size()) active_rooms = core()->world()->active_rooms();
+            if (!active_rooms.size()) active_rooms = world->active_rooms();
             for (auto room_id : active_rooms)
             {
-                const auto room = core()->world()->get_room(room_id);
+                const auto room = world->get_room(room_id);
                 room->decay_scars();
             }
         }
@@ -295,9 +301,17 @@ bool TimeWeather::pass_time(float seconds, bool interruptable)
         // Reduce timers on buffs for all Mobiles and the Player.
         if (heartbeat_ready(Heartbeat::BUFFS))
         {
-            core()->world()->player()->tick_buffs();
-            for (size_t m = 0; m < core()->world()->mob_count(); m++)
-                core()->world()->mob_vec(m)->tick_buffs();
+            player->tick_buffs();
+            if (player->is_dead()) return true;
+            for (size_t m = 0; m < world->mob_count(); m++)
+                world->mob_vec(m)->tick_buffs();
+        }
+
+        // Increases the player's hunger.
+        if (heartbeat_ready(Heartbeat::HUNGER))
+        {
+            player->hunger_tick();
+            if (player->is_dead()) return true;
         }
     }
 

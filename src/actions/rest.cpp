@@ -36,6 +36,7 @@ void ActionRest::rest(const std::string&, const std::vector<std::string> &words)
     if (time_rest > TimeWeather::HOUR * 24) time_rest = TimeWeather::HOUR * 24;
     core()->message("{u}Time passes....");
     core()->world()->player()->set_tag(MobileTag::Resting);
-    core()->world()->player()->pass_time(time_rest);
+    const bool uninterrupted = core()->world()->player()->pass_time(time_rest);
     core()->world()->player()->clear_tag(MobileTag::Resting);
+    if (!uninterrupted) core()->message("{c}You awaken with a start!");
 }

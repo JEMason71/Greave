@@ -16,6 +16,9 @@ public:
     int         clothes_warmth() const;             // Gets the clothing warmth level from the Player.
     std::string death_reason() const;               // Retrieves the player's death reason.
     void        gain_skill_xp(const std::string& skill_id, float xp = 1.0f);    // Gains experience in a skill.
+    int         hunger() const;                     // Checks the current hunger level.
+    void        hunger_tick();                      // The player gets a little more hungry.
+    bool        is_dead() const override;           // Checks if this Player is dead.
     bool        is_player() const override;         // Returns true if this Mobile is a Player, false if not.
     uint32_t    load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id) override;  // Loads the Player data.
     uint32_t    mob_target();                       // Retrieves the Mobile target if it's still valid, or sets it to 0 if not.
@@ -32,6 +35,7 @@ private:
     static const int    BASE_SKILL_COST_LEVEL_OFFSET;   // The skill XP cost formula is offset by this many levels.
 
     std::string m_death_reason; // The cause of death, when it happens.
+    uint8_t     m_hunger;       // The hunger counter. 20 = completely full, 0 = starved to death.
     uint32_t    m_mob_target;   // The last Mobile to have been attacked.
     uint32_t    m_money;        // The amount of coin the player is carrying.
     std::map<std::string, int>      m_skill_levels; // The skill levels learned by this Player, if any.
