@@ -1,14 +1,14 @@
 # data/misc/help.yml -- Strings for the in-game help command.
 # Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-ATTACK: "tbc"
+ATTACK: "The {C}ATTACK {w}command (can also be written as {C}KILL {w}or shortened to {C}K{w}) is your primary means of fighting creatures and people in the game world. Simply type {C}ATTACK {w}followed by the name of your target (for example, {C}ATTACK GOBLIN{w}) to attack with your currently-equipped weapon."
 
-CLOSE: "tbc"
+CLOSE: "You can close doors (or windows, grates, or other door-like things) with the {C}CLOSE {w}command. Simply type {C}CLOSE {w}followed by a direction (for example, {C}CLOSE NORTHEAST {w}to attempt to close something in that direction."
 
 COMMAND: "#COMMANDS"
 
 COMMANDS: [ "{W}Combat commands: {C}ATTACK{w}, {C}STANCE",
-            "{W}Item interaction: {C}DROP{w}, {C}EQUIP{w}, {C}EQUIPMENT{w}, {C}EXAMINE{w}, {C}INVENTORY{w}, {C}TAKE{w}, {C}UNEQUIP",
+            "{W}Item interaction: {C}DROP{w}, {C}EQUIP{w}, {C}EXAMINE{w}, {C}INVENTORY{w}, {C}TAKE{w}, {C}UNEQUIP",
             "{W}Room interaction: {C}CLOSE{w}, {C}EXITS{w}, {C}LOCK{w}, {C}LOOK{w}, {C}OPEN{w}, {C}TRAVEL{w}, {C}UNLOCK",
             "{W}Status commands: {C}SCORE{w}, {C}SKILLS{w}, {C}TIME{w}, {C}WEATHER",
             "{W}Misc: {C}HELP{w}, {C}QUIT{w}, {C}SAVE{c}, {C}WAIT" ]
@@ -21,19 +21,29 @@ DATE: "#TIME"
 
 DOWN: "#TRAVEL"
 
+DROP: "You can drop anything you're carrying (and do not currently have equipped) by typing {C}DROP {w}followed by the name of the item (e.g. {C}DROP CANDLE{w}). If you wish to drop multiple items from a stack - for example, you're carrying 30 arrows and want to drop 5 on the ground - specify a number before the item name (e.g. {C}DROP 5 ARROWS{w})."
+
 E: "#TRAVEL"
 
 EAST: "#TRAVEL"
 
-EQ: "The {C}EQ {w}command can be short for either {C}EQUIP or {C}EQUIPMENT{w}, depending on context. Please check those help pages for more details."
+EQ: "#EQUIP"
 
-EQUIP: "tbc"
+EQUIP: "The {C}EQUIP {w}(or {C}EQ{w}) command allows you to equip gear - wield weapons, wear clothing or armour, and so on. Simply type {C}EQUIP {w}followed by the name of something in your inventory (e.g. {C}EQUIP LEATHER BOOTS{w}). You can also write {C}WEAR {w}or {C}WIELD {w}for the same effect. Typing {C}EQUIP {w}with no item specified will show your currently-equipped gear."
 
-EQUIPMENT: "tbc"
+EQUIPMENT: "#EQUIP"
 
-EXIT: "tbc"
+EQUIPPED: "#EQUIP"
 
-EXITS: "#EXIT"
+EX: "#EXAMINE"
+
+EXAM: "#EXAMINE"
+
+EXAMINE: "You can look at any items (either in your inventory, equipped, or in the room nearby), or at any mobiles in your current room, with the {C}EXAMINE {w}command. Simply type {C}EXAMINE {w}(or {C}EX{w}, or {C}X{w} for short) followed by the name of what you want to look more closely at (e.g. {C}EXAMINE GEMSTONE{w})."
+
+EXIT: "#QUIT"
+
+EXITS: "You can see what exits from your current room lead to adjacent rooms by typing {C}EXITS{w}."
 
 GET: "#TAKE"
 
@@ -52,9 +62,9 @@ INV: "#INVENTORY"
 
 INVENT: "#INVENTORY"
 
-INVENTORY: "tbc"
+INVENTORY: "You can check what you are currently carrying by typing {C}INVENTORY {w}(or {C}INV {w}or {C}I {w}for short). This only shows {W}unequipped {w}items in your possession - for items you have worn or wielded, type {C}EQUIPMENT {w}(or {C}EQUIP{w})."
 
-ITEM: "tbc"
+ITEM: "An {C}ITEM {w}is anything you can pick up and interact with. It could be an apple, a sword, or a suit of armour. You carry items in your {C}INVENTORY{w}, some items can be {C}EQUIPPED{w}, and items can be picked up or dropped in your current room."
 
 ITEMS: "#ITEM"
 
@@ -62,13 +72,15 @@ K: "#ATTACK"
 
 KILL: "#ATTACK"
 
-LOCK: "tbc"
+L: "#LOOK"
+
+LOCK: "If you have the right key, you can attempt to lock a nearby door. Simply type {C}LOCK {w}followed by the direction of the door (e.g. {C}LOCK EAST{w}). You do not need to specify which key to use."
 
 LOCKED: "#LOCK"
 
-LOOK: "tbc"
+LOOK: "The {C}LOOK {w}command (can be shortened to {C}L{w}) allows you to see your surroundings, which directions you can travel, and any items or mobiles that may be present here right now."
 
-MOBILE: "tbc"
+MOBILE: "A {C}MOBILE {w}represents something that moves around and interacts with the game world - like you! Mobiles include townspeople, guards and bandits, monsters, wild beasts, and many more things."
 
 MOBILES: "#MOBILE"
 
@@ -91,9 +103,13 @@ NORTHWEST: "#TRAVEL"
 
 NW: "#TRAVEL"
 
+OPEN: "You can attempt to open doors (or windows, grates, or other door-like things) with the {C}OPEN {w}command. Simply type {C}OPEN {w}followed by a direction (for example, {C}OPEN SOUTHWEST {w}to attempt to open something in that direction."
+
+QUIT: "To quit the game, simply type {C}QUIT{w}, followed by {C}YES {w}to confirm. {W}Please note, the game will not be automatically saved.{w} If you wish to save first, use the {C}SAVE {w}command."
+
 REMOVE: "#UNEQUIP"
 
-ROOM: "tbc"
+ROOM: "A {C}ROOM {w}is a singular area in the game world, with links leading to adjacent rooms in cardinal compass directions (as well as up and down). 'Rooms' do not necessarily mean literal rooms - a room could be a forest clearing, a mountain lake, or an empty stretch of road."
 
 ROOMS: "#ROOM"
 
@@ -103,11 +119,13 @@ S: "#TRAVEL"
 
 SA: "#STANCE"
 
+SAVE: "The {C}SAVE {w}command will save your game, overwriting your previous saved game in this slot."
+
 SB: "#STANCE"
 
 SC: "#SCORE"
 
-SCORE: "tbc"
+SCORE: "The {C}SCORE {w}command (can be shortened to {C}SC{w}) shows your current game's score."
 
 SD: "#STANCE"
 
@@ -117,7 +135,7 @@ SK: "#SKILLS"
 
 SKILL: "#SKILLS"
 
-SKILLS: "tbc"
+SKILLS: "The {C}SKILLS {w}command lists any skills you currently have, and their associated levels of training."
 
 SOUTH: "#TRAVEL"
 
@@ -125,40 +143,43 @@ SOUTHEAST: "#TRAVEL"
 
 SOUTHWEST: "#TRAVEL"
 
-STANCE: "tbc"
+STANCE: [ "There are three different stances you can take in combat -- {G}balanced {w}is an all-round stance with no penalties or bonuses, {R}aggressive {w}deals more damage while also taking more damage from enemy attacks, and {U}defensive {w}deals less damage, but also takes less in return.",
+          "You can switch stances by typing {C}STANCE {w}followed by the name of the stance to change to (e.g. {C}STANCE BALANCED{w}), or instead, you can simply type {C}SA{w}, {C}SB {w}or {C}SD {w}for short." ]
 
 SW: "#TRAVEL"
 
-TAKE: "tbc"
+TAKE: "You can pick up items from your current room with the {C}TAKE {w}(or {C}GET{w}) command. Simply type {C}TAKE {w}followed by the name of the item you wish to pick up (e.g. {C}TAKE SKULL{w}). If you wish to take only a few items from a stack - for example, there's a pile of 30 coins and you want to take 12 of them - specify a number before the item's name (e.g. {C}TAKE 12 COINS{w})."
 
 TEMP: "#WEATHER"
 
 TEMPERATURE: "#WEATHER"
 
-TIME: "tbc"
+TIME: "The {C}TIME {w}command will tell you the current time of day and date. If you are indoors, you will only be able to estimate the rough time of day."
 
-TRAVEL: "tbc"
+TRAVEL: "To travel to a nearby room, type {C}TRAVEL {w}or {C}GO {w}followed by the name of the compass direction you wish to travel (or {C}UP {w}or {C}DOWN{w}). You can also just type the compass direction on its own, or a shortened version of the compass direction, for example, {C}SOUTHWEST {w}or {C}SW{w}."
 
 U: "#TRAVEL"
 
 UNEQ: "#UNEQUIP"
 
-UNEQUIP: "tbc"
+UNEQUIP: "The {C}UNEQUIP {w}(or {C}REMOVE{w}, or {C}UNEQ{w}) command can be used to remove items you are currently wearing, wielding, or otherwise have equipped. Just type {C}UNEQUIP {w}followed by the name of the item (e.g. {C}UNEQUIP HELMET{w})."
 
-UNLOCK: "tbc"
+UNLOCK: "If you have the right key, you can attempt to unlock a door with the {C}UNLOCK {w}command. Just type {C}UNLOCK {w}followed by the compass direction of the door (e.g. {C}UNLOCK WEST{w}). You do not need to specify which key to use."
 
 UP: "#TRAVEL"
 
 W: "#TRAVEL"
 
-WAIT: "tbc"
+WAIT: "The {C}WAIT {w}command currently allows time to pass, waiting for 1 hour unless you are interrupted by damage."
 
 WALK: "#TRAVEL"
 
 WEAR: "#EQUIP"
 
-WEATHER: "tbc"
+WEATHER: "The {C}WEATHER {w}command shows the current weather if you are outdoors, or can see the outdoors from where you are. It also shows the current temperature of your area, and how warm or cold you feel."
 
 WEST: "#TRAVEL"
 
 WIELD: "#EQUIP"
+
+X: "#EXAMINE"
