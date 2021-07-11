@@ -42,7 +42,7 @@ Message log and input window code originally based on [BearLibTerminal](https://
 
 Time and weather system adapted from [Keran's MUSH/MUX Weather and Time Code Package Version 4.0 beta](http://www.mushcode.com/File/Kerans-Weather-System-And-Time-Code-4-0-(PennMUSH)), copyright © 1996-1998 Keran.
 
-FindSDL2TTF CMake module copyright © 2003-2009 Kitware, Inc.
+FindSDL2TTF CMake module copyright © 2003-2009 [Kitware, Inc](https://cmake.org/).
 
 Portions of this software are copyright © 2013 [The FreeType Project](https://www.freetype.org/). All rights reserved.
 

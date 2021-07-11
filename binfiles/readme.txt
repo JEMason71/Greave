@@ -57,6 +57,7 @@ Package Version 4.0 beta, copyright © 1996-1998 Keran.
 http://www.mushcode.com/File/Kerans-Weather-System-And-Time-Code-4-0-(PennMUSH)
 
 FindSDL2TTF CMake module copyright © 2003-2009 Kitware, Inc.
+https://www.cmake.org/
 
 Portions of this software are copyright © 2013 The FreeType Project.
 All rights reserved. https://www.freetype.org/
