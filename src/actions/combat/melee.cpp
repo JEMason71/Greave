@@ -21,12 +21,12 @@ const float Melee::ATTACKER_DAMAGE_MODIFIER_PUNY =              0.9f;   // The d
 const float Melee::ATTACKER_DAMAGE_MODIFIER_STRONG =            1.1f;   // The damage multiplier when a Mobile with the Strong tag attacks in melee combat.
 const float Melee::ATTACKER_DAMAGE_MODIFIER_VIGOROUS =          1.5f;   // The damage multiplier when a Mobile with the Vigorous tag attacks in melee combat.
 const float Melee::BASE_ABSORPTION_VARIANCE =                   4;      // The variance in weapon damage soaked by armour (lower number = more variance).
-const float Melee::BASE_BLOCK_CHANCE_MELEE =                    20.0f;  // The base block chance in melee combat.
+const float Melee::BASE_BLOCK_CHANCE_MELEE =                    40.0f;  // The base block chance in melee combat.
 const float Melee::BASE_DAMAGE_VARIANCE =                       3;      // The variance in weapon damage (lower number = more variance).
 const float Melee::BASE_HIT_CHANCE_MELEE =                      75.0f;  // The base hit chance in melee combat.
 const float Melee::BASE_MELEE_DAMAGE_MULTIPLIER =               1.2f;   // The base damage multiplier for melee weapons.
 const float Melee::BASE_PARRY_CHANCE =                          10.0f;  // The base parry chance in melee combat.
-const float Melee::BLOCK_SKILL_BONUS_PER_LEVEL =                0.6f;   // The bonus % chance to block per level of block skill.
+const float Melee::BLOCK_SKILL_BONUS_PER_LEVEL =                0.3f;   // The bonus % chance to block per level of block skill.
 const float Melee::CRIT_CHANCE_MULTIPLIER_SINGLE_WIELD =        1.1f;   // The multiplier to crit% for single-wielding.
 const float Melee::DEFENDER_PARRY_MODIFIER_AGILE =              1.5f;   // The multiplier to the parry chance of a Mobile with the Agile tag.
 const float Melee::DEFENDER_PARRY_MODIFIER_CLUMSY =             0.5f;   // The multiplier to the parry chance of a Mobile with the Clumsy tag.
@@ -34,8 +34,9 @@ const float Melee::DEFENDER_TO_HIT_MODIFIER_AGILE =             0.8f;   // The t
 const float Melee::DEFENDER_TO_HIT_MODIFIER_CLUMSY =            1.25f;  // The to-hit multiplier when attempting to hit a Mobile with the Clumsy tag.
 const float Melee::EVASION_SKILL_BONUS_PER_LEVEL =              0.5f;   // The bonus % chance to dodge attacks per level of evasion skill.
 const float Melee::HIT_CHANCE_MULTIPLIER_DUAL_WIELD =           0.9f;   // The multiplier to accuracy% for dual-wielding.
-const float Melee::HIT_CHANCE_MULTIPLIER_SINGLE_WIELD =         1.2f;   // The multiplier to accuracy% for single-wielding.
-const float Melee::HIT_CHANCE_MULTIPLIER_SWORD_AND_BOARD =      1.1f;   // The multiplier to accuracy% for wielding 1h+shield or 1h+extra.
+const float Melee::HIT_CHANCE_MULTIPLIER_SINGLE_WIELD =         1.8f;   // The multiplier to accuracy% for single-wielding.
+const float Melee::HIT_CHANCE_MULTIPLIER_SWORD_AND_BOARD =      1.5f;   // The multiplier to accuracy% for wielding 1h+shield or 1h+extra.
+const float Melee::PARRY_PENALTY_TWO_HANDED =                   0.6f;   // The penalty % chance to parry when using a two-handed weapon.
 const float Melee::PARRY_SKILL_BONUS_PER_LEVEL =                0.5f;   // The bonus % chance to parry per level of parry skill.
 const float Melee::STANCE_DAMAGE_MULTIPLIER_AGGRESSIVE =        1.2f;   // The multiplier to melee damage when in an aggressive stance.
 const float Melee::STANCE_DAMAGE_MULTIPLIER_DEFENSIVE =         0.8f;   // The multiplier to melee damage when in a defensive stance.
@@ -185,6 +186,7 @@ void Melee::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mob
         if (can_parry)
         {
             float parry_chance = BASE_PARRY_CHANCE;
+            if (wield_type_attacker == WieldType::TWO_HAND || wield_type_attacker == WieldType::HAND_AND_A_HALF_2H) parry_chance *= PARRY_PENALTY_TWO_HANDED;
             if (defender_is_player) parry_chance += (PARRY_SKILL_BONUS_PER_LEVEL * player->skill_level("PARRY"));
             parry_chance *= defender->parry_mod();
             if (defender->tag(MobileTag::Agile) || attacker->tag(MobileTag::Clumsy)) parry_chance *= DEFENDER_PARRY_MODIFIER_AGILE;

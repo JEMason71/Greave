@@ -37,6 +37,7 @@ private:
     static const float  HIT_CHANCE_MULTIPLIER_DUAL_WIELD;           // The multiplier to accuracy% for dual-wielding.
     static const float  HIT_CHANCE_MULTIPLIER_SINGLE_WIELD;         // The multiplier to accuracy% for single-wielding.
     static const float  HIT_CHANCE_MULTIPLIER_SWORD_AND_BOARD;      // The multiplier to accuracy% for wielding 1h+shield or 1h+extra.
+    static const float  PARRY_PENALTY_TWO_HANDED;                   // The penalty % chance to parry when using a two-handed weapon.
     static const float  PARRY_SKILL_BONUS_PER_LEVEL;                // The bonus % chance to parry per level of parry skill.
     static const float  STANCE_DAMAGE_MULTIPLIER_AGGRESSIVE;        // The multiplier to melee damage when in an aggressive stance.
     static const float  STANCE_DAMAGE_MULTIPLIER_DEFENSIVE;         // The multiplier to melee damage when in a defensive stance.
