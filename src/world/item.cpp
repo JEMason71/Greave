@@ -389,10 +389,18 @@ bool Item::tag(ItemTag the_tag) const { return (m_tags.count(the_tag) > 0); }
 ItemType Item::type() const { return m_type; }
 
 // The Item's value in money.
-uint32_t Item::value() const { return m_value; }
+uint32_t Item::value(bool individual) const
+{
+    if (individual || !tag(ItemTag::Stackable)) return m_value;
+    else return m_value * m_stack;
+}
 
 // The Item's warmth rating, if any.
 int Item::warmth() const { return meta_int("warmth"); }
 
 // The Item's weight, in pacs.
-uint32_t Item::weight() const { return m_weight; }
+uint32_t Item::weight(bool individual) const
+{
+    if (individual || !tag(ItemTag::Stackable)) return m_weight;
+    else return m_weight * m_stack;
+}
