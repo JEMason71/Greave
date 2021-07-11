@@ -2,7 +2,7 @@
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #include "3rdparty/SQLiteCpp/SQLiteCpp.h"
-#include "actions/combat/combat.hpp"
+#include "actions/combat.hpp"
 #include "core/core.hpp"
 #include "core/guru.hpp"
 #include "core/random.hpp"

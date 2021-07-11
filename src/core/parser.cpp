@@ -2,7 +2,7 @@
 // Copyright (c) 2021 Raine "Gravecat" Simmons and the Greave contributors. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #include "actions/cheat.hpp"
-#include "actions/combat/melee.hpp"
+#include "actions/combat.hpp"
 #include "actions/doors.hpp"
 #include "actions/help.hpp"
 #include "actions/inventory.hpp"
@@ -420,7 +420,7 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             else ActionCheat::add_money(parse_int(words.at(0)));
             break;
         case ParserCommand::ATTACK:
-            if (parsed_target_type == ParserTarget::TARGET_MOBILE) Melee::attack(player, core()->world()->mob_vec(parsed_target));
+            if (parsed_target_type == ParserTarget::TARGET_MOBILE) Combat::attack(player, core()->world()->mob_vec(parsed_target));
             else if (!words.size()) core()->message("{y}Please specify {Y}what you want to attack{y}.");
             else if (parsed_target_type == ParserTarget::TARGET_NONE) core()->message("{y}You don't see any such {Y}" + collapsed_words + " {y}here.");
             break;

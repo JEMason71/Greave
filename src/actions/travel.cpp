@@ -1,10 +1,10 @@
 // actions/travel.cpp -- Actions allowing the player and NPCs to move around the game world.
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
+#include "actions/combat.hpp"
 #include "actions/doors.hpp"
 #include "actions/look.hpp"
 #include "actions/travel.hpp"
-#include "combat/combat.hpp"
 #include "core/core.hpp"
 #include "core/mathx.hpp"
 #include "core/parser.hpp"

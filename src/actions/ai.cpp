@@ -2,8 +2,8 @@
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #include "actions/ai.hpp"
+#include "actions/combat.hpp"
 #include "actions/travel.hpp"
-#include "combat/melee.hpp"
 #include "core/core.hpp"
 #include "core/random.hpp"
 #include "world/player.hpp"
@@ -123,7 +123,7 @@ void AI::tick_mob(std::shared_ptr<Mobile> mob, uint32_t)
 
         // For non-cowardly NPCs, we'll wait until there's sufficient action time available to perform an attack. If not, just wait until there is.
         // This will prevent angry NPCs from just doing something else entirely, instead of winding up to attack.
-        if (mob->can_perform_action(mob->attack_speed())) Melee::attack(mob, attack_target);
+        if (mob->can_perform_action(mob->attack_speed())) Combat::attack(mob, attack_target);
         return;
     }
 
@@ -134,7 +134,7 @@ void AI::tick_mob(std::shared_ptr<Mobile> mob, uint32_t)
         // particular mobile isn't hellbent on unleashing limitless unlimited unprecedented eternal terrible violence on anyone *in particular*.
         if (mob->can_perform_action(mob->attack_speed()))
         {
-            Melee::attack(mob, core()->world()->player());
+            Combat::attack(mob, core()->world()->player());
             return;
         }
     }
