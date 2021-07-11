@@ -262,6 +262,11 @@ Parser::ParserSearchResult Parser::parse_target(std::vector<std::string> input, 
                         word_in_name = true;
                     }
                 }
+                if (input.at(j) == StrX::itos(candidates.at(i).parser_id, 4))
+                {
+                    score = 1000;
+                    word_in_name = true;
+                }
                 if (!word_in_name) invalid_word = true;
             }
             if (invalid_word) score = 0;
