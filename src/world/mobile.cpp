@@ -17,6 +17,7 @@
 
 const float Mobile::ACTION_TIMER_CAP_MAX =                  3600.0f;    // The maximum value the action timer can ever reach.
 const int   Mobile::BASE_CARRY_WEIGHT =                     30000;      // The maximum amount of weight a Mobile can carry, before modifiers.
+const int   Mobile::DAMAGE_DEBUFF_TIME =                    60;         // How long the damage debuff that prevents HP regeneration lasts.
 const int   Mobile::SCAR_BLEED_INTENSITY_FROM_BLEED_TICK =  1;          // Blood type scar intensity caused by each tick of the player or an NPC bleeding.
 
 // Flags for the name() function.
@@ -397,6 +398,7 @@ bool Mobile::pass_time(float seconds, bool interruptable)
 void Mobile::reduce_hp(int amount, bool death_message)
 {
     m_hp[0] -= amount;
+    set_buff(Buff::Type::RECENT_DAMAGE, DAMAGE_DEBUFF_TIME, 0, false, false);
     if (is_player()) return;                // The player character's death is handled elsewhere.
     clear_buff(Buff::Type::RECENTLY_FLED);  // Cowardly NPCs fleeing in fear should be able to flee again when taking damage.
     if (m_hp[0] > 0) return;                // Everything below this point deals with the Mobile dying.
@@ -463,13 +465,17 @@ uint32_t Mobile::save(std::shared_ptr<SQLite::Database> save_db)
 uint32_t Mobile::score() const { return m_score; }
 
 // Sets a specified buff/debuff on the Actor, or extends an existing buff/debuff.
-void Mobile::set_buff(Buff::Type type, uint16_t time, uint32_t power, bool additive_power)
+void Mobile::set_buff(Buff::Type type, uint16_t time, uint32_t power, bool additive_power, bool additive_time)
 {
     for (auto b : m_buffs)
     {
         if (b->type == type)
         {
-            if (time != USHRT_MAX) b->time += time;
+            if (time != USHRT_MAX)
+            {
+                if (additive_time) b->time += time;
+                else if (b->time < time) b->time = time;
+            }
             if (additive_power) b->power += power;
             else if (b->power < power) b->power = power;
             return;
@@ -608,6 +614,7 @@ void Mobile::tick_buffs()
 // Regenerates HP over time.
 void Mobile::tick_hp_regen()
 {
+    if (has_buff(Buff::Type::RECENT_DAMAGE)) return;
     if (m_hp[0] > 0 && m_hp[0] < m_hp[1])
         m_hp[0]++;
 }

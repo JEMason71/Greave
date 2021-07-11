@@ -55,7 +55,7 @@ struct BodyPart
 
 struct Buff
 {
-    enum class Type : uint8_t { NONE, BLEED, POISON, RECENTLY_FLED };
+    enum class Type : uint8_t { NONE, BLEED, POISON, RECENT_DAMAGE, RECENTLY_FLED };
 
     static const std::string    SQL_BUFFS;  // The SQL table construction string for Buffs.
 
@@ -119,7 +119,7 @@ public:
     virtual uint32_t    save(std::shared_ptr<SQLite::Database> save_db);    // Saves this Mobile.
                         // Sets a specified buff/debuff on the Actor, or extends an existing buff/debuff.
     uint32_t            score() const;                              // Checks this Mobile's score.
-    void                set_buff(Buff::Type type, uint16_t time = USHRT_MAX, uint32_t power = 0, bool additive_power = false);
+    void                set_buff(Buff::Type type, uint16_t time = USHRT_MAX, uint32_t power = 0, bool additive_power = false, bool additive_time = true);
     void                set_gender(Gender gender);                  // Sets the gender of this Mobile.
     void                set_hp(int hp, int hp_max = 0);             // Sets the current (and, optionally, maximum) HP of this Mobile.
     void                set_id(uint32_t new_id);                    // Sets this Mobile's unique ID.
@@ -145,6 +145,7 @@ public:
 protected:
     static const float  ACTION_TIMER_CAP_MAX;   // The maximum value the action timer can ever reach.
     static const int    BASE_CARRY_WEIGHT;      // The maximum amount of weight a Mobile can carry, before modifiers.
+    static const int    DAMAGE_DEBUFF_TIME;     // How long the damage debuff that prevents HP regeneration lasts.
     static const int    SCAR_BLEED_INTENSITY_FROM_BLEED_TICK;   // Blood type scar intensity caused by each tick of the player or an NPC bleeding.
 
     std::shared_ptr<Buff>   buff(Buff::Type type) const;    // Returns a pointer to a specified Buff.

@@ -125,6 +125,7 @@ void ActionStatus::status()
 
     if (player->has_buff(Buff::Type::BLEED)) status_line += " {R}You are bleeding quite badly!";
     if (player->has_buff(Buff::Type::POISON)) status_line += " {G}Deadly poison runs through your veins!";
+    if (player->has_buff(Buff::Type::RECENT_DAMAGE)) status_line += " {r}You have recently taken damage, inhibiting your natural healing.";
     core()->message(status_line);
 }
 
