@@ -3,6 +3,7 @@
 
 #include "actions/cheat.hpp"
 #include "actions/look.hpp"
+#include "core/parser.hpp"
 #include "core/strx.hpp"
 #include "world/inventory.hpp"
 #include "world/item.hpp"
@@ -25,10 +26,21 @@ void ActionCheat::add_money(int32_t amount)
 // Attempts to spawn an item.
 void ActionCheat::spawn_item(std::string item)
 {
+    int count = -1;
+    if (item.find(" ") != std::string::npos)
+    {
+        std::vector<std::string> split = StrX::string_explode(item, " ");
+        if (split.size() == 2 && StrX::is_number(split.at(0)))
+        {
+            item = split.at(1);
+            count = core()->parser()->parse_int(split.at(0));
+        }
+    }
+
     item = StrX::str_toupper(item);
     if (core()->world()->item_exists(item))
     {
-        const std::shared_ptr<Item> new_item = core()->world()->get_item(item);
+        const std::shared_ptr<Item> new_item = core()->world()->get_item(item, count);
         core()->message("{C}You use the power of {R}w{Y}i{G}s{U}h{C}f{M}u{R}l {Y}t{G}h{U}i{C}n{M}k{R}i{Y}n{G}g {C}to bring " + new_item->name() + " {C}into the world!");
         core()->world()->player()->inv()->add_item(new_item);
     }

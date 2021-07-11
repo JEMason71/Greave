@@ -164,12 +164,14 @@ const std::vector<std::shared_ptr<BodyPart>>& World::get_anatomy(const std::stri
 }
 
 // Retrieves a specified Item by ID.
-const std::shared_ptr<Item> World::get_item(const std::string &item_id, int) const
+const std::shared_ptr<Item> World::get_item(const std::string &item_id, int stack_size) const
 {
     if (!item_id.size()) throw std::runtime_error("Blank item ID requested.");
     const auto it = m_item_pool.find(StrX::hash(item_id));
     if (it == m_item_pool.end()) throw std::runtime_error("Invalid item ID requested: " + item_id);
-    return std::make_shared<Item>(*it->second);
+    auto copy = std::make_shared<Item>(*it->second);
+    if (stack_size > 0) copy->set_stack(stack_size);
+    return copy;
 }
 
 // Retrieves a specified List by ID.
