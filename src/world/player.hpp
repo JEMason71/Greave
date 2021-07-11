@@ -31,10 +31,13 @@ public:
     const std::map<std::string, int>&   skill_map() const;      // Returns read-only access to the player's skill levels.
     int         thirst() const;                     // Checks the current thirst level.
     void        thirst_tick();                      // The player gets a little more thirsty.
+    void        tick_hp_regen() override;           // Regenerates HP over time.
 
 private:
     static const float  BASE_SKILL_COST_MULTIPLIER;     // The higher this number, the slower player skill levels increase.
     static const int    BASE_SKILL_COST_LEVEL_OFFSET;   // The skill XP cost formula is offset by this many levels.
+    static const int    REGEN_TIME_COST_HUNGER;         // How many hunger ticks it costs to regenerate a unit of health.
+    static const int    REGEN_TIME_COST_THIRST;         // How many thirst ticks it costs to regenerate a unit of health.
 
     std::string m_death_reason; // The cause of death, when it happens.
     uint8_t     m_hunger;       // The hunger counter. 20 = completely full, 0 = starved to death.

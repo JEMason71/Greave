@@ -8,10 +8,13 @@
 #include "world/item.hpp"
 #include "world/world.hpp"
 #include "world/player.hpp"
+#include "world/time-weather.hpp"
 
 
-const int Player:: BASE_SKILL_COST_LEVEL_OFFSET =   0;      // The skill XP cost formula is offset by this many levels.
+const int   Player:: BASE_SKILL_COST_LEVEL_OFFSET = 0;      // The skill XP cost formula is offset by this many levels.
 const float Player::BASE_SKILL_COST_MULTIPLIER =    2.0f;   // The higher this number, the slower player skill levels increase.
+const int   Player::REGEN_TIME_COST_HUNGER =        60;     // How many hunger ticks it costs to regenerate a unit of health.
+const int   Player::REGEN_TIME_COST_THIRST =        30;     // How many thirst ticks it costs to regenerate a unit of health.
 
 // The SQL table construction string for the player data.
 const std::string Player::SQL_PLAYER = "CREATE TABLE player ( hunger INTEGER NOT NULL, mob_target INTEGER, money INTEGER NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, "
@@ -239,4 +242,15 @@ void Player::thirst_tick()
         case 11: case 12: core()->message("{u}You really want something to drink."); break;
         case 14: core()->message("{u}You're starting to feel a little thirsty."); break;
     }
+}
+
+// Regenerates HP over time.
+void Player::tick_hp_regen()
+{
+    if (m_hp[0] < m_hp[1])
+    {
+        core()->world()->time_weather()->increase_heartbeat(TimeWeather::Heartbeat::HUNGER, REGEN_TIME_COST_HUNGER);
+        core()->world()->time_weather()->increase_heartbeat(TimeWeather::Heartbeat::THIRST, REGEN_TIME_COST_THIRST);
+    }
+    Mobile::tick_hp_regen();
 }

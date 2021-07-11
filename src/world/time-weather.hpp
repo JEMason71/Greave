@@ -28,6 +28,7 @@ public:
     int         day_of_month() const;               // Returns the current day of the month.
     std::string day_of_month_string() const;        // Returns the day of the month in the form of a string like "1st" or "19th".
     Weather     get_weather() const;                // Gets the current weather, runs fix_weather() internally.
+    void        increase_heartbeat(Heartbeat beat, int count);  // Increases a specified heartbeat timer.
     LightDark   light_dark() const;                 // Checks whether it's light or dark right now.
     void        load(std::shared_ptr<SQLite::Database> save_db);    // Loads the time/weather data from disk.
     std::string month_name() const;                 // Returns the name of the current month.

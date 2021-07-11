@@ -123,6 +123,13 @@ TimeWeather::Weather TimeWeather::fix_weather(TimeWeather::Weather weather, Time
 // Gets the current weather, runs fix_weather() internally.
 TimeWeather::Weather TimeWeather::get_weather() const { return fix_weather(m_weather, current_season()); }
 
+// Increases a specified heartbeat timer.
+void TimeWeather::increase_heartbeat(Heartbeat beat, int count)
+{
+    if (beat >= Heartbeat::_TOTAL) throw std::runtime_error("Invalid heartbeat ID!");
+    m_heartbeats[static_cast<int>(beat)] += count;
+}
+
 // Checks if a given heartbeat is ready to trigger, and resets its counter.
 bool TimeWeather::heartbeat_ready(Heartbeat beat)
 {
