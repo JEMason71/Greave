@@ -37,6 +37,22 @@ void ActionLook::examine_item(std::shared_ptr<Item> target)
     std::string stat_string;
     switch (target->type())
     {
+        case ItemType::AMMO:
+        {
+            stat_string = "This is {U}ammunition {w}that can be fired from ";
+            if (target->tag(ItemTag::AmmoArrow)) stat_string += "a bow. ";
+            else if (target->tag(ItemTag::AmmoBolt)) stat_string += "a crossbow. ";
+            else throw std::runtime_error("Unknown ammo type: " + target->name());
+
+            std::vector<std::string> damage_str_vec;
+            damage_str_vec.push_back("It has a damage multiplier of {U}" + StrX::ftos(target->ammo_power()) + "x{w}");
+            if (target->crit()) damage_str_vec.push_back("a critical hit bonus of {U}" + std::to_string(target->crit()) + "%{w}");
+            if (target->bleed()) damage_str_vec.push_back("a bleeding bonus of {U}" + std::to_string(target->bleed()) + "%{w}");
+            if (target->poison()) damage_str_vec.push_back("a poison bonus of {U}" + std::to_string(target->poison()) + "%{w}");
+            stat_string += StrX::comma_list(damage_str_vec, StrX::CL_FLAG_USE_AND | StrX::CL_FLAG_OXFORD_COMMA) + ". ";
+
+            break;
+        }
         case ItemType::ARMOUR:
         {
             switch (target->subtype())
@@ -77,6 +93,7 @@ void ActionLook::examine_item(std::shared_ptr<Item> target)
             switch (target->subtype())
             {
                 case ItemSub::MELEE: stat_string = "This is a {U}melee weapon {w}which can be wielded. "; break;
+                case ItemSub::RANGED: stat_string = "This is a {U}ranged weapon {w}which can be widled. "; break;
                 default: break;
             }
             if (target->tag(ItemTag::TwoHanded)) stat_string += "It is heavy and requires {U}two hands {w}to wield. ";
@@ -96,8 +113,16 @@ void ActionLook::examine_item(std::shared_ptr<Item> target)
                 case DamageType::RENDING: damage_type_str = "randing"; break;
                 default: core()->guru()->nonfatal("Unable to determine item damage type: " + target->name(), Guru::ERROR);
             }
-            stat_string += "It has a damage value of {U}" + std::to_string(target->power()) + " " + damage_type_str + "{w}, a speed of {U}" +
-                StrX::ftos(target->speed(), true) + "{w}, and a critical hit chance of {U}" + std::to_string(target->crit()) + "%{w}. ";
+            std::vector<std::string> damage_str_vec;
+            damage_str_vec.push_back("It has a damage value of {U}" + std::to_string(target->power()) + " " + damage_type_str + "{w}");
+            damage_str_vec.push_back("a speed of {U}" + StrX::ftos(target->speed(), true) + "{w}");
+            if (target->crit()) damage_str_vec.push_back("a critical hit chance of {U}" + std::to_string(target->crit()) + "%{w}");
+            if (target->bleed()) damage_str_vec.push_back("a {U}" + std::to_string(target->bleed()) + "%{w} chance to cause bleeding wounds");
+            if (target->poison()) damage_str_vec.push_back("a {U}" + std::to_string(target->poison()) + "%{w} chance to inflict poison");
+            stat_string += StrX::comma_list(damage_str_vec, StrX::CL_FLAG_USE_AND | StrX::CL_FLAG_OXFORD_COMMA) + ". ";
+
+            if (target->tag(ItemTag::AmmoArrow)) stat_string += "It uses {U}arrows {w}for ammunition. ";
+            if (target->tag(ItemTag::AmmoBolt)) stat_string += "It uses {U}bolts {w}for ammunition. ";
             break;
         }
     }
@@ -114,12 +139,15 @@ void ActionLook::examine_item(std::shared_ptr<Item> target)
     if (block_mod > 0) stat_string += "It {G}boosts your chance to shield-block {w}by {G}" + std::to_string(block_mod) + "%{w}. ";
     else if (block_mod < 0) stat_string += "It {Y}reduces your chance to shield-block {w}by {R}" + std::to_string(-block_mod) + "%{w}. ";
 
+    const bool stackable = target->tag(ItemTag::Stackable);
+    if (stackable) stat_string += "It can be {U}stacked {w}with other identical items. ";
+
     uint32_t weight = MathX::fuzz(target->weight());
-    stat_string += "{w}It weighs around {U}" + StrX::intostr_pretty(weight) + (weight == 1 ? " pac" : " pacs");
+    stat_string += (stackable ? "{w}The stack weighs around {U}" : "{w}It weighs around {U}") + StrX::intostr_pretty(weight) + (weight == 1 ? " pac" : " pacs");
     const int actual_value = target->value();
     const int appraised_value = MathX::fuzz(actual_value);
-    if (!appraised_value) stat_string += "{w}, and {y}isn't worth anything{w}.";
-    else stat_string += "{w}, and is worth around {U}" + StrX::mgsc_string(appraised_value, StrX::MGSC::LONG) + "{w}. ";
+    if (!appraised_value) stat_string += (stackable ? "{w}, and {y}aren't worth anything{w}." : "{w}, and {y}isn't worth anything{w}.");
+    else stat_string += (stackable ? "{w}, and they are worth around {U}" : "{w}, and is worth around {U}") + StrX::mgsc_string(appraised_value, StrX::MGSC::LONG) + "{w}. ";
 
     if (stat_string.size())
     {

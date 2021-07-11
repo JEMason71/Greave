@@ -1,0 +1,22 @@
+# data/items/weapons/ammo.yml -- Ammunition used by ranged weapons.
+# Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+
+ARROW:
+  ammo_power: 1
+  desc: This lightweight arrow has a wicked-looking, razor-sharp broadhead tip.
+  name: arrow
+  rare: 2
+  tags: [ AmmoArrow, Stackable ]
+  type: [ ammo, arrow ]
+  value: 4c
+  weight: 3
+
+BOLT:
+  ammo_power: 1
+  desc: A long, narrow steel bolt for use in a crossbow.
+  name: crossbow bolt
+  rare: 2
+  tags: [ AmmoBolt, Stackable ]
+  type: [ ammo, bolt ]
+  value: 5c
+  weight: 3

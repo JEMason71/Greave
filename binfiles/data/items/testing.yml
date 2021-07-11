@@ -1,16 +1,6 @@
 # data/items/testing.yml -- Temporary testing items for developing the inventory system. Will be removed later.
 # Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-STACKABLE_TEST:
-  desc: A stackable test item.
-  name: stackable test
-  rare: 12
-  stack: 10
-  tags: [ Stackable ]
-  type: none
-  value: 0
-  weight: 0
-
 TORCH:
   desc: It's a torch.
   name: torch

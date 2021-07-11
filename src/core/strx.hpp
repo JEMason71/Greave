@@ -10,7 +10,7 @@ enum class Direction : uint8_t; // defined in world/room.hpp
 class StrX
 {
 public:
-    static const int    CL_FLAG_USE_AND, CL_FLAG_SQL_MODE;  // comma_list() flags
+    static const int    CL_FLAG_USE_AND, CL_FLAG_OXFORD_COMMA;  // comma_list() flags
 
     enum class DirNameType : uint8_t { NORMAL, TO_THE, TO_THE_ALT, FROM_THE, FROM_THE_ALT };
     enum class MGSC : uint8_t { SHORT, SHORT_ROUND, LONG }; // mgsc_string() modes.

@@ -28,6 +28,9 @@ const std::string Item::SQL_ITEMS = "CREATE TABLE items ( description TEXT, meta
 // Constructor, sets default values.
 Item::Item() : m_parser_id(0), m_rarity(1), m_stack(1), m_type(ItemType::NONE), m_type_sub(ItemSub::NONE), m_value(0) { }
 
+// The damage multiplier for ammunition.
+float Item::ammo_power() const { return meta_float("ammo_power"); }
+
 // Returns the armour damage reduction value of this Item, if any.
 float Item::armour(int bonus_power) const
 {

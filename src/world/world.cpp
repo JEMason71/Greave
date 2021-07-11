@@ -36,16 +36,17 @@ const std::map<std::string, EquipSlot> World::EQUIP_SLOT_MAP = { { "about", Equi
     { "feet", EquipSlot::FEET }, { "hands", EquipSlot::HANDS }, { "head", EquipSlot::HEAD }, { "held", EquipSlot::HAND_MAIN } };
 
 // Lookup table for converting ItemSub text names into enums.
-const std::map<std::string, ItemSub> World::ITEM_SUBTYPE_MAP = { { "clothing", ItemSub::CLOTHING }, { "heavy", ItemSub::HEAVY }, { "light", ItemSub::LIGHT },
-    { "medium", ItemSub::MEDIUM }, { "melee", ItemSub::MELEE }, { "none", ItemSub::NONE }, { "ranged", ItemSub::RANGED }, { "unarmed", ItemSub::UNARMED } };
+const std::map<std::string, ItemSub> World::ITEM_SUBTYPE_MAP = { { "arrow", ItemSub::ARROW }, { "bolt", ItemSub::BOLT }, { "clothing", ItemSub::CLOTHING },
+    { "heavy", ItemSub::HEAVY }, { "light", ItemSub::LIGHT }, { "medium", ItemSub::MEDIUM }, { "melee", ItemSub::MELEE }, { "none", ItemSub::NONE },
+    { "ranged", ItemSub::RANGED }, { "unarmed", ItemSub::UNARMED } };
 
 // Lookup table for converting ItemTag text names into enums.
-const std::map<std::string, ItemTag> World::ITEM_TAG_MAP = { { "handandahalf", ItemTag::HandAndAHalf }, { "noa", ItemTag::NoA }, { "offhandonly", ItemTag::OffHandOnly },
-    { "pluralname", ItemTag::PluralName }, { "preferoffhand", ItemTag::PreferOffHand }, { "propernoun", ItemTag::ProperNoun }, { "stackable", ItemTag::Stackable },
-    { "twohanded", ItemTag::TwoHanded } };
+const std::map<std::string, ItemTag> World::ITEM_TAG_MAP = { { "ammoarrow", ItemTag::AmmoArrow }, { "ammobolt", ItemTag::AmmoBolt }, { "handandahalf", ItemTag::HandAndAHalf },
+    { "noa", ItemTag::NoA }, { "noammo", ItemTag::NoAmmo }, { "offhandonly", ItemTag::OffHandOnly }, { "pluralname", ItemTag::PluralName },
+    { "preferoffhand", ItemTag::PreferOffHand }, { "propernoun", ItemTag::ProperNoun }, { "stackable", ItemTag::Stackable }, { "twohanded", ItemTag::TwoHanded } };
 
 // Lookup table for converting ItemType text names into enums.
-const std::map<std::string, ItemType> World::ITEM_TYPE_MAP = { { "armour", ItemType::ARMOUR }, { "key", ItemType::KEY }, { "light", ItemType::LIGHT },
+const std::map<std::string, ItemType> World::ITEM_TYPE_MAP = { { "ammo", ItemType::AMMO }, { "armour", ItemType::ARMOUR }, { "key", ItemType::KEY }, { "light", ItemType::LIGHT },
     { "none", ItemType::NONE }, { "shield", ItemType::SHIELD }, { "weapon", ItemType::WEAPON } };
 
 // Lookup table for converting textual light levels (e.g. "bright") to integer values.
@@ -85,8 +86,8 @@ const std::map<std::string, Security> World::SECURITY_MAP = { { "anarchy", Secur
 const std::set<std::string> World::VALID_YAML_KEYS_AREAS = { "desc", "exits", "light", "name", "security", "spawn_mobs", "tags", "wilderness" };
 
 // A list of all valid keys in item YAML files.
-const std::set<std::string> World::VALID_YAML_KEYS_ITEMS = { "bleed", "block_mod", "crit", "damage_type", "desc", "dodge_mod", "metadata", "name", "parry_mod", "poison", "power",
-    "rare", "slot", "speed", "stack", "tags", "type", "value", "warmth", "weight" };
+const std::set<std::string> World::VALID_YAML_KEYS_ITEMS = { "ammo_power", "bleed", "block_mod", "crit", "damage_type", "desc", "dodge_mod", "metadata", "name", "parry_mod",
+    "poison", "power", "rare", "slot", "speed", "stack", "tags", "type", "value", "warmth", "weight" };
 
 // A list of all valid keys in mobile YAML files.
 const std::set<std::string> World::VALID_YAML_KEYS_MOBS = { "gear", "hp", "name", "score", "species", "tags" };
@@ -467,6 +468,9 @@ void World::load_item_pool()
 
             // The Item's power, if any.
             if (item_data["power"]) new_item->set_meta("power", item_data["power"].as<int>());
+
+            // The Item's ammunition power, if any.
+            if (item_data["ammo_power"]) new_item->set_meta("ammo_power", item_data["ammo_power"].as<float>());
 
             // The Item's warmth rating, if any.
             if (item_data["warmth"]) new_item->set_meta("warmth", item_data["warmth"].as<int>());

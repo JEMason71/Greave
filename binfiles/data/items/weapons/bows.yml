@@ -1,0 +1,18 @@
+# data/items/weapons/bows.yml -- Bows and crossbows, ranged weapons.
+# Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+
+
+LONGBOW:
+  bleed: 20
+  crit: 10
+  damage_type: ballistic
+  desc: A larger, heavier bow with a better range than aa shortbow.
+  name: longbow
+  power: 37
+  rare: 3
+  slot: held
+  speed: 1.8
+  tags: [ AmmoArrow, TwoHanded ]
+  type: [ weapon, ranged ]
+  value: 1g 70s
+  weight: 230

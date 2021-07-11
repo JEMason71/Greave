@@ -14,10 +14,11 @@ enum class DamageType : int8_t { ACID, BALLISTIC, CRUSHING, EDGED, ENERGY, EXPLO
 enum class EquipSlot : uint8_t { NONE, HAND_MAIN, HAND_OFF, BODY, ARMOUR, ABOUT_BODY, HEAD, HANDS, FEET, _END };
 
 // ItemType is the primary type of Item (e.g. weapon, food, etc.)
-enum class ItemType : uint16_t { NONE, ARMOUR, KEY, LIGHT, SHIELD, WEAPON };
+enum class ItemType : uint16_t { NONE, AMMO, ARMOUR, KEY, LIGHT, SHIELD, WEAPON };
 
 // ItemSub is for sub-types of items, e.g. a tool could sub-classify itself here.
 enum class ItemSub : uint16_t { NONE,
+    ARROW, BOLT,                    // Ammo subtypes.
     CLOTHING, HEAVY, LIGHT, MEDIUM, // Armour subtypes.
     MELEE, RANGED, UNARMED,         // Weapon subtypes.
     };
@@ -33,7 +34,10 @@ enum class ItemTag : uint16_t { _None = 0,  // Do not use this tag, it's just a 
     ProperNoun,         // This Item's name is a proper noun (e.g. Foehammer).
 
     // Tags specific to weapons, armour and other equipment.
-    HandAndAHalf,   // Hand-and-a-half weapons can be wielded in either one or both hands.
+    AmmoArrow,          // Either this is a weapon that uses arrows, or it's a stack of arrows.
+    AmmoBolt,           // Either this is a weapon that uses bolts, or it's a stack of bolts.
+    HandAndAHalf,       // Hand-and-a-half weapons can be wielded in either one or both hands.
+    NoAmmo,             // This is a ranged weapon that does not require ammo.
     OffHandOnly,        // This item can ONLY be equipped in the off-hand.
     PreferOffHand,      // When equipped, this Item prefers to be held in the off-hand.
     TwoHanded,          // This Item requires two hands to wield.
@@ -48,6 +52,7 @@ public:
     static const std::string    SQL_ITEMS;  // The SQL table construction string for saving items.
 
                 Item();                             // Constructor, sets default values.
+    float       ammo_power() const;                 // The damage multiplier for ammunition.
     float       armour(int bonus_power = 0) const;  // Returns the armour damage reduction value of this Item, if any.
     int         bleed() const;                      // Returns thie bleed chance of this Item, if any.
     int         block_mod() const;                  // Returns the block modifier% for this Item, if any.

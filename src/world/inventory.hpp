@@ -14,6 +14,7 @@ class Inventory
 public:
     void        add_item(std::shared_ptr<Item> item);   // Adds an Item to this Inventory (this will later handle auto-stacking, etc.)
     void        add_item(const std::string &id);        // As above, but generates a new Item from a template with a specified ID.
+    size_t      ammo_pos(std::shared_ptr<Item> item);   // Locates the position of an ammunition item used by the specified weapon.
     size_t      count() const;                          // Returns the number of Items in this Inventory.
     void        erase(size_t pos);                      // Deletes an Item from this Inventory.
     std::shared_ptr<Item> get(size_t pos) const;        // Retrieves an Item from this Inventory.

@@ -315,9 +315,25 @@ void Combat::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mo
     if (!weapon_ptr) weapon_ptr = world->get_item("UNARMED_ATTACK");
     const std::shared_ptr<Item> def_weapon_main = defender->equ()->get(EquipSlot::HAND_MAIN);
     const std::shared_ptr<Item> def_weapon_off = defender->equ()->get(EquipSlot::HAND_OFF);
-
+    const bool ranged_attack = (weapon_ptr->subtype() == ItemSub::RANGED);
     const bool attacker_is_player = attacker->is_player();
     const bool defender_is_player = defender->is_player();
+    const bool no_ammo = (ranged_attack && weapon_ptr->tag(ItemTag::NoAmmo));
+
+    const size_t ammo_pos = (ranged_attack ? attacker->inv()->ammo_pos(weapon_ptr) : SIZE_MAX);
+    if (ranged_attack && !no_ammo && ammo_pos == SIZE_MAX)
+    {
+        if (attacker_is_player)
+        {
+            std::string ammo_name = "ammunition";
+            if (weapon_ptr->tag(ItemTag::AmmoArrow)) ammo_name = "arrows";
+            else if (weapon_ptr->tag(ItemTag::AmmoBolt)) ammo_name = "bolts";
+            core()->message("{y}You do not have any {Y}" + ammo_name + " {y}to fire your " + weapon_ptr->name() + "{y}!");
+        }
+        return;
+    }
+    const std::shared_ptr<Item> ammo_ptr = (ranged_attack && !no_ammo ? attacker->inv()->get(ammo_pos) : nullptr);
+
     const bool player_is_here = (player->location() == attacker->location());
     const bool is_dark_here = world->get_room(attacker->location())->light() < Room::LIGHT_VISIBLE;
     const bool player_can_see_attacker = attacker_is_player || !is_dark_here;
@@ -334,7 +350,7 @@ void Combat::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mo
     const std::string defender_your_string_c = StrX::capitalize_first_letter(defender_your_string);
     const std::string attacker_your_string = (attacker_is_player ? "your" : StrX::possessive_string(attacker_name));
     const std::string attacker_your_string_c = StrX::capitalize_first_letter(attacker_your_string);
-    const std::string weapon_name = weapon_ptr->name();
+    const std::string weapon_name = (ammo_ptr ? ammo_ptr->name(Item::NAME_FLAG_NO_COUNT) : weapon_ptr->name());
 
     const CombatStance attacker_stance = attacker->stance();
     const CombatStance defender_stance = defender->stance();
@@ -351,6 +367,7 @@ void Combat::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mo
             case WieldType::ONE_HAND_PLUS_EXTRA: case WieldType::ONE_HAND_PLUS_SHIELD: case WieldType::SINGLE_WIELD: weapon_skill = "ONE_HANDED"; break;
             case WieldType::TWO_HAND: case WieldType::HAND_AND_A_HALF_2H: weapon_skill = "TWO_HANDED"; break;
         }
+        if (weapon_ptr->subtype() == ItemSub::RANGED) weapon_skill = "ARCHERY";
     }
 
     // Roll to hit!
@@ -373,6 +390,7 @@ void Combat::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mo
         wield_type_defender == WieldType::UNARMED_PLUS_SHIELD) && !defender->tag(MobileTag::CannotBlock);
     bool can_parry = wield_type_defender != WieldType::UNARMED && wield_type_defender != WieldType::SHIELD_ONLY && wield_type_defender != WieldType::UNARMED_PLUS_SHIELD &&
         defender_melee && !defender->tag(MobileTag::CannotParry);
+    if ((def_weapon_main && def_weapon_main->subtype() == ItemSub::RANGED) || (def_weapon_off && def_weapon_off->subtype() == ItemSub::RANGED)) can_parry = false;
 
     // Check for Agile or Clumsy defender.
     if (defender->tag(MobileTag::Agile)) to_hit *= DEFENDER_TO_HIT_MODIFIER_AGILE;
@@ -440,6 +458,7 @@ void Combat::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mo
     else
     {
         float damage = weapon_ptr->power() * BASE_MELEE_DAMAGE_MULTIPLIER;
+        if (ammo_ptr) damage *= ammo_ptr->ammo_power();
         if (attacker_is_player) damage += (damage * (WEAPON_SKILL_DAMAGE_MODIFIER * player->skill_level(weapon_skill)));
         switch (attacker_stance)
         {
@@ -464,8 +483,8 @@ void Combat::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mo
             bleed = true;
             damage *= 3;
         }
-        const float poison_chance = weapon_ptr->poison();
-        const float bleed_chance = weapon_ptr->bleed();
+        const float poison_chance = weapon_ptr->poison() + (ammo_ptr ? ammo_ptr->poison() : 0);
+        const float bleed_chance = weapon_ptr->bleed() + (ammo_ptr ? ammo_ptr->bleed() : 0);
         if (poison_chance >= 100.0f || rng->frnd(100) <= poison_chance) poison = true;
         if (bleed_chance >= 100.0f || rng->frnd(100) <= bleed_chance) bleed = true;
 
@@ -489,7 +508,7 @@ void Combat::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mo
             if (body_armour && outer_armour) damage_blocked = damage * body_armour->armour(outer_armour->power());
             else if (body_armour) damage_blocked = damage * body_armour->armour();
             else if (outer_armour) damage_blocked = damage * outer_armour->armour();
-            damage_blocked = apply_damage_modifiers(damage_blocked, weapon_ptr, defender, outer_layer);
+            damage_blocked = apply_damage_modifiers(damage_blocked, (ammo_ptr ? ammo_ptr : weapon_ptr), defender, outer_layer);
         }
         else
         {
@@ -497,7 +516,7 @@ void Combat::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mo
             if (defender->tag(MobileTag::Beast)) hit_loc = EquipSlot::BODY;
             const std::shared_ptr<Item> armour_piece_hit = defender->equ()->get(hit_loc);
             if (armour_piece_hit) damage_blocked = damage * armour_piece_hit->armour();
-            damage_blocked = apply_damage_modifiers(damage_blocked, weapon_ptr, defender, hit_loc);
+            damage_blocked = apply_damage_modifiers(damage_blocked, (ammo_ptr ? ammo_ptr : weapon_ptr), defender, hit_loc);
         }
         if (blocked)
         {
@@ -573,6 +592,17 @@ void Combat::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mo
         defender->reduce_hp(damage, false);
         if (attacker_is_player) player->gain_skill_xp(weapon_skill, (critical_hit ? XP_PER_CRITICAL_HIT : XP_PER_SUCCESSFUL_HIT));
         else if (defender_is_player && blocked) player->gain_skill_xp("BLOCK", XP_PER_BLOCK);
+    }
+
+    // Remove ammo if we're using a ranged weapon.
+    if (!no_ammo && ammo_ptr && attacker_is_player)
+    {
+        if (ammo_ptr->stack() > 1) ammo_ptr->set_stack(ammo_ptr->stack() - 1);
+        else
+        {
+            core()->message("{m}You have fired the last of your " + ammo_ptr->name(Item::NAME_FLAG_PLURAL) + ".");
+            attacker->inv()->erase(ammo_pos);
+        }
     }
 }
 

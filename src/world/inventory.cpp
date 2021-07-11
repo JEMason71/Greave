@@ -37,6 +37,22 @@ void Inventory::add_item(std::shared_ptr<Item> item)
 // As above, but generates a new Item from a template with a specified ID.
 void Inventory::add_item(const std::string &id) { add_item(core()->world()->get_item(id)); }
 
+// Locates the position of an ammunition item used by the specified weapon.
+size_t Inventory::ammo_pos(std::shared_ptr<Item> item)
+{
+    if (item->subtype() != ItemSub::RANGED || item->tag(ItemTag::NoAmmo)) return SIZE_MAX;
+    ItemSub ammo_type = ItemSub::NONE;
+    if (item->tag(ItemTag::AmmoArrow)) ammo_type = ItemSub::ARROW;
+    else if (item->tag(ItemTag::AmmoBolt)) ammo_type = ItemSub::BOLT;
+    else throw std::runtime_error("Could not determine ammo type for " + item->name());
+    for (size_t i = 0; i < m_items.size(); i++)
+    {
+        const auto inv_item = m_items.at(i);
+        if (inv_item->type() == ItemType::AMMO && inv_item->subtype() == ammo_type) return i;
+    }
+    return SIZE_MAX;
+}
+
 // Returns the number of Items in this Inventory.
 size_t Inventory::count() const { return m_items.size(); }
 
