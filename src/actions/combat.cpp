@@ -390,7 +390,8 @@ void Combat::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mo
         wield_type_defender == WieldType::UNARMED_PLUS_SHIELD) && !defender->tag(MobileTag::CannotBlock);
     bool can_parry = wield_type_defender != WieldType::UNARMED && wield_type_defender != WieldType::SHIELD_ONLY && wield_type_defender != WieldType::UNARMED_PLUS_SHIELD &&
         defender_melee && !defender->tag(MobileTag::CannotParry);
-    if ((def_weapon_main && def_weapon_main->subtype() == ItemSub::RANGED) || (def_weapon_off && def_weapon_off->subtype() == ItemSub::RANGED)) can_parry = false;
+    if ((def_weapon_main && def_weapon_main->subtype() == ItemSub::RANGED) || (def_weapon_off && def_weapon_off->subtype() == ItemSub::RANGED) ||
+        (weapon_ptr->subtype() == ItemSub::RANGED)) can_parry = false;
 
     // Check for Agile or Clumsy defender.
     if (defender->tag(MobileTag::Agile)) to_hit *= DEFENDER_TO_HIT_MODIFIER_AGILE;
