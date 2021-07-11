@@ -1,4 +1,4 @@
-# data/items/testing.yml -- Temporary testing items for developing the inventory system. Will be removed later.
+# data/items/misc/testing.yml -- Temporary testing items for developing the inventory system. Will be removed later.
 # Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 TORCH:
