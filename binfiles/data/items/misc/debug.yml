@@ -1,6 +1,18 @@
 # data/items/misc/debug.yml -- Items intended for debugging/testing and development, but can also be used for cheating.
 # Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
+FOAM_GREATSWORD:
+  damage_type: kinetic
+  desc: A large, unwieldy foam sword.
+  name: "{g}f{G}o{g}am greatsw{G}o{g}rd"
+  power: 0
+  rare: 12
+  slot: held
+  speed: 1.8
+  type: [ weapon, melee ]
+  value: 0
+  weight: 4
+
 SKELETON_KEY:   # The skeleton key can open any lock.
   desc: This key appears to have been carved from a small bone.
   metadata: "key:SKELETON"
