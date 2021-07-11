@@ -89,8 +89,8 @@ float Mobile::attack_speed() const
 {
     auto main_hand = m_equipment->get(EquipSlot::HAND_MAIN);
     auto off_hand = m_equipment->get(EquipSlot::HAND_OFF);
-    const bool main_can_attack = (main_hand && main_hand->type() == ItemType::WEAPON && main_hand->subtype() == ItemSub::MELEE);
-    const bool off_can_attack = (off_hand && off_hand->type() == ItemType::WEAPON && off_hand->subtype() == ItemSub::MELEE);
+    const bool main_can_attack = (main_hand && main_hand->type() == ItemType::WEAPON);
+    const bool off_can_attack = (off_hand && off_hand->type() == ItemType::WEAPON);
 
     // Attack speed is the slowest of the equipped weapons.
     float speed = 0.0f;
