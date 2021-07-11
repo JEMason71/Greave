@@ -32,6 +32,7 @@ const uint32_t TimeWeather::HEARTBEAT_TIMERS[TimeWeather::Heartbeat::_TOTAL] = {
     5 * Time::MINUTE,   // WILDERNESS_SPAWN, for spawning beasts in the wilderness.
     432 * Time::MINUTE, // HUNGER. Pretty slow, as you can live for a long time without food.
     311 * Time::MINUTE, // THIRST. More rapid than hunger.
+    2 * Time::MINUTE,   // HP_REGEN, causes health to regenerate over time.
 };
 
 
@@ -323,6 +324,14 @@ bool TimeWeather::pass_time(float seconds, bool interruptable)
         {
             player->thirst_tick();
             if (player->is_dead()) return true;
+        }
+
+        // Regenerates hit points over time.
+        if (heartbeat_ready(Heartbeat::HP_REGEN))
+        {
+            player->tick_hp_regen();
+            for (unsigned int i = 0; i < world->mob_count(); i++)
+                world->mob_vec(i)->tick_hp_regen();
         }
     }
 

@@ -605,6 +605,13 @@ void Mobile::tick_buffs()
     }
 }
 
+// Regenerates HP over time.
+void Mobile::tick_hp_regen()
+{
+    if (m_hp[0] > 0 && m_hp[0] < m_hp[1])
+        m_hp[0]++;
+}
+
 // Triggers a single poison tick.
 bool Mobile::tick_poison(uint32_t power, uint16_t time)
 {

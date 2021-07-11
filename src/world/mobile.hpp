@@ -139,6 +139,7 @@ public:
     bool                tag(MobileTag the_tag) const;               // Checks if a MobileTag is set on this Mobile.
     bool                tick_bleed(uint32_t power, uint16_t time);  // Triggers a single bleed tick.
     void                tick_buffs();                               // Reduce the timer on all buffs.
+    virtual void        tick_hp_regen();                            // Regenerates HP over time.
     bool                tick_poison(uint32_t power, uint16_t time); // Triggers a single poison tick.
 
 protected:
