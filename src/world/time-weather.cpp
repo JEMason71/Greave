@@ -31,6 +31,7 @@ const uint32_t TimeWeather::HEARTBEAT_TIMERS[TimeWeather::Heartbeat::_TOTAL] = {
     10 * Time::SECOND,  // BUFFS, for ticking down buffs/debuffs on Mobiles and the Player.
     5 * Time::MINUTE,   // WILDERNESS_SPAWN, for spawning beasts in the wilderness.
     432 * Time::MINUTE, // HUNGER. Pretty slow, as you can live for a long time without food.
+    311 * Time::MINUTE, // THIRST. More rapid than hunger.
 };
 
 
@@ -224,6 +225,7 @@ bool TimeWeather::pass_time(float seconds, bool interruptable)
 
     int old_hp = player->hp();
     int old_hunger = player->hunger();
+    int old_thirst = player->thirst();
     while (seconds_to_add--)
     {
         if (player->is_dead()) return false;    // Don't pass time if the player is dead.
@@ -233,9 +235,11 @@ bool TimeWeather::pass_time(float seconds, bool interruptable)
         {
             const int hp = player->hp();
             const int hunger = player->hunger();
-            if (hp < old_hp || (hunger < old_hunger && hunger <= 6)) return false;
+            const int thirst = player->thirst();
+            if (hp < old_hp || (hunger < old_hunger && hunger <= 6) || (thirst < old_thirst && thirst <= 6)) return false;
             old_hp = hp;
             old_hunger = hunger;
+            old_thirst = thirst;
         }
 
         m_time_passed++;    // The total time passed in the game. This will loop every 136 years, but that's not a problem; see time_passed().
@@ -311,6 +315,13 @@ bool TimeWeather::pass_time(float seconds, bool interruptable)
         if (heartbeat_ready(Heartbeat::HUNGER))
         {
             player->hunger_tick();
+            if (player->is_dead()) return true;
+        }
+
+        // Increases the player's thirst.
+        if (heartbeat_ready(Heartbeat::THIRST))
+        {
+            player->thirst_tick();
             if (player->is_dead()) return true;
         }
     }

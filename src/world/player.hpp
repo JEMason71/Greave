@@ -29,6 +29,8 @@ public:
     void        set_mob_target(uint32_t target);    // Sets a new Mobile target.
     int         skill_level(const std::string &skill_id) const; // Returns the skill level of a specified skill of this Player.
     const std::map<std::string, int>&   skill_map() const;      // Returns read-only access to the player's skill levels.
+    int         thirst() const;                     // Checks the current thirst level.
+    void        thirst_tick();                      // The player gets a little more thirsty.
 
 private:
     static const float  BASE_SKILL_COST_MULTIPLIER;     // The higher this number, the slower player skill levels increase.
@@ -40,4 +42,5 @@ private:
     uint32_t    m_money;        // The amount of coin the player is carrying.
     std::map<std::string, int>      m_skill_levels; // The skill levels learned by this Player, if any.
     std::map<std::string, float>    m_skill_xp;     // The experience levels of skills on this Player, if any.
+    uint8_t     m_thirst;       // The thirst counter. 20 = compmpletely hydrated, 0 = died of dehydration.
 };

@@ -14,14 +14,15 @@ const int Player:: BASE_SKILL_COST_LEVEL_OFFSET =   0;      // The skill XP cost
 const float Player::BASE_SKILL_COST_MULTIPLIER =    2.0f;   // The higher this number, the slower player skill levels increase.
 
 // The SQL table construction string for the player data.
-const std::string Player::SQL_PLAYER = "CREATE TABLE player ( hunger INTEGER NOT NULL, mob_target INTEGER, money INTEGER NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL )";
+const std::string Player::SQL_PLAYER = "CREATE TABLE player ( hunger INTEGER NOT NULL, mob_target INTEGER, money INTEGER NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, "
+    "thirst INTEGET NOT NULL )";
 
 // The SQL table construction string for the player skills data.
 const std::string Player::SQL_SKILLS = "CREATE TABLE skills ( id TEXT PRIMARY KEY UNIQUE NOT NULL, level INTEGER NOT NULL, xp REAL )";
 
 
 // Constructor, sets default values.
-Player::Player() : m_death_reason("the will of the gods"), m_hunger(20), m_mob_target(0), m_money(0)
+Player::Player() : m_death_reason("the will of the gods"), m_hunger(20), m_mob_target(0), m_money(0), m_thirst(20)
 {
     set_species("humanoid");
     set_name("Player");
@@ -95,7 +96,7 @@ void Player::hunger_tick()
     switch (--m_hunger)
     {
         case 0:
-            core()->message("{y}You collapse from starvation, too weak to keep going.");
+            core()->message("{y}You collapse from {Y}starvation{y}, too weak to keep going.");
             set_death_reason("starved to death");
             break;
         case 1: case 2: core()->message("{Y}You are starving to death!"); break;
@@ -111,7 +112,7 @@ void Player::hunger_tick()
 // Checks if this Player is dead.
 bool Player::is_dead() const
 {
-    if (m_hunger < 1) return true;
+    if (m_hunger < 1 || m_thirst < 1) return true;
     return Mobile::is_dead();
 }
 
@@ -128,6 +129,7 @@ uint32_t Player::load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id
         if (!query.isColumnNull("mob_target")) m_mob_target = query.getColumn("mob_target").getUInt();
         m_money = query.getColumn("money").getUInt();
         sql_id = query.getColumn("sql_id").getUInt();
+        m_thirst = query.getColumn("thirst").getInt();
     }
     else throw std::runtime_error("Could not load player data!");
 
@@ -179,11 +181,12 @@ void Player::remove_money(uint32_t amount)
 uint32_t Player::save(std::shared_ptr<SQLite::Database> save_db)
 {
     const uint32_t sql_id = Mobile::save(save_db);
-    SQLite::Statement query(*save_db, "INSERT INTO player ( hunger, mob_target, money, sql_id ) VALUES ( ?, ?, ?, ? )");
+    SQLite::Statement query(*save_db, "INSERT INTO player ( hunger, mob_target, money, sql_id, thirst ) VALUES ( ?, ?, ?, ?, ? )");
     query.bind(1, m_hunger);
     if (m_mob_target) query.bind(2, m_mob_target);
     query.bind(3, m_money);
     query.bind(4, sql_id);
+    query.bind(5, m_thirst);
     query.exec();
 
     for (const auto &kv : m_skill_levels)
@@ -215,3 +218,25 @@ int Player::skill_level(const std::string &skill_id) const
 
 // Returns read-only access to the player's skill levels.
 const std::map<std::string, int>& Player::skill_map() const { return m_skill_levels; }
+
+// Checks the current thirst level.
+int Player::thirst() const { return m_thirst; }
+
+// The player gets a little more thirsty.
+void Player::thirst_tick()
+{
+    switch (--m_thirst)
+    {
+        case 0:
+            core()->message("{u}You collapse from {U}severe dehydration{u}.");
+            set_death_reason("died from dehydration");
+            break;
+        case 1: case 2: core()->message("{U}You are dying of dehydration!"); break;
+        case 3: case 4: core()->message("{U}Your throat is so parched it's painful!"); break;
+        case 5: case 6: core()->message("{U}You are desperately thirsty!"); break;
+        case 7: case 8: core()->message("{U}You are extremely thirsty!"); break;
+        case 9: case 10: core()->message("{u}Your motuth feels very dry."); break;
+        case 11: case 12: core()->message("{u}You really want something to drink."); break;
+        case 14: core()->message("{u}You're starting to feel a little thirsty."); break;
+    }
+}
