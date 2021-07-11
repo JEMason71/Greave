@@ -1,6 +1,20 @@
 # data/items/weapons/maces.yml -- Maces, clubs, mauls, and other heavy, blunt crushing weapons.
 # Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
+CLUB_HEAVY:
+  crit: 5
+  damage_type: crushing
+  desc: This heavy piece of wood has been polished and smoothed, the handle wrapped in leather.
+  name: heavy club
+  power: 35
+  rare: 2
+  slot: held
+  speed: 1.4
+  tags: [ TwoHanded ]
+  type: [ weapon, melee ]
+  value: 5s
+  weight: 620
+
 MACE:
   crit: 2
   damage_type: crushing
@@ -26,3 +40,18 @@ MACE_GOBLIN:
   type: [ weapon, melee ]
   value: 6c
   weight: 340
+
+MAUL:
+  bleed: 5
+  crit: 5
+  damage_type: crushing
+  desc: An uncomplicated weapon for uncomplicated slaughter, a long wooden haft is topped with a massive blunt iron head.
+  name: maul
+  power: 38
+  rare: 2
+  slot: held
+  speed: 1.6
+  tags: [ TwoHanded ]
+  type: [ weapon, melee ]
+  value: 90s
+  weight: 960
