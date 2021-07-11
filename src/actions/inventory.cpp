@@ -285,7 +285,11 @@ void ActionInventory::take(std::shared_ptr<Mobile> mob, size_t item_pos, int cou
     if (!count_check(item, count)) return;
 
     int weight = item->weight(true);
-    if (stackable) weight *= count;
+    if (stackable)
+    {
+        if (count == -1) weight = item->weight(false);
+        else weight *= count;
+    }
     if (mob->carry_weight() + weight > mob->max_carry())
     {
         core()->message("{y}You can't carry that much!");
