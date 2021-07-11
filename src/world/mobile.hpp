@@ -15,34 +15,35 @@ enum class CombatStance : uint8_t { BALANCED, AGGRESSIVE, DEFENSIVE };
 enum class MobileTag : uint16_t { None = 0,
 
     // Tags that affect the Mobile's name.
-    PluralName,     // This Mobile's name is a plural (e.g. "pack of rats").
-    ProperNoun,     // This Mobile's name is a proper noun (e.g. Smaug).
+    PluralName,         // This Mobile's name is a plural (e.g. "pack of rats").
+    ProperNoun,         // This Mobile's name is a proper noun (e.g. Smaug).
 
     // Tags that affect the Mobile's abilities or stats in combat.
-    CannotBlock,    // This Mobile is unable to block attacks.
-    CannotDodge,    // This Mobile is unable to dodge attacks.
-    CannotParry,    // This Mobbile is unable to parry melee attacks.
-    Agile,          // Agile Mobiles are harder to hit in melee combat (0.8x hit chance), and more likely to parry attacks (1.5x chance).
-    Clumsy,         // The opposite of Agile, Clumsy Mobiles are easier to hit in melee (1.25x hit chance) and suffer a penalty to parrying (0.5x chance).
-    Anemic,         // Anemic Mobiles deal less damage with melee attacks (0.5x).
-    Feeble,         // Feeble Mobiles deal less damage with melee attacks (0.75x).
-    Puny,           // Puny Mobiles deal less damage with melee attacks (0.9x).
-    Strong,         // Strong Mobiles deal more damage with melee attacks (1.1x).
-    Brawny,         // Brawny Mobiles deal more damage with melee attacks (1.25x).
-    Vigorous,       // Vigorous Mobiles deal more damage with melee attacks (1.5x).
-    Mighty,         // Mighty Mobiles deal more damage with melee attacks (2x).
+    CannotBlock,        // This Mobile is unable to block attacks.
+    CannotDodge,        // This Mobile is unable to dodge attacks.
+    CannotParry,        // This Mobbile is unable to parry melee attacks.
+    Agile,              // Agile Mobiles are harder to hit in melee combat (0.8x hit chance), and more likely to parry attacks (1.5x chance).
+    Clumsy,             // The opposite of Agile, Clumsy Mobiles are easier to hit in melee (1.25x hit chance) and suffer a penalty to parrying (0.5x chance).
+    Anemic,             // Anemic Mobiles deal less damage with melee attacks (0.5x).
+    Feeble,             // Feeble Mobiles deal less damage with melee attacks (0.75x).
+    Puny,               // Puny Mobiles deal less damage with melee attacks (0.9x).
+    Strong,             // Strong Mobiles deal more damage with melee attacks (1.1x).
+    Brawny,             // Brawny Mobiles deal more damage with melee attacks (1.25x).
+    Vigorous,           // Vigorous Mobiles deal more damage with melee attacks (1.5x).
+    Mighty,             // Mighty Mobiles deal more damage with melee attacks (2x).
 
     // Tags that determine the Mobile's general state of being.
-    Beast,          // This Mobile is a beast or creature; it has body-parts rather than equipment.
-    ImmunityBleed,  // This Mobile is unable to bleed.
-    ImmunityPoison, // This Mobile is immune to being poisoned.
-    RandomGender,   // This Mobile can be assigned a random gender.
-    Unliving,       // This Mobile is a construct or other unliving entity.
+    Beast,              // This Mobile is a beast or creature; it has body-parts rather than equipment.
+    ImmunityBleed,      // This Mobile is unable to bleed.
+    ImmunityPoison,     // This Mobile is immune to being poisoned.
+    RandomGender,       // This Mobile can be assigned a random gender.
+    Unliving,           // This Mobile is a construct or other unliving entity.
 
     // Tags regarding the Mobile's AI and behaviour.
-    AggroOnSight,   // This Mobile will attack the player on sight.
-    Coward,         // This Mobile will try to run rather than fight.
-    Resting,        // This Mobile is currently resting.
+    AggroOnSight,       // This Mobile will attack the player on sight.
+    CannotOpenDoors,    // This Mobile cannot open doors.
+    Coward,             // This Mobile will try to run rather than fight.
+    Resting,            // This Mobile is currently resting.
 };
 
 struct BodyPart

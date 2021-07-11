@@ -172,6 +172,7 @@ bool AI::travel_randomly(std::shared_ptr<Mobile> mob, bool allow_dangerous_exits
         if (room->fake_link(i)) continue;
         if (!allow_dangerous_exits && room->dangerous_link(i)) continue;
         if (room->link_tag(i, LinkTag::Locked)) continue;
+        if (mob->tag(MobileTag::CannotOpenDoors) && room->link_tag(i, LinkTag::Openable) && !room->link_tag(i, LinkTag::Open)) continue;
         viable_exits.push_back(i);
     }
     if (viable_exits.size()) return ActionTravel::travel(mob, static_cast<Direction>(viable_exits.at(core()->rng()->rnd(0, viable_exits.size() - 1))), true);

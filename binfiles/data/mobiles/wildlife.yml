@@ -7,7 +7,7 @@ BEAR_BLACK:
   name: black bear
   score: 109
   species: bear
-  tags: [ AggroOnSight, Beast, CannotBlock, CannotParry, RandomGender, Strong ]
+  tags: [ AggroOnSight, Beast, CannotBlock, CannotOpenDoors, CannotParry, RandomGender, Strong ]
 
 BEAR_BROWN:
   gear: GEAR_BEAR
@@ -15,7 +15,7 @@ BEAR_BROWN:
   name: brown bear
   score: 274
   species: bear
-  tags: [ AggroOnSight, Beast, Brawny, CannotBlock, CannotParry, RandomGender ]
+  tags: [ AggroOnSight, Beast, Brawny, CannotBlock, CannotOpenDoors, CannotParry, RandomGender ]
 
 FALLOW_DEER:
   gear: GEAR_DEER
@@ -23,7 +23,7 @@ FALLOW_DEER:
   name: fallow deer
   score: 14
   species: deer
-  tags: [ Agile, Beast, CannotBlock, CannotParry, Coward, RandomGender ]
+  tags: [ Agile, Beast, CannotBlock, CannotOpenDoors, CannotParry, Coward, RandomGender ]
 
 FOREST_BADGER:
   gear: GEAR_BADGER
@@ -31,7 +31,7 @@ FOREST_BADGER:
   name: forest badger
   score: 12
   species: badger
-  tags: [ Anemic, Beast, CannotBlock, CannotParry, RandomGender ]
+  tags: [ Anemic, Beast, CannotBlock, CannotOpenDoors, CannotParry, RandomGender ]
 
 GIANT_RAT:
   gear: GEAR_GIANT_RODENT
@@ -39,7 +39,7 @@ GIANT_RAT:
   name: giant rat
   score: 19
   species: giant_rat
-  tags: [ AggroOnSight, Agile, Beast, CannotBlock, CannotParry, Feeble, RandomGender ]
+  tags: [ AggroOnSight, Agile, Beast, CannotBlock, CannotOpenDoors, CannotParry, Feeble, RandomGender ]
 
 GIANT_SPIDER:
   gear: GEAR_GIANT_SPIDER
@@ -47,7 +47,7 @@ GIANT_SPIDER:
   name: giant spider
   score: 268
   species: giant_spider
-  tags: [ AggroOnSight, Agile, Beast, CannotBlock, CannotParry, RandomGender, Strong ]
+  tags: [ AggroOnSight, Agile, Beast, CannotBlock, CannotOpenDoors, CannotParry, RandomGender, Strong ]
 
 GIANT_WASP:
   gear: GEAR_WASP
@@ -55,7 +55,7 @@ GIANT_WASP:
   name: giant wasp
   score: 111
   species: wasp
-  tags: [ AggroOnSight, Agile, Beast, CannotBlock, CannotParry, RandomGender ]
+  tags: [ AggroOnSight, Agile, Beast, CannotBlock, CannotOpenDoors, CannotParry, RandomGender ]
 
 JABA:
   gear: GEAR_RODENT
@@ -63,7 +63,7 @@ JABA:
   name: jaba
   score: 1
   species: jaba
-  tags: [ Anemic, Beast, CannotBlock, CannotParry, Coward, RandomGender ]
+  tags: [ Anemic, Beast, CannotBlock, CannotOpenDoors, CannotParry, Coward, RandomGender ]
 
 PANTHER:
   gear: GEAR_CAT_BIG
@@ -71,7 +71,7 @@ PANTHER:
   name: panther
   score: 49
   species: cat
-  tags: [ AggroOnSight, Beast, CannotBlock, CannotParry, RandomGender ]
+  tags: [ AggroOnSight, Beast, CannotBlock, CannotOpenDoors, CannotParry, RandomGender ]
 
 PAPIO_BROWN:
   gear: GEAR_PAPIO
@@ -79,7 +79,7 @@ PAPIO_BROWN:
   name: brown papio
   score: 10
   species: papio
-  tags: [ Agile, Beast, CannotBlock, CannotParry, Puny, RandomGender ]
+  tags: [ Agile, Beast, CannotBlock, CannotOpenDoors, CannotParry, Puny, RandomGender ]
 
 PIT_VIPER:
   gear: GEAR_SNAKE
@@ -87,7 +87,7 @@ PIT_VIPER:
   name: pit viper
   score: 18
   species: snake
-  tags: [ Agile, Anemic, Beast, CannotBlock, CannotParry, RandomGender ]
+  tags: [ Agile, Anemic, Beast, CannotBlock, CannotOpenDoors, CannotParry, RandomGender ]
 
 SPOTTED_HYENA:
   gear: GEAR_HYENA
@@ -95,7 +95,7 @@ SPOTTED_HYENA:
   name: spotted hyena
   score: 22
   species: hyena
-  tags: [ AggroOnSight, Beast, CannotBlock, CannotParry, RandomGender ]
+  tags: [ AggroOnSight, Beast, CannotBlock, CannotOpenDoors, CannotParry, RandomGender ]
 
 TIGER:
   gear: GEAR_CAT_BIG_2
@@ -103,7 +103,7 @@ TIGER:
   name: tiger
   score: 178
   species: cat
-  tags: [ AggroOnSight, Agile, Beast, CannotBlock, CannotParry, RandomGender, Strong ]
+  tags: [ AggroOnSight, Agile, Beast, CannotBlock, CannotOpenDoors, CannotParry, RandomGender, Strong ]
 
 WANDERING_ELK:
   gear: GEAR_DEER
@@ -111,7 +111,7 @@ WANDERING_ELK:
   name: wandering elk
   score: 47
   species: deer
-  tags: [ Beast, CannotBlock, CannotParry, RandomGender, Strong ]
+  tags: [ Beast, CannotBlock, CannotOpenDoors, CannotParry, RandomGender, Strong ]
 
 WILD_BOAR:
   gear: GEAR_BOAR
@@ -119,7 +119,7 @@ WILD_BOAR:
   name: wild boar
   score: 60
   species: boar
-  tags: [ AggroOnSight, Beast, CannotBlock, CannotParry, RandomGender ]
+  tags: [ AggroOnSight, Beast, CannotBlock, CannotOpenDoors, CannotParry, RandomGender ]
 
 WILD_CAT:
   gear: GEAR_CAT
@@ -127,7 +127,7 @@ WILD_CAT:
   name: wild cat
   score: 9
   species: cat
-  tags: [ Agile, Anemic, Beast, CannotBlock, CannotParry, RandomGender ]
+  tags: [ Agile, Anemic, Beast, CannotBlock, CannotOpenDoors, CannotParry, RandomGender ]
 
 WOLF_DIRE:
   gear: GEAR_WOLF_DIRE
@@ -135,7 +135,7 @@ WOLF_DIRE:
   name: dire wolf
   score: 263
   species: wolf
-  tags: [ AggroOnSight, Agile, Beast, CannotBlock, CannotParry, RandomGender, Strong ]
+  tags: [ AggroOnSight, Agile, Beast, CannotBlock, CannotOpenDoors, CannotParry, RandomGender, Strong ]
 
 WOLF_GRAY:
   gear: GEAR_WOLF
@@ -143,4 +143,4 @@ WOLF_GRAY:
   name: gray wolf
   score: 55
   species: wolf
-  tags: [ AggroOnSight, Agile, Beast, CannotBlock, CannotParry, RandomGender ]
+  tags: [ AggroOnSight, Agile, Beast, CannotBlock, CannotOpenDoors, CannotParry, RandomGender ]

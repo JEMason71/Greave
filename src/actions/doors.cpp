@@ -3,6 +3,7 @@
 
 #include "actions/doors.hpp"
 #include "core/core.hpp"
+#include "core/guru.hpp"
 #include "core/mathx.hpp"
 #include "core/strx.hpp"
 #include "world/inventory.hpp"
@@ -21,6 +22,12 @@ const float ActionDoors::TIME_UNLOCK_DOOR = 10.0f;  // The time taken (in second
 // Attempts to lock or unlock a door, with optional messages.
 bool ActionDoors::lock_or_unlock(std::shared_ptr<Mobile> mob, Direction dir, bool unlock, bool silent_fail)
 {
+    if (mob->tag(MobileTag::CannotOpenDoors))
+    {
+        core()->guru()->nonfatal("Mobile with CannotOpenDoors tag attempting to " + std::string(unlock ? "unlock" : "lock") + " a door!", Guru::WARN);
+        return false;
+    }
+
     const uint32_t mob_loc = mob->location();
     const auto player = core()->world()->player();
     const uint32_t player_loc = player->location();
@@ -135,6 +142,12 @@ bool ActionDoors::lock_or_unlock(std::shared_ptr<Mobile> mob, Direction dir, boo
 // Attempts to open or close a door, window, or other openable portal.
 bool ActionDoors::open_or_close(std::shared_ptr<Mobile> mob, Direction dir, bool open)
 {
+    if (mob->tag(MobileTag::CannotOpenDoors))
+    {
+        core()->guru()->nonfatal("Mobile with CannotOpenDoors tag attempting to " + std::string(open ? "open" : "close") + " a door!", Guru::WARN);
+        return false;
+    }
+
     const uint32_t mob_loc = mob->location();
     const auto player = core()->world()->player();
     const uint32_t player_loc = player->location();

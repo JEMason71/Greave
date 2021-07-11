@@ -32,27 +32,27 @@ const std::map<std::string, DamageType> World::DAMAGE_TYPE_MAP = { { "acid", Dam
     { "piercing", DamageType::PIERCING }, { "plasma", DamageType::PLASMA }, { "poison", DamageType::POISON }, { "rending", DamageType::RENDING } };
 
 // Lookup table for converting EquipSlot text names into enums.
-const std::map<std::string, EquipSlot>  World::EQUIP_SLOT_MAP = { { "about", EquipSlot::ABOUT_BODY }, { "armour", EquipSlot::ARMOUR }, { "body", EquipSlot::BODY },
+const std::map<std::string, EquipSlot> World::EQUIP_SLOT_MAP = { { "about", EquipSlot::ABOUT_BODY }, { "armour", EquipSlot::ARMOUR }, { "body", EquipSlot::BODY },
     { "feet", EquipSlot::FEET }, { "hands", EquipSlot::HANDS }, { "head", EquipSlot::HEAD }, { "held", EquipSlot::HAND_MAIN } };
 
 // Lookup table for converting ItemSub text names into enums.
-const std::map<std::string, ItemSub>    World::ITEM_SUBTYPE_MAP = { { "clothing", ItemSub::CLOTHING }, { "heavy", ItemSub::HEAVY }, { "light", ItemSub::LIGHT },
+const std::map<std::string, ItemSub> World::ITEM_SUBTYPE_MAP = { { "clothing", ItemSub::CLOTHING }, { "heavy", ItemSub::HEAVY }, { "light", ItemSub::LIGHT },
     { "medium", ItemSub::MEDIUM }, { "melee", ItemSub::MELEE }, { "none", ItemSub::NONE }, { "ranged", ItemSub::RANGED }, { "unarmed", ItemSub::UNARMED } };
 
 // Lookup table for converting ItemTag text names into enums.
-const std::map<std::string, ItemTag>    World::ITEM_TAG_MAP = { { "handandahalf", ItemTag::HandAndAHalf }, { "noa", ItemTag::NoA }, { "offhandonly", ItemTag::OffHandOnly },
+const std::map<std::string, ItemTag> World::ITEM_TAG_MAP = { { "handandahalf", ItemTag::HandAndAHalf }, { "noa", ItemTag::NoA }, { "offhandonly", ItemTag::OffHandOnly },
     { "pluralname", ItemTag::PluralName }, { "preferoffhand", ItemTag::PreferOffHand }, { "propernoun", ItemTag::ProperNoun }, { "stackable", ItemTag::Stackable },
     { "twohanded", ItemTag::TwoHanded } };
 
 // Lookup table for converting ItemType text names into enums.
-const std::map<std::string, ItemType>   World::ITEM_TYPE_MAP = { { "armour", ItemType::ARMOUR }, { "key", ItemType::KEY }, { "light", ItemType::LIGHT },
+const std::map<std::string, ItemType>  World::ITEM_TYPE_MAP = { { "armour", ItemType::ARMOUR }, { "key", ItemType::KEY }, { "light", ItemType::LIGHT },
     { "none", ItemType::NONE }, { "shield", ItemType::SHIELD }, { "weapon", ItemType::WEAPON } };
 
 // Lookup table for converting textual light levels (e.g. "bright") to integer values.
 const std::map<std::string, uint8_t>    World::LIGHT_LEVEL_MAP = { { "bright", 7 }, { "dim", 5 }, { "wilderness", 5 }, { "dark", 3 }, { "none", 0 } };
 
 // Lookup table for converting LinkTag text names into enums.
-const std::map<std::string, LinkTag>    World::LINK_TAG_MAP = { { "autoclose", LinkTag::AutoClose }, { "autolock", LinkTag::AutoLock }, { "decline", LinkTag::Decline },
+const std::map<std::string, LinkTag> World::LINK_TAG_MAP = { { "autoclose", LinkTag::AutoClose }, { "autolock", LinkTag::AutoLock }, { "decline", LinkTag::Decline },
     { "doormetal", LinkTag::DoorMetal }, { "doorshop", LinkTag::DoorShop }, { "doublelength", LinkTag::DoubleLength }, { "hidden", LinkTag::Hidden }, { "incline", LinkTag::Incline },
     { "lockable", LinkTag::Lockable },  { "locked", LinkTag::LockedByDefault }, { "lockstrong", LinkTag::LockStrong }, { "lockswhenclosed", LinkTag::LocksWhenClosed },
     { "lockweak", LinkTag::LockWeak }, { "noblockexit", LinkTag::NoBlockExit }, { "nomobroam", LinkTag::NoMobRoam }, { "ocean", LinkTag::Ocean }, { "open", LinkTag::Open },
@@ -60,15 +60,15 @@ const std::map<std::string, LinkTag>    World::LINK_TAG_MAP = { { "autoclose", L
     { "triplelength", LinkTag::TripleLength }, { "window", LinkTag::Window } };
 
 // Lookup table for converting MobileTag text names into enums.
-const std::map<std::string, MobileTag>  World::MOBILE_TAG_MAP = { { "aggroonsight", MobileTag::AggroOnSight }, { "agile", MobileTag::Agile }, { "anemic", MobileTag::Anemic },
+const std::map<std::string, MobileTag> World::MOBILE_TAG_MAP = { { "aggroonsight", MobileTag::AggroOnSight }, { "agile", MobileTag::Agile }, { "anemic", MobileTag::Anemic },
     { "beast", MobileTag::Beast}, { "brawny", MobileTag::Brawny }, { "cannotblock", MobileTag::CannotBlock }, { "cannotdodge", MobileTag::CannotDodge },
-    { "cannotparry", MobileTag::CannotParry }, { "clumsy", MobileTag::Clumsy }, { "coward", MobileTag::Coward }, { "feeble", MobileTag::Feeble },
-    { "immunitybleed", MobileTag::ImmunityBleed }, { "immunitypoison", MobileTag::ImmunityPoison }, { "mighty", MobileTag::Mighty }, { "pluralname", MobileTag::PluralName },
-    { "propernoun", MobileTag::ProperNoun }, { "puny", MobileTag::Puny }, { "randomgender", MobileTag::RandomGender }, { "strong", MobileTag::Strong },
-    { "unliving", MobileTag::Unliving }, { "vigorous", MobileTag::Vigorous } };
+    { "cannotopendoors", MobileTag::CannotOpenDoors }, { "cannotparry", MobileTag::CannotParry }, { "clumsy", MobileTag::Clumsy }, { "coward", MobileTag::Coward },
+    { "feeble", MobileTag::Feeble }, { "immunitybleed", MobileTag::ImmunityBleed }, { "immunitypoison", MobileTag::ImmunityPoison }, { "mighty", MobileTag::Mighty },
+    { "pluralname", MobileTag::PluralName }, { "propernoun", MobileTag::ProperNoun }, { "puny", MobileTag::Puny }, { "randomgender", MobileTag::RandomGender },
+    { "strong", MobileTag::Strong }, { "unliving", MobileTag::Unliving }, { "vigorous", MobileTag::Vigorous } };
 
 // Lookup table for converting RoomTag text names into enums.
-const std::map<std::string, RoomTag>    World::ROOM_TAG_MAP = { { "canseeoutside", RoomTag::CanSeeOutside }, { "churchaltar", RoomTag::ChurchAltar }, { "digok", RoomTag::DigOK },
+const std::map<std::string, RoomTag> World::ROOM_TAG_MAP = { { "canseeoutside", RoomTag::CanSeeOutside }, { "churchaltar", RoomTag::ChurchAltar }, { "digok", RoomTag::DigOK },
     { "gamepoker", RoomTag::GamePoker }, { "gameslots", RoomTag::GameSlots }, { "gross", RoomTag::Gross }, { "heatedinterior", RoomTag::HeatedInterior },
     { "hidecampfirescar", RoomTag::HideCampfireScar }, { "indoors", RoomTag::Indoors }, { "maze", RoomTag::Maze }, { "nexus", RoomTag::Nexus },
     { "noexplorecredit", RoomTag::NoExploreCredit }, { "permacampfire", RoomTag::PermaCampfire }, { "private", RoomTag::Private }, { "radiationlight", RoomTag::RadiationLight },
@@ -78,18 +78,18 @@ const std::map<std::string, RoomTag>    World::ROOM_TAG_MAP = { { "canseeoutside
     { "watertainted", RoomTag::WaterTainted }, { "wide", RoomTag::Wide }, { "wilderness", RoomTag::Wilderness } };
 
 // Lookup table for converting textual room security (e.g. "anarchy") to enum values.
-const std::map<std::string, Security>   World::SECURITY_MAP = { { "anarchy", Security::ANARCHY }, { "low", Security::LOW }, { "high", Security::HIGH },
+const std::map<std::string, Security> World::SECURITY_MAP = { { "anarchy", Security::ANARCHY }, { "low", Security::LOW }, { "high", Security::HIGH },
     { "sanctuary", Security::SANCTUARY }, { "inaccessible", Security::INACCESSIBLE } };
 
 // A list of all valid keys in area YAML files.
-const std::set<std::string>     World::VALID_YAML_KEYS_AREAS = { "desc", "exits", "light", "name", "security", "spawn_mobs", "tags", "wilderness" };
+const std::set<std::string> World::VALID_YAML_KEYS_AREAS = { "desc", "exits", "light", "name", "security", "spawn_mobs", "tags", "wilderness" };
 
 // A list of all valid keys in item YAML files.
-const std::set<std::string>     World::VALID_YAML_KEYS_ITEMS = { "bleed", "block_mod", "crit", "damage_type", "desc", "dodge_mod", "metadata", "name", "parry_mod", "poison", "power",
+const std::set<std::string> World::VALID_YAML_KEYS_ITEMS = { "bleed", "block_mod", "crit", "damage_type", "desc", "dodge_mod", "metadata", "name", "parry_mod", "poison", "power",
     "rare", "slot", "speed", "stack", "tags", "type", "value", "warmth", "weight" };
 
 // A list of all valid keys in mobile YAML files.
-const std::set<std::string>     World::VALID_YAML_KEYS_MOBS = { "gear", "hp", "name", "score", "species", "tags" };
+const std::set<std::string> World::VALID_YAML_KEYS_MOBS = { "gear", "hp", "name", "score", "species", "tags" };
 
 
 // Constructor, loads the room YAML data.
