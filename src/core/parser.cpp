@@ -48,6 +48,7 @@ Parser::Parser() : m_special_state(SpecialState::NONE)
     add_command("[score|sc]", ParserCommand::SCORE);
     add_command("[skills|skill|sk]", ParserCommand::SKILLS);
     add_command("stance <txt>", ParserCommand::STANCE);
+    add_command("[status|stat|st]", ParserCommand::STATUS);
     add_command("[take|get] <item:r>", ParserCommand::TAKE);
     add_command("[time|date]", ParserCommand::TIME);
     add_command("[unequip|uneq|remove] <item:e>", ParserCommand::UNEQUIP);
@@ -525,6 +526,9 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             else Combat::change_stance(player, chosen_stance);
             break;
         }
+        case ParserCommand::STATUS:
+            ActionStatus::status();
+            break;
         case ParserCommand::SWEAR:
             core()->message("{y}Real adventurers do not use such language.");
             break;

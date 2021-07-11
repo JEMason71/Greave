@@ -10,7 +10,7 @@ COMMAND: "#COMMANDS"
 COMMANDS: [ "{W}Combat commands: {C}ATTACK{w}, {C}STANCE",
             "{W}Item interaction: {C}DROP{w}, {C}EQUIP{w}, {C}EXAMINE{w}, {C}INVENTORY{w}, {C}TAKE{w}, {C}UNEQUIP",
             "{W}Room interaction: {C}CLOSE{w}, {C}EXITS{w}, {C}LOCK{w}, {C}LOOK{w}, {C}OPEN{w}, {C}TRAVEL{w}, {C}UNLOCK",
-            "{W}Status commands: {C}SCORE{w}, {C}SKILLS{w}, {C}TIME{w}, {C}WEATHER",
+            "{W}Status commands: {C}SCORE{w}, {C}SKILLS{w}, {C}STATUS{w}, {C}TIME{w}, {C}WEATHER",
             "{W}Misc: {C}HELP{w}, {C}QUIT{w}, {C}SAVE{c}, {C}WAIT" ]
 
 CYAN: "According to Wikipedia, {C}cyan {w}is the colour between {G}green {w}and {U}blue {w}on the visible spectrum of light."
@@ -143,8 +143,14 @@ SOUTHEAST: "#TRAVEL"
 
 SOUTHWEST: "#TRAVEL"
 
+ST: "#STATUS"
+
 STANCE: [ "There are three different stances you can take in combat -- {G}balanced {w}is an all-round stance with no penalties or bonuses, {R}aggressive {w}deals more damage while also taking more damage from enemy attacks, and {U}defensive {w}deals less damage, but also takes less in return.",
           "You can switch stances by typing {C}STANCE {w}followed by the name of the stance to change to (e.g. {C}STANCE BALANCED{w}), or instead, you can simply type {C}SA{w}, {C}SB {w}or {C}SD {w}for short." ]
+
+STAT: "#STATUS"
+
+STATUS: "The {C}STATUS {w}command (can be shortened to {C}STAT {w}or {C}ST{w}) will show any important status effects about your character, such as if you are bleeding or hungry, as well as your current temperature, the time of day, and the weather if you are outdoors."
 
 SW: "#TRAVEL"
 
