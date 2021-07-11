@@ -56,11 +56,11 @@ std::string Player::death_reason() const { return m_death_reason; }
 void Player::gain_skill_xp(const std::string& skill_id, float xp)
 {
     xp *= core()->world()->get_skill_multiplier(skill_id);
-	if (xp <= 0)
-	{
-		if (xp < 0) core()->guru()->nonfatal("Attempt to give negative XP in " + skill_id, Guru::WARN);
-		return;
-	}
+    if (xp <= 0)
+    {
+        if (xp < 0) core()->guru()->nonfatal("Attempt to give negative XP in " + skill_id, Guru::WARN);
+        return;
+    }
     auto it = m_skill_xp.find(skill_id);
     if (it == m_skill_xp.end())
     {

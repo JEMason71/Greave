@@ -191,7 +191,7 @@ void TerminalSDL2::init_colours()
 
     auto populate_colour_map = [this](const std::string &colour_str, Colour colour_enum)
     {
-        
+
         if (colour_str.size() != 6) throw std::runtime_error("Invalid colour value: " + colour_str);
         uint8_t r = StrX::htoi(colour_str.substr(0, 2));
         uint8_t g = StrX::htoi(colour_str.substr(2, 2));

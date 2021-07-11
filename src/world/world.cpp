@@ -21,10 +21,10 @@
 #include "world/world.hpp"
 
 
-const int   World::ROOM_SCAN_DISTANCE = 10; // The distance to scan for active rooms.
+const int World::ROOM_SCAN_DISTANCE = 10; // The distance to scan for active rooms.
 
 // The SQL construction table for the World data.
-const std::string   World::SQL_WORLD = "CREATE TABLE world ( mob_unique_id INTEGER PRIMARY KEY UNIQUE NOT NULL )";
+const std::string World::SQL_WORLD = "CREATE TABLE world ( mob_unique_id INTEGER PRIMARY KEY UNIQUE NOT NULL )";
 
 // Lookup table for converting DamageType text names into enums.
 const std::map<std::string, DamageType> World::DAMAGE_TYPE_MAP = { { "acid", DamageType::ACID }, { "ballistic", DamageType::BALLISTIC }, { "crushing", DamageType::CRUSHING },
@@ -45,11 +45,11 @@ const std::map<std::string, ItemTag> World::ITEM_TAG_MAP = { { "handandahalf", I
     { "twohanded", ItemTag::TwoHanded } };
 
 // Lookup table for converting ItemType text names into enums.
-const std::map<std::string, ItemType>  World::ITEM_TYPE_MAP = { { "armour", ItemType::ARMOUR }, { "key", ItemType::KEY }, { "light", ItemType::LIGHT },
+const std::map<std::string, ItemType> World::ITEM_TYPE_MAP = { { "armour", ItemType::ARMOUR }, { "key", ItemType::KEY }, { "light", ItemType::LIGHT },
     { "none", ItemType::NONE }, { "shield", ItemType::SHIELD }, { "weapon", ItemType::WEAPON } };
 
 // Lookup table for converting textual light levels (e.g. "bright") to integer values.
-const std::map<std::string, uint8_t>    World::LIGHT_LEVEL_MAP = { { "bright", 7 }, { "dim", 5 }, { "wilderness", 5 }, { "dark", 3 }, { "none", 0 } };
+const std::map<std::string, uint8_t> World::LIGHT_LEVEL_MAP = { { "bright", 7 }, { "dim", 5 }, { "wilderness", 5 }, { "dark", 3 }, { "none", 0 } };
 
 // Lookup table for converting LinkTag text names into enums.
 const std::map<std::string, LinkTag> World::LINK_TAG_MAP = { { "autoclose", LinkTag::AutoClose }, { "autolock", LinkTag::AutoLock }, { "decline", LinkTag::Decline },
