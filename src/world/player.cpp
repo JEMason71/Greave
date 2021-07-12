@@ -2,8 +2,10 @@
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #include "3rdparty/SQLiteCpp/SQLiteCpp.h"
+#include "actions/eat-drink.hpp"
 #include "core/core.hpp"
 #include "core/guru.hpp"
+#include "core/random.hpp"
 #include "world/inventory.hpp"
 #include "world/item.hpp"
 #include "world/world.hpp"
@@ -11,20 +13,29 @@
 #include "world/time-weather.hpp"
 
 
-const int   Player:: BASE_SKILL_COST_LEVEL_OFFSET = 0;      // The skill XP cost formula is offset by this many levels.
+const int   Player::BASE_SKILL_COST_LEVEL_OFFSET =  0;      // The skill XP cost formula is offset by this many levels.
 const float Player::BASE_SKILL_COST_MULTIPLIER =    2.0f;   // The higher this number, the slower player skill levels increase.
+const int   Player::BLOOD_TOX_POISON_CHANCE =       3;      // 1 in X chance of being poisoned by the below level of toxicity.
+const int   Player::BLOOD_TOX_POISON_LEVEL =        10;     // The level at which the player can be poisoned by blood toxicity.
+const int   Player::BLOOD_TOX_POISON_POWER_BASE =   5;      // The base amount of power for the blood toxicity poison debuff.
+const int   Player::BLOOD_TOX_POISON_POWER_RNG =    10;     // The RNG variance additional power for the blood toxicity poison debuff.
+const int   Player::BLOOD_TOX_POISON_TIME_BASE =    5;      // The base amount of time for the blood toxicity poison debuff.
+const int   Player::BLOOD_TOX_POISON_TIME_RNG =     5;      // The RNG variance additional time for the blood toxicity poison debuff.
+const int   Player::BLOOD_TOX_VOMIT_LEVEL =         6;      // The level at which the player can vomit from blood toxicity.
+const int   Player::BLOOD_TOX_VOMIT_CHANCE =        4;      // 1 in X chance of vomiting past the above level of toxicity.
+const int   Player::BLOOD_TOX_WARNING =             4;      // The level at which the player is warned of increasing blood toxicity.
 const int   Player::REGEN_TIME_COST_HUNGER =        60;     // How many hunger ticks it costs to regenerate a unit of health.
 const int   Player::REGEN_TIME_COST_THIRST =        30;     // How many thirst ticks it costs to regenerate a unit of health.
 
 // The SQL table construction string for the player data.
-const std::string Player::SQL_PLAYER = "CREATE TABLE player ( hunger INTEGER NOT NULL, mob_target INTEGER, money INTEGER NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, thirst INTEGET NOT NULL )";
+const std::string Player::SQL_PLAYER = "CREATE TABLE player ( blood_tox INTEGER, hunger INTEGER NOT NULL, mob_target INTEGER, money INTEGER NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, thirst INTEGET NOT NULL )";
 
 // The SQL table construction string for the player skills data.
 const std::string Player::SQL_SKILLS = "CREATE TABLE skills ( id TEXT PRIMARY KEY UNIQUE NOT NULL, level INTEGER NOT NULL, xp REAL )";
 
 
 // Constructor, sets default values.
-Player::Player() : m_death_reason("the will of the gods"), m_hunger(20), m_mob_target(0), m_money(0), m_thirst(20)
+Player::Player() : m_blood_tox(0), m_death_reason("the will of the gods"), m_hunger(20), m_mob_target(0), m_money(0), m_thirst(20)
 {
     set_species("humanoid");
     set_name("Player");
@@ -51,6 +62,9 @@ void Player::add_water(int power)
     m_thirst += power;
     if (m_thirst > 20) m_thirst = 20;
 }
+
+// Retrieves the player's blood toxicity level.
+int Player::blood_tox() const { return m_blood_tox; }
 
 // Gets the clothing warmth level from the Player.
 int Player::clothes_warmth() const
@@ -121,6 +135,26 @@ void Player::hunger_tick()
     }
 }
 
+// Increases the player's blood toxicity.
+void Player::increase_tox(int power)
+{
+    const auto rng = core()->rng();
+    int old_tox = m_blood_tox;
+    m_blood_tox += power;
+    if (m_blood_tox >= BLOOD_TOX_POISON_LEVEL && rng->rnd(BLOOD_TOX_POISON_CHANCE) == 1)
+    {
+        set_buff(Buff::Type::POISON, rng->rnd(BLOOD_TOX_POISON_TIME_RNG) + BLOOD_TOX_POISON_TIME_BASE, rng->rnd(BLOOD_TOX_POISON_POWER_RNG) + BLOOD_TOX_POISON_POWER_BASE, true, true);
+        core()->message("{G}You feel deathly ill, your stomach churning violently!");
+        return;
+    }
+    if (m_blood_tox >= BLOOD_TOX_VOMIT_LEVEL && rng->rnd(BLOOD_TOX_VOMIT_CHANCE) == 1)
+    {
+        ActionEatDrink::vomit(true);
+        return;
+    }
+    if (old_tox < BLOOD_TOX_WARNING && m_blood_tox >= BLOOD_TOX_WARNING) core()->message("{g}Your stomach churns and you feel horrible.");
+}
+
 // Checks if this Player is dead.
 bool Player::is_dead() const
 {
@@ -137,6 +171,7 @@ uint32_t Player::load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id
     SQLite::Statement query(*save_db, "SELECT * FROM player");
     if (query.executeStep())
     {
+        if (!query.isColumnNull("blood_tox")) m_blood_tox = query.getColumn("blood_tox").getInt();
         m_hunger = query.getColumn("hunger").getInt();
         if (!query.isColumnNull("mob_target")) m_mob_target = query.getColumn("mob_target").getUInt();
         m_money = query.getColumn("money").getUInt();
@@ -193,12 +228,13 @@ void Player::remove_money(uint32_t amount)
 uint32_t Player::save(std::shared_ptr<SQLite::Database> save_db)
 {
     const uint32_t sql_id = Mobile::save(save_db);
-    SQLite::Statement query(*save_db, "INSERT INTO player ( hunger, mob_target, money, sql_id, thirst ) VALUES ( ?, ?, ?, ?, ? )");
-    query.bind(1, m_hunger);
-    if (m_mob_target) query.bind(2, m_mob_target);
-    query.bind(3, m_money);
-    query.bind(4, sql_id);
-    query.bind(5, m_thirst);
+    SQLite::Statement query(*save_db, "INSERT INTO player ( blood_tox, hunger, mob_target, money, sql_id, thirst ) VALUES ( ?, ?, ?, ?, ?, ? )");
+    if (m_blood_tox) query.bind(1, m_blood_tox);
+    query.bind(2, m_hunger);
+    if (m_mob_target) query.bind(3, m_mob_target);
+    query.bind(4, m_money);
+    query.bind(5, sql_id);
+    query.bind(6, m_thirst);
     query.exec();
 
     for (const auto &kv : m_skill_levels)
@@ -252,6 +288,9 @@ void Player::thirst_tick()
         case 14: core()->message("{u}You're starting to feel a little thirsty."); break;
     }
 }
+
+// Reduces blood toxicity.
+void Player::tick_blood_tox() { if (m_blood_tox > 0) m_blood_tox--; }
 
 // Regenerates HP over time.
 void Player::tick_hp_regen()

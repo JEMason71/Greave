@@ -8,18 +8,21 @@
 class Player : public Mobile
 {
 public:
-    static const std::string    SQL_PLAYER; // The SQL table construction string for the player data.
-    static const std::string    SQL_SKILLS; // The SQL table construction string for the player skills data.
+    static const int            BLOOD_TOX_WARNING;  // The level at which the player is warned of increasing blood toxicity.
+    static const std::string    SQL_PLAYER;         // The SQL table construction string for the player data.
+    static const std::string    SQL_SKILLS;         // The SQL table construction string for the player skills data.
 
                 Player();                           // Constructor, sets default values.
     void        add_food(int power);                // Eats food, increasing the hunger counter.
     void        add_money(uint32_t amount);         // Adds money to the player's wallet.
     void        add_water(int power);               // Drinks some water, increasing the thirst counter.
+    int         blood_tox() const;                  // Retrieves the player's blood toxicity level.
     int         clothes_warmth() const;             // Gets the clothing warmth level from the Player.
     std::string death_reason() const;               // Retrieves the player's death reason.
     void        gain_skill_xp(const std::string& skill_id, float xp = 1.0f);    // Gains experience in a skill.
     int         hunger() const;                     // Checks the current hunger level.
     void        hunger_tick();                      // The player gets a little more hungry.
+    void        increase_tox(int power);            // Increases the player's blood toxicity.
     bool        is_dead() const override;           // Checks if this Player is dead.
     bool        is_player() const override;         // Returns true if this Mobile is a Player, false if not.
     uint32_t    load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id) override;  // Loads the Player data.
@@ -33,14 +36,24 @@ public:
     const std::map<std::string, int>&   skill_map() const;      // Returns read-only access to the player's skill levels.
     int         thirst() const;                     // Checks the current thirst level.
     void        thirst_tick();                      // The player gets a little more thirsty.
+    void        tick_blood_tox();                   // Reduces blood toxicity.
     void        tick_hp_regen() override;           // Regenerates HP over time.
 
 private:
     static const float  BASE_SKILL_COST_MULTIPLIER;     // The higher this number, the slower player skill levels increase.
     static const int    BASE_SKILL_COST_LEVEL_OFFSET;   // The skill XP cost formula is offset by this many levels.
+    static const int    BLOOD_TOX_POISON_CHANCE;        // 1 in X chance of being poisoned by the below level of toxicity.
+    static const int    BLOOD_TOX_POISON_LEVEL;         // The level at which the player can be poisoned by blood toxicity.
+    static const int    BLOOD_TOX_POISON_POWER_BASE;    // The base amount of power for the blood toxicity poison debuff.
+    static const int    BLOOD_TOX_POISON_POWER_RNG;     // The RNG variance additional power for the blood toxicity poison debuff.
+    static const int    BLOOD_TOX_POISON_TIME_BASE;     // The base amount of time for the blood toxicity poison debuff.
+    static const int    BLOOD_TOX_POISON_TIME_RNG;      // The RNG variance additional time for the blood toxicity poison debuff.
+    static const int    BLOOD_TOX_VOMIT_LEVEL;          // The level at which the player can vomit from blood toxicity.
+    static const int    BLOOD_TOX_VOMIT_CHANCE;         // 1 in X chance of vomiting past the above level of toxicity.
     static const int    REGEN_TIME_COST_HUNGER;         // How many hunger ticks it costs to regenerate a unit of health.
     static const int    REGEN_TIME_COST_THIRST;         // How many thirst ticks it costs to regenerate a unit of health.
 
+    int         m_blood_tox;    // Blood toxicity level.
     std::string m_death_reason; // The cause of death, when it happens.
     uint8_t     m_hunger;       // The hunger counter. 20 = completely full, 0 = starved to death.
     uint32_t    m_mob_target;   // The last Mobile to have been attacked.

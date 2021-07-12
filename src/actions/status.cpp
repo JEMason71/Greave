@@ -38,8 +38,7 @@ void ActionStatus::skills()
         return;
     }
 
-    // Sort the list of skills with the highest-level skill first. There's probably a better way to do this (feel free to improve this code if the urge takes you),
-    // but for now I'm going to just go with a lazy and simple method and bubble-sort it by hand.
+    // Sort the list of skills with the highest-level skill first. There's probably a better way to do this (feel free to improve this code if the urge takes you), but for now I'm going to just go with a lazy and simple method and bubble-sort it by hand.
     if (skill_levels.size() > 1)
     {
         bool rearranged;
@@ -122,12 +121,13 @@ void ActionStatus::status()
         case 13: case 14: thirst_str = "{u}You're starting to feel a little thirsty."; break;
         default: thirst_str = "{u}You don't feel thirsty right now.";
     }
-    if (player->hunger() > 14 && player->hunger() < 20 && player->thirst() > 14) status_line = "{g}You don't feel hungry or thirsty right now.";
+    if (player->hunger() > 14 && player->hunger() <= 20 && player->thirst() > 14) status_line = "{c}You don't feel hungry or thirsty right now.";
     else status_line = hunger_str + " " + thirst_str;
 
     if (player->has_buff(Buff::Type::BLEED)) status_line += " {R}You are bleeding quite badly!";
     if (player->has_buff(Buff::Type::POISON)) status_line += " {G}Deadly poison runs through your veins!";
     if (player->has_buff(Buff::Type::RECENT_DAMAGE)) status_line += " {r}You have recently taken damage, inhibiting your natural healing.";
+    if (player->blood_tox()) status_line += " {g}Your stomach feels horrible!";
     core()->message(status_line);
 }
 

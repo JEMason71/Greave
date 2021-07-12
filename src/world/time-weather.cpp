@@ -33,6 +33,7 @@ const uint32_t TimeWeather::HEARTBEAT_TIMERS[TimeWeather::Heartbeat::_TOTAL] = {
     432 * Time::MINUTE, // HUNGER. Pretty slow, as you can live for a long time without food.
     311 * Time::MINUTE, // THIRST. More rapid than hunger.
     2 * Time::MINUTE,   // HP_REGEN, causes health to regenerate over time.
+    16 * Time::MINUTE,  // DISEASE, ticks diseases and reduces blood toxicity in the player's body.
 };
 
 
@@ -339,6 +340,12 @@ bool TimeWeather::pass_time(float seconds, bool interruptable)
             player->tick_hp_regen();
             for (unsigned int i = 0; i < world->mob_count(); i++)
                 world->mob_vec(i)->tick_hp_regen();
+        }
+
+        // Ticks diseases and reduces blood toxicity.
+        if (heartbeat_ready(Heartbeat::DISEASE))
+        {
+            player->tick_blood_tox();
         }
     }
 

@@ -64,6 +64,7 @@ void ActionEatDrink::drink(size_t inv_pos, bool confirm)
     else water_str += ".";
     core()->message(water_str);
     player->add_water(liquid_consumed);
+    if (item->subtype() == ItemSub::BOOZE) player->increase_tox(item->power());
     item->set_charge(liquid_available - liquid_consumed);
     if (liquid_consumed == liquid_available) item->set_liquid("");
 }
