@@ -8,7 +8,7 @@ CLOSE: "You can close doors (or windows, grates, or other door-like things) with
 COMMAND: "#COMMANDS"
 
 COMMANDS: [ "{W}Combat commands: {C}ATTACK{w}, {C}STANCE",
-            "{W}Item interaction: {C}DROP{w}, {C}EQUIP{w}, {C}EXAMINE{w}, {C}INVENTORY{w}, {C}TAKE{w}, {C}UNEQUIP",
+            "{W}Item interaction: {C}DRINK{w}, {C}DROP{w}, {C}EAT{w}, {C}EQUIP{w}, {C}EXAMINE{w}, {C}INVENTORY{w}, {C}TAKE{w}, {C}UNEQUIP",
             "{W}Room interaction: {C}CLOSE{w}, {C}EXITS{w}, {C}LOCK{w}, {C}LOOK{w}, {C}OPEN{w}, {C}TRAVEL{w}, {C}UNLOCK",
             "{W}Status commands: {C}SCORE{w}, {C}SKILLS{w}, {C}STATUS{w}, {C}TIME{w}, {C}WEATHER",
             "{W}Misc: {C}HELP{w}, {C}QUIT{w}, {C}SAVE{c}, {C}WAIT" ]
@@ -21,11 +21,15 @@ DATE: "#TIME"
 
 DOWN: "#TRAVEL"
 
+DRINK: "To drink from a waterskin or other liquid container, type {C}DRINK {w}followed by the name of the item (e.g. {C}DRINK WATERSKIN{w})."
+
 DROP: "You can drop anything you're carrying (and do not currently have equipped) by typing {C}DROP {w}followed by the name of the item (e.g. {C}DROP CANDLE{w}). If you wish to drop multiple items from a stack - for example, you're carrying 30 arrows and want to drop 5 on the ground - specify a number before the item name (e.g. {C}DROP 5 ARROWS{w})."
 
 E: "#TRAVEL"
 
 EAST: "#TRAVEL"
+
+EAT: "To eat some food, type {C}EAT {w}followed by the name of the item (e.g. {C}EAT FISH{w})."
 
 EQ: "#EQUIP"
 
