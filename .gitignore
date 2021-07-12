@@ -5,5 +5,4 @@
 *.tmp
 .vscode/*
 build/*
-!build/delete.me
 scripts/*
