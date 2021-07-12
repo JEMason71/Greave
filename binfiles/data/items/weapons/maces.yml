@@ -6,7 +6,7 @@ CLUB_HEAVY:
   damage_type: crushing
   desc: This heavy piece of wood has been polished and smoothed, the handle wrapped in leather.
   name: heavy club
-  power: 35
+  power: 28
   rare: 2
   slot: held
   speed: 1.4
@@ -47,7 +47,7 @@ MAUL:
   damage_type: crushing
   desc: An uncomplicated weapon for uncomplicated slaughter, a long wooden haft is topped with a massive blunt iron head.
   name: maul
-  power: 38
+  power: 31
   rare: 2
   slot: held
   speed: 1.6

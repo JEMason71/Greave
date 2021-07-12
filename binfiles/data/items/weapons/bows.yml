@@ -8,7 +8,7 @@ LONGBOW:
   damage_type: ballistic
   desc: A larger, heavier bow with a better range than aa shortbow.
   name: longbow
-  power: 37
+  power: 29
   rare: 3
   slot: held
   speed: 1.8

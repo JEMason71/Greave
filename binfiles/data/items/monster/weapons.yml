@@ -48,7 +48,7 @@ MONSTER_BITE_2H:
   damage_type: crushing
   desc: "-"
   name: powerful bite
-  power: 26
+  power: 21
   rare: 1
   slot: held
   speed: 1.2
@@ -62,7 +62,7 @@ MONSTER_BITE_2H_0:
   damage_type: crushing
   desc: "-"
   name: heavy bite
-  power: 23
+  power: 17
   rare: 1
   slot: held
   speed: 1.2
@@ -77,7 +77,7 @@ MONSTER_BITE_2H_2:
   damage_type: crushing
   desc: "-"
   name: splintering bite
-  power: 29
+  power: 25
   rare: 1
   slot: held
   speed: 1.2
@@ -92,7 +92,7 @@ MONSTER_BITE_2H_PIERCE:
   damage_type: piercing
   desc: "-"
   name: sharp bite
-  power: 25
+  power: 20
   rare: 1
   slot: held
   speed: 1.2
@@ -107,7 +107,7 @@ MONSTER_BITE_2H_PIERCE_0:
   damage_type: piercing
   desc: "-"
   name: keen bite
-  power: 21
+  power: 16
   rare: 1
   slot: held
   speed: 1.2
@@ -122,7 +122,7 @@ MONSTER_BITE_2H_PIERCE_2:
   damage_type: piercing
   desc: "-"
   name: razor-sharp bite
-  power: 29
+  power: 25
   rare: 1
   slot: held
   speed: 1.2
@@ -138,7 +138,7 @@ MONSTER_BITE_2H_VENOM:
   desc: "-"
   name: poisonous bite
   poison: 40
-  power: 16
+  power: 13
   rare: 1
   slot: held
   speed: 1.2
@@ -154,7 +154,7 @@ MONSTER_BITE_2H_VENOM_0:
   desc: "-"
   name: toxic bite
   poison: 20
-  power: 15
+  power: 10
   rare: 1
   slot: held
   speed: 1.2
@@ -170,7 +170,7 @@ MONSTER_BITE_2H_VENOM_2:
   desc: "-"
   name: venomous bite
   poison: 60
-  power: 17
+  power: 15
   rare: 1
   slot: held
   speed: 1.2
@@ -393,7 +393,7 @@ MONSTER_STING_2H:
   desc: "-"
   name: deadly sting
   poison: 25
-  power: 21
+  power: 17
   rare: 1
   slot: held
   speed: 1.3
@@ -408,7 +408,7 @@ MONSTER_STING_2H_0:
   desc: "-"
   name: poisoned sting
   poison: 19
-  power: 18
+  power: 12
   rare: 1
   slot: held
   speed: 1.3
@@ -423,7 +423,7 @@ MONSTER_STING_2H_2:
   desc: "-"
   name: noxious sting
   poison: 50
-  power: 21
+  power: 19
   rare: 1
   slot: held
   speed: 1.3
