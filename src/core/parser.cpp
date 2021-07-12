@@ -56,6 +56,7 @@ Parser::Parser() : m_special_state(SpecialState::NONE)
     add_command("[time|date]", ParserCommand::TIME);
     add_command("[unequip|uneq|remove] <item:e>", ParserCommand::UNEQUIP);
     add_command("unlock <dir>", ParserCommand::UNLOCK);
+    add_command("vomit", ParserCommand::VOMIT);
     add_command("[wait|rest|sleep|zzz|z] <txt>", ParserCommand::WAIT);
     add_command("[weather|temperature|temp]", ParserCommand::WEATHER);
     add_command("[xyzzy|frotz|plugh|plover]", ParserCommand::XYZZY);
@@ -548,6 +549,7 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             else if (parsed_target_type == ParserTarget::TARGET_NONE) core()->message("{y}You don't seem to be wearing or wielding {Y}" + collapsed_words + "{y}.");
             else if (parsed_target_type == ParserTarget::TARGET_EQUIPMENT) ActionInventory::unequip(player, parsed_target);
             break;
+        case ParserCommand::VOMIT: ActionEatDrink::vomit(confirm); break;
         case ParserCommand::WAIT: ActionRest::rest(first_word, words); break;
         case ParserCommand::WEATHER: ActionStatus::weather(); break;
         case ParserCommand::XYZZY: core()->message("{u}A hollow voice says, {m}\"Fool.\""); break;

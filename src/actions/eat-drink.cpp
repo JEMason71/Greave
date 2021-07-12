@@ -4,11 +4,20 @@
 #include "actions/eat-drink.hpp"
 #include "core/core.hpp"
 #include "core/parser.hpp"
+#include "core/random.hpp"
 #include "world/inventory.hpp"
 #include "world/item.hpp"
 #include "world/player.hpp"
+#include "world/room.hpp"
 #include "world/time-weather.hpp"
 #include "world/world.hpp"
+
+
+const int ActionEatDrink::VOMIT_FOOD_LOSS_MAX =             5;  // 1 to X food lost when vomiting.
+const int ActionEatDrink::VOMIT_MINIMUM_FOOD_REMAINING =    3;  // How much food to allow to remain after vomiting?
+const int ActionEatDrink::VOMIT_MINIMUM_WATER_REMAINING =   3;  // How much water to allow to remain after vomiting?
+const int ActionEatDrink::VOMIT_SCAR_INTENSITY =            5;  // Vomit type scar intensity for vomiting once.
+const int ActionEatDrink::VOMIT_WATER_LOSS_MAX =            2;  // 1 to X water lost when vomiting.
 
 
 // Drinks a specified inventory item.
@@ -101,4 +110,25 @@ void ActionEatDrink::eat(size_t inv_pos, bool confirm)
     player->add_food(item->power());
     if (last_item) player->inv()->remove_item(inv_pos);
     else item->set_stack(item->stack() - 1);
+}
+
+// Loses the contents of your stomach.
+void ActionEatDrink::vomit(bool confirm)
+{
+    if (!confirm)
+    {
+        core()->message("{g}Forcing yourself to vomit would probably be bad for your health.");
+        core()->parser()->confirm_message();
+        return;
+    }
+    core()->message("{g}You retch violently, {G}vomiting {g}all over the floor!");
+
+    auto player = core()->world()->player();
+    int food_loss = core()->rng()->rnd(VOMIT_FOOD_LOSS_MAX);
+    int water_loss = core()->rng()->rnd(VOMIT_WATER_LOSS_MAX);
+    if (player->hunger() - food_loss < VOMIT_MINIMUM_FOOD_REMAINING) food_loss = player->hunger() - VOMIT_MINIMUM_FOOD_REMAINING;
+    if (player->thirst() - water_loss < VOMIT_MINIMUM_WATER_REMAINING) water_loss = player->thirst() - VOMIT_MINIMUM_WATER_REMAINING;
+    if (food_loss > 0) player->add_food(-food_loss);
+    if (water_loss > 0) player->add_water(-water_loss);
+    core()->world()->get_room(player->location())->add_scar(ScarType::VOMIT, VOMIT_SCAR_INTENSITY);
 }

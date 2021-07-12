@@ -10,4 +10,12 @@ class ActionEatDrink
 public:
     static void drink(size_t inv_pos, bool confirm);    // Drinks a specified inventory item.
     static void eat(size_t inv_pos, bool confirm);      // Eats a specified inventory item.
+    static void vomit(bool confirm);                    // Loses the contents of your stomach.
+
+private:
+    static const int    VOMIT_FOOD_LOSS_MAX;            // 1 to X food lost when vomiting.
+    static const int    VOMIT_MINIMUM_FOOD_REMAINING;   // How much food to allow to remain after vomiting?
+    static const int    VOMIT_MINIMUM_WATER_REMAINING;  // How much water to allow to remain after vomiting?
+    static const int    VOMIT_SCAR_INTENSITY;           // Vomit type scar intensity for vomiting once.
+    static const int    VOMIT_WATER_LOSS_MAX;           // 1 to X water lost when vomiting.
 };
