@@ -46,6 +46,7 @@ public:
     static void         string_to_metadata(const std::string &str, std::map<std::string, std::string> &metadata);   // Converts a string to a metadata map.
     static std::string  strip_ansi(const std::string &str);         // Strips colour codes from a string.
     static size_t       strlen_colour(const std::string &str);      // Returns the length of a string, taking colour tags into account.
+    static std::string  time_string_rough(float seconds);           // Returns a time string as a rough description ("a few seconds", "a moment", "a few minutes").
     static size_t       word_count(const std::string &str, const std::string &word);    // Returns a count of the amount of times a string is found in a parent string.
 
     template<class T> static void string_to_tags(const std::string &tag_string, std::set<T> &tags)

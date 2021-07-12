@@ -12,6 +12,7 @@ public:
     static const std::string    SQL_SKILLS; // The SQL table construction string for the player skills data.
 
                 Player();                           // Constructor, sets default values.
+    void        add_food(int power);                // Eats food, increasing the hunger counter.
     void        add_money(uint32_t amount);         // Adds money to the player's wallet.
     int         clothes_warmth() const;             // Gets the clothing warmth level from the Player.
     std::string death_reason() const;               // Retrieves the player's death reason.

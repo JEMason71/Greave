@@ -521,6 +521,37 @@ size_t StrX::strlen_colour(const std::string &str)
     return len;
 }
 
+// Returns a time string as a rough description ("a few seconds", "a moment", "a few minutes").
+std::string StrX::time_string_rough(float seconds)
+{
+    if (seconds < 1.0f) return "a moment";
+    else if (seconds < 2.0f) return "a second";
+    else if (seconds < 5.0f) return "a couple of seconds";
+    else if (seconds < 10.0f) return "a few seconds";
+    else if (seconds < 20.0f) return "about ten seconds";
+    else if (seconds < 30.0f) return "about twenty seconds";
+    else if (seconds < 60.0f) return "half a minute";
+    else if (seconds < 120.0f) return "a minute";
+    else if (seconds < 900.0f) return "a few minutes";
+    else if (seconds < 1800.0f) return "a quarter of an hour";
+    else if (seconds < 2700.0f) return "half an hour";
+    else if (seconds < 3600.0f) return "three quarters of an hour";
+    else if (seconds < 7200.0f) return "an hour";
+    else if (seconds < 10800.0f) return "a couple of hours";
+    else if (seconds < 43200.0f) return "several hours";
+    else if (seconds < 82800.0f) return "half a day";
+    else if (seconds < 86400.0f) return "most of a day";
+    else if (seconds < 172800.0f) return "a day";
+    else if (seconds < 259200.0f) return "a couple of days";
+    else if (seconds < 604800.0f) return "several days";
+    else if (seconds < 1209600.0f) return "a week";
+    else if (seconds < 2592000.0f) return "weeks";
+    else if (seconds < 5184000.0f) return "a month";
+    else if (seconds < 31536000.0f) return "months";
+    else if (seconds < 63072000.0f) return "a year";
+    else return "years";
+}
+
 // Returns a count of the amount of times a string is found in a parent string.
 size_t StrX::word_count(const std::string &str, const std::string &word)
 {

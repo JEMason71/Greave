@@ -31,6 +31,9 @@ Player::Player() : m_death_reason("the will of the gods"), m_hunger(20), m_mob_t
     set_name("Player");
 }
 
+// Eats food, increasing the hunger counter.
+void Player::add_food(int power) { m_hunger += power; }
+
 // Adds money to the player's wallet.
 void Player::add_money(uint32_t amount)
 {
@@ -238,7 +241,7 @@ void Player::thirst_tick()
         case 3: case 4: core()->message("{U}Your throat is so parched it's painful!"); break;
         case 5: case 6: core()->message("{U}You are desperately thirsty!"); break;
         case 7: case 8: core()->message("{U}You are extremely thirsty!"); break;
-        case 9: case 10: core()->message("{u}Your motuth feels very dry."); break;
+        case 9: case 10: core()->message("{u}Your mouth feels very dry."); break;
         case 11: case 12: core()->message("{u}You really want something to drink."); break;
         case 14: core()->message("{u}You're starting to feel a little thirsty."); break;
     }

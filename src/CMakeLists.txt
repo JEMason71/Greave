@@ -65,6 +65,7 @@ set(GREAVE_CPPS
   actions/cheat.cpp
   actions/combat.cpp
   actions/doors.cpp
+  actions/eat-drink.cpp
   actions/help.cpp
   actions/inventory.cpp
   actions/look.cpp

@@ -1,0 +1,35 @@
+# data/items/misc/food.yml -- Things that can be eaten.
+# Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+
+BREAD:
+  desc: This large hunk of bread is only a little dry. 
+  name: [ piece of bread, pieces of bread ]
+  power: 1
+  rare: 2
+  speed: 60
+  tags: [ Stackable ]
+  type: food
+  value: 2c
+  weight: 44
+
+CHEESE:
+  desc: A solid wedge of yellow, aged cheese.
+  name: cheese wedge
+  power: 3
+  rare: 2
+  speed: 120
+  tags: [ Stackable ]
+  type: food
+  value: 1s
+  weight: 55
+
+MEAT_COOKED:
+  desc: This slab of meat is well-cooked, but you're not entirely sure what it once was.
+  name: [ chunk of cooked meat, chunks of cooked meat ]
+  power: 2
+  rare: 2
+  speed: 100
+  tags: [ Stackable ]
+  type: food
+  value: 3s
+  weight: 62

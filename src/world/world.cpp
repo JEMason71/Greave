@@ -46,8 +46,8 @@ const std::map<std::string, ItemTag> World::ITEM_TAG_MAP = { { "ammoarrow", Item
     { "preferoffhand", ItemTag::PreferOffHand }, { "propernoun", ItemTag::ProperNoun }, { "stackable", ItemTag::Stackable }, { "twohanded", ItemTag::TwoHanded } };
 
 // Lookup table for converting ItemType text names into enums.
-const std::map<std::string, ItemType> World::ITEM_TYPE_MAP = { { "ammo", ItemType::AMMO }, { "armour", ItemType::ARMOUR }, { "key", ItemType::KEY }, { "light", ItemType::LIGHT },
-    { "none", ItemType::NONE }, { "shield", ItemType::SHIELD }, { "weapon", ItemType::WEAPON } };
+const std::map<std::string, ItemType> World::ITEM_TYPE_MAP = { { "ammo", ItemType::AMMO }, { "armour", ItemType::ARMOUR }, { "food", ItemType::FOOD }, { "key", ItemType::KEY },
+    { "light", ItemType::LIGHT }, { "none", ItemType::NONE }, { "shield", ItemType::SHIELD }, { "weapon", ItemType::WEAPON } };
 
 // Lookup table for converting textual light levels (e.g. "bright") to integer values.
 const std::map<std::string, uint8_t> World::LIGHT_LEVEL_MAP = { { "bright", 7 }, { "dim", 5 }, { "wilderness", 5 }, { "dark", 3 }, { "none", 0 } };

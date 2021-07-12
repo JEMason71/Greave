@@ -80,6 +80,12 @@ void ActionLook::examine_item(std::shared_ptr<Item> target)
             stat_string += "{w}. ";
             break;
         }
+        case ItemType::FOOD:
+        {
+            stat_string = "This is something you can {U}consume{w}. ";
+            stat_string += "It has a food value of {U}" + std::to_string(target->power()) + "{w}, and will take {U}" + StrX::time_string_rough(target->speed()) + " {w}to eat. ";
+            break;
+        }
         case ItemType::KEY: stat_string = "This is a {U}key {w}which can unlock certain doors. "; break;
         case ItemType::LIGHT:
             stat_string = "This is a {U}light source {w}which can be held. It provides a brightness level of {Y}" + std::to_string(target->power()) + "{w} when used. ";
