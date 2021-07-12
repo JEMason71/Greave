@@ -1,4 +1,4 @@
-# data/items/misc.yml -- Miscellaneous items that don't fit into any other category.
+# data/items/drinks/water-containers.yml -- Waterskins and other containers for carrying water and other fluids around.
 # Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 WATERSKIN:

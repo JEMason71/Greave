@@ -84,6 +84,7 @@ void ActionLook::examine_item(std::shared_ptr<Item> target)
         {
             switch (target->subtype())
             {
+                case ItemSub::BOOZE: stat_string = "This is an {U}alcoholic beverage{w}. "; break;
                 case ItemSub::WATER_CONTAINER: stat_string = "This is a {U}water container{w}. "; break;
                 default: break;
             }
@@ -92,6 +93,7 @@ void ActionLook::examine_item(std::shared_ptr<Item> target)
             if (charge)
             {
                 stat_string += ", and currently holds {U}" + std::to_string(charge) + (charge > 1 ? " units of " : " unit of ") + target->liquid_type() + "{w}, and will take {U}" + StrX::time_string_rough(target->speed()) + " {w}to drink. ";
+                if (target->subtype() == ItemSub::BOOZE) stat_string += "It has a potency rating of {U}" + std::to_string(target->power()) + "{w}. ";
             }
             else stat_string += ", and is currently {U}empty{w}. ";
             break;

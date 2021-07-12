@@ -20,7 +20,7 @@ enum class ItemType : uint16_t { NONE, AMMO, ARMOUR, DRINK, FOOD, KEY, LIGHT, SH
 enum class ItemSub : uint16_t { NONE,
     ARROW, BOLT,                    // AMMO subtypes.
     CLOTHING, HEAVY, LIGHT, MEDIUM, // ARMOUR subtypes.
-    WATER_CONTAINER,                // DRINK subtypes.
+    BOOZE, WATER_CONTAINER,         // DRINK subtypes.
     MELEE, RANGED, UNARMED,         // WEAPON subtypes.
     };
 

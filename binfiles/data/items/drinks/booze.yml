@@ -1,0 +1,28 @@
+# data/items/drinks/booze.yml -- Various alcoholic beverages.
+# Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+
+ALE_FLAGON:
+  capacity: 2
+  charge: 2
+  desc: A heavy wooden flagon with a foamy serving of ale.
+  liquid: ale
+  name: [ flagon of ale, flagons of ale ]
+  power: 1
+  rare: 2
+  speed: 30
+  type: [ drink, booze ]
+  value: 4c
+  weight: 210
+
+WINE_PITCHER:
+  capacity: 4
+  charge: 4
+  desc: A hefty clay pitcher filled with deep red wine.
+  liquid: wine
+  name: [ pitcher of wine, pitchers of wine ]
+  power: 2
+  rare: 3
+  speed: 40
+  type: [ drink, booze ]
+  value: 2s
+  weight: 400
