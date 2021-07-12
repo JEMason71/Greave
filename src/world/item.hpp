@@ -47,8 +47,9 @@ enum class ItemTag : uint16_t { _None = 0,  // Do not use this tag, it's just a 
 class Item
 {
 public:
-    static const int    NAME_FLAG_A, NAME_FLAG_CAPITALIZE_FIRST, NAME_FLAG_CORE_STATS, NAME_FLAG_ID, NAME_FLAG_FULL_STATS, NAME_FLAG_NO_COLOUR, NAME_FLAG_NO_COUNT, NAME_FLAG_PLURAL, NAME_FLAG_RARE, NAME_FLAG_THE;    // Flags for the name() function.
-    static const std::string    SQL_ITEMS;  // The SQL table construction string for saving items.
+    static const int            NAME_FLAG_A, NAME_FLAG_CAPITALIZE_FIRST, NAME_FLAG_CORE_STATS, NAME_FLAG_ID, NAME_FLAG_FULL_STATS, NAME_FLAG_NO_COLOUR, NAME_FLAG_NO_COUNT, NAME_FLAG_PLURAL, NAME_FLAG_RARE, NAME_FLAG_THE;    // Flags for the name() function.
+    static const std::string    SQL_ITEMS;      // The SQL table construction string for saving items.
+    static const float          WATER_WEIGHT;   // The weight of 1 unit of water.
 
                 Item();                                     // Constructor, sets default values.
     float       ammo_power() const;                         // The damage multiplier for ammunition.

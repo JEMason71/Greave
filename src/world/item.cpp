@@ -23,6 +23,8 @@ const int Item::NAME_FLAG_THE =                 512;    // Precede the Item's na
 // The SQL table construction string for saving items.
 const std::string Item::SQL_ITEMS = "CREATE TABLE items ( description TEXT, metadata TEXT, name TEXT NOT NULL, owner_id INTEGER NOT NULL, parser_id INTEGER NOT NULL, rare INTEGER NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, stack INTEGER, subtype INTEGER, tags TEXT, type INTEGER, value INTEGER, weight INTEGER NOT NULL )";
 
+const float Item::WATER_WEIGHT =    58.68f; // The weight of 1 unit of water.
+
 
 // Constructor, sets default values.
 Item::Item() : m_parser_id(0), m_rarity(1), m_stack(1), m_type(ItemType::NONE), m_type_sub(ItemSub::NONE), m_value(0) { }
@@ -432,6 +434,8 @@ int Item::warmth() const { return meta_int("warmth"); }
 // The Item's weight, in pacs.
 uint32_t Item::weight(bool individual) const
 {
-    if (individual || !tag(ItemTag::Stackable)) return m_weight;
-    else return m_weight * m_stack;
+    uint32_t water_weight = 0;
+    if (m_type == ItemType::DRINK) water_weight = std::round(charge() * WATER_WEIGHT);
+    if (individual || !tag(ItemTag::Stackable)) return m_weight + water_weight;
+    else return (m_weight + water_weight) * m_stack;
 }
