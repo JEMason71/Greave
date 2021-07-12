@@ -109,6 +109,8 @@ void ActionStatus::status()
         case 13: case 14: hunger_str = "{y}You're starting to feel peckish."; break;
         default: hunger_str = "{y}You don't feel hungry right now.";
     }
+    if (player->hunger() >= 25) hunger_str = "{y}You feel extremely full and bloated.";
+    else if (player->hunger() > 20) hunger_str = "{y}You feel extremely full.";
     switch (player->thirst())
     {
         case 1: case 2: thirst_str = "{U}You are dying of dehydration!"; break;
@@ -120,7 +122,7 @@ void ActionStatus::status()
         case 13: case 14: thirst_str = "{u}You're starting to feel a little thirsty."; break;
         default: thirst_str = "{u}You don't feel thirsty right now.";
     }
-    if (player->hunger() > 14 && player->thirst() > 14) status_line = "{g}You don't feel hungry or thirsty right now.";
+    if (player->hunger() > 14 && player->hunger() < 20 && player->thirst() > 14) status_line = "{g}You don't feel hungry or thirsty right now.";
     else status_line = hunger_str + " " + thirst_str;
 
     if (player->has_buff(Buff::Type::BLEED)) status_line += " {R}You are bleeding quite badly!";

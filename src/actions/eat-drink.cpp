@@ -13,6 +13,8 @@
 #include "world/world.hpp"
 
 
+const int ActionEatDrink::VOMIT_CHANCE_BLOAT_MAJOR =        2;  // 1 in X chance of vomiting from severely over-eating.
+const int ActionEatDrink::VOMIT_CHANCE_BLOAT_MINOR =        8;  // 1 in X chance of vomiting from just over-eating a little.
 const int ActionEatDrink::VOMIT_FOOD_LOSS_MAX =             5;  // 1 to X food lost when vomiting.
 const int ActionEatDrink::VOMIT_MINIMUM_FOOD_REMAINING =    3;  // How much food to allow to remain after vomiting?
 const int ActionEatDrink::VOMIT_MINIMUM_WATER_REMAINING =   3;  // How much water to allow to remain after vomiting?
@@ -79,7 +81,7 @@ void ActionEatDrink::eat(size_t inv_pos, bool confirm)
 
     const int old_hunger = player->hunger();
     const int new_hunger = old_hunger + item->power();
-    if (new_hunger > 25 && !confirm)
+    if (new_hunger > 20 && !confirm)
     {
         core()->message("{y}You're not really hungry enough to fit all that in. Are you sure you want to force it?");
         core()->parser()->confirm_message();
@@ -102,7 +104,7 @@ void ActionEatDrink::eat(size_t inv_pos, bool confirm)
     else eat_str  += item->name(Item::NAME_FLAG_THE | Item::NAME_FLAG_NO_COUNT);
     if (old_hunger <= 12 && new_hunger > 14) eat_str += "{U}. {G}That hit the spot!";
     else if (new_hunger <= 12) eat_str += "{U}, but you're {c}still hungry{U}...";
-    else if (new_hunger > 25) eat_str += "{U}, feeling {c}extremely full and bloated{U}.";
+    else if (new_hunger >= 25) eat_str += "{U}, feeling {c}extremely full and bloated{U}.";
     else if (new_hunger > 20) eat_str += "{U}, feeling {c}extremely full{U}.";
     else eat_str += "{U}, feeling satiated.";
     core()->message(eat_str);
@@ -110,6 +112,8 @@ void ActionEatDrink::eat(size_t inv_pos, bool confirm)
     player->add_food(item->power());
     if (last_item) player->inv()->remove_item(inv_pos);
     else item->set_stack(item->stack() - 1);
+
+    if ((new_hunger >= 25 && core()->rng()->rnd(VOMIT_CHANCE_BLOAT_MAJOR) == 1) || (new_hunger > 20 && new_hunger < 25 && core()->rng()->rnd(VOMIT_CHANCE_BLOAT_MINOR) == 1)) vomit(true);
 }
 
 // Loses the contents of your stomach.
@@ -126,6 +130,7 @@ void ActionEatDrink::vomit(bool confirm)
     auto player = core()->world()->player();
     int food_loss = core()->rng()->rnd(VOMIT_FOOD_LOSS_MAX);
     int water_loss = core()->rng()->rnd(VOMIT_WATER_LOSS_MAX);
+    if (player->hunger() > 20) food_loss += player->hunger() - 20;
     if (player->hunger() - food_loss < VOMIT_MINIMUM_FOOD_REMAINING) food_loss = player->hunger() - VOMIT_MINIMUM_FOOD_REMAINING;
     if (player->thirst() - water_loss < VOMIT_MINIMUM_WATER_REMAINING) water_loss = player->thirst() - VOMIT_MINIMUM_WATER_REMAINING;
     if (food_loss > 0) player->add_food(-food_loss);

@@ -13,6 +13,8 @@ public:
     static void vomit(bool confirm);                    // Loses the contents of your stomach.
 
 private:
+    static const int    VOMIT_CHANCE_BLOAT_MAJOR;       // 1 in X chance of vomiting from severely over-eating.
+    static const int    VOMIT_CHANCE_BLOAT_MINOR;       // 1 in X chance of vomiting from just over-eating a little.
     static const int    VOMIT_FOOD_LOSS_MAX;            // 1 to X food lost when vomiting.
     static const int    VOMIT_MINIMUM_FOOD_REMAINING;   // How much food to allow to remain after vomiting?
     static const int    VOMIT_MINIMUM_WATER_REMAINING;  // How much water to allow to remain after vomiting?
