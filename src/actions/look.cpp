@@ -97,6 +97,7 @@ void ActionLook::examine_item(std::shared_ptr<Item> target)
                 default: break;
             }
             if (target->tag(ItemTag::TwoHanded)) stat_string += "It is heavy and requires {U}two hands {w}to wield. ";
+            else if (target->tag(ItemTag::HandAndAHalf)) stat_string += "It is versatile and can be wielded in {U}either one or two hands{w}. ";
             std::string damage_type_str;
             switch (target->damage_type())
             {
