@@ -8,5 +8,5 @@
 class ActionRest
 {
 public:
-    static void rest(const std::string &word, const std::vector<std::string> &words);  // Rests for a specified amount of time.
+    static void rest(const std::string &word, const std::vector<std::string> &words, bool confirm); // Rests for a specified amount of time.
 };

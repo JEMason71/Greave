@@ -111,6 +111,13 @@ void Parser::add_command(const std::string &text, ParserCommand cmd)
 // Tells the player how to confirm a command.
 void Parser::confirm_message() { core()->message("{0}{m}If you are sure you want to do this, repeat your command with a {M}! {m}at the beginning (for example, {M}!" + m_last_input + "{m})."); }
 
+// The player was interrupted trying to perform an action.
+void Parser::interrupted(const std::string &action)
+{
+    core()->message("{R}You are interrupted while attempting to " + action + "!");
+    core()->message("{0}{m}If you wish to perform this action to completion regardless of interruptions (which could result in your death), repeat your command with a {M}! {m}at the beginning (for example, {M}!" + m_last_input + "{m}).");
+}
+
 // Parses input from the player!
 void Parser::parse(std::string input)
 {
@@ -440,7 +447,7 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
         case ParserCommand::DROP:
             if (!words.size()) specify("drop");
             else if (parsed_target_type == ParserTarget::TARGET_NONE) not_carrying();
-            else if (parsed_target_type == ParserTarget::TARGET_INVENTORY) ActionInventory::drop(player, parsed_target, parsed_target_count);
+            else if (parsed_target_type == ParserTarget::TARGET_INVENTORY) ActionInventory::drop(player, parsed_target, parsed_target_count, confirm);
             break;
         case ParserCommand::EAT:
             if (!words.size()) specify("eat");
@@ -450,7 +457,7 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
         case ParserCommand::EQUIP:
             if (!words.size()) specify("equip");
             else if (parsed_target_type == ParserTarget::TARGET_NONE) not_carrying();
-            else if (parsed_target_type == ParserTarget::TARGET_INVENTORY) ActionInventory::equip(player, parsed_target);
+            else if (parsed_target_type == ParserTarget::TARGET_INVENTORY) ActionInventory::equip(player, parsed_target, confirm);
             break;
         case ParserCommand::EQUIPMENT: ActionInventory::equipment(); break;
         case ParserCommand::EXAMINE:
@@ -475,7 +482,7 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
         case ParserCommand::INVENTORY: ActionInventory::check_inventory(); break;
         case ParserCommand::LOCK: case ParserCommand::UNLOCK:
             if (parsed_direction == Direction::NONE) specify_direction(first_word);
-            else ActionDoors::lock_or_unlock(player, parsed_direction, pcd.command == ParserCommand::UNLOCK);
+            else ActionDoors::lock_or_unlock(player, parsed_direction, pcd.command == ParserCommand::UNLOCK, confirm);
             break;
         case ParserCommand::LOOK: ActionLook::look(); break;
         case ParserCommand::MIXUP:
@@ -490,7 +497,7 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             break;
         case ParserCommand::OPEN: case ParserCommand::CLOSE:
             if (parsed_direction == Direction::NONE) specify_direction(first_word);
-            else ActionDoors::open_or_close(player, parsed_direction, pcd.command == ParserCommand::OPEN);
+            else ActionDoors::open_or_close(player, parsed_direction, pcd.command == ParserCommand::OPEN, confirm);
             break;
         case ParserCommand::QUIT:
             core()->message("{R}Are you sure you want to quit? {M}Your game will not be saved. {R}Type {C}yes {R}to confirm.");
@@ -537,7 +544,7 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
         case ParserCommand::TAKE:
             if (!words.size()) core()->message("{y}Please specify {Y}what you want to take{y}.");
             else if (parsed_target_type == ParserTarget::TARGET_NONE) core()->message("{y}You don't see {Y}" + collapsed_words + "{y} here.");
-            else if (parsed_target_type == ParserTarget::TARGET_ROOM) ActionInventory::take(player, parsed_target, parsed_target_count);
+            else if (parsed_target_type == ParserTarget::TARGET_ROOM) ActionInventory::take(player, parsed_target, parsed_target_count, confirm);
             break;
         case ParserCommand::TELEPORT:
             if (!words.size()) core()->message("{y}Please specify a {Y}teleport destination{y}.");
@@ -547,10 +554,10 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
         case ParserCommand::UNEQUIP:
             if (!words.size()) core()->message("{y}Please specify {Y}what you want to unequip{y}.");
             else if (parsed_target_type == ParserTarget::TARGET_NONE) core()->message("{y}You don't seem to be wearing or wielding {Y}" + collapsed_words + "{y}.");
-            else if (parsed_target_type == ParserTarget::TARGET_EQUIPMENT) ActionInventory::unequip(player, parsed_target);
+            else if (parsed_target_type == ParserTarget::TARGET_EQUIPMENT) ActionInventory::unequip(player, parsed_target, confirm);
             break;
         case ParserCommand::VOMIT: ActionEatDrink::vomit(confirm); break;
-        case ParserCommand::WAIT: ActionRest::rest(first_word, words); break;
+        case ParserCommand::WAIT: ActionRest::rest(first_word, words, confirm); break;
         case ParserCommand::WEATHER: ActionStatus::weather(); break;
         case ParserCommand::XYZZY: core()->message("{u}A hollow voice says, {m}\"Fool.\""); break;
         case ParserCommand::YES: case ParserCommand::NO:

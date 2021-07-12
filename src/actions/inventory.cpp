@@ -4,6 +4,7 @@
 #include "actions/inventory.hpp"
 #include "core/core.hpp"
 #include "core/guru.hpp"
+#include "core/parser.hpp"
 #include "core/strx.hpp"
 #include "world/inventory.hpp"
 #include "world/item.hpp"
@@ -75,18 +76,19 @@ bool ActionInventory::count_check(std::shared_ptr<Item> item, int count)
 }
 
 // Drops an item on the ground.
-void ActionInventory::drop(std::shared_ptr<Mobile> mob, size_t item_pos, int count)
+void ActionInventory::drop(std::shared_ptr<Mobile> mob, size_t item_pos, int count, bool confirm)
 {
     const std::shared_ptr<Item> item = mob->inv()->get(item_pos);
     const std::shared_ptr<Room> room = core()->world()->get_room(mob->location());
     const bool stackable = item->tag(ItemTag::Stackable);
     if (!count_check(item, count)) return;
 
-    if (!mob->pass_time(TIME_DROP_ITEM))
+    if (!mob->pass_time(TIME_DROP_ITEM, !confirm))
     {
-        core()->message("{R}You are interrupted while attempting to drop " + item->name() + "{R}!");
+        core()->parser()->interrupted("drop " + item->name());
         return;
     }
+    if (mob->is_dead()) return;
 
     const bool drop_all = (!stackable) || (count == -1 || count == static_cast<int>(item->stack()));
     if (drop_all)
@@ -104,7 +106,7 @@ void ActionInventory::drop(std::shared_ptr<Mobile> mob, size_t item_pos, int cou
 }
 
 // Wields or wears an equippable item.
-bool ActionInventory::equip(std::shared_ptr<Mobile> mob, size_t item_pos)
+bool ActionInventory::equip(std::shared_ptr<Mobile> mob, size_t item_pos, bool confirm)
 {
     const auto inv = mob->inv();
     const auto equ = mob->equ();
@@ -124,7 +126,7 @@ bool ActionInventory::equip(std::shared_ptr<Mobile> mob, size_t item_pos)
         if (two_handed_item)
         {
             // If anything fails on unequipping, just bow out here.
-            if ((main_used && !unequip(mob, EquipSlot::HAND_MAIN)) || (off_used && !unequip(mob, EquipSlot::HAND_OFF))) return false;
+            if ((main_used && !unequip(mob, EquipSlot::HAND_MAIN, confirm)) || (off_used && !unequip(mob, EquipSlot::HAND_OFF, confirm))) return false;
             slot = EquipSlot::HAND_MAIN;
         }
         // Normal one-handed equipping.
@@ -137,10 +139,10 @@ bool ActionInventory::equip(std::shared_ptr<Mobile> mob, size_t item_pos)
             else if (!two_handed_equipped && !off_used) slot = EquipSlot::HAND_OFF;
 
             // Okay, both hands are used. First, try to unequip the main hand.
-            else if (unequip(mob, EquipSlot::HAND_MAIN)) slot = EquipSlot::HAND_MAIN;
+            else if (unequip(mob, EquipSlot::HAND_MAIN, confirm)) slot = EquipSlot::HAND_MAIN;
 
             // No luck? Okay, try to unequip the off-hand, if we're not using a two-hander.
-            else if (!two_handed_equipped && unequip(mob, EquipSlot::HAND_OFF)) slot = EquipSlot::HAND_OFF;
+            else if (!two_handed_equipped && unequip(mob, EquipSlot::HAND_OFF, confirm)) slot = EquipSlot::HAND_OFF;
 
             // Just give up if we can't even do that.
             else return false;
@@ -150,8 +152,8 @@ bool ActionInventory::equip(std::shared_ptr<Mobile> mob, size_t item_pos)
         {
             if (!two_handed_equipped && !off_used) slot = EquipSlot::HAND_OFF;
             else if (!main_used && !off_hand_only) slot = EquipSlot::HAND_MAIN;
-            else if (!two_handed_equipped && unequip(mob, EquipSlot::HAND_OFF)) slot = EquipSlot::HAND_OFF;
-            else if (!off_hand_only && unequip(mob, EquipSlot::HAND_MAIN)) slot = EquipSlot::HAND_MAIN;
+            else if (!two_handed_equipped && unequip(mob, EquipSlot::HAND_OFF, confirm)) slot = EquipSlot::HAND_OFF;
+            else if (!off_hand_only && unequip(mob, EquipSlot::HAND_MAIN, confirm)) slot = EquipSlot::HAND_MAIN;
             else return false;
         }
 
@@ -168,11 +170,11 @@ bool ActionInventory::equip(std::shared_ptr<Mobile> mob, size_t item_pos)
             return false;
         }
         // For NPCs, just unequip the outer armour first.
-        if (!unequip(mob, EquipSlot::ARMOUR)) return false;
+        if (!unequip(mob, EquipSlot::ARMOUR, confirm)) return false;
     }
 
     // Attempt to unequip the item currently using the slot. If it's not possible (cursed?), just stop here.
-    if (equ->get(slot) != nullptr && !unequip(mob, slot)) return false;
+    if (equ->get(slot) != nullptr && !unequip(mob, slot, confirm)) return false;
 
     std::string action = "wear", slot_name;
     float time_taken = 0;
@@ -219,12 +221,12 @@ bool ActionInventory::equip(std::shared_ptr<Mobile> mob, size_t item_pos)
     // todo: messages for NPCs equipping gear
     StrX::find_and_replace(slot_name, "%your%", "your");
 
-    const bool success = mob->pass_time(time_taken);
-    if (!success)
+    if (!mob->pass_time(time_taken, !confirm))
     {
-        core()->message("{R}You are interrupted while attempting to " + action + " the " + item->name() + "{R}!");
+        core()->parser()->interrupted(action + " the " + item->name());
         return false;
     }
+    if (mob->is_dead()) return false;
     core()->message("{U}You " + action + " the " + item->name() + " {U}" + slot_name + ".");
 
     const auto room = core()->world()->get_room(mob->location());
@@ -277,7 +279,7 @@ void ActionInventory::equipment()
 }
 
 // Takes an item from the ground.
-void ActionInventory::take(std::shared_ptr<Mobile> mob, size_t item_pos, int count)
+void ActionInventory::take(std::shared_ptr<Mobile> mob, size_t item_pos, int count, bool confirm)
 {
     const std::shared_ptr<Room> room = core()->world()->get_room(mob->location());
     const std::shared_ptr<Item> item = room->inv()->get(item_pos);
@@ -296,11 +298,12 @@ void ActionInventory::take(std::shared_ptr<Mobile> mob, size_t item_pos, int cou
         return;
     }
 
-    if (!mob->pass_time(TIME_GET_ITEM))
+    if (!mob->pass_time(TIME_GET_ITEM, !confirm))
     {
-        core()->message("{R}You are interrupted while trying to pick up " + item->stack_name(count, Item::NAME_FLAG_THE) + "{R}!");
+        core()->parser()->interrupted("pick up " + item->stack_name(count, Item::NAME_FLAG_THE));
         return;
     }
+    if (mob->is_dead()) return;
 
     const bool get_all = (!stackable) || (count == -1 || count == static_cast<int>(item->stack()));
     if (get_all)
@@ -318,7 +321,7 @@ void ActionInventory::take(std::shared_ptr<Mobile> mob, size_t item_pos, int cou
 }
 
 // Unequips a worn or wielded item.
-bool ActionInventory::unequip(std::shared_ptr<Mobile> mob, size_t item_pos)
+bool ActionInventory::unequip(std::shared_ptr<Mobile> mob, size_t item_pos, bool confirm)
 {
     const auto equ = mob->equ();
     const auto inv = mob->inv();
@@ -334,7 +337,7 @@ bool ActionInventory::unequip(std::shared_ptr<Mobile> mob, size_t item_pos)
             return false;
         }
         // For NPCs, just unequip the outer armour first.
-        if (!unequip(mob, EquipSlot::ARMOUR)) return false;
+        if (!unequip(mob, EquipSlot::ARMOUR, confirm)) return false;
     }
 
     // todo: add message for NPCs unequipping items
@@ -353,12 +356,12 @@ bool ActionInventory::unequip(std::shared_ptr<Mobile> mob, size_t item_pos)
         case EquipSlot::HEAD: time_taken = TIME_UNEQUIP_HEAD; break;
     }
     if (!time_taken) core()->guru()->nonfatal("Could not determine unequip time for " + item->name(), Guru::ERROR);
-    const bool success = mob->pass_time(time_taken);
-    if (!success)
+    if (!mob->pass_time(time_taken, !confirm))
     {
-        core()->message("{R}You are interrupted while attempting to " + action + " the " + item->name() + "{R}!");
+        core()->parser()->interrupted(action + " the " + item->name());
         return false;
     }
+    if (mob->is_dead()) return false;
 
     core()->message("{U}You " + action + " your " + item->name() + "{U}.");
     equ->remove_item(item_pos);
@@ -367,11 +370,11 @@ bool ActionInventory::unequip(std::shared_ptr<Mobile> mob, size_t item_pos)
 }
 
 // As above, but specifying an EquipSlot.
-bool ActionInventory::unequip(std::shared_ptr<Mobile> mob, EquipSlot slot)
+bool ActionInventory::unequip(std::shared_ptr<Mobile> mob, EquipSlot slot, bool confirm)
 {
     const auto inv = mob->equ();
     for (size_t i = 0; i < inv->count(); i++)
-        if (inv->get(i)->equip_slot() == slot) return unequip(mob, i);
+        if (inv->get(i)->equip_slot() == slot) return unequip(mob, i, confirm);
     return false;
 }
 

@@ -49,11 +49,12 @@ void ActionEatDrink::drink(size_t inv_pos, bool confirm)
         return;
     }
 
-    if (!player->pass_time(item->speed()))
+    if (!player->pass_time(item->speed(), !confirm))
     {
-        core()->message("{r}You are interrupted while trying to drink!");
+        core()->parser()->interrupted("drink");
         return;
     }
+    if (player->is_dead()) return;
 
     std::string water_str;
     if (liquid_consumed == liquid_available) water_str = "{U}You drink the last of the ";
@@ -89,11 +90,12 @@ void ActionEatDrink::eat(size_t inv_pos, bool confirm)
         return;
     }
 
-    if (!player->pass_time(item->speed()))
+    if (!player->pass_time(item->speed(), !confirm))
     {
-        core()->message("{r}You are interrupted while trying to eat!");
+        core()->parser()->interrupted("eat");
         return;
     }
+    if (player->is_dead()) return;
 
     const bool last_item = (!item->tag(ItemTag::Stackable) || item->stack() == 1);
     std::string eat_str;

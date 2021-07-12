@@ -11,7 +11,7 @@
 
 
 // Rests for a specified amount of time.
-void ActionRest::rest(const std::string&, const std::vector<std::string> &words)
+void ActionRest::rest(const std::string&, const std::vector<std::string> &words, bool confirm)
 {
     int time_rest = TimeWeather::MINUTE * 10;
     if (words.size())
@@ -36,7 +36,7 @@ void ActionRest::rest(const std::string&, const std::vector<std::string> &words)
     if (time_rest > TimeWeather::HOUR * 24) time_rest = TimeWeather::HOUR * 24;
     core()->message("{u}Time passes....");
     core()->world()->player()->set_tag(MobileTag::Resting);
-    const bool uninterrupted = core()->world()->player()->pass_time(time_rest);
+    const bool uninterrupted = core()->world()->player()->pass_time(time_rest, !confirm);
     core()->world()->player()->clear_tag(MobileTag::Resting);
     if (!uninterrupted) core()->message("{c}You awaken with a start!");
 }

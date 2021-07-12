@@ -70,7 +70,7 @@ bool ActionTravel::travel(std::shared_ptr<Mobile> mob, Direction dir, bool confi
     if (room->link_tag(dir, LinkTag::Openable) && !room->link_tag(dir, LinkTag::Open))
     {
         if (is_player) core()->message("{0}{m}(first opening the " + room->door_name(dir) + ")");
-        const bool opened = ActionDoors::open_or_close(mob, dir, true);
+        const bool opened = ActionDoors::open_or_close(mob, dir, true, confirm);
         if (!opened) return false;
     }
 
@@ -87,12 +87,12 @@ bool ActionTravel::travel(std::shared_ptr<Mobile> mob, Direction dir, bool confi
     float travel_time = TRAVEL_TIME_NORMAL;
     if (room->link_tag(dir, LinkTag::DoubleLength)) travel_time = TRAVEL_TIME_DOUBLE;
     else if (room->link_tag(dir, LinkTag::TripleLength)) travel_time = TRAVEL_TIME_TRIPLE;
-    const bool success = mob->pass_time(travel_time);
-    if (!success)
+    if (!mob->pass_time(travel_time, !confirm))
     {
-        core()->message("{R}You are interrupted before you are able to leave!");
+        core()->parser()->interrupted("leave");
         return false;
     }
+    if (mob->is_dead()) return false;
 
     const bool player_can_see = room->light();
     const std::string mob_name_the = (player_can_see ? mob->name(Mobile::NAME_FLAG_THE | Mobile::NAME_FLAG_CAPITALIZE_FIRST) : "Something");

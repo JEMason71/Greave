@@ -5,6 +5,7 @@
 #include "core/core.hpp"
 #include "core/guru.hpp"
 #include "core/mathx.hpp"
+#include "core/parser.hpp"
 #include "core/strx.hpp"
 #include "world/inventory.hpp"
 #include "world/item.hpp"
@@ -20,7 +21,7 @@ const float ActionDoors::TIME_UNLOCK_DOOR = 10.0f;  // The time taken (in second
 
 
 // Attempts to lock or unlock a door, with optional messages.
-bool ActionDoors::lock_or_unlock(std::shared_ptr<Mobile> mob, Direction dir, bool unlock, bool silent_fail)
+bool ActionDoors::lock_or_unlock(std::shared_ptr<Mobile> mob, Direction dir, bool unlock, bool confirm, bool silent_fail)
 {
     if (mob->tag(MobileTag::CannotOpenDoors))
     {
@@ -89,15 +90,16 @@ bool ActionDoors::lock_or_unlock(std::shared_ptr<Mobile> mob, Direction dir, boo
     if (!unlock && room->link_tag(dir, LinkTag::Open))
     {
         if (is_player) core()->message("{0}{m}(first closing the " + door_name + ")");
-        if (!open_or_close(mob, dir, false)) return false;
+        if (!open_or_close(mob, dir, false, confirm)) return false;
     }
 
     const float time_taken = (unlock ? TIME_UNLOCK_DOOR : TIME_LOCK_DOOR);
-    if (!mob->pass_time(time_taken))
+    if (!mob->pass_time(time_taken, !confirm))
     {
-        core()->message("{R}You are interrupted while attempting to " + lock_unlock_str + " the " + door_name + "!");
+        core()->parser()->interrupted(lock_unlock_str + " the " + door_name);
         return false;
     }
+    if (mob->is_dead()) return false;
 
     if (is_player) core()->message("{u}You {U}" + lock_unlock_str + " {u}the " + door_name + " " + StrX::dir_to_name(dir, StrX::DirNameType::TO_THE) + " with your {U}" +
         correct_key->name() + "{u}.");
@@ -140,7 +142,7 @@ bool ActionDoors::lock_or_unlock(std::shared_ptr<Mobile> mob, Direction dir, boo
 }
 
 // Attempts to open or close a door, window, or other openable portal.
-bool ActionDoors::open_or_close(std::shared_ptr<Mobile> mob, Direction dir, bool open)
+bool ActionDoors::open_or_close(std::shared_ptr<Mobile> mob, Direction dir, bool open, bool confirm)
 {
     if (mob->tag(MobileTag::CannotOpenDoors))
     {
@@ -176,7 +178,7 @@ bool ActionDoors::open_or_close(std::shared_ptr<Mobile> mob, Direction dir, bool
 
     if (open && room->link_tag(dir, LinkTag::Locked))
     {
-        bool unlock_attempt = lock_or_unlock(mob, dir, true, true);
+        bool unlock_attempt = lock_or_unlock(mob, dir, true, true, true);
         if (!unlock_attempt)
         {
             if (is_player)
@@ -197,11 +199,12 @@ bool ActionDoors::open_or_close(std::shared_ptr<Mobile> mob, Direction dir, bool
     const std::string door_name = room->door_name(dir);
 
     const float time_taken = (open ? TIME_OPEN_DOOR : TIME_CLOSE_DOOR);
-    if (!mob->pass_time(time_taken))
+    if (!mob->pass_time(time_taken, !confirm))
     {
-        core()->message("{R}You are interrupted while trying to " + open_close_str + " the " + door_name + "!");
+        core()->parser()->interrupted(open_close_str + " the " + door_name);
         return false;
     }
+    if (mob->is_dead()) return false;
 
     if (is_player) core()->message("{u}You {U}" + open_close_str + " {u}the " + door_name + " " + StrX::dir_to_name(dir, StrX::DirNameType::TO_THE) + ".");
     else if (player_loc == mob_loc && !player_is_resting)

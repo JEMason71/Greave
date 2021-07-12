@@ -12,10 +12,11 @@ enum ParserTarget : uint8_t { TARGET_NONE = 0, TARGET_EQUIPMENT = 1, TARGET_INVE
 class Parser
 {
 public:
-            Parser();                           // Constructor, sets up the parser.
-    void    confirm_message();                  // Tells the player how to confirm a command.
-    void    parse(std::string input);           // Parses input from the player!
-    int32_t parse_int(const std::string &s);    // Wrapper function to check for out of range values.
+            Parser();                               // Constructor, sets up the parser.
+    void    confirm_message();                      // Tells the player how to confirm a command.
+    void    interrupted(const std::string &action); // The player was interrupted trying to perform an action.
+    void    parse(std::string input);               // Parses input from the player!
+    int32_t parse_int(const std::string &s);        // Wrapper function to check for out of range values.
 
 private:
     enum class ParserCommand : uint16_t { NONE, ADD_MONEY, ATTACK, CLOSE, DIRECTION, DRINK, DROP, EAT, EQUIP, EQUIPMENT, EXAMINE, EXITS, GO, HASH, HELP, INVENTORY, LOCK, LOOK, MIXUP, MIXUP_BIG, NO, OPEN, SAVE, SCORE, SKILLS, SPAWN_ITEM, SPAWN_MOBILE, STANCE, STATUS, SWEAR, TAKE, TELEPORT, TIME, UNEQUIP, UNLOCK, VOMIT, WAIT, WEATHER, XYZZY, YES, QUIT };
