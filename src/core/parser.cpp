@@ -26,6 +26,7 @@
 // Constructor, sets up the parser.
 Parser::Parser() : m_special_state(SpecialState::NONE)
 {
+    add_command("! <txt>", ParserCommand::EXCLAIM);
     add_command("[attack|kill|k] <mobile>", ParserCommand::ATTACK);
     add_command("close <dir>", ParserCommand::CLOSE);
     add_command("drink <item:i>", ParserCommand::DRINK);
@@ -115,7 +116,7 @@ void Parser::confirm_message() { core()->message("{0}{m}If you are sure you want
 void Parser::interrupted(const std::string &action)
 {
     core()->message("{R}You are interrupted while attempting to " + action + "!");
-    core()->message("{0}{m}If you wish to perform this action to completion regardless of interruptions (which could result in your death), repeat your command with a {M}! {m}at the beginning (for example, {M}!" + m_last_input + "{m}).");
+    core()->message("{0}{m}If you wish to perform this action to completion regardless of interruptions (which could result in your death), repeat your command with an exclamation mark ({M}!{m}) at the beginning (for example, {M}!" + m_last_input + "{m}).");
 }
 
 // Parses input from the player!
@@ -465,6 +466,7 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             else if (parsed_target_type == ParserTarget::TARGET_NONE) not_here();
             else if (parsed_target_type != ParserTarget::TARGET_UNCLEAR) ActionLook::examine(parsed_target_type, parsed_target);
             break;
+        case ParserCommand::EXCLAIM: core()->message("{m}Please type your command {M}without any spaces {m}between the exclamation mark and the rest of the command (for example, {M}!" + StrX::collapse_vector(words) + "{m})."); break;
         case ParserCommand::EXITS: ActionLook::obvious_exits(false); break;
         case ParserCommand::GO:
             if (parsed_direction == Direction::NONE) specify_direction("travel");
