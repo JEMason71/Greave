@@ -1,6 +1,20 @@
 # data/items/weapons/bows.yml -- Bows and crossbows, ranged weapons.
 # Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
+CROSSBOW:
+  bleed: 10
+  crit: 5
+  damage_type: ballistic
+  desc: This heavy and unwieldy ranged weapon can propel iron bolts with enough force to pierce the thickest armour.
+  name: crossbow
+  power: 38
+  rare: 4
+  slot: held
+  speed: 2.0
+  tags: [ AmmoBolt, TwoHanded ]
+  type: [ weapon, ranged ]
+  value: 4g 70s
+  weight: 1900
 
 LONGBOW:
   bleed: 20
@@ -16,3 +30,18 @@ LONGBOW:
   type: [ weapon, ranged ]
   value: 1g 70s
   weight: 230
+
+SHORTBOW:
+  bleed: 20
+  crit: 15
+  damage_type: ballistic
+  desc: This simple, curved wooden bow is an elegant design.
+  name: shortbow
+  power: 25
+  rare: 3
+  slot: held
+  speed: 1.6
+  tags: [ AmmoArrow, TwoHanded ]
+  type: [ weapon, ranged ]
+  value: 1g 70s
+  weight: 180

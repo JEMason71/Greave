@@ -1,0 +1,44 @@
+# data/items/weapons/daggers.yml -- Any kinds of daggers, dirks, knives or shivs.
+# Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+
+DAGGER:
+  bleed: 10
+  crit: 50
+  damage_type: piercing
+  desc: A simple yet effective weapon, this lightweight dagger has a long, narrow blade.
+  name: dagger
+  power: 5
+  rare: 2
+  slot: held
+  speed: 0.7
+  type: [ weapon, melee ]
+  value: 18s
+  weight: 90
+
+DIRK:
+  bleed: 10
+  crit: 40
+  damage_type: piercing
+  desc: With a long and somewhat wide blade, this weapon resembles a half-way point between a dagger and shortsword.
+  name: dirk
+  power: 6
+  rare: 3
+  slot: held
+  speed: 0.7
+  type: [ weapon, melee ]
+  value: 25s
+  weight: 100
+
+STILETTO:
+  bleed: 5
+  crit: 60
+  damage_type: piercing
+  desc: An extremely thin, long dagger intended for stabbing.
+  name: stiletto
+  power: 5
+  rare: 2
+  slot: held
+  speed: 0.7
+  type: [ weapon, melee ]
+  value: 10s
+  weight: 30

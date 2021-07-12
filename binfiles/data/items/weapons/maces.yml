@@ -1,6 +1,18 @@
 # data/items/weapons/maces.yml -- Maces, clubs, mauls, and other heavy, blunt crushing weapons.
 # Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
+BLACKJACK:
+  damage_type: crushing
+  desc: A heavy lead weight attached to a wooden handle is wrapped tightly in leather bindings.
+  name: blackjack
+  power: 16
+  rare: 2
+  slot: held
+  speed: 1.2
+  type: [ weapon, melee ]
+  value: 30s
+  weight: 140
+
 CLUB_HEAVY:
   crit: 5
   damage_type: crushing
@@ -48,10 +60,25 @@ MAUL:
   desc: An uncomplicated weapon for uncomplicated slaughter, a long wooden haft is topped with a massive blunt iron head.
   name: maul
   power: 31
-  rare: 2
+  rare: 3
   slot: held
   speed: 1.6
   tags: [ TwoHanded ]
   type: [ weapon, melee ]
   value: 90s
   weight: 960
+
+MORNINGSTAR:
+  bleed: 10
+  crit: 5
+  damage_type: kinetic
+  desc: Simple in design yet brutal in execution, a leather-wrapped metal haft is topped with a heavy metal ball covered in sharp spikes.
+  name: morningstar
+  power: 15
+  rare: 3
+  slot: held
+  speed: 1.3
+  tags: [ HandAndAHalf ]
+  type: [ weapon, melee ]
+  value: 70s
+  weight: 440

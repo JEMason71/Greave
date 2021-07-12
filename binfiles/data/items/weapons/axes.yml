@@ -1,0 +1,46 @@
+# data/items/weapons/axes.yml -- Axes, both one- and two-handed.
+# Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+
+GREATAXE:
+  bleed: 15
+  crit: 10
+  damage_type: edged
+  desc: A heavy axe built for war, with a long wooden haft and a double-headed blade.
+  name: greataxe
+  power: 29
+  rare: 3
+  slot: held
+  speed: 1.4
+  tags: [ TwoHanded ]
+  type: [ weapon, melee ]
+  value: 2g 70s
+  weight: 660
+
+HAND_AXE:
+  bleed: 15
+  crit: 10
+  damage_type: edged
+  desc: A simple, sharp iron axe blade mounted on a sturdy wooden haft.
+  name: hand axe
+  power: 11
+  rare: 3
+  slot: held
+  speed: 1.1
+  type: [ weapon, melee ]
+  value: 50s
+  weight: 200
+
+WAR_AXE:
+  bleed: 15
+  crit: 5
+  damage_type: edged
+  desc: A simple yet razor-sharp, curved axe head mounted on the end of a sturdy wooden haft.
+  name: war axe
+  power: 12
+  rare: 3
+  slot: held
+  speed: 1.1
+  tags: [ HandAndAHalf ]
+  type: [ weapon, melee ]
+  value: 80s
+  weight: 440

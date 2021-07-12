@@ -1,0 +1,118 @@
+# data/items/weapons/swords.yml -- Swords, scimitars, rapiers, and anything other sword-like weapons belong here.
+# Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+
+GREATSWORD:
+  bleed: 10
+  crit: 20
+  damage_type: edged
+  desc: This heavy blade requires both hands to wield effectively.
+  name: greatsword
+  power: 21
+  rare: 3
+  slot: held
+  speed: 1.3
+  tags: [ TwoHanded ]
+  type: [ weapon, melee ]
+  value: 4g 80s
+  weight: 650
+
+KATANA:
+  bleed: 10
+  crit: 30
+  damage_type: edged
+  desc: A long, narrow curved blade with a hilt long enough to hold in one or both hands.
+  name: katana
+  power: 9
+  rare: 4
+  slot: held
+  speed: 1.0
+  tags: [ HandAndAHalf ]
+  type: [ weapon, melee ]
+  value: 1g 60s
+  weight: 250
+
+KNIGHTLY_SWORD:
+  bleed: 10
+  crit: 10
+  damage_type: edged
+  desc: A simple, straight steel blade about three feet long, double-edged with a cruciform hilt.
+  name: knightly sword
+  power: 12
+  rare: 3
+  slot: held
+  speed: 1.0
+  type: [ weapon, melee ]
+  value: 1g 10s
+  weight: 240
+
+LONGSWORD:
+  bleed: 10
+  crit: 20
+  damage_type: edged
+  desc: Sometimes known as a bastard sword or a hand-and-a-half sword, this versatile blade can be wielded in either one or both hands.
+  name: longsword
+  power: 10
+  rare: 3
+  slot: held
+  speed: 1.0
+  tags: [ HandAndAHalf ]
+  type: [ weapon, melee ]
+  value: 1g 40s
+  weight: 350
+
+ODACHI:
+  bleed: 10
+  crit: 30
+  damage_type: edged
+  desc: This long, curved blade resembles a larger, heavier katana, forged from strong steel.
+  name: odachi
+  power: 19
+  rare: 4
+  slot: held
+  speed: 1.3
+  tags: [ TwoHanded ]
+  type: [ weapon, melee ]
+  value: 3g
+  weight: 620
+
+RAPIER:
+  bleed: 10
+  crit: 35
+  damage_type: piercing
+  desc: This long, narrow blade is sharply-tipped, designed for thrusting rather than slashing.
+  name: rapier
+  power: 8
+  rare: 3
+  slot: held
+  speed: 0.9
+  type: [ weapon, melee ]
+  value: 1g 50s
+  weight: 220
+
+SCIMITAR:
+  bleed: 10
+  crit:  15
+  damage_type: edged
+  desc: A wickedly sharp, curved blade, slightly wider than a shortsword.
+  name: scimitar
+  power: 12
+  rare: 3
+  slot: held
+  speed: 1.1
+  type: [ weapon, melee ]
+  value: 1g 50s
+  weight: 210
+
+SHORTSWORD:
+  bleed: 10
+  crit: 25
+  damage_type: edged
+  desc: Lightweight and versatile, this blade can be easily and comfortably wielded in one hand.
+  name: shortsword
+  power: 10
+  rare: 3
+  slot: held
+  speed: 1.0
+  type: [ weapon, melee ]
+  value: 1g
+  weight: 180

@@ -1,0 +1,59 @@
+# data/items/weapons/misc.yml -- Unusual weapon types that don't fit into another category.
+# Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+
+CESTUS:
+  crit: 50
+  damage_type: kinetic
+  desc: A sort of flat leather half-glove that covers the back of the hand, adorned in metal studs.
+  name: leather cestus
+  power: 9
+  rare: 3
+  slot: held
+  speed: 1.0
+  type: [ weapon, melee ]
+  value: 70s
+  weight: 90
+
+QUARTERSTAFF:
+  crit: 10
+  damage_type: kinetic
+  desc: A simple smooth, long wooden staff.
+  name: quarterstaff
+  power: 15
+  rare: 2
+  slot: held
+  speed: 1.2
+  tags: [ HandAndAHalf ]
+  type: [ weapon, melee ]
+  value: 5s
+  weight: 320
+
+SCYTHE:
+  bleed: 20
+  crit: 25
+  damage_type: edged
+  desc: This well-balanced scythe has a wicked, razor-sharp edge.
+  name: war scythe
+  power: 21
+  rare: 4
+  slot: held
+  speed: 1.5
+  tags: [ TwoHanded ]
+  type: [ weapon, melee ]
+  value: 3g 50s
+  weight: 360
+
+SPEAR:
+  bleed: 15
+  crit: 30
+  damage_type: piercing
+  desc: A simple, smooth wooden shaft topped with a narrow, long iron blade.
+  name: spear
+  power: 12
+  rare: 2
+  slot: held
+  speed: 1.4
+  tags: [ HandAndAHalf ]
+  type: [ weapon, melee ]
+  value: 20s
+  weight: 290
