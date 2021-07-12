@@ -8,5 +8,6 @@
 class ActionEatDrink
 {
 public:
-    static void eat(size_t inv_pos, bool confirm);  // Eats a specified inventory item.
+    static void drink(size_t inv_pos, bool confirm);    // Drinks a specified inventory item.
+    static void eat(size_t inv_pos, bool confirm);      // Eats a specified inventory item.
 };

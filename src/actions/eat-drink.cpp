@@ -11,6 +11,52 @@
 #include "world/world.hpp"
 
 
+// Drinks a specified inventory item.
+void ActionEatDrink::drink(size_t inv_pos, bool confirm)
+{
+    const auto player = core()->world()->player();
+    const auto item = player->inv()->get(inv_pos);
+    const int liquid_available = item->charge();
+    if (item->type() != ItemType::DRINK)
+    {
+        core()->message("{u}That isn't something you can drink!");
+        return;
+    }
+    if (!liquid_available)
+    {
+        core()->message("{u}Your " + item->name(Item::NAME_FLAG_NO_COUNT) + " {u}is empty!");
+        return;
+    }
+
+    const int thirst = player->thirst();
+    const int water_space_left_in_body = std::max(1, 20 - thirst);
+    const int liquid_consumed = std::min(water_space_left_in_body, liquid_available);
+    if (thirst >= 20 && !confirm)
+    {
+        core()->message("{u}But you're not at all thirsty! Are you sure you want to drink anyway?");
+        core()->parser()->confirm_message();
+        return;
+    }
+
+    if (!player->pass_time(item->speed()))
+    {
+        core()->message("{r}You are interrupted while trying to drink!");
+        return;
+    }
+
+    std::string water_str;
+    if (liquid_consumed == liquid_available) water_str = "{U}You drink the last of the ";
+    else water_str = "{U}You drink some ";
+    water_str += "{C}" + item->liquid_type() + " {U}from your " + item->name(Item::NAME_FLAG_NO_COUNT) + "{U}";
+    if (thirst + liquid_consumed <= 14) water_str += ", but you're still thirsty...";
+    else if (thirst <= 14 && thirst + liquid_consumed > 14) water_str += ", quenching your thirst.";
+    else water_str += ".";
+    core()->message(water_str);
+    player->add_water(liquid_consumed);
+    item->set_charge(liquid_available - liquid_consumed);
+    if (liquid_consumed == liquid_available) item->set_liquid("");
+}
+
 // Eats a specified inventory item.
 void ActionEatDrink::eat(size_t inv_pos, bool confirm)
 {

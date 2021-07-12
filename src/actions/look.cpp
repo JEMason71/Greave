@@ -80,6 +80,22 @@ void ActionLook::examine_item(std::shared_ptr<Item> target)
             stat_string += "{w}. ";
             break;
         }
+        case ItemType::DRINK:
+        {
+            switch (target->subtype())
+            {
+                case ItemSub::WATER_CONTAINER: stat_string = "This is a {U}water container{w}. "; break;
+                default: break;
+            }
+            const int capacity = target->capacity(), charge = target->charge();
+            stat_string += "It has a capacity of {U}" + std::to_string(capacity) + (capacity > 1 ? " units" : " unit") + "{w}";
+            if (charge)
+            {
+                stat_string += ", and currently holds {U}" + std::to_string(charge) + (charge > 1 ? " units of " : " unit of ") + target->liquid_type() + "{w}, and will take {U}" + StrX::time_string_rough(target->speed()) + " {w}to drink. ";
+            }
+            else stat_string += ", and is currently {U}empty{w}. ";
+            break;
+        }
         case ItemType::FOOD:
         {
             stat_string = "This is something you can {U}consume{w}. ";
@@ -87,13 +103,9 @@ void ActionLook::examine_item(std::shared_ptr<Item> target)
             break;
         }
         case ItemType::KEY: stat_string = "This is a {U}key {w}which can unlock certain doors. "; break;
-        case ItemType::LIGHT:
-            stat_string = "This is a {U}light source {w}which can be held. It provides a brightness level of {Y}" + std::to_string(target->power()) + "{w} when used. ";
-            break;
+        case ItemType::LIGHT: stat_string = "This is a {U}light source {w}which can be held. It provides a brightness level of {Y}" + std::to_string(target->power()) + "{w} when used. "; break;
         case ItemType::NONE: break;
-        case ItemType::SHIELD:
-            stat_string = "This is a {U}shield {w}which can be wielded. It has an armour value of {U}" + std::to_string(target->power()) + "{w}. ";
-            break;
+        case ItemType::SHIELD: stat_string = "This is a {U}shield {w}which can be wielded. It has an armour value of {U}" + std::to_string(target->power()) + "{w}. "; break;
         case ItemType::WEAPON:
         {
             switch (target->subtype())

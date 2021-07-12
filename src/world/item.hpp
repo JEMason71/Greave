@@ -14,13 +14,14 @@ enum class DamageType : int8_t { ACID, BALLISTIC, CRUSHING, EDGED, ENERGY, EXPLO
 enum class EquipSlot : uint8_t { NONE, HAND_MAIN, HAND_OFF, BODY, ARMOUR, ABOUT_BODY, HEAD, HANDS, FEET, _END };
 
 // ItemType is the primary type of Item (e.g. weapon, food, etc.)
-enum class ItemType : uint16_t { NONE, AMMO, ARMOUR, FOOD, KEY, LIGHT, SHIELD, WEAPON };
+enum class ItemType : uint16_t { NONE, AMMO, ARMOUR, DRINK, FOOD, KEY, LIGHT, SHIELD, WEAPON };
 
 // ItemSub is for sub-types of items, e.g. a tool could sub-classify itself here.
 enum class ItemSub : uint16_t { NONE,
-    ARROW, BOLT,                    // Ammo subtypes.
-    CLOTHING, HEAVY, LIGHT, MEDIUM, // Armour subtypes.
-    MELEE, RANGED, UNARMED,         // Weapon subtypes.
+    ARROW, BOLT,                    // AMMO subtypes.
+    CLOTHING, HEAVY, LIGHT, MEDIUM, // ARMOUR subtypes.
+    WATER_CONTAINER,                // DRINK subtypes.
+    MELEE, RANGED, UNARMED,         // WEAPON subtypes.
     };
 
 enum class ItemTag : uint16_t { _None = 0,  // Do not use this tag, it's just a marker to start the tags below counting from 1.
@@ -46,9 +47,7 @@ enum class ItemTag : uint16_t { _None = 0,  // Do not use this tag, it's just a 
 class Item
 {
 public:
-                        // Flags for the name() function.
-    static const int    NAME_FLAG_A, NAME_FLAG_CAPITALIZE_FIRST, NAME_FLAG_CORE_STATS, NAME_FLAG_ID, NAME_FLAG_FULL_STATS, NAME_FLAG_NO_COLOUR, NAME_FLAG_NO_COUNT, NAME_FLAG_PLURAL,
-        NAME_FLAG_RARE, NAME_FLAG_THE;
+    static const int    NAME_FLAG_A, NAME_FLAG_CAPITALIZE_FIRST, NAME_FLAG_CORE_STATS, NAME_FLAG_ID, NAME_FLAG_FULL_STATS, NAME_FLAG_NO_COLOUR, NAME_FLAG_NO_COUNT, NAME_FLAG_PLURAL, NAME_FLAG_RARE, NAME_FLAG_THE;    // Flags for the name() function.
     static const std::string    SQL_ITEMS;  // The SQL table construction string for saving items.
 
                 Item();                                     // Constructor, sets default values.
@@ -56,6 +55,8 @@ public:
     float       armour(int bonus_power = 0) const;          // Returns the armour damage reduction value of this Item, if any.
     int         bleed() const;                              // Returns thie bleed chance of this Item, if any.
     int         block_mod() const;                          // Returns the block modifier% for this Item, if any.
+    int         capacity() const;                           // Returns this Item's capacity, if any.
+    int         charge() const;                             // Returns this Item's charge, if any.
     void        clear_meta(const std::string &key);         // Clears a metatag from an Item. Use with caution!
     void        clear_tag(ItemTag the_tag);                 // Clears a tag on this Item.
     int         crit() const;                               // Retrieves this Item's critical power, if any.
@@ -65,6 +66,7 @@ public:
     int         dodge_mod() const;                          // Returns the dodge modifier% for this Item, if any.
     EquipSlot   equip_slot() const;                         // Checks what slot this Item equips in, if any.
     bool        is_identical(std::shared_ptr<Item> item) const; // Checks if this Item is identical to another (except stack size).
+    std::string liquid_type() const;                        // Returns the liquid type contained in this Item, if any.
     static std::shared_ptr<Item> load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id);  // Loads a new Item from the save file.
     std::string meta(const std::string &key) const;         // Retrieves Item metadata.
     float       meta_float(const std::string &key) const;   // Retrieves metadata, in float format.
@@ -78,8 +80,10 @@ public:
     int         power() const;                              // Retrieves this Item's power.
     int         rare() const;                               // Retrieves this Item's rarity.
     void        save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id); // Saves the Item to the save file.
+    void        set_charge(int new_charge);                 // Sets the charge level of this Item.
     void        set_description(const std::string &desc);   // Sets this Item's description.
     void        set_equip_slot(EquipSlot es);               // Sets this Item's equipment slot.
+    void        set_liquid(const std::string &new_liquid);  // Sets the liquid contents of this Item.
     void        set_meta(const std::string &key, std::string value);    // Adds Item metadata.
     void        set_meta(const std::string &key, int value);            // As above, but with an integer value.
     void        set_meta(const std::string &key, float value);          // As above again, but this time for floats.

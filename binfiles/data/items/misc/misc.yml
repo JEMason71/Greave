@@ -1,0 +1,14 @@
+# data/items/misc.yml -- Miscellaneous items that don't fit into any other category.
+# Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+
+WATERSKIN:
+  capacity: 10
+  charge: 10
+  desc: A simple leather waterskin, suitable for carrying water.
+  liquid: water
+  name: waterskin
+  rare: 2
+  speed: 6
+  type: [ drink, water_container ]
+  value: 12s
+  weight: 40

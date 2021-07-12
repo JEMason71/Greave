@@ -21,8 +21,7 @@ const int Item::NAME_FLAG_RARE =                256;    // Include the Item's ra
 const int Item::NAME_FLAG_THE =                 512;    // Precede the Item's name with 'the', unless the name is a proper noun.
 
 // The SQL table construction string for saving items.
-const std::string Item::SQL_ITEMS = "CREATE TABLE items ( description TEXT, metadata TEXT, name TEXT NOT NULL, owner_id INTEGER NOT NULL, parser_id INTEGER NOT NULL, "
-    "rare INTEGER NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, stack INTEGER, subtype INTEGER, tags TEXT, type INTEGER, value INTEGER, weight INTEGER NOT NULL )";
+const std::string Item::SQL_ITEMS = "CREATE TABLE items ( description TEXT, metadata TEXT, name TEXT NOT NULL, owner_id INTEGER NOT NULL, parser_id INTEGER NOT NULL, rare INTEGER NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, stack INTEGER, subtype INTEGER, tags TEXT, type INTEGER, value INTEGER, weight INTEGER NOT NULL )";
 
 
 // Constructor, sets default values.
@@ -43,6 +42,12 @@ int Item::bleed() const { return meta_int("bleed"); }
 
 // Returns the block modifier% for this Item, if any.
 int Item::block_mod() const { return meta_int("block_mod"); }
+
+// Returns this Item's capacity, if any.
+int Item::capacity() const { return meta_int("capacity"); }
+
+// Returns this Item's charge, if any.
+int Item::charge() const { return meta_int("charge"); }
 
 // Clears a metatag from an Item. Use with caution!
 void Item::clear_meta(const std::string &key) { m_metadata.erase(key); }
@@ -113,6 +118,9 @@ bool Item::is_identical(std::shared_ptr<Item> item) const
 
     return true;
 }
+
+// Returns the liquid type contained in this Item, if any.
+std::string Item::liquid_type() const { return meta("liquid"); }
 
 // Loads a new Item from the save file.
 std::shared_ptr<Item> Item::load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id)
@@ -212,6 +220,11 @@ std::string Item::name(int flags) const
         switch (m_type)
         {
             case ItemType::ARMOUR: case ItemType::SHIELD: full_stats_str += " {c}[{U}" + std::to_string(power()) + "{c}]"; break;
+            case ItemType::DRINK:
+                full_stats_str += " {c}[{U}" + std::to_string(charge()) + "{c}/{U}" + std::to_string(capacity());
+                if (charge()) full_stats_str += " {c}" + liquid_type();
+                full_stats_str += "{c}]";
+                break;
             case ItemType::LIGHT: core_stats_str += " {Y}<gl{W}o{Y}wing>"; break;
             case ItemType::WEAPON: full_stats_str += " {c}<{U}" + std::to_string(power()) + "{c}" + damage_type_string() + "/{U}" + StrX::ftos(speed(), true) + "{c}>"; break;
             default: break;
@@ -259,8 +272,7 @@ int Item::rare() const { return m_rarity; }
 // Saves the Item.
 void Item::save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id)
 {
-    SQLite::Statement query(*save_db, "INSERT INTO items ( description, metadata, name, owner_id, parser_id, rare, sql_id, stack, subtype, tags, type, value, weight ) "
-        "VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
+    SQLite::Statement query(*save_db, "INSERT INTO items ( description, metadata, name, owner_id, parser_id, rare, sql_id, stack, subtype, tags, type, value, weight ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
     if (m_description.size()) query.bind(1, m_description);
     if (m_metadata.size()) query.bind(2, StrX::metadata_to_string(m_metadata));
     query.bind(3, m_name);
@@ -277,25 +289,44 @@ void Item::save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id)
     query.exec();
 }
 
+// Sets the charge level of this Item.
+void Item::set_charge(int new_charge) { set_meta("charge", new_charge); }
+
 // Sets this Item's description.
 void Item::set_description(const std::string &desc) { m_description = desc; }
 
 // Sets this Item's equipment slot.
 void Item::set_equip_slot(EquipSlot es) { set_meta("slot", static_cast<int>(es)); }
 
+// Sets the liquid contents of this Item.
+void Item::set_liquid(const std::string &new_liquid) { set_meta("liquid", new_liquid); }
+
 // Adds Item metadata.
 void Item::set_meta(const std::string &key, std::string value)
 {
+    if (!value.size())
+    {
+        clear_meta(key);
+        return;
+    }
     StrX::find_and_replace(value, " ", "_");
     if (m_metadata.find(key) == m_metadata.end()) m_metadata.insert(std::pair<std::string, std::string>(key, value));
     else m_metadata.at(key) = value;
 }
 
 // As above, but with an integer value.
-void Item::set_meta(const std::string &key, int value) { set_meta(key, std::to_string(value)); }
+void Item::set_meta(const std::string &key, int value)
+{
+    if (!value) clear_meta(key);
+    else set_meta(key, std::to_string(value));
+}
 
 // As above again, but this time for floats.
-void Item::set_meta(const std::string &key, float value) { set_meta(key, StrX::ftos(value, 1)); }
+void Item::set_meta(const std::string &key, float value)
+{
+    if (!value) clear_meta(key);
+    else set_meta(key, StrX::ftos(value, 1));
+}
 
 // Sets the name of this Item.
 void Item::set_name(const std::string &name) { m_name = name; }

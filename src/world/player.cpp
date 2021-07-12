@@ -17,8 +17,7 @@ const int   Player::REGEN_TIME_COST_HUNGER =        60;     // How many hunger t
 const int   Player::REGEN_TIME_COST_THIRST =        30;     // How many thirst ticks it costs to regenerate a unit of health.
 
 // The SQL table construction string for the player data.
-const std::string Player::SQL_PLAYER = "CREATE TABLE player ( hunger INTEGER NOT NULL, mob_target INTEGER, money INTEGER NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, "
-    "thirst INTEGET NOT NULL )";
+const std::string Player::SQL_PLAYER = "CREATE TABLE player ( hunger INTEGER NOT NULL, mob_target INTEGER, money INTEGER NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, thirst INTEGET NOT NULL )";
 
 // The SQL table construction string for the player skills data.
 const std::string Player::SQL_SKILLS = "CREATE TABLE skills ( id TEXT PRIMARY KEY UNIQUE NOT NULL, level INTEGER NOT NULL, xp REAL )";
@@ -44,6 +43,13 @@ void Player::add_money(uint32_t amount)
         m_money = UINT32_MAX;
     }
     else m_money += amount;
+}
+
+// Drinks some water, increasing the thirst counter.
+void Player::add_water(int power)
+{
+    m_thirst += power;
+    if (m_thirst > 20) m_thirst = 20;
 }
 
 // Gets the clothing warmth level from the Player.

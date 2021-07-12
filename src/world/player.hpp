@@ -14,6 +14,7 @@ public:
                 Player();                           // Constructor, sets default values.
     void        add_food(int power);                // Eats food, increasing the hunger counter.
     void        add_money(uint32_t amount);         // Adds money to the player's wallet.
+    void        add_water(int power);               // Drinks some water, increasing the thirst counter.
     int         clothes_warmth() const;             // Gets the clothing warmth level from the Player.
     std::string death_reason() const;               // Retrieves the player's death reason.
     void        gain_skill_xp(const std::string& skill_id, float xp = 1.0f);    // Gains experience in a skill.

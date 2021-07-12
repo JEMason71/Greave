@@ -27,67 +27,40 @@ const int World::ROOM_SCAN_DISTANCE = 10; // The distance to scan for active roo
 const std::string World::SQL_WORLD = "CREATE TABLE world ( mob_unique_id INTEGER PRIMARY KEY UNIQUE NOT NULL )";
 
 // Lookup table for converting DamageType text names into enums.
-const std::map<std::string, DamageType> World::DAMAGE_TYPE_MAP = { { "acid", DamageType::ACID }, { "ballistic", DamageType::BALLISTIC }, { "crushing", DamageType::CRUSHING },
-    { "edged", DamageType::EDGED }, { "explosive", DamageType::EXPLOSIVE }, { "energy", DamageType::ENERGY }, { "kinetic", DamageType::KINETIC },
-    { "piercing", DamageType::PIERCING }, { "plasma", DamageType::PLASMA }, { "poison", DamageType::POISON }, { "rending", DamageType::RENDING } };
+const std::map<std::string, DamageType> World::DAMAGE_TYPE_MAP = { { "acid", DamageType::ACID }, { "ballistic", DamageType::BALLISTIC }, { "crushing", DamageType::CRUSHING }, { "edged", DamageType::EDGED }, { "explosive", DamageType::EXPLOSIVE }, { "energy", DamageType::ENERGY }, { "kinetic", DamageType::KINETIC }, { "piercing", DamageType::PIERCING }, { "plasma", DamageType::PLASMA }, { "poison", DamageType::POISON }, { "rending", DamageType::RENDING } };
 
 // Lookup table for converting EquipSlot text names into enums.
-const std::map<std::string, EquipSlot> World::EQUIP_SLOT_MAP = { { "about", EquipSlot::ABOUT_BODY }, { "armour", EquipSlot::ARMOUR }, { "body", EquipSlot::BODY },
-    { "feet", EquipSlot::FEET }, { "hands", EquipSlot::HANDS }, { "head", EquipSlot::HEAD }, { "held", EquipSlot::HAND_MAIN } };
+const std::map<std::string, EquipSlot> World::EQUIP_SLOT_MAP = { { "about", EquipSlot::ABOUT_BODY }, { "armour", EquipSlot::ARMOUR }, { "body", EquipSlot::BODY }, { "feet", EquipSlot::FEET }, { "hands", EquipSlot::HANDS }, { "head", EquipSlot::HEAD }, { "held", EquipSlot::HAND_MAIN } };
 
 // Lookup table for converting ItemSub text names into enums.
-const std::map<std::string, ItemSub> World::ITEM_SUBTYPE_MAP = { { "arrow", ItemSub::ARROW }, { "bolt", ItemSub::BOLT }, { "clothing", ItemSub::CLOTHING },
-    { "heavy", ItemSub::HEAVY }, { "light", ItemSub::LIGHT }, { "medium", ItemSub::MEDIUM }, { "melee", ItemSub::MELEE }, { "none", ItemSub::NONE },
-    { "ranged", ItemSub::RANGED }, { "unarmed", ItemSub::UNARMED } };
+const std::map<std::string, ItemSub> World::ITEM_SUBTYPE_MAP = { { "arrow", ItemSub::ARROW }, { "bolt", ItemSub::BOLT }, { "clothing", ItemSub::CLOTHING }, { "heavy", ItemSub::HEAVY }, { "light", ItemSub::LIGHT }, { "medium", ItemSub::MEDIUM }, { "melee", ItemSub::MELEE }, { "none", ItemSub::NONE }, { "ranged", ItemSub::RANGED }, { "unarmed", ItemSub::UNARMED }, { "water_container", ItemSub::WATER_CONTAINER } };
 
 // Lookup table for converting ItemTag text names into enums.
-const std::map<std::string, ItemTag> World::ITEM_TAG_MAP = { { "ammoarrow", ItemTag::AmmoArrow }, { "ammobolt", ItemTag::AmmoBolt }, { "handandahalf", ItemTag::HandAndAHalf },
-    { "noa", ItemTag::NoA }, { "noammo", ItemTag::NoAmmo }, { "offhandonly", ItemTag::OffHandOnly }, { "pluralname", ItemTag::PluralName },
-    { "preferoffhand", ItemTag::PreferOffHand }, { "propernoun", ItemTag::ProperNoun }, { "stackable", ItemTag::Stackable }, { "twohanded", ItemTag::TwoHanded } };
+const std::map<std::string, ItemTag> World::ITEM_TAG_MAP = { { "ammoarrow", ItemTag::AmmoArrow }, { "ammobolt", ItemTag::AmmoBolt }, { "handandahalf", ItemTag::HandAndAHalf }, { "noa", ItemTag::NoA }, { "noammo", ItemTag::NoAmmo }, { "offhandonly", ItemTag::OffHandOnly }, { "pluralname", ItemTag::PluralName }, { "preferoffhand", ItemTag::PreferOffHand }, { "propernoun", ItemTag::ProperNoun }, { "stackable", ItemTag::Stackable }, { "twohanded", ItemTag::TwoHanded } };
 
 // Lookup table for converting ItemType text names into enums.
-const std::map<std::string, ItemType> World::ITEM_TYPE_MAP = { { "ammo", ItemType::AMMO }, { "armour", ItemType::ARMOUR }, { "food", ItemType::FOOD }, { "key", ItemType::KEY },
-    { "light", ItemType::LIGHT }, { "none", ItemType::NONE }, { "shield", ItemType::SHIELD }, { "weapon", ItemType::WEAPON } };
+const std::map<std::string, ItemType> World::ITEM_TYPE_MAP = { { "ammo", ItemType::AMMO }, { "armour", ItemType::ARMOUR }, { "drink", ItemType::DRINK }, { "food", ItemType::FOOD }, { "key", ItemType::KEY }, { "light", ItemType::LIGHT }, { "none", ItemType::NONE }, { "shield", ItemType::SHIELD }, { "weapon", ItemType::WEAPON } };
 
 // Lookup table for converting textual light levels (e.g. "bright") to integer values.
 const std::map<std::string, uint8_t> World::LIGHT_LEVEL_MAP = { { "bright", 7 }, { "dim", 5 }, { "wilderness", 5 }, { "dark", 3 }, { "none", 0 } };
 
 // Lookup table for converting LinkTag text names into enums.
-const std::map<std::string, LinkTag> World::LINK_TAG_MAP = { { "autoclose", LinkTag::AutoClose }, { "autolock", LinkTag::AutoLock }, { "decline", LinkTag::Decline },
-    { "doormetal", LinkTag::DoorMetal }, { "doorshop", LinkTag::DoorShop }, { "doublelength", LinkTag::DoubleLength }, { "hidden", LinkTag::Hidden }, { "incline", LinkTag::Incline },
-    { "lockable", LinkTag::Lockable },  { "locked", LinkTag::LockedByDefault }, { "lockstrong", LinkTag::LockStrong }, { "lockswhenclosed", LinkTag::LocksWhenClosed },
-    { "lockweak", LinkTag::LockWeak }, { "noblockexit", LinkTag::NoBlockExit }, { "nomobroam", LinkTag::NoMobRoam }, { "ocean", LinkTag::Ocean }, { "open", LinkTag::Open },
-    { "openable", LinkTag::Openable }, { "permalock", LinkTag::Permalock }, { "sky", LinkTag::Sky}, { "sky2", LinkTag::Sky2 }, { "sky3", LinkTag::Sky3 },
-    { "triplelength", LinkTag::TripleLength }, { "window", LinkTag::Window } };
+const std::map<std::string, LinkTag> World::LINK_TAG_MAP = { { "autoclose", LinkTag::AutoClose }, { "autolock", LinkTag::AutoLock }, { "decline", LinkTag::Decline }, { "doormetal", LinkTag::DoorMetal }, { "doorshop", LinkTag::DoorShop }, { "doublelength", LinkTag::DoubleLength }, { "hidden", LinkTag::Hidden }, { "incline", LinkTag::Incline }, { "lockable", LinkTag::Lockable },  { "locked", LinkTag::LockedByDefault }, { "lockstrong", LinkTag::LockStrong }, { "lockswhenclosed", LinkTag::LocksWhenClosed }, { "lockweak", LinkTag::LockWeak }, { "noblockexit", LinkTag::NoBlockExit }, { "nomobroam", LinkTag::NoMobRoam }, { "ocean", LinkTag::Ocean }, { "open", LinkTag::Open }, { "openable", LinkTag::Openable }, { "permalock", LinkTag::Permalock }, { "sky", LinkTag::Sky}, { "sky2", LinkTag::Sky2 }, { "sky3", LinkTag::Sky3 }, { "triplelength", LinkTag::TripleLength }, { "window", LinkTag::Window } };
 
 // Lookup table for converting MobileTag text names into enums.
-const std::map<std::string, MobileTag> World::MOBILE_TAG_MAP = { { "aggroonsight", MobileTag::AggroOnSight }, { "agile", MobileTag::Agile }, { "anemic", MobileTag::Anemic },
-    { "beast", MobileTag::Beast}, { "brawny", MobileTag::Brawny }, { "cannotblock", MobileTag::CannotBlock }, { "cannotdodge", MobileTag::CannotDodge },
-    { "cannotopendoors", MobileTag::CannotOpenDoors }, { "cannotparry", MobileTag::CannotParry }, { "clumsy", MobileTag::Clumsy }, { "coward", MobileTag::Coward },
-    { "feeble", MobileTag::Feeble }, { "immunitybleed", MobileTag::ImmunityBleed }, { "immunitypoison", MobileTag::ImmunityPoison }, { "mighty", MobileTag::Mighty },
-    { "pluralname", MobileTag::PluralName }, { "propernoun", MobileTag::ProperNoun }, { "puny", MobileTag::Puny }, { "randomgender", MobileTag::RandomGender },
-    { "strong", MobileTag::Strong }, { "unliving", MobileTag::Unliving }, { "vigorous", MobileTag::Vigorous } };
+const std::map<std::string, MobileTag> World::MOBILE_TAG_MAP = { { "aggroonsight", MobileTag::AggroOnSight }, { "agile", MobileTag::Agile }, { "anemic", MobileTag::Anemic }, { "beast", MobileTag::Beast}, { "brawny", MobileTag::Brawny }, { "cannotblock", MobileTag::CannotBlock }, { "cannotdodge", MobileTag::CannotDodge }, { "cannotopendoors", MobileTag::CannotOpenDoors }, { "cannotparry", MobileTag::CannotParry }, { "clumsy", MobileTag::Clumsy }, { "coward", MobileTag::Coward }, { "feeble", MobileTag::Feeble }, { "immunitybleed", MobileTag::ImmunityBleed }, { "immunitypoison", MobileTag::ImmunityPoison }, { "mighty", MobileTag::Mighty }, { "pluralname", MobileTag::PluralName }, { "propernoun", MobileTag::ProperNoun }, { "puny", MobileTag::Puny }, { "randomgender", MobileTag::RandomGender }, { "strong", MobileTag::Strong }, { "unliving", MobileTag::Unliving }, { "vigorous", MobileTag::Vigorous } };
 
 // Lookup table for converting RoomTag text names into enums.
-const std::map<std::string, RoomTag> World::ROOM_TAG_MAP = { { "canseeoutside", RoomTag::CanSeeOutside }, { "churchaltar", RoomTag::ChurchAltar }, { "digok", RoomTag::DigOK },
-    { "gamepoker", RoomTag::GamePoker }, { "gameslots", RoomTag::GameSlots }, { "gross", RoomTag::Gross }, { "heatedinterior", RoomTag::HeatedInterior },
-    { "hidecampfirescar", RoomTag::HideCampfireScar }, { "indoors", RoomTag::Indoors }, { "maze", RoomTag::Maze }, { "nexus", RoomTag::Nexus },
-    { "noexplorecredit", RoomTag::NoExploreCredit }, { "permacampfire", RoomTag::PermaCampfire }, { "private", RoomTag::Private }, { "radiationlight", RoomTag::RadiationLight },
-    { "shopbuyscontraband", RoomTag::ShopBuysContraband }, { "shoprespawningowner", RoomTag::ShopRespawningOwner }, { "sleepok", RoomTag::SleepOK },
-    { "sludgepit", RoomTag::SludgePit }, { "smelly", RoomTag::Smelly }, { "trees", RoomTag::Trees }, { "underground", RoomTag::Underground }, { "verywide", RoomTag::VeryWide },
-    { "waterclean", RoomTag::WaterClean }, { "waterdeep", RoomTag::WaterDeep }, { "watersalt", RoomTag::WaterSalt }, { "watershallow", RoomTag::WaterShallow },
-    { "watertainted", RoomTag::WaterTainted }, { "wide", RoomTag::Wide }, { "wilderness", RoomTag::Wilderness } };
+const std::map<std::string, RoomTag> World::ROOM_TAG_MAP = { { "canseeoutside", RoomTag::CanSeeOutside }, { "churchaltar", RoomTag::ChurchAltar }, { "digok", RoomTag::DigOK }, { "gamepoker", RoomTag::GamePoker }, { "gameslots", RoomTag::GameSlots }, { "gross", RoomTag::Gross }, { "heatedinterior", RoomTag::HeatedInterior }, { "hidecampfirescar", RoomTag::HideCampfireScar }, { "indoors", RoomTag::Indoors }, { "maze", RoomTag::Maze }, { "nexus", RoomTag::Nexus }, { "noexplorecredit", RoomTag::NoExploreCredit }, { "permacampfire", RoomTag::PermaCampfire }, { "private", RoomTag::Private }, { "radiationlight", RoomTag::RadiationLight }, { "shopbuyscontraband", RoomTag::ShopBuysContraband }, { "shoprespawningowner", RoomTag::ShopRespawningOwner }, { "sleepok", RoomTag::SleepOK }, { "sludgepit", RoomTag::SludgePit }, { "smelly", RoomTag::Smelly }, { "trees", RoomTag::Trees }, { "underground", RoomTag::Underground }, { "verywide", RoomTag::VeryWide }, { "waterclean", RoomTag::WaterClean }, { "waterdeep", RoomTag::WaterDeep }, { "watersalt", RoomTag::WaterSalt }, { "watershallow", RoomTag::WaterShallow }, { "watertainted", RoomTag::WaterTainted }, { "wide", RoomTag::Wide }, { "wilderness", RoomTag::Wilderness } };
 
 // Lookup table for converting textual room security (e.g. "anarchy") to enum values.
-const std::map<std::string, Security> World::SECURITY_MAP = { { "anarchy", Security::ANARCHY }, { "low", Security::LOW }, { "high", Security::HIGH },
-    { "sanctuary", Security::SANCTUARY }, { "inaccessible", Security::INACCESSIBLE } };
+const std::map<std::string, Security> World::SECURITY_MAP = { { "anarchy", Security::ANARCHY }, { "low", Security::LOW }, { "high", Security::HIGH }, { "sanctuary", Security::SANCTUARY }, { "inaccessible", Security::INACCESSIBLE } };
 
 // A list of all valid keys in area YAML files.
 const std::set<std::string> World::VALID_YAML_KEYS_AREAS = { "desc", "exits", "light", "name", "security", "spawn_mobs", "tags", "wilderness" };
 
 // A list of all valid keys in item YAML files.
-const std::set<std::string> World::VALID_YAML_KEYS_ITEMS = { "ammo_power", "bleed", "block_mod", "crit", "damage_type", "desc", "dodge_mod", "metadata", "name", "parry_mod",
-    "poison", "power", "rare", "slot", "speed", "stack", "tags", "type", "value", "warmth", "weight" };
+const std::set<std::string> World::VALID_YAML_KEYS_ITEMS = { "ammo_power", "bleed", "block_mod", "capacity", "charge", "crit", "damage_type", "desc", "dodge_mod", "liquid", "metadata", "name", "parry_mod", "poison", "power", "rare", "slot", "speed", "stack", "tags", "type", "value", "warmth", "weight" };
 
 // A list of all valid keys in mobile YAML files.
 const std::set<std::string> World::VALID_YAML_KEYS_MOBS = { "gear", "hp", "name", "score", "species", "tags" };
@@ -454,6 +427,12 @@ void World::load_item_pool()
             // The Item's speed, if any.
             if (item_data["speed"]) new_item->set_meta("speed", item_data["speed"].as<float>());
 
+            // The Item's capacity, if any.
+            if (item_data["capacity"]) new_item->set_meta("capacity", item_data["capacity"].as<int>());
+
+            // The Item's charge, if any.
+            if (item_data["charge"]) new_item->set_meta("charge", item_data["charge"].as<int>());
+
             // The Item's EquipSlot, if any.
             if (item_data["slot"])
             {
@@ -482,6 +461,9 @@ void World::load_item_pool()
 
             // The Item's poison chance, if any.
             if (item_data["poison"]) new_item->set_meta("poison", item_data["poison"].as<int>());
+
+            // The Item's liquid type, if any.
+            if (item_data["liquid"]) new_item->set_meta("liquid", item_data["liquid"].as<std::string>());
 
             // The Item's description, if any.
             if (!item_data["desc"]) core()->guru()->nonfatal("Missing description for item " + item_id_str, Guru::WARN);

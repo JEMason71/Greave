@@ -35,7 +35,7 @@
 std::shared_ptr<Core> greave = nullptr;   // The main Core object.
 
 const std::string   Core::GAME_VERSION =    "pre-alpha";    // The game's version number.
-const uint32_t      Core::SAVE_VERSION =    63;             // The version number for saved game files. This should increment when old saves can no longer be loaded.
+const uint32_t      Core::SAVE_VERSION =    64;             // The version number for saved game files. This should increment when old saves can no longer be loaded.
 const uint16_t      Core::TAGS_PERMANENT =  10000;          // The tag number at which tags are considered permanent.
 
 
@@ -439,9 +439,7 @@ void Core::title()
                             m_save_slot = input_num;
                             inner_loop = false;
                         }
-                        else message("{R}This saved game is {M}incompatible {R}with this version of the game. Greave " + GAME_VERSION + " uses save file {M}version " +
-                                std::to_string(SAVE_VERSION) + "{R}, this save file is using {M}" + (save_file_ver ? "version " + std::to_string(save_file_ver) :
-                                "an unknown version") + "{R}.");
+                        else message("{R}This saved game is {M}incompatible {R}with this version of the game. Greave " + GAME_VERSION + " uses save file {M}version " + std::to_string(SAVE_VERSION) + "{R}, this save file is using {M}" + (save_file_ver ? "version " + std::to_string(save_file_ver) : "an unknown version") + "{R}.");
                     }
                 }
             }

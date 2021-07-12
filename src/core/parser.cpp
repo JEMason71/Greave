@@ -28,6 +28,7 @@ Parser::Parser() : m_special_state(SpecialState::NONE)
 {
     add_command("[attack|kill|k] <mobile>", ParserCommand::ATTACK);
     add_command("close <dir>", ParserCommand::CLOSE);
+    add_command("drink <item:i>", ParserCommand::DRINK);
     add_command("drop <item:i>", ParserCommand::DROP);
     add_command("[eat|consume] <item:i>", ParserCommand::EAT);
     add_command("[equipment|equip|eq]", ParserCommand::EQUIPMENT);
@@ -107,8 +108,7 @@ void Parser::add_command(const std::string &text, ParserCommand cmd)
 }
 
 // Tells the player how to confirm a command.
-void Parser::confirm_message()
-{ core()->message("{0}{m}If you are sure you want to do this, repeat your command with a {M}! {m}at the beginning (for example, {M}!" + m_last_input + "{m})."); }
+void Parser::confirm_message() { core()->message("{0}{m}If you are sure you want to do this, repeat your command with a {M}! {m}at the beginning (for example, {M}!" + m_last_input + "{m})."); }
 
 // Parses input from the player!
 void Parser::parse(std::string input)
@@ -197,8 +197,7 @@ Parser::ParserSearchResult Parser::parse_target(std::vector<std::string> input, 
         for (size_t i = 0; i < equ->count(); i++)
         {
             const std::shared_ptr<Item> item = equ->get(i);
-            candidates.push_back({0, StrX::str_tolower(item->name(Item::NAME_FLAG_NO_COLOUR)), StrX::str_tolower(item->name(Item::NAME_FLAG_NO_COLOUR | Item::NAME_FLAG_NO_COUNT)),
-                item->parser_id(), i, ParserTarget::TARGET_EQUIPMENT, count});
+            candidates.push_back({0, StrX::str_tolower(item->name(Item::NAME_FLAG_NO_COLOUR)), StrX::str_tolower(item->name(Item::NAME_FLAG_NO_COLOUR | Item::NAME_FLAG_NO_COUNT)), item->parser_id(), i, ParserTarget::TARGET_EQUIPMENT, count});
         }
     }
 
@@ -209,8 +208,7 @@ Parser::ParserSearchResult Parser::parse_target(std::vector<std::string> input, 
         for (size_t i = 0; i < inv->count(); i++)
         {
             const std::shared_ptr<Item> item = inv->get(i);
-            candidates.push_back({0, StrX::str_tolower(item->name(Item::NAME_FLAG_NO_COLOUR)), StrX::str_tolower(item->name(Item::NAME_FLAG_NO_COLOUR | Item::NAME_FLAG_NO_COUNT)),
-                item->parser_id(), i, ParserTarget::TARGET_INVENTORY, count});
+            candidates.push_back({0, StrX::str_tolower(item->name(Item::NAME_FLAG_NO_COLOUR)), StrX::str_tolower(item->name(Item::NAME_FLAG_NO_COLOUR | Item::NAME_FLAG_NO_COUNT)), item->parser_id(), i, ParserTarget::TARGET_INVENTORY, count});
         }
     }
 
@@ -221,8 +219,7 @@ Parser::ParserSearchResult Parser::parse_target(std::vector<std::string> input, 
         for (size_t i = 0; i < room_inv->count(); i++)
         {
             const std::shared_ptr<Item> item = room_inv->get(i);
-            candidates.push_back({0, StrX::str_tolower(item->name(Item::NAME_FLAG_NO_COLOUR)), StrX::str_tolower(item->name(Item::NAME_FLAG_NO_COLOUR | Item::NAME_FLAG_NO_COUNT)),
-                item->parser_id(), i, ParserTarget::TARGET_ROOM, count});
+            candidates.push_back({0, StrX::str_tolower(item->name(Item::NAME_FLAG_NO_COLOUR)), StrX::str_tolower(item->name(Item::NAME_FLAG_NO_COLOUR | Item::NAME_FLAG_NO_COUNT)), item->parser_id(), i, ParserTarget::TARGET_ROOM, count});
         }
     }
 
@@ -230,8 +227,7 @@ Parser::ParserSearchResult Parser::parse_target(std::vector<std::string> input, 
     for (size_t i = 0; i < world->mob_count(); i++)
     {
         const std::shared_ptr<Mobile> mob = world->mob_vec(i);
-        if (mob->location() == player_location) candidates.push_back({0, StrX::str_tolower(mob->name(Item::NAME_FLAG_NO_COLOUR)), "", mob->parser_id(), i,
-            ParserTarget::TARGET_MOBILE, count});
+        if (mob->location() == player_location) candidates.push_back({0, StrX::str_tolower(mob->name(Item::NAME_FLAG_NO_COLOUR)), "", mob->parser_id(), i, ParserTarget::TARGET_MOBILE, count});
     }
 
     // Score each candidate.
@@ -362,15 +358,10 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
 
             if (words.size() <= i)
             {
-                // Normally we'd just skip trying to parse this if the player hasn't given enough input.
-                // BUT...! For target-only matches, there's a special exception. This allows the player
-                // to do something like "kill goblin", then just type "kill" again to keep attacking
-                // the same target without naming it over and over.
+                // Normally we'd just skip trying to parse this if the player hasn't given enough input. BUT...! For target-only matches, there's a special exception. This allows the player to do something like "kill goblin", then just type "kill" again to keep attacking the same target without naming it over and over.
                 if (target_flags == ParserTarget::TARGET_MOBILE)
                 {
-                    // Check if the player has a *valid* Mobile targetted already. mob_target() will
-                    // return 0 if there is no target, no valid target, or the valid target is no
-                    // longer in the same room, which saves us some effort here.
+                    // Check if the player has a *valid* Mobile targetted already. mob_target() will return 0 if there is no target, no valid target, or the valid target is no longer in the same room, which saves us some effort here.
                     uint32_t target_id = core()->world()->player()->mob_target();
                     if (!target_id) continue;
 
@@ -439,8 +430,11 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             else if (!words.size()) specify("attack");
             else if (parsed_target_type == ParserTarget::TARGET_NONE) not_here();
             break;
-        case ParserCommand::DIRECTION:
-            ActionTravel::travel(player, parse_direction(first_word), confirm);
+        case ParserCommand::DIRECTION: ActionTravel::travel(player, parse_direction(first_word), confirm); break;
+        case ParserCommand::DRINK:
+            if (!words.size()) specify("drink");
+            else if (parsed_target_type == ParserTarget::TARGET_NONE) not_carrying();
+            else if (parsed_target_type == ParserTarget::TARGET_INVENTORY) ActionEatDrink::drink(parsed_target, confirm);
             break;
         case ParserCommand::DROP:
             if (!words.size()) specify("drop");
@@ -457,17 +451,13 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             else if (parsed_target_type == ParserTarget::TARGET_NONE) not_carrying();
             else if (parsed_target_type == ParserTarget::TARGET_INVENTORY) ActionInventory::equip(player, parsed_target);
             break;
-        case ParserCommand::EQUIPMENT:
-            ActionInventory::equipment();
-            break;
+        case ParserCommand::EQUIPMENT: ActionInventory::equipment(); break;
         case ParserCommand::EXAMINE:
             if (!words.size()) specify("examine");
             else if (parsed_target_type == ParserTarget::TARGET_NONE) not_here();
             else if (parsed_target_type != ParserTarget::TARGET_UNCLEAR) ActionLook::examine(parsed_target_type, parsed_target);
             break;
-        case ParserCommand::EXITS:
-            ActionLook::obvious_exits(false);
-            break;
+        case ParserCommand::EXITS: ActionLook::obvious_exits(false); break;
         case ParserCommand::GO:
             if (parsed_direction == Direction::NONE) specify_direction("travel");
             else ActionTravel::travel(player, parsed_direction, confirm);
@@ -480,12 +470,8 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
                 core()->message("{G}" + hash_word + " {g}hashes to {G}" + std::to_string(StrX::hash(hash_word)) + "{g}.");
             }
             break;
-        case ParserCommand::HELP:
-            ActionHelp::help(StrX::collapse_vector(words));
-            break;
-        case ParserCommand::INVENTORY:
-            ActionInventory::check_inventory();
-            break;
+        case ParserCommand::HELP: ActionHelp::help(StrX::collapse_vector(words)); break;
+        case ParserCommand::INVENTORY: ActionInventory::check_inventory(); break;
         case ParserCommand::LOCK: case ParserCommand::UNLOCK:
             if (parsed_direction == Direction::NONE) specify_direction(first_word);
             else ActionDoors::lock_or_unlock(player, parsed_direction, pcd.command == ParserCommand::UNLOCK);
@@ -509,15 +495,9 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             core()->message("{R}Are you sure you want to quit? {M}Your game will not be saved. {R}Type {C}yes {R}to confirm.");
             m_special_state = SpecialState::QUIT_CONFIRM;
             return; // not break
-        case ParserCommand::SAVE:
-            core()->save();
-            break;
-        case ParserCommand::SCORE:
-            ActionStatus::score();
-            break;
-        case ParserCommand::SKILLS:
-            ActionStatus::skills();
-            break;
+        case ParserCommand::SAVE: core()->save(); break;
+        case ParserCommand::SCORE: ActionStatus::score(); break;
+        case ParserCommand::SKILLS: ActionStatus::skills(); break;
         case ParserCommand::SPAWN_ITEM:
             if (!words.size()) core()->message("{y}Please specify an {Y}item ID{y}.");
             else ActionCheat::spawn_item(collapsed_words);
@@ -551,12 +531,8 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             else Combat::change_stance(player, chosen_stance);
             break;
         }
-        case ParserCommand::STATUS:
-            ActionStatus::status();
-            break;
-        case ParserCommand::SWEAR:
-            core()->message("{y}Real adventurers do not use such language.");
-            break;
+        case ParserCommand::STATUS: ActionStatus::status(); break;
+        case ParserCommand::SWEAR: core()->message("{y}Real adventurers do not use such language."); break;
         case ParserCommand::TAKE:
             if (!words.size()) core()->message("{y}Please specify {Y}what you want to take{y}.");
             else if (parsed_target_type == ParserTarget::TARGET_NONE) core()->message("{y}You don't see {Y}" + collapsed_words + "{y} here.");
@@ -566,23 +542,15 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             if (!words.size()) core()->message("{y}Please specify a {Y}teleport destination{y}.");
             else ActionCheat::teleport(collapsed_words);
             break;
-        case ParserCommand::TIME:
-            ActionStatus::time();
-            break;
+        case ParserCommand::TIME: ActionStatus::time(); break;
         case ParserCommand::UNEQUIP:
             if (!words.size()) core()->message("{y}Please specify {Y}what you want to unequip{y}.");
             else if (parsed_target_type == ParserTarget::TARGET_NONE) core()->message("{y}You don't seem to be wearing or wielding {Y}" + collapsed_words + "{y}.");
             else if (parsed_target_type == ParserTarget::TARGET_EQUIPMENT) ActionInventory::unequip(player, parsed_target);
             break;
-        case ParserCommand::WAIT:
-            ActionRest::rest(first_word, words);
-            break;
-        case ParserCommand::WEATHER:
-            ActionStatus::weather();
-            break;
-        case ParserCommand::XYZZY:
-            core()->message("{u}A hollow voice says, {m}\"Fool.\"");
-            break;
+        case ParserCommand::WAIT: ActionRest::rest(first_word, words); break;
+        case ParserCommand::WEATHER: ActionStatus::weather(); break;
+        case ParserCommand::XYZZY: core()->message("{u}A hollow voice says, {m}\"Fool.\""); break;
         case ParserCommand::YES: case ParserCommand::NO:
             if (m_special_state == SpecialState::QUIT_CONFIRM)
             {
