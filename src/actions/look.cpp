@@ -147,7 +147,7 @@ void ActionLook::examine_item(std::shared_ptr<Item> target)
     stat_string += (stackable ? "{w}The stack weighs around {U}" : "{w}It weighs around {U}") + StrX::intostr_pretty(weight) + (weight == 1 ? " pac" : " pacs");
     const int actual_value = target->value();
     const int appraised_value = MathX::fuzz(actual_value);
-    if (!appraised_value) stat_string += (stackable ? "{w}, and {y}aren't worth anything{w}." : "{w}, and {y}isn't worth anything{w}.");
+    if (!appraised_value) stat_string += (stackable ? "{w}, and {y}aren't worth anything{w}." : "{w}, and {y}isn't worth anything{w}. ");
     else stat_string += (stackable ? "{w}, and they are worth around {U}" : "{w}, and is worth around {U}") + StrX::mgsc_string(appraised_value, StrX::MGSC::LONG) + "{w}. ";
 
     if (stat_string.size())
