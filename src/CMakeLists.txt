@@ -40,7 +40,7 @@ if(TARGET_WINDOWS)
 elseif(TARGET_LINUX)
 
   # Platform-specific libraries.
-  set(CMAKE_MODULE_PATH ../cmake_modules)
+  set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/src/3rdparty/cmake_modules)
   find_package(Threads REQUIRED)
   find_package(X11 REQUIRED)
   set(OS_LIBRARIES ${X11_LIBRARIES})
