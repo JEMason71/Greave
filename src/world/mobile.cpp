@@ -32,9 +32,7 @@ const int Mobile::NAME_FLAG_THE =               32; // Precede the Mobile's name
 const std::string   Buff::SQL_BUFFS =       "CREATE TABLE buffs ( owner INTEGER, power INTEGER, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, time INTEGER, type INTEGER NOT NULL )";
 
 // The SQL table construction string for Mobiles.
-const std::string   Mobile::SQL_MOBILES =   "CREATE TABLE mobiles ( action_timer REAL, equipment INTEGER UNIQUE, gender INTEGER, hostility TEXT, hp INTEGER NOT NULL, "
-    "hp_max INTEGER NOT NULL, id INTEGER UNIQUE NOT NULL, inventory INTEGER UNIQUE, location INTEGER NOT NULL, metadata TEXT, name TEXT, parser_id INTEGER, score INTEGER, "
-    "spawn_room INTEGER, species TEXT NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, stance INTEGER, tags TEXT )";
+const std::string   Mobile::SQL_MOBILES =   "CREATE TABLE mobiles ( action_timer REAL, equipment INTEGER UNIQUE, gender INTEGER, hostility TEXT, hp INTEGER NOT NULL, hp_max INTEGER NOT NULL, id INTEGER UNIQUE NOT NULL, inventory INTEGER UNIQUE, location INTEGER NOT NULL, metadata TEXT, name TEXT, parser_id INTEGER, score INTEGER, spawn_room INTEGER, species TEXT NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, stance INTEGER, tags TEXT )";
 
 
 // Loads this Buff from a save file.
@@ -50,19 +48,18 @@ std::shared_ptr<Buff> Buff::load(SQLite::Statement &query)
 // Saves this Buff to a save file.
 void Buff::save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id)
 {
-    SQLite::Statement query(*save_db, "INSERT INTO BUFFS ( owner, power, sql_id, time, type ) VALUES ( ?, ?, ?, ?, ? )");
-    query.bind(1, owner_id);
-    if (power) query.bind(2, power);
-    query.bind(3, core()->sql_unique_id());
-    if (time != USHRT_MAX) query.bind(4, time);
-    query.bind(5, static_cast<int>(type));
+    SQLite::Statement query(*save_db, "INSERT INTO BUFFS ( owner, power, sql_id, time, type ) VALUES ( :owner, :power, :sql_id, :time, :type )");
+    query.bind(":owner", owner_id);
+    if (power) query.bind(":power", power);
+    query.bind(":sql_id", core()->sql_unique_id());
+    if (time != USHRT_MAX) query.bind(":time", time);
+    query.bind(":type", static_cast<int>(type));
     query.exec();
 }
 
 
 // Constructor, sets default values.
-Mobile::Mobile() : m_action_timer(0), m_equipment(std::make_shared<Inventory>()), m_gender(Gender::IT), m_id(0), m_inventory(std::make_shared<Inventory>()), m_location(0),
-    m_parser_id(0), m_score(0), m_spawn_room(0), m_stance(CombatStance::BALANCED)
+Mobile::Mobile() : m_action_timer(0), m_equipment(std::make_shared<Inventory>()), m_gender(Gender::IT), m_id(0), m_inventory(std::make_shared<Inventory>()), m_location(0), m_parser_id(0), m_score(0), m_spawn_room(0), m_stance(CombatStance::BALANCED)
 {
     m_hp[0] = m_hp[1] = 100;
 }
@@ -257,8 +254,8 @@ bool Mobile::is_player() const { return false; }
 uint32_t Mobile::load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id)
 {
     uint32_t inventory_id = 0, equipment_id = 0;
-    SQLite::Statement query(*save_db, "SELECT * FROM mobiles WHERE sql_id = ?");
-    query.bind(1, sql_id);
+    SQLite::Statement query(*save_db, "SELECT * FROM mobiles WHERE sql_id = :sql_id");
+    query.bind(":sql_id", sql_id);
     if (query.executeStep())
     {
         if (!query.isColumnNull("action_timer")) m_action_timer = query.getColumn("action_timer").getDouble();
@@ -285,8 +282,8 @@ uint32_t Mobile::load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id
     if (equipment_id) m_equipment->load(save_db, equipment_id);
 
     // Load any and all buffs/debuffs.
-    SQLite::Statement buff_query(*save_db, "SELECT * FROM buffs WHERE owner = ?");
-    buff_query.bind(1, sql_id);
+    SQLite::Statement buff_query(*save_db, "SELECT * FROM buffs WHERE owner = :sql_id");
+    buff_query.bind(":sql_id", sql_id);
     while (buff_query.executeStep())
         m_buffs.push_back(Buff::load(buff_query));
 
@@ -431,27 +428,26 @@ uint32_t Mobile::save(std::shared_ptr<SQLite::Database> save_db)
     const uint32_t equipment_id = m_equipment->save(save_db);
 
     const uint32_t sql_id = core()->sql_unique_id();
-    SQLite::Statement query(*save_db, "INSERT INTO mobiles ( action_timer, equipment, gender, hostility, hp, hp_max, id, inventory, location, metadata, name, parser_id, score, "
-        "spawn_room, species, sql_id, stance, tags ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
-    if (m_action_timer) query.bind(1, m_action_timer);
-    if (equipment_id) query.bind(2, equipment_id);
-    if (m_gender != Gender::IT) query.bind(3, static_cast<int>(m_gender));
-    if (m_hostility.size()) query.bind(4, StrX::collapse_vector(m_hostility));
-    query.bind(5, m_hp[0]);
-    query.bind(6, m_hp[1]);
-    query.bind(7, m_id);
-    if (inventory_id) query.bind(8, inventory_id);
-    query.bind(9, m_location);
-    if (m_metadata.size()) query.bind(10, StrX::metadata_to_string(m_metadata));
-    if (m_name.size()) query.bind(11, m_name);
-    if (m_parser_id) query.bind(12, m_parser_id);
-    if (m_score) query.bind(13, m_score);
-    if (m_spawn_room) query.bind(14, m_spawn_room);
-    query.bind(15, m_species);
-    query.bind(16, sql_id);
-    if (m_stance != CombatStance::BALANCED) query.bind(17, static_cast<int>(m_stance));
+    SQLite::Statement query(*save_db, "INSERT INTO mobiles ( action_timer, equipment, gender, hostility, hp, hp_max, id, inventory, location, metadata, name, parser_id, score, spawn_room, species, sql_id, stance, tags ) VALUES ( :action_timer, :equipment, :gender, :hostility, :hp, :hp_max, :id, :inventory, :location, :metadata, :name, :parser_id, :score, :spawn_room, :species, :sql_id, :stance, :tags )");
+    if (m_action_timer) query.bind(":action_timer", m_action_timer);
+    if (equipment_id) query.bind(":equipment", equipment_id);
+    if (m_gender != Gender::IT) query.bind(":gender", static_cast<int>(m_gender));
+    if (m_hostility.size()) query.bind(":hostility", StrX::collapse_vector(m_hostility));
+    query.bind(":hp", m_hp[0]);
+    query.bind(":hp_max", m_hp[1]);
+    query.bind(":id", m_id);
+    if (inventory_id) query.bind(":inventory", inventory_id);
+    query.bind(":location", m_location);
+    if (m_metadata.size()) query.bind(":metadata", StrX::metadata_to_string(m_metadata));
+    if (m_name.size()) query.bind(":name", m_name);
+    if (m_parser_id) query.bind(":parser_id", m_parser_id);
+    if (m_score) query.bind(":score", m_score);
+    if (m_spawn_room) query.bind(":spawn_room", m_spawn_room);
+    query.bind(":species", m_species);
+    query.bind(":sql_id", sql_id);
+    if (m_stance != CombatStance::BALANCED) query.bind(":stance", static_cast<int>(m_stance));
     const std::string tags = StrX::tags_to_string(m_tags);
-    if (tags.size()) query.bind(18, tags);
+    if (tags.size()) query.bind(":tags", tags);
     query.exec();
 
     // Save any and all buffs/debuffs.
@@ -580,8 +576,7 @@ bool Mobile::tick_bleed(uint32_t power, uint16_t time)
     else
     {
         const std::shared_ptr<Player> player = core()->world()->player();
-        if (player->location() == m_location && room->light() >= Room::LIGHT_VISIBLE)
-            core()->message("{r}" + name(NAME_FLAG_CAPITALIZE_FIRST | NAME_FLAG_THE) + " {r}is {R}bleeding {r}rather badly. {w}[{R}-" + std::to_string(power) + "{w}]");
+        if (player->location() == m_location && room->light() >= Room::LIGHT_VISIBLE) core()->message("{r}" + name(NAME_FLAG_CAPITALIZE_FIRST | NAME_FLAG_THE) + " {r}is {R}bleeding {r}rather badly. {w}[{R}-" + std::to_string(power) + "{w}]");
     }
     reduce_hp(power);
     if (!fatal && is_player() && time == 1) core()->message("{r}Your wounds stop bleeding.");
@@ -638,8 +633,7 @@ bool Mobile::tick_poison(uint32_t power, uint16_t time)
     else
     {
         const std::shared_ptr<Player> player = core()->world()->player();
-        if (player->location() == m_location && room->light() >= Room::LIGHT_VISIBLE)
-            core()->message("{g}" + name(NAME_FLAG_CAPITALIZE_FIRST | NAME_FLAG_THE) + " {g}takes damage from {G}poison{g}. {w}[{G}-" + std::to_string(power) + "{w}]");
+        if (player->location() == m_location && room->light() >= Room::LIGHT_VISIBLE) core()->message("{g}" + name(NAME_FLAG_CAPITALIZE_FIRST | NAME_FLAG_THE) + " {g}takes damage from {G}poison{g}. {w}[{G}-" + std::to_string(power) + "{w}]");
     }
     reduce_hp(power);
     if (!fatal && is_player() && time == 1) core()->message("{g}You feel much better as the poison fades from your system.");

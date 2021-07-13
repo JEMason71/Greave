@@ -276,9 +276,9 @@ void MessageLog::save(std::shared_ptr<SQLite::Database> save_db)
 {
     for (unsigned int i = 0; i < m_output_raw.size(); i++)
     {
-        SQLite::Statement query(*save_db, "INSERT INTO msglog ( line, text ) VALUES ( ?, ? )");
-        query.bind(1, i);
-        query.bind(2, m_output_raw.at(i));
+        SQLite::Statement query(*save_db, "INSERT INTO msglog ( line, text ) VALUES ( :line, :text )");
+        query.bind(":line", i);
+        query.bind(":text", m_output_raw.at(i));
         query.exec();
     }
 }

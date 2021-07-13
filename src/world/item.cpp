@@ -129,8 +129,8 @@ std::shared_ptr<Item> Item::load(std::shared_ptr<SQLite::Database> save_db, uint
 {
     auto new_item = std::make_shared<Item>();
 
-    SQLite::Statement query(*save_db, "SELECT * FROM items WHERE sql_id = ?");
-    query.bind(1, sql_id);
+    SQLite::Statement query(*save_db, "SELECT * FROM items WHERE sql_id = :id");
+    query.bind(":id", sql_id);
     if (query.executeStep())
     {
         ItemType new_type = ItemType::NONE;
@@ -274,20 +274,20 @@ int Item::rare() const { return m_rarity; }
 // Saves the Item.
 void Item::save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id)
 {
-    SQLite::Statement query(*save_db, "INSERT INTO items ( description, metadata, name, owner_id, parser_id, rare, sql_id, stack, subtype, tags, type, value, weight ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
-    if (m_description.size()) query.bind(1, m_description);
-    if (m_metadata.size()) query.bind(2, StrX::metadata_to_string(m_metadata));
-    query.bind(3, m_name);
-    query.bind(4, owner_id);
-    query.bind(5, m_parser_id);
-    query.bind(6, m_rarity);
-    query.bind(7, core()->sql_unique_id());
-    if (m_stack != 1) query.bind(8, m_stack);
-    if (m_type_sub != ItemSub::NONE) query.bind(9, static_cast<int>(m_type_sub));
-    if (m_tags.size()) query.bind(10, StrX::tags_to_string(m_tags));
-    if (m_type != ItemType::NONE) query.bind(11, static_cast<int>(m_type));
-    if (m_value) query.bind(12, m_value);
-    query.bind(13, m_weight);
+    SQLite::Statement query(*save_db, "INSERT INTO items ( description, metadata, name, owner_id, parser_id, rare, sql_id, stack, subtype, tags, type, value, weight ) VALUES ( :desc, :meta, :name, :owner_id, :parser_id, :rare, :sql_id, :stack, :subtype, :tags, :type, :value, :weight )");
+    if (m_description.size()) query.bind(":desc", m_description);
+    if (m_metadata.size()) query.bind(":meta", StrX::metadata_to_string(m_metadata));
+    query.bind(":name", m_name);
+    query.bind(":owner_id", owner_id);
+    query.bind(":parser_id", m_parser_id);
+    query.bind(":rare", m_rarity);
+    query.bind(":sql_id", core()->sql_unique_id());
+    if (m_stack != 1) query.bind(":stack", m_stack);
+    if (m_type_sub != ItemSub::NONE) query.bind(":subtype", static_cast<int>(m_type_sub));
+    if (m_tags.size()) query.bind(":tags", StrX::tags_to_string(m_tags));
+    if (m_type != ItemType::NONE) query.bind(":type", static_cast<int>(m_type));
+    if (m_value) query.bind(":value", m_value);
+    query.bind(":weight", m_weight);
     query.exec();
 }
 

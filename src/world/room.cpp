@@ -94,8 +94,7 @@ const std::vector<std::vector<std::string>> Room::ROOM_SCAR_DESCS = {
 };
 
 // The SQL table construction string for the saved rooms.
-const std::string   Room::SQL_ROOMS =   "CREATE TABLE rooms ( sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, id INTEGER UNIQUE NOT NULL, last_spawned_mobs INTEGER, "
-    "metadata TEXT, scars TEXT, spawn_mobs TEXT, tags TEXT, link_tags TEXT, inventory INTEGER UNIQUE )";
+const std::string   Room::SQL_ROOMS =   "CREATE TABLE rooms ( sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, id INTEGER UNIQUE NOT NULL, last_spawned_mobs INTEGER, metadata TEXT, scars TEXT, spawn_mobs TEXT, tags TEXT, link_tags TEXT, inventory INTEGER UNIQUE )";
 
 
 Room::Room(std::string new_id) : m_inventory(std::make_shared<Inventory>()), m_last_spawned_mobs(0), m_light(0), m_security(Security::ANARCHY)
@@ -306,8 +305,7 @@ int Room::light() const
         const auto item = equ->get(i);
         if (item->type() != ItemType::LIGHT) continue;
 
-        // If a light source's power is brighter than the dynamic light so far, up the dynamic light to its power.
-        // It's not *additive*, light sources will never make a bright room brighter, they just bring the light level up to a minimum value.
+        // If a light source's power is brighter than the dynamic light so far, up the dynamic light to its power. It's not *additive*, light sources will never make a bright room brighter, they just bring the light level up to a minimum value.
         if (item->power() > dynamic_light) dynamic_light = item->power();
     }
 
@@ -341,8 +339,7 @@ bool Room::link_tag(uint8_t id, LinkTag the_tag) const
         if (m_tags_link[id].count(LinkTag::Permalock) > 0) return true; // If checking for Lockable, Openable or Locked, also check for Permalock.
         if (m_links[id] == FALSE_ROOM) return true; // Links to FALSE_ROOM are always considered to be permalocked.
 
-        // Special rules check here. Because exits are usually unlocked by default, but may have the LockedByDefault tag, they then require Unlocked
-        // to mark them as currently unlocked. To simplify things, we'll just check for the Locked tag externally, and handle this special case here.
+        // Special rules check here. Because exits are usually unlocked by default, but may have the LockedByDefault tag, they then require Unlocked to mark them as currently unlocked. To simplify things, we'll just check for the Locked tag externally, and handle this special case here.
         if (the_tag == LinkTag::Locked)
         {
             if (m_tags_link[id].count(LinkTag::Locked) > 0) return true;    // If it's marked as Locked then it's locked, no question.
@@ -363,8 +360,8 @@ bool Room::link_tag(Direction dir, LinkTag the_tag) const { return link_tag(stat
 void Room::load(std::shared_ptr<SQLite::Database> save_db)
 {
     uint32_t inventory_id = 0;
-    SQLite::Statement query(*save_db, "SELECT * FROM rooms WHERE id = ?");
-    query.bind(1, m_id);
+    SQLite::Statement query(*save_db, "SELECT * FROM rooms WHERE id = :id");
+    query.bind(":id", m_id);
     if (query.executeStep())
     {
         inventory_id = query.getColumn("inventory").getUInt();
@@ -461,13 +458,12 @@ void Room::save(std::shared_ptr<SQLite::Database> save_db)
 
     if (!tags.size() && link_tags == ",,,,,,,,," && !m_scar_type.size()) return;
 
-    SQLite::Statement room_query(*save_db, "INSERT INTO rooms (id, inventory, last_spawned_mobs, link_tags, metadata, scars, spawn_mobs, sql_id, tags) "
-        "VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ? )");
-    room_query.bind(1, m_id);
-    if (inventory_id) room_query.bind(2, inventory_id);
-    if (m_last_spawned_mobs) room_query.bind(3, m_last_spawned_mobs);
-    if (link_tags != ",,,,,,,,,") room_query.bind(4, link_tags);
-    if (tag(RoomTag::MetaChanged)) room_query.bind(5, StrX::metadata_to_string(m_metadata));
+    SQLite::Statement room_query(*save_db, "INSERT INTO rooms (id, inventory, last_spawned_mobs, link_tags, metadata, scars, spawn_mobs, sql_id, tags) VALUES ( :id, :inventory, :last_spawned_mobs, :link_tags, :metadata, :scars, :spawn_mobs, :sql_id, :tags )");
+    room_query.bind(":id", m_id);
+    if (inventory_id) room_query.bind(":inventory", inventory_id);
+    if (m_last_spawned_mobs) room_query.bind(":last_spawned_mobs", m_last_spawned_mobs);
+    if (link_tags != ",,,,,,,,,") room_query.bind(":link_tags", link_tags);
+    if (tag(RoomTag::MetaChanged)) room_query.bind(":metadata", StrX::metadata_to_string(m_metadata));
     if (m_scar_type.size())
     {
         std::string scar_str;
@@ -476,11 +472,11 @@ void Room::save(std::shared_ptr<SQLite::Database> save_db)
             scar_str += StrX::itoh(static_cast<int>(m_scar_type.at(i)), 1) + ";" + StrX::itoh(m_scar_intensity.at(i), 1);
             if (i < m_scar_type.size() - 1) scar_str += ",";
         }
-        room_query.bind(6, scar_str);
+        room_query.bind(":scars", scar_str);
     }
-    if (tag(RoomTag::MobSpawnListChanged) && m_spawn_mobs.size()) room_query.bind(7, StrX::collapse_vector(m_spawn_mobs));
-    room_query.bind(8, core()->sql_unique_id());
-    if (tags.size()) room_query.bind(9, tags);
+    if (tag(RoomTag::MobSpawnListChanged) && m_spawn_mobs.size()) room_query.bind(":spawn_mobs", StrX::collapse_vector(m_spawn_mobs));
+    room_query.bind(":sql_id", core()->sql_unique_id());
+    if (tags.size()) room_query.bind(":tags", tags);
     room_query.exec();
 }
 

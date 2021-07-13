@@ -18,8 +18,7 @@
 const std::string TimeWeather::SQL_HEARTBEATS = "CREATE TABLE heartbeats ( id INTEGER PRIMARY KEY UNIQUE NOT NULL, count INTEGER NOT NULL )";
 
 // SQL table construction string for time and weather data.
-const std::string TimeWeather::SQL_TIME_WEATHER = "CREATE TABLE time_weather ( day INTEGER NOT NULL, moon INTEGER NOT NULL, subsecond REAL NOT NULL, "
-    "time INTEGER PRIMARY KEY UNIQUE NOT NULL, time_total INTEGER NOT NULL, weather INTEGER NOT NULL )";
+const std::string TimeWeather::SQL_TIME_WEATHER = "CREATE TABLE time_weather ( day INTEGER NOT NULL, moon INTEGER NOT NULL, subsecond REAL NOT NULL, time INTEGER PRIMARY KEY UNIQUE NOT NULL, time_total INTEGER NOT NULL, weather INTEGER NOT NULL )";
 
 const int   TimeWeather::LUNAR_CYCLE_DAYS =     29;     // How many days are in a lunar cycle?
 const float TimeWeather::UNINTERRUPTABLE_TIME = 5.0f;   // The maximum amount of time for an action that cannot be interrupted.
@@ -355,20 +354,20 @@ bool TimeWeather::pass_time(float seconds, bool interruptable)
 // Saves the time/weather data to disk.
 void TimeWeather::save(std::shared_ptr<SQLite::Database> save_db) const
 {
-    SQLite::Statement query(*save_db, "INSERT INTO time_weather ( day, moon, subsecond, time, time_total, weather ) VALUES ( ?, ?, ?, ?, ?, ? )");
-    query.bind(1, m_day);
-    query.bind(2, m_moon);
-    query.bind(3, m_subsecond);
-    query.bind(4, m_time);
-    query.bind(5, m_time_passed);
-    query.bind(6, static_cast<int>(m_weather));
+    SQLite::Statement query(*save_db, "INSERT INTO time_weather ( day, moon, subsecond, time, time_total, weather ) VALUES ( :day, :moon, :subsecond, :time, :time_total, :weather )");
+    query.bind(":day", m_day);
+    query.bind(":moon", m_moon);
+    query.bind(":subsecond", m_subsecond);
+    query.bind(":time", m_time);
+    query.bind(":time_total", m_time_passed);
+    query.bind(":weather", static_cast<int>(m_weather));
     query.exec();
 
     for (unsigned int h = 0; h < Heartbeat::_TOTAL; h++)
     {
-        SQLite::Statement heartbeat_query(*save_db, "INSERT INTO heartbeats ( id, count ) VALUES ( ?, ? )");
-        heartbeat_query.bind(1, h);
-        heartbeat_query.bind(2, m_heartbeats[h]);
+        SQLite::Statement heartbeat_query(*save_db, "INSERT INTO heartbeats ( id, count ) VALUES ( :id, :count )");
+        heartbeat_query.bind(":id", h);
+        heartbeat_query.bind(":count", m_heartbeats[h]);
         heartbeat_query.exec();
     }
 }

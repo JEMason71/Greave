@@ -266,7 +266,8 @@ void World::load(std::shared_ptr<SQLite::Database> save_db)
     const uint32_t player_sql_id = m_player->load(save_db, 0);
     m_time_weather->load(save_db);
 
-    SQLite::Statement query(*save_db, "SELECT sql_id FROM mobiles WHERE sql_id != " + std::to_string(player_sql_id) + " ORDER BY sql_id ASC");
+    SQLite::Statement query(*save_db, "SELECT sql_id FROM mobiles WHERE sql_id != :sql_id ORDER BY sql_id ASC");
+    query.bind(":sql_id", std::to_string(player_sql_id));
     while (query.executeStep())
     {
         auto new_mob = std::make_shared<Mobile>();
@@ -934,8 +935,8 @@ void World::save(std::shared_ptr<SQLite::Database> save_db)
     save_db->exec(TimeWeather::SQL_TIME_WEATHER);
     save_db->exec(SQL_WORLD);
 
-    SQLite::Statement query(*save_db, "INSERT INTO world ( mob_unique_id ) VALUES ( ? )");
-    query.bind(1, m_mob_unique_id);
+    SQLite::Statement query(*save_db, "INSERT INTO world ( mob_unique_id ) VALUES ( :mob_unique_id )");
+    query.bind(":mob_unique_id", m_mob_unique_id);
     query.exec();
 
     m_player->save(save_db);

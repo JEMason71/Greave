@@ -18,8 +18,7 @@ const uint32_t      Bones::BONES_VERSION =  1;  // The expected version format f
 const int           Bones::MAX_HIGHSCORES = 10; // The maximum amount of highscores to store.
 
 // SQL table construction string.
-const std::string   Bones::SQL_BONES =  "CREATE TABLE highscores ( death_reason TEXT NOT NULL, id INTEGER PRIMARY KEY UNIQUE NOT NULL, name TEXT NOT NULL, "
-    "score INTEGER NOT NULL )";
+const std::string   Bones::SQL_BONES =  "CREATE TABLE highscores ( death_reason TEXT NOT NULL, id INTEGER PRIMARY KEY UNIQUE NOT NULL, name TEXT NOT NULL, score INTEGER NOT NULL )";
 
 
 // Checks the version of the bones file, 0 if the file doesn't exist or version cannot be determined.
@@ -110,15 +109,15 @@ bool Bones::record_death()
             SQLite::Database bones_db(BONES_FILENAME, SQLite::OPEN_READWRITE);
 
             // First, check if this player ID is already present on the scoreboard.
-            SQLite::Statement duplicate_query(bones_db, "SELECT id FROM highscores WHERE id = ?");
-            duplicate_query.bind(1, player->meta_uint("bones_id"));
+            SQLite::Statement duplicate_query(bones_db, "SELECT id FROM highscores WHERE id = :id");
+            duplicate_query.bind(":id", player->meta_uint("bones_id"));
             if (duplicate_query.executeStep())
             {
-                SQLite::Statement update(bones_db, "UPDATE highscores SET death_reason = ?, name = ?, score = ? WHERE id = ?");
-                update.bind(1, player->death_reason());
-                update.bind(2, player->name());
-                update.bind(3, player->score());
-                update.bind(4, player->meta_uint("bones_id"));
+                SQLite::Statement update(bones_db, "UPDATE highscores SET death_reason = :death_reason, name = :name, score = :score WHERE id = :bones_id");
+                update.bind(":death_reason", player->death_reason());
+                update.bind(":name", player->name());
+                update.bind(":score", player->score());
+                update.bind(":bones_id", player->meta_uint("bones_id"));
                 update.exec();
                 belongs_in_hall_of_legends = 1;
             }
@@ -136,11 +135,11 @@ bool Bones::record_death()
                 if (belongs_in_hall_of_legends)
                 {
                     SQLite::Transaction transaction(bones_db);
-                    SQLite::Statement insert(bones_db, "INSERT INTO highscores ( death_reason, id, name, score ) VALUES ( ?, ?, ?, ? )");
-                    insert.bind(1, player->death_reason());
-                    insert.bind(2, player->meta_uint("bones_id"));
-                    insert.bind(3, player->name());
-                    insert.bind(4, player->score());
+                    SQLite::Statement insert(bones_db, "INSERT INTO highscores ( death_reason, id, name, score ) VALUES ( :death_reason, :id, :name, :score )");
+                    insert.bind(":death_reason", player->death_reason());
+                    insert.bind(":id", player->meta_uint("bones_id"));
+                    insert.bind(":name", player->name());
+                    insert.bind(":score", player->score());
                     insert.exec();
                     if (scores_checked >= MAX_HIGHSCORES)
                         bones_db.exec("DELETE FROM highscores WHERE ID NOT IN (SELECT id FROM highscores ORDER BY score DESC LIMIT " + std::to_string(MAX_HIGHSCORES) + ")");
@@ -171,8 +170,8 @@ uint32_t Bones::unique_id()
             do
             {
                 choice = core()->rng()->rnd(UINT32_MAX);
-                SQLite::Statement query(bones_db, "SELECT id FROM highscores WHERE id = ?");
-                query.bind(1, choice);
+                SQLite::Statement query(bones_db, "SELECT id FROM highscores WHERE id = :id");
+                query.bind(":id", choice);
                 if (query.executeStep()) valid = false;
                 else valid = true;
             } while (!valid);

@@ -82,8 +82,8 @@ std::shared_ptr<Item> Inventory::get(EquipSlot es) const
 void Inventory::load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id)
 {
     m_items.clear();
-    SQLite::Statement query(*save_db, "SELECT sql_id FROM items WHERE owner_id = ? ORDER BY sql_id ASC");
-    query.bind(1, sql_id);
+    SQLite::Statement query(*save_db, "SELECT sql_id FROM items WHERE owner_id = :owner_id ORDER BY sql_id ASC");
+    query.bind(":owner_id", sql_id);
     bool loaded_items = false;
     while (query.executeStep())
     {

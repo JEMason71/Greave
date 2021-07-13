@@ -228,22 +228,22 @@ void Player::remove_money(uint32_t amount)
 uint32_t Player::save(std::shared_ptr<SQLite::Database> save_db)
 {
     const uint32_t sql_id = Mobile::save(save_db);
-    SQLite::Statement query(*save_db, "INSERT INTO player ( blood_tox, hunger, mob_target, money, sql_id, thirst ) VALUES ( ?, ?, ?, ?, ?, ? )");
-    if (m_blood_tox) query.bind(1, m_blood_tox);
-    query.bind(2, m_hunger);
-    if (m_mob_target) query.bind(3, m_mob_target);
-    query.bind(4, m_money);
-    query.bind(5, sql_id);
-    query.bind(6, m_thirst);
+    SQLite::Statement query(*save_db, "INSERT INTO player ( blood_tox, hunger, mob_target, money, sql_id, thirst ) VALUES ( :blood_tox, :hunger, :mob_target, :money, :sql_id, :thirst )");
+    if (m_blood_tox) query.bind(":blood_tox", m_blood_tox);
+    query.bind(":hunger", m_hunger);
+    if (m_mob_target) query.bind(":mob_target", m_mob_target);
+    query.bind(":money", m_money);
+    query.bind(":sql_id", sql_id);
+    query.bind(":thirst", m_thirst);
     query.exec();
 
     for (const auto &kv : m_skill_levels)
     {
-        SQLite::Statement skill_query(*save_db, "INSERT INTO skills ( id, level, xp ) VALUES ( ?, ?, ?)");
-        skill_query.bind(1, kv.first);
-        skill_query.bind(2, kv.second);
+        SQLite::Statement skill_query(*save_db, "INSERT INTO skills ( id, level, xp ) VALUES ( :id, :level, :xp )");
+        skill_query.bind(":id", kv.first);
+        skill_query.bind(":level", kv.second);
         const auto it = m_skill_xp.find(kv.first);
-        if (it != m_skill_xp.end()) skill_query.bind(3, it->second);
+        if (it != m_skill_xp.end()) skill_query.bind(":xp", it->second);
         skill_query.exec();
     }
 
