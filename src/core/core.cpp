@@ -200,15 +200,16 @@ void Core::main_loop()
 }
 
 // Prints a message in the message log.
-#ifdef GREAVE_TOLK
 void Core::message(std::string msg, bool interrupt)
-#else
-void Core::message(std::string msg, bool)
-#endif
 {
     m_message_log->msg(msg);
+    screen_read(msg, interrupt);
+}
 
+// Reads a string in a screen reader, if any are active.
 #ifdef GREAVE_TOLK
+void Core::screen_read(std::string msg, bool interrupt)
+{
     if (m_prefs->screen_reader_external || m_prefs->screen_reader_sapi)
     {
         if (m_prefs->screen_reader_process_square_brackets)
@@ -224,8 +225,10 @@ void Core::message(std::string msg, bool)
         if (interrupt) m_message_log->clear_latest_messages();
         m_message_log->add_latest_message(msg_voice);
     }
-#endif
 }
+#else
+void Core::screen_read(std::string, bool) { }
+#endif
 
 // Returns a pointer to the MessageLog object.
 const std::shared_ptr<MessageLog> Core::messagelog() const { return m_message_log; }
@@ -306,8 +309,7 @@ const std::shared_ptr<Terminal> Core::terminal() const { return m_terminal; }
 // The 'title screen' and saved game selection.
 void Core::title()
 {
-    message("{U}Welcome to {G}Greave {U}" + GAME_VERSION +
-        ", copyright (c) 2021 Raine \"Gravecat\" Simmons and the Greave contributors. This game is free and open-source, released under the Gnu AGPL 3.0 license.");
+    message("{U}Welcome to {G}Greave {U}" + GAME_VERSION + ", copyright (c) 2021 Raine \"Gravecat\" Simmons and the Greave contributors. This game is free and open-source, released under the Gnu AGPL 3.0 license.");
 #ifdef GREAVE_TOLK
     if (Tolk_DetectScreenReader()) message("{U}If you are using a screen reader, pressing the {C}tab key {U}will repeat the text after your last input.");
 #endif

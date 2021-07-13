@@ -88,6 +88,37 @@ void MessageLog::recalc_window_sizes()
 std::string MessageLog::render_message_log(bool accept_blank_input)
 {
     const std::shared_ptr<Prefs> prefs = core()->prefs();
+
+    auto coloured_value_indicator = [](const std::string &name, int current, int max) -> std::string {
+        std::string colour = "{G}", colour_dark = "{g}";
+        float percent = static_cast<float>(current) / static_cast<float>(max);
+        if (percent <= 0.2f)
+        {
+            colour = "{R}";
+            colour_dark = "{r}";
+        }
+        else if (percent <= 0.5f)
+        {
+            colour = "{Y}";
+            colour_dark = "{y}";
+        }
+        return colour + std::to_string(current) + colour_dark + "/" + colour + std::to_string(max) + colour_dark + name;
+    };
+
+    std::string status_str;
+    if (core()->world())
+    {
+        std::string stance_str;
+        switch (core()->world()->player()->stance())
+        {
+            case CombatStance::AGGRESSIVE: stance_str = "{R}a"; break;
+            case CombatStance::BALANCED: stance_str = "{G}b"; break;
+            case CombatStance::DEFENSIVE: stance_str = "{U}d"; break;
+        }
+        status_str = "{W}<" + stance_str + "{W}:" + coloured_value_indicator("hp", core()->world()->player()->hp(), core()->world()->player()->hp(true)) + "{W}>";
+        core()->screen_read(status_str, false);
+    }
+
     while(true)
     {
         // Clear the screen, fill in dark gray areas for the input and output areas.
@@ -106,33 +137,7 @@ std::string MessageLog::render_message_log(bool accept_blank_input)
 
         // Render the input buffer.
         std::string input_buf = "{W}" + m_input_buffer;
-        if (core()->world())
-        {
-            auto coloured_value_indicator = [](const std::string &name, int current, int max) -> std::string {
-                std::string colour = "{G}", colour_dark = "{g}";
-                float percent = static_cast<float>(current) / static_cast<float>(max);
-                if (percent <= 0.2f)
-                {
-                    colour = "{R}";
-                    colour_dark = "{r}";
-                }
-                else if (percent <= 0.5f)
-                {
-                    colour = "{Y}";
-                    colour_dark = "{y}";
-                }
-                return colour + std::to_string(current) + colour_dark + "/" + colour + std::to_string(max) + colour_dark + name;
-            };
-
-            std::string stance_str;
-            switch (core()->world()->player()->stance())
-            {
-                case CombatStance::AGGRESSIVE: stance_str = "{R}a"; break;
-                case CombatStance::BALANCED: stance_str = "{G}b"; break;
-                case CombatStance::DEFENSIVE: stance_str = "{U}d"; break;
-            }
-            input_buf = "{W}<" + stance_str + "{W}:" + coloured_value_indicator("hp", core()->world()->player()->hp(), core()->world()->player()->hp(true)) + "{W}> " + input_buf;
-        }
+        if (core()->world()) input_buf = status_str + " " + input_buf;
         const unsigned int input_buf_len = StrX::strlen_colour(input_buf);
         if (input_buf_len > m_input_window_width) input_buf = input_buf.substr(0, m_input_window_width);
         core()->terminal()->print(input_buf, m_input_window_x, m_input_window_y);

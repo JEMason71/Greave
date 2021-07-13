@@ -27,6 +27,7 @@ public:
     const std::shared_ptr<Parser>       parser() const;         // Returns a pointer to the Parser object.
     const std::shared_ptr<Random>       rng() const;            // Returns a pointer to the Random object.
     void                                save();                 // Saves the game to disk.
+    void                                screen_read(std::string msg, bool interrupt);   // Reads a string in a screen reader, if any are active.
     uint32_t                            sql_unique_id();        // Retrieves a new unique SQL ID.
     const std::shared_ptr<Terminal>     terminal() const;       // Returns a pointer  to the terminal emulator object.
     void                                title();                // The 'title screen' and saved game selection.
