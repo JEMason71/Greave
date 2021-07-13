@@ -1,0 +1,58 @@
+# data/mobiles/arena.yml -- NPC combatants in the arena.
+# Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+
+AMATEUR_GLADIATOR:
+  gear: GEAR_ARENA_AMATEUR_GLADIATOR
+  hp: 84
+  name: amateur gladiator
+  score: 59
+  species: humanoid
+  tags: [ AggroOnSight, Clumsy, Puny, RandomGender ]
+
+DILETTANTE_ROGUE:
+  gear: GEAR_ARENA_DILETTANTE_ROGUE
+  hp: 64
+  name: dilettante rogue
+  score: 47
+  species: humanoid
+  tags: [ AggroOnSight, Clumsy, Puny, RandomGender ]
+
+FLEDGLING_KNIGHT:
+  gear: GEAR_ARENA_FLEDGLING_KNIGHT
+  hp: 73
+  name: fledgling knight
+  score: 98
+  species: humanoid
+  tags: [ AggroOnSight, Clumsy, Puny, RandomGender ]
+
+GREENHORN_SOLDIER:
+  gear: GEAR_ARENA_GREENHORN_SOLDIER
+  hp: 82
+  name: greenhorn soldier
+  score: 64
+  species: humanoid
+  tags: [ AggroOnSight, Clumsy, Puny, RandomGender ]
+
+JACKLEG_BERSERKER:
+  gear: GEAR_ARENA_JACKLEG_BERSERKER
+  hp: 75
+  name: jackleg berserker
+  score: 52
+  species: humanoid
+  tags: [ AggroOnSight, Clumsy, Puny, RandomGender ]
+
+TENDERFOOT_MARAUDER:
+  gear: GEAR_ARENA_TENDERFOOT_MARAUDER
+  hp: 77
+  name: tenderfoot marauder
+  score: 62
+  species: humanoid
+  tags: [ AggroOnSight, Clumsy, Puny, RandomGender ]
+
+UNTRAINED_MERCENARY:
+  gear: GEAR_ARENA_UNTRAINED_MERCENARY
+  hp: 67
+  name: untrained mercenary
+  score: 58
+  species: humanoid
+  tags: [ AggroOnSight, Clumsy, Puny, RandomGender ]

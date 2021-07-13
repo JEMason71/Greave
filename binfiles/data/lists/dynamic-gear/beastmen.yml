@@ -1,4 +1,4 @@
-# data/lists/dynamic-gear/individual-gear.yml -- Sub-lists used for dynamic gear/clothing assignments for NPCs.
+# data/lists/dynamic-gear/beastmen.yml -- The beastmen category encompasses hostile, low-intelligence, humanoid monsters such as goblins, orcs, gnolls, etc.
 # Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 ARMOUR_GOBLIN_LIGHT: [ ARMOUR_HIDE_BARBARIC_SMALL, -1, BRACERS_FUR_SMALL, -1, GREAVES_FUR_SMALL, -1 ]

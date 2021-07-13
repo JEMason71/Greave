@@ -1,0 +1,14 @@
+# data/lists/dynamic-spawns/arena.yml -- Mobiles that spawn as combatants in the arena.
+# Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+
+ARENA_SPAWNS: [ "#ARENA_NOVICE" ]
+
+ARENA_NOVICE: [
+  AMATEUR_GLADIATOR, 1,
+  DILETTANTE_ROGUE, 1,
+  FLEDGLING_KNIGHT, 1,
+  GREENHORN_SOLDIER, 1,
+  JACKLEG_BERSERKER, 1,
+  TENDERFOOT_MARAUDER, 1,
+  UNTRAINED_MERCENARY, 1
+]
