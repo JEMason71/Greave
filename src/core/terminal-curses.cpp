@@ -23,7 +23,7 @@ TerminalCurses::TerminalCurses()
 #else
     core()->guru()->log("Setting up NCurses.");
 #endif
-    initscr();
+    if (!initscr()) throw std::runtime_error("Could not initialize Curses terminal!");
     noecho();
     keypad(stdscr, true);
     curs_set(0);
@@ -110,10 +110,8 @@ uint32_t TerminalCurses::colour(Colour col) const
     {
         case Colour::BLACK: return (prefs->curses_custom_colours ? COLOR_PAIR(CUSTOM_BLACK) : COLOR_PAIR(1));
         case Colour::BLACK_BOLD: return (prefs->curses_custom_colours ? COLOR_PAIR(CUSTOM_GREY_DARK) : COLOR_PAIR(1) | A_BOLD);
-        case Colour::RED: case Colour::GREEN: case Colour::YELLOW: case Colour::BLUE: case Colour::MAGENTA: case Colour::CYAN: case Colour::WHITE:
-            return (prefs->curses_custom_colours ? COLOR_PAIR(CUSTOM_GREY) : COLOR_PAIR(8));
-        case Colour::RED_BOLD: case Colour::GREEN_BOLD: case Colour::YELLOW_BOLD: case Colour::BLUE_BOLD: case Colour::MAGENTA_BOLD: case Colour::CYAN_BOLD: case Colour::WHITE_BOLD:
-            return (prefs->curses_custom_colours ? COLOR_PAIR(CUSTOM_WHITE) :COLOR_PAIR(8) | A_BOLD);
+        case Colour::RED: case Colour::GREEN: case Colour::YELLOW: case Colour::BLUE: case Colour::MAGENTA: case Colour::CYAN: case Colour::WHITE: return (prefs->curses_custom_colours ? COLOR_PAIR(CUSTOM_GREY) : COLOR_PAIR(8));
+        case Colour::RED_BOLD: case Colour::GREEN_BOLD: case Colour::YELLOW_BOLD: case Colour::BLUE_BOLD: case Colour::MAGENTA_BOLD: case Colour::CYAN_BOLD: case Colour::WHITE_BOLD: return (prefs->curses_custom_colours ? COLOR_PAIR(CUSTOM_WHITE) :COLOR_PAIR(8) | A_BOLD);
         case Colour::WHITE_BG: return (prefs->curses_custom_colours ? COLOR_PAIR(CUSTOM_WHITE_BG) : COLOR_PAIR(9) | A_BOLD);
         default: return 0;  // This should be impossible, but keeps the compiler happy.
     }

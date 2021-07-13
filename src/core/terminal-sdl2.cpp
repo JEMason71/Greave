@@ -14,12 +14,13 @@
 
 
 // Constructor, sets up SDL2.
-TerminalSDL2::TerminalSDL2() : m_cursor_visible(false), m_cursor_x(0), m_cursor_y(0), m_font(nullptr), m_mouse_x(0), m_mouse_y(0), m_renderer(nullptr), m_screenshot_msg_time(0),
-    m_screenshot_taken(0), m_window(nullptr)
+TerminalSDL2::TerminalSDL2() : m_cursor_visible(false), m_cursor_x(0), m_cursor_y(0), m_font(nullptr), m_init_sdl(false), m_init_sdl_ttf(false), m_mouse_x(0), m_mouse_y(0), m_renderer(nullptr), m_screenshot_msg_time(0), m_screenshot_taken(0), m_window(nullptr)
 {
     const std::shared_ptr<Prefs> prefs = core()->prefs();
     if (SDL_Init(SDL_INIT_VIDEO) < 0) throw std::runtime_error("Could not initialize SDL: " + std::string(SDL_GetError()));
+    else m_init_sdl = true;
     if (TTF_Init() < 0) throw std::runtime_error("Could not initialize SDL_ttf: " + std::string(TTF_GetError()));
+    else m_init_sdl_ttf = true;
     SDL_StartTextInput();
 
     // Load the font!
@@ -69,8 +70,8 @@ TerminalSDL2::~TerminalSDL2()
         SDL_DestroyWindow(m_window);
         m_window = nullptr;
     }
-    TTF_Quit();
-    SDL_Quit();
+    if (m_init_sdl_ttf) TTF_Quit();
+    if (m_init_sdl) SDL_Quit();
 }
 
 // Returns the height of a single cell, in pixels.

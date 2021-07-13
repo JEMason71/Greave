@@ -125,17 +125,29 @@ void Core::init(bool dry_run)
     std::string terminal_choice = StrX::str_tolower(m_prefs->terminal);
     if (!dry_run)
     {
-#ifdef GREAVE_TARGET_WINDOWS
-        if (terminal_choice != "curses") FreeConsole();
-#endif
-
         // Set up our terminal emulator.
 #ifdef GREAVE_INCLUDE_SDL
-        if (terminal_choice == "sdl" || terminal_choice == "sdl2") m_terminal = std::make_shared<TerminalSDL2>();
+        if (terminal_choice == "sdl" || terminal_choice == "sdl2")
+        {
+            try
+            {
+                m_terminal = std::make_shared<TerminalSDL2>();
+            }
+            catch (std::exception &e)
+            {
+                core()->guru()->log("Could not initialize SDL terminal! Falling back to Curses...", Guru::WARN);
+                terminal_choice = "curses";
+                m_terminal = std::make_shared<TerminalCurses>();
+            }
+        }
         else
 #endif
         if (terminal_choice == "curses") m_terminal = std::make_shared<TerminalCurses>();
         else m_guru_meditation->halt("Invalid terminal specified in prefs.yml");
+
+#ifdef GREAVE_TARGET_WINDOWS
+        if (terminal_choice != "curses") FreeConsole();
+#endif
 
         // Sets up the main message log window.
         m_message_log = std::make_shared<MessageLog>();

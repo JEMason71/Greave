@@ -43,6 +43,8 @@ private:
     TTF_Font*               m_font;                 // The font chosen by the user.
     int                     m_font_height;          // The height of the loaded font, in pixels.
     int                     m_font_width;           // The width of the loaded font, in pixels.
+    bool                    m_init_sdl;             // SDL system successfully initialized.
+    bool                    m_init_sdl_ttf;         // SDL_ttf system successfully initialized.
     int                     m_mouse_x;              // The X pixel coordinate of the mouse cursor's last location.
     int                     m_mouse_y;              // The Y pixel coordinate of the mouse cursor's last location.
     SDL_Renderer*           m_renderer;             // The SDL2 hardware renderer.
