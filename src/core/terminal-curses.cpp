@@ -1,6 +1,7 @@
 // core/terminal-curses.cpp -- Terminal interface for PDCurses/NCurses. See core/terminal.hpp for a full description of the Terminal class.
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
+#ifdef GREAVE_INCLUDE_CURSES
 #include "core/core.hpp"
 #include "core/guru.hpp"
 #include "core/prefs.hpp"
@@ -231,3 +232,4 @@ bool TerminalCurses::wants_to_close() const
     const char ch = getch();
     return (ch == 3 || ch == 4 || ch == 27);
 }
+#endif

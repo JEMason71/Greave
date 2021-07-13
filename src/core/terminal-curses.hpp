@@ -2,6 +2,7 @@
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #pragma once
+#ifdef GREAVE_INCLUDE_CURSES
 #include "core/terminal.hpp"
 
 
@@ -33,3 +34,4 @@ private:
     enum CustomColour { CUSTOM_BLACK = 100, CUSTOM_GREY_DARK, CUSTOM_RED, CUSTOM_RED_DARK, CUSTOM_GREEN, CUSTOM_GREEN_DARK, CUSTOM_YELLOW, CUSTOM_YELLOW_DARK, CUSTOM_BLUE,
         CUSTOM_BLUE_DARK, CUSTOM_CYAN, CUSTOM_CYAN_DARK, CUSTOM_MAGENTA, CUSTOM_MAGENTA_DARK, CUSTOM_WHITE, CUSTOM_GREY, CUSTOM_WHITE_BG };
 };
+#endif

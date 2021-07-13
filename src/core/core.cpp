@@ -125,6 +125,18 @@ void Core::init(bool dry_run)
     std::string terminal_choice = StrX::str_tolower(m_prefs->terminal);
     if (!dry_run)
     {
+
+#if !defined(GREAVE_INCLUDE_SDL) && !defined(GREAVE_INCLUDE_CURSES)
+#error No support for either SDL2 or Curses! Please choose at least one!
+#endif
+
+        // If SDL or Curses is disabled, just default to the other option.
+#ifndef GREAVE_INCLUDE_SDL
+        terminal_choice = "curses";
+#elif !defined(GREAVE_INCLUDE_CURSES)
+        terminal_choice = "sdl2";
+#endif
+
         // Set up our terminal emulator.
 #ifdef GREAVE_INCLUDE_SDL
         if (terminal_choice == "sdl" || terminal_choice == "sdl2")
@@ -135,18 +147,24 @@ void Core::init(bool dry_run)
             }
             catch (std::exception &e)
             {
+#ifdef GREAVE_INCLUDE_CURSES
                 core()->guru()->log("Could not initialize SDL terminal! Falling back to Curses...", Guru::WARN);
                 terminal_choice = "curses";
-                m_terminal = std::make_shared<TerminalCurses>();
+#else
+                throw e;
+#endif
             }
         }
-        else
 #endif
+#ifdef GREAVE_INCLUDE_CURSES
         if (terminal_choice == "curses") m_terminal = std::make_shared<TerminalCurses>();
-        else m_guru_meditation->halt("Invalid terminal specified in prefs.yml");
+#endif
+        if (!m_terminal) m_guru_meditation->halt("Invalid terminal specified in prefs.yml");
 
 #ifdef GREAVE_TARGET_WINDOWS
+#ifdef GREAVE_INCLUDE_CURSES
         if (terminal_choice != "curses") FreeConsole();
+#endif
 #endif
 
         // Sets up the main message log window.

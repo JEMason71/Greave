@@ -19,6 +19,12 @@ if(INCLUDE_SDL)
   add_definitions(-DGREAVE_INCLUDE_SDL)
 endif(INCLUDE_SDL)
 
+# Option to disable Curses when compiling.
+option(INCLUDE_CURSES "INCLUDE_CURSES" ON)
+if(INCLUDE_CURSES)
+  add_definitions(-DGREAVE_INCLUDE_CURSES)
+endif(INCLUDE_CURSES)
+
 # Platform-specific defaults/overrides
 if(WIN32)
   set(TARGET_WINDOWS 1)
