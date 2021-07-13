@@ -279,585 +279,644 @@ void World::load(std::shared_ptr<SQLite::Database> save_db)
 // Loads the anatomy YAML data into memory.
 void World::load_anatomy_pool()
 {
-    const YAML::Node yaml_anatomies = YAML::LoadFile("data/misc/anatomy.yml");
-    for (auto a : yaml_anatomies)
+    try
     {
-        // First, determine the species ID.
-        const std::string species_id = a.first.as<std::string>();
-
-        std::vector<std::shared_ptr<BodyPart>> anatomy_vec;
-
-        // Cycle over the body parts.
-        for (auto bp : a.second)
+        const YAML::Node yaml_anatomies = YAML::LoadFile("data/misc/anatomy.yml");
+        for (auto a : yaml_anatomies)
         {
-            auto new_bp = std::make_shared<BodyPart>();
-            if (!bp.second.IsSequence() || bp.second.size() != 2)
-            {
-                core()->guru()->nonfatal("Anatomy data incorrect for " + species_id, Guru::CRITICAL);
-                continue;
-            }
-            new_bp->name = bp.first.as<std::string>();
-            new_bp->hit_chance = bp.second[0].as<int>();
-            const std::string target = bp.second[1].as<std::string>();
-            if (target == "body") new_bp->slot = EquipSlot::BODY;
-            else if (target == "head") new_bp->slot = EquipSlot::HEAD;
-            else if (target == "feet") new_bp->slot = EquipSlot::FEET;
-            else if (target == "hands") new_bp->slot = EquipSlot::HANDS;
-            else
-            {
-                core()->guru()->nonfatal("Could not determine body part armour target for " + species_id + ": " + target, Guru::CRITICAL);
-                continue;
-            }
-            anatomy_vec.push_back(new_bp);
-        }
+            // First, determine the species ID.
+            const std::string species_id = a.first.as<std::string>();
 
-        m_anatomy_pool.insert(std::pair<std::string, std::vector<std::shared_ptr<BodyPart>>>(species_id, anatomy_vec));
+            std::vector<std::shared_ptr<BodyPart>> anatomy_vec;
+
+            // Cycle over the body parts.
+            for (auto bp : a.second)
+            {
+                auto new_bp = std::make_shared<BodyPart>();
+                if (!bp.second.IsSequence() || bp.second.size() != 2)
+                {
+                    core()->guru()->nonfatal("Anatomy data incorrect for " + species_id, Guru::CRITICAL);
+                    continue;
+                }
+                new_bp->name = bp.first.as<std::string>();
+                new_bp->hit_chance = bp.second[0].as<int>();
+                const std::string target = bp.second[1].as<std::string>();
+                if (target == "body") new_bp->slot = EquipSlot::BODY;
+                else if (target == "head") new_bp->slot = EquipSlot::HEAD;
+                else if (target == "feet") new_bp->slot = EquipSlot::FEET;
+                else if (target == "hands") new_bp->slot = EquipSlot::HANDS;
+                else
+                {
+                    core()->guru()->nonfatal("Could not determine body part armour target for " + species_id + ": " + target, Guru::CRITICAL);
+                    continue;
+                }
+                anatomy_vec.push_back(new_bp);
+            }
+
+            m_anatomy_pool.insert(std::pair<std::string, std::vector<std::shared_ptr<BodyPart>>>(species_id, anatomy_vec));
+        }
+    } catch (std::exception& e)
+    {
+        throw std::runtime_error("Error while loading data/misc/anatomy.yml: " + std::string(e.what()));
     }
 }
 
 // Loads the generic descriptions YAML data into memory.
 void World::load_generic_descs()
 {
-    const YAML::Node yaml_descs = YAML::LoadFile("data/misc/generic descriptions.yml");
-    for (auto desc : yaml_descs)
-        m_generic_descs.insert(std::make_pair(desc.first.as<std::string>(), desc.second.as<std::string>()));
+    try
+    {
+        const YAML::Node yaml_descs = YAML::LoadFile("data/misc/generic descriptions.yml");
+        for (auto desc : yaml_descs)
+            m_generic_descs.insert(std::make_pair(desc.first.as<std::string>(), desc.second.as<std::string>()));
+    }
+    catch (std::exception& e)
+    {
+        throw std::runtime_error("Error while loading data/misc/generic descriptions.yml: " + std::string(e.what()));
+    }
 }
 
 // Loads the Item YAML data into memory.
 void World::load_item_pool()
 {
-    const std::vector<std::string> item_files = FileX::files_in_dir("data/items", true);
-    for (auto item_file : item_files)
+    std::string current_file;
+    try
     {
-        const YAML::Node yaml_items = YAML::LoadFile("data/items/" + item_file);
-        for (auto item : yaml_items)
+        const std::vector<std::string> item_files = FileX::files_in_dir("data/items", true);
+        for (auto item_file : item_files)
         {
-            const YAML::Node item_data = item.second;
-
-            // Create a new Item object.
-            const std::string item_id_str = item.first.as<std::string>();
-            const uint32_t item_id = StrX::hash(item_id_str);
-            const auto new_item(std::make_shared<Item>());
-
-            // Verify all keys in this file.
-            for (auto key_value : item_data)
+            current_file = item_file;
+            const YAML::Node yaml_items = YAML::LoadFile("data/items/" + item_file);
+            for (auto item : yaml_items)
             {
-                const std::string key = key_value.first.as<std::string>();
-                if (VALID_YAML_KEYS_ITEMS.find(key) == VALID_YAML_KEYS_ITEMS.end())
-                    core()->guru()->nonfatal("Invalid key in item YAML data (" + key + "): " + item_id_str, Guru::WARN);
-            }
+                const YAML::Node item_data = item.second;
 
-            // Check to make sure there are no hash collisions.
-            if (m_item_pool.find(item_id) != m_item_pool.end()) throw std::runtime_error("Item ID hash conflict: " + item_id_str);
+                // Create a new Item object.
+                const std::string item_id_str = item.first.as<std::string>();
+                const uint32_t item_id = StrX::hash(item_id_str);
+                const auto new_item(std::make_shared<Item>());
 
-            // The Item's type and subtype.
-            if (!item_data["type"]) throw std::runtime_error("Missing item type: " + item_id_str);
-            std::string item_type_str, item_subtype_str;
-            if (item_data["type"].IsSequence())
-            {
-                const unsigned int seq_size = item_data["type"].size();
-                if (seq_size < 1 || seq_size > 2) throw std::runtime_error("Item type data malforned: " + item_id_str);
-                item_type_str = item_data["type"][0].as<std::string>();
-                if (seq_size == 2) item_subtype_str = item_data["type"][1].as<std::string>();
-            }
-            else item_type_str = item_data["type"].as<std::string>();
-            ItemType type = ItemType::NONE;
-            ItemSub subtype = ItemSub::NONE;
-            if (item_type_str.size())
-            {
-                const auto it = ITEM_TYPE_MAP.find(item_type_str);
-                if (it == ITEM_TYPE_MAP.end()) core()->guru()->nonfatal("Invalid item type on " + item_id_str + ": " + item_type_str, Guru::ERROR);
-                else type = it->second;
-            }
-            if (item_subtype_str.size())
-            {
-                const auto it = ITEM_SUBTYPE_MAP.find(item_subtype_str);
-                if (it == ITEM_SUBTYPE_MAP.end()) core()->guru()->nonfatal("Invalid item subtype on " + item_id_str + ": " + item_subtype_str, Guru::ERROR);
-                else subtype = it->second;
-            }
-            new_item->set_type(type, subtype);
-
-            // The Item's tags, if any.
-            if (item_data["tags"])
-            {
-                if (!item_data["tags"].IsSequence()) core()->guru()->nonfatal("{r}Malformed item tags: " + item_id_str, Guru::ERROR);
-                else for (auto tag : item_data["tags"])
+                // Verify all keys in this file.
+                for (auto key_value : item_data)
                 {
-                    const std::string tag_str = StrX::str_tolower(tag.as<std::string>());
-                    const auto tag_it = ITEM_TAG_MAP.find(tag_str);
-                    if (tag_it == ITEM_TAG_MAP.end()) core()->guru()->nonfatal("Unrecognized item tag (" + tag_str + "): " + item_id_str, Guru::ERROR);
-                    else new_item->set_tag(tag_it->second);
+                    const std::string key = key_value.first.as<std::string>();
+                    if (VALID_YAML_KEYS_ITEMS.find(key) == VALID_YAML_KEYS_ITEMS.end())
+                        core()->guru()->nonfatal("Invalid key in item YAML data (" + key + "): " + item_id_str, Guru::WARN);
                 }
-            }
 
-            // The Item's metadata, if any.
-            if (item_data["metadata"]) StrX::string_to_metadata(item_data["metadata"].as<std::string>(), *new_item->meta_raw());
+                // Check to make sure there are no hash collisions.
+                if (m_item_pool.find(item_id) != m_item_pool.end()) throw std::runtime_error("Item ID hash conflict: " + item_id_str);
 
-            // The Item's name.
-            if (!item_data["name"]) throw std::runtime_error("Missing item name: " + item_id_str);
-            if (item_data["name"].IsSequence())
-            {
-                const unsigned int seq_size = item_data["name"].size();
-                if (seq_size < 1 || seq_size > 2) throw std::runtime_error("Item name data malforned: " + item_id_str);
-                new_item->set_name(item_data["name"][0].as<std::string>());
-                if (seq_size == 2) new_item->set_meta("plural_name", item_data["name"][1].as<std::string>());
-            }
-            else new_item->set_name(item_data["name"].as<std::string>());
+                // The Item's type and subtype.
+                if (!item_data["type"]) throw std::runtime_error("Missing item type: " + item_id_str);
+                std::string item_type_str, item_subtype_str;
+                if (item_data["type"].IsSequence())
+                {
+                    const unsigned int seq_size = item_data["type"].size();
+                    if (seq_size < 1 || seq_size > 2) throw std::runtime_error("Item type data malforned: " + item_id_str);
+                    item_type_str = item_data["type"][0].as<std::string>();
+                    if (seq_size == 2) item_subtype_str = item_data["type"][1].as<std::string>();
+                }
+                else item_type_str = item_data["type"].as<std::string>();
+                ItemType type = ItemType::NONE;
+                ItemSub subtype = ItemSub::NONE;
+                if (item_type_str.size())
+                {
+                    const auto it = ITEM_TYPE_MAP.find(item_type_str);
+                    if (it == ITEM_TYPE_MAP.end()) core()->guru()->nonfatal("Invalid item type on " + item_id_str + ": " + item_type_str, Guru::ERROR);
+                    else type = it->second;
+                }
+                if (item_subtype_str.size())
+                {
+                    const auto it = ITEM_SUBTYPE_MAP.find(item_subtype_str);
+                    if (it == ITEM_SUBTYPE_MAP.end()) core()->guru()->nonfatal("Invalid item subtype on " + item_id_str + ": " + item_subtype_str, Guru::ERROR);
+                    else subtype = it->second;
+                }
+                new_item->set_type(type, subtype);
 
-            // The Item's damage type, if any.
-            if (item_data["damage_type"])
-            {
-                const std::string damage_type = item_data["damage_type"].as<std::string>();
-                const auto type_it = DAMAGE_TYPE_MAP.find(damage_type);
-                if (type_it == DAMAGE_TYPE_MAP.end()) core()->guru()->nonfatal("Unrecognized damage type (" + damage_type + "): " + item_id_str, Guru::ERROR);
-                else new_item->set_meta("damage_type", static_cast<int>(type_it->second));
-            }
+                // The Item's tags, if any.
+                if (item_data["tags"])
+                {
+                    if (!item_data["tags"].IsSequence()) core()->guru()->nonfatal("{r}Malformed item tags: " + item_id_str, Guru::ERROR);
+                    else for (auto tag : item_data["tags"])
+                    {
+                        const std::string tag_str = StrX::str_tolower(tag.as<std::string>());
+                        const auto tag_it = ITEM_TAG_MAP.find(tag_str);
+                        if (tag_it == ITEM_TAG_MAP.end()) core()->guru()->nonfatal("Unrecognized item tag (" + tag_str + "): " + item_id_str, Guru::ERROR);
+                        else new_item->set_tag(tag_it->second);
+                    }
+                }
 
-            // The item's block% modifier, if a ny.
-            if (item_data["block_mod"]) new_item->set_meta("block_mod", item_data["block_mod"].as<int>());
+                // The Item's metadata, if any.
+                if (item_data["metadata"]) StrX::string_to_metadata(item_data["metadata"].as<std::string>(), *new_item->meta_raw());
 
-            // The item's dodge% modifier, if any.
-            if (item_data["dodge_mod"]) new_item->set_meta("dodge_mod", item_data["dodge_mod"].as<int>());
+                // The Item's name.
+                if (!item_data["name"]) throw std::runtime_error("Missing item name: " + item_id_str);
+                if (item_data["name"].IsSequence())
+                {
+                    const unsigned int seq_size = item_data["name"].size();
+                    if (seq_size < 1 || seq_size > 2) throw std::runtime_error("Item name data malforned: " + item_id_str);
+                    new_item->set_name(item_data["name"][0].as<std::string>());
+                    if (seq_size == 2) new_item->set_meta("plural_name", item_data["name"][1].as<std::string>());
+                }
+                else new_item->set_name(item_data["name"].as<std::string>());
 
-            // The item's parry% modifier, if any.
-            if (item_data["parry_mod"]) new_item->set_meta("parry_mod", item_data["parry_mod"].as<int>());
+                // The Item's damage type, if any.
+                if (item_data["damage_type"])
+                {
+                    const std::string damage_type = item_data["damage_type"].as<std::string>();
+                    const auto type_it = DAMAGE_TYPE_MAP.find(damage_type);
+                    if (type_it == DAMAGE_TYPE_MAP.end()) core()->guru()->nonfatal("Unrecognized damage type (" + damage_type + "): " + item_id_str, Guru::ERROR);
+                    else new_item->set_meta("damage_type", static_cast<int>(type_it->second));
+                }
 
-            // The Item's critical power, if any.
-            if (item_data["crit"]) new_item->set_meta("crit", item_data["crit"].as<int>());
+                // The item's block% modifier, if a ny.
+                if (item_data["block_mod"]) new_item->set_meta("block_mod", item_data["block_mod"].as<int>());
 
-            // The Item's speed, if any.
-            if (item_data["speed"]) new_item->set_meta("speed", item_data["speed"].as<float>());
+                // The item's dodge% modifier, if any.
+                if (item_data["dodge_mod"]) new_item->set_meta("dodge_mod", item_data["dodge_mod"].as<int>());
 
-            // The Item's capacity, if any.
-            if (item_data["capacity"]) new_item->set_meta("capacity", item_data["capacity"].as<int>());
+                // The item's parry% modifier, if any.
+                if (item_data["parry_mod"]) new_item->set_meta("parry_mod", item_data["parry_mod"].as<int>());
 
-            // The Item's charge, if any.
-            if (item_data["charge"]) new_item->set_meta("charge", item_data["charge"].as<int>());
+                // The Item's critical power, if any.
+                if (item_data["crit"]) new_item->set_meta("crit", item_data["crit"].as<int>());
 
-            // The Item's EquipSlot, if any.
-            if (item_data["slot"])
-            {
-                const std::string slot_str = item_data["slot"].as<std::string>();
-                const auto slot_it = EQUIP_SLOT_MAP.find(slot_str);
-                if (slot_it == EQUIP_SLOT_MAP.end()) core()->guru()->nonfatal("Unrecognized equipment slot (" + slot_str + "): " + item_id_str, Guru::ERROR);
+                // The Item's speed, if any.
+                if (item_data["speed"]) new_item->set_meta("speed", item_data["speed"].as<float>());
+
+                // The Item's capacity, if any.
+                if (item_data["capacity"]) new_item->set_meta("capacity", item_data["capacity"].as<int>());
+
+                // The Item's charge, if any.
+                if (item_data["charge"]) new_item->set_meta("charge", item_data["charge"].as<int>());
+
+                // The Item's EquipSlot, if any.
+                if (item_data["slot"])
+                {
+                    const std::string slot_str = item_data["slot"].as<std::string>();
+                    const auto slot_it = EQUIP_SLOT_MAP.find(slot_str);
+                    if (slot_it == EQUIP_SLOT_MAP.end()) core()->guru()->nonfatal("Unrecognized equipment slot (" + slot_str + "): " + item_id_str, Guru::ERROR);
+                    else
+                    {
+                        EquipSlot chosen_slot = slot_it->second;
+                        if (new_item->type() == ItemType::SHIELD && new_item->equip_slot() == EquipSlot::HAND_MAIN) chosen_slot = EquipSlot::HAND_OFF;
+                        new_item->set_meta("slot", static_cast<int>(chosen_slot));
+                    }
+                }
+
+                // The Item's power, if any.
+                if (item_data["power"]) new_item->set_meta("power", item_data["power"].as<int>());
+
+                // The Item's ammunition power, if any.
+                if (item_data["ammo_power"]) new_item->set_meta("ammo_power", item_data["ammo_power"].as<float>());
+
+                // The Item's warmth rating, if any.
+                if (item_data["warmth"]) new_item->set_meta("warmth", item_data["warmth"].as<int>());
+
+                // The Item's bleed chance, if any.
+                if (item_data["bleed"]) new_item->set_meta("bleed", item_data["bleed"].as<int>());
+
+                // The Item's poison chance, if any.
+                if (item_data["poison"]) new_item->set_meta("poison", item_data["poison"].as<int>());
+
+                // The Item's liquid type, if any.
+                if (item_data["liquid"]) new_item->set_meta("liquid", item_data["liquid"].as<std::string>());
+
+                // The Item's description, if any.
+                if (!item_data["desc"]) core()->guru()->nonfatal("Missing description for item " + item_id_str, Guru::WARN);
                 else
                 {
-                    EquipSlot chosen_slot = slot_it->second;
-                    if (new_item->type() == ItemType::SHIELD && new_item->equip_slot() == EquipSlot::HAND_MAIN) chosen_slot = EquipSlot::HAND_OFF;
-                    new_item->set_meta("slot", static_cast<int>(chosen_slot));
+                    const std::string desc = item_data["desc"].as<std::string>();
+                    if (desc != "-") new_item->set_description(desc);
                 }
-            }
 
-            // The Item's power, if any.
-            if (item_data["power"]) new_item->set_meta("power", item_data["power"].as<int>());
-
-            // The Item's ammunition power, if any.
-            if (item_data["ammo_power"]) new_item->set_meta("ammo_power", item_data["ammo_power"].as<float>());
-
-            // The Item's warmth rating, if any.
-            if (item_data["warmth"]) new_item->set_meta("warmth", item_data["warmth"].as<int>());
-
-            // The Item's bleed chance, if any.
-            if (item_data["bleed"]) new_item->set_meta("bleed", item_data["bleed"].as<int>());
-
-            // The Item's poison chance, if any.
-            if (item_data["poison"]) new_item->set_meta("poison", item_data["poison"].as<int>());
-
-            // The Item's liquid type, if any.
-            if (item_data["liquid"]) new_item->set_meta("liquid", item_data["liquid"].as<std::string>());
-
-            // The Item's description, if any.
-            if (!item_data["desc"]) core()->guru()->nonfatal("Missing description for item " + item_id_str, Guru::WARN);
-            else
-            {
-                const std::string desc = item_data["desc"].as<std::string>();
-                if (desc != "-") new_item->set_description(desc);
-            }
-
-            // The Item's value.
-            unsigned int item_value = 0;
-            if (!item_data["value"]) core()->guru()->nonfatal("Missing value for item " + item_id_str, Guru::WARN);
-            else
-            {
-                const std::string value_str = item_data["value"].as<std::string>();
-                if (value_str.size() && value_str != "0" && value_str != "-")
+                // The Item's value.
+                unsigned int item_value = 0;
+                if (!item_data["value"]) core()->guru()->nonfatal("Missing value for item " + item_id_str, Guru::WARN);
+                else
                 {
-                    std::vector<std::string> coins_split = StrX::string_explode(value_str, " ");
-                    while (coins_split.size())
+                    const std::string value_str = item_data["value"].as<std::string>();
+                    if (value_str.size() && value_str != "0" && value_str != "-")
                     {
-                        const std::string coin_str = coins_split.at(0);
-                        coins_split.erase(coins_split.begin());
-                        if (coin_str.size() < 2) throw std::runtime_error("Malformed item value string on " + item_id);
-                        const char currency = coin_str[coin_str.size() - 1];
-                        unsigned int currency_amount = std::stoi(coin_str.substr(0, coin_str.size() - 1));
-                        if (currency == 'c') item_value += currency_amount;
-                        else if (currency == 's') item_value += currency_amount * 10;
-                        else if (currency == 'g') item_value += currency_amount * 1000;
-                        else if (currency == 'm') item_value += currency_amount * 1000000;
-                        else throw std::runtime_error("Malformed item value string on " + item_id);
+                        std::vector<std::string> coins_split = StrX::string_explode(value_str, " ");
+                        while (coins_split.size())
+                        {
+                            const std::string coin_str = coins_split.at(0);
+                            coins_split.erase(coins_split.begin());
+                            if (coin_str.size() < 2) throw std::runtime_error("Malformed item value string on " + item_id);
+                            const char currency = coin_str[coin_str.size() - 1];
+                            unsigned int currency_amount = std::stoi(coin_str.substr(0, coin_str.size() - 1));
+                            if (currency == 'c') item_value += currency_amount;
+                            else if (currency == 's') item_value += currency_amount * 10;
+                            else if (currency == 'g') item_value += currency_amount * 1000;
+                            else if (currency == 'm') item_value += currency_amount * 1000000;
+                            else throw std::runtime_error("Malformed item value string on " + item_id);
+                        }
+                        if (!item_value) throw std::runtime_error("Null coin value on " + item_id);
                     }
-                    if (!item_value) throw std::runtime_error("Null coin value on " + item_id);
                 }
+                new_item->set_value(item_value);
+
+                // The Item's rarity.
+                if (!item_data["rare"]) core()->guru()->nonfatal("Missing rarity for item " + item_id_str, Guru::WARN);
+                else new_item->set_rare(item_data["rare"].as<int>());
+
+                // The Item's weight.
+                if (!item_data["weight"]) core()->guru()->nonfatal("Missing weight for item " + item_id_str, Guru::ERROR);
+                else new_item->set_weight(item_data["weight"].as<uint32_t>());
+
+                // The Item's stack size, if any.
+                if (item_data["stack"])
+                {
+                    if (!new_item->tag(ItemTag::Stackable)) core()->guru()->nonfatal("Stack size specified for nonstackable item: " + item_id_str, Guru::ERROR);
+                    new_item->set_stack(item_data["stack"].as<uint32_t>());
+                }
+
+                // Add the new Item to the item pool.
+                m_item_pool.insert(std::make_pair(item_id, new_item));
             }
-            new_item->set_value(item_value);
-
-            // The Item's rarity.
-            if (!item_data["rare"]) core()->guru()->nonfatal("Missing rarity for item " + item_id_str, Guru::WARN);
-            else new_item->set_rare(item_data["rare"].as<int>());
-
-            // The Item's weight.
-            if (!item_data["weight"]) core()->guru()->nonfatal("Missing weight for item " + item_id_str, Guru::ERROR);
-            else new_item->set_weight(item_data["weight"].as<uint32_t>());
-
-            // The Item's stack size, if any.
-            if (item_data["stack"])
-            {
-                if (!new_item->tag(ItemTag::Stackable)) core()->guru()->nonfatal("Stack size specified for nonstackable item: " + item_id_str, Guru::ERROR);
-                new_item->set_stack(item_data["stack"].as<uint32_t>());
-            }
-
-            // Add the new Item to the item pool.
-            m_item_pool.insert(std::make_pair(item_id, new_item));
         }
+    }
+    catch (std::exception& e)
+    {
+        if (current_file.size()) throw std::runtime_error("YAML error while loading data/items/" + current_file + ": " + std::string(e.what()));
+        else throw e;
     }
 }
 
 // Loads the List YAML data into memory.
 void World::load_lists()
 {
-    const std::vector<std::string> list_files = FileX::files_in_dir("data/lists", true);
-    for (auto list_file : list_files)
+    std::string current_file;
+    try
     {
-        const YAML::Node yaml_lists= YAML::LoadFile("data/lists/" + list_file);
-        for (auto list : yaml_lists)
+        const std::vector<std::string> list_files = FileX::files_in_dir("data/lists", true);
+        for (auto list_file : list_files)
         {
-            // First, determine the List's ID.
-            const std::string list_id = list.first.as<std::string>();
-
-            // Get the rest of the data.
-            const YAML::Node yaml_list = list.second;
-            if (!yaml_list.IsSequence()) throw std::runtime_error("Invalid list data for list " + list_id);
-
-            auto new_list = std::make_shared<List>();
-            bool is_count = false;
-            ListEntry new_list_entry;
-            for (auto le : yaml_list)
+            current_file = list_file;
+            const YAML::Node yaml_lists = YAML::LoadFile("data/lists/" + list_file);
+            for (auto list : yaml_lists)
             {
-                if (is_count)
+                // First, determine the List's ID.
+                const std::string list_id = list.first.as<std::string>();
+
+                // Get the rest of the data.
+                const YAML::Node yaml_list = list.second;
+                if (!yaml_list.IsSequence()) throw std::runtime_error("Invalid list data for list " + list_id);
+
+                auto new_list = std::make_shared<List>();
+                bool is_count = false;
+                ListEntry new_list_entry;
+                for (auto le : yaml_list)
                 {
-                    new_list_entry.count = le.as<int>();
-                    new_list->push_back(new_list_entry);
-                    is_count = false;
-                }
-                else
-                {
-                    const std::string str = le.as<std::string>();
-                    new_list_entry.str = str;
-                    if (str.size() && (str[0] == '#' || str[0] == '+' || str[0] == '&'))
+                    if (is_count)
                     {
-                        new_list_entry.count = -1;
+                        new_list_entry.count = le.as<int>();
                         new_list->push_back(new_list_entry);
+                        is_count = false;
                     }
-                    else is_count = true;
+                    else
+                    {
+                        const std::string str = le.as<std::string>();
+                        new_list_entry.str = str;
+                        if (str.size() && (str[0] == '#' || str[0] == '+' || str[0] == '&'))
+                        {
+                            new_list_entry.count = -1;
+                            new_list->push_back(new_list_entry);
+                        }
+                        else is_count = true;
+                    }
                 }
+                if (is_count) throw std::runtime_error("Invalid list length: " + list_id);
+                m_list_pool.insert(std::pair<std::string, std::shared_ptr<List>>(list_id, new_list));
             }
-            if (is_count) throw std::runtime_error("Invalid list length: " + list_id);
-            m_list_pool.insert(std::pair<std::string, std::shared_ptr<List>>(list_id, new_list));
         }
+    } catch (std::exception& e)
+    {
+        if (current_file.size()) throw std::runtime_error("Error while loading data/lists/" + current_file + ": " + std::string(e.what()));
+        else throw e;
     }
 }
 
 // Loads the Mobile YAML data into memory.
 void World::load_mob_pool()
 {
-    const std::vector<std::string> mobile_files = FileX::files_in_dir("data/mobiles", true);
-    for (auto mobile_file : mobile_files)
+    std::string current_file;
+    try
     {
-        const YAML::Node yaml_mobiles = YAML::LoadFile("data/mobiles/" + mobile_file);
-        for (auto mobile : yaml_mobiles)
+        const std::vector<std::string> mobile_files = FileX::files_in_dir("data/mobiles", true);
+        for (auto mobile_file : mobile_files)
         {
-            const YAML::Node mobile_data = mobile.second;
-
-            // Create a new Mobile object, and remember its unique ID.
-            const std::string mobile_id_str = mobile.first.as<std::string>();
-            const uint32_t mobile_id = StrX::hash(mobile_id_str);
-            const auto new_mob(std::make_shared<Mobile>());
-
-            // Verify all keys in this file.
-            for (auto key_value : mobile_data)
+            current_file = mobile_file;
+            const YAML::Node yaml_mobiles = YAML::LoadFile("data/mobiles/" + mobile_file);
+            for (auto mobile : yaml_mobiles)
             {
-                const std::string key = key_value.first.as<std::string>();
-                if (VALID_YAML_KEYS_MOBS.find(key) == VALID_YAML_KEYS_MOBS.end())
-                    core()->guru()->nonfatal("Invalid key in mobile YAML data (" + key + "): " + mobile_id_str, Guru::WARN);
-            }
+                const YAML::Node mobile_data = mobile.second;
 
-            // Check to make sure there are no hash collisions.
-            if (m_mob_pool.find(mobile_id) != m_mob_pool.end()) throw std::runtime_error("Mobile ID hash conflict: " + mobile_id_str);
+                // Create a new Mobile object, and remember its unique ID.
+                const std::string mobile_id_str = mobile.first.as<std::string>();
+                const uint32_t mobile_id = StrX::hash(mobile_id_str);
+                const auto new_mob(std::make_shared<Mobile>());
 
-            // The Mobile's name.
-            if (!mobile_data["name"]) core()->guru()->nonfatal("Missing mobile name: " + mobile_id_str, Guru::ERROR);
-            else new_mob->set_name(mobile_data["name"].as<std::string>());
-
-            // The Mobile's hit points.
-            if (!mobile_data["hp"]) core()->guru()->nonfatal("Missing mobile hit points: "+ mobile_id_str, Guru::ERROR);
-            else new_mob->set_hp(mobile_data["hp"].as<int>(), mobile_data["hp"].as<int>());
-
-            // The Mobile's score, if any.
-            if (mobile_data["score"]) new_mob->add_score(mobile_data["score"].as<int>());
-
-            // The Mobile's species.
-            if (!mobile_data["species"]) core()->guru()->nonfatal("Missing species: " + mobile_id_str, Guru::CRITICAL);
-            else new_mob->set_species(mobile_data["species"].as<std::string>());
-
-            // The Mobile's tags, if any.
-            if (mobile_data["tags"])
-            {
-                if (!mobile_data["tags"].IsSequence()) core()->guru()->nonfatal("{r}Malformed mobile tags: " + mobile_id_str, Guru::ERROR);
-                else for (auto tag : mobile_data["tags"])
+                // Verify all keys in this file.
+                for (auto key_value : mobile_data)
                 {
-                    const std::string tag_str = StrX::str_tolower(tag.as<std::string>());
-                    const auto tag_it = MOBILE_TAG_MAP.find(tag_str);
-                    if (tag_it == MOBILE_TAG_MAP.end()) core()->guru()->nonfatal("Unrecognized mobile tag (" + tag_str + "): " + mobile_id_str, Guru::ERROR);
-                    else new_mob->set_tag(tag_it->second);
+                    const std::string key = key_value.first.as<std::string>();
+                    if (VALID_YAML_KEYS_MOBS.find(key) == VALID_YAML_KEYS_MOBS.end())
+                        core()->guru()->nonfatal("Invalid key in mobile YAML data (" + key + "): " + mobile_id_str, Guru::WARN);
                 }
+
+                // Check to make sure there are no hash collisions.
+                if (m_mob_pool.find(mobile_id) != m_mob_pool.end()) throw std::runtime_error("Mobile ID hash conflict: " + mobile_id_str);
+
+                // The Mobile's name.
+                if (!mobile_data["name"]) core()->guru()->nonfatal("Missing mobile name: " + mobile_id_str, Guru::ERROR);
+                else new_mob->set_name(mobile_data["name"].as<std::string>());
+
+                // The Mobile's hit points.
+                if (!mobile_data["hp"]) core()->guru()->nonfatal("Missing mobile hit points: "+ mobile_id_str, Guru::ERROR);
+                else new_mob->set_hp(mobile_data["hp"].as<int>(), mobile_data["hp"].as<int>());
+
+                // The Mobile's score, if any.
+                if (mobile_data["score"]) new_mob->add_score(mobile_data["score"].as<int>());
+
+                // The Mobile's species.
+                if (!mobile_data["species"]) core()->guru()->nonfatal("Missing species: " + mobile_id_str, Guru::CRITICAL);
+                else new_mob->set_species(mobile_data["species"].as<std::string>());
+
+                // The Mobile's tags, if any.
+                if (mobile_data["tags"])
+                {
+                    if (!mobile_data["tags"].IsSequence()) core()->guru()->nonfatal("{r}Malformed mobile tags: " + mobile_id_str, Guru::ERROR);
+                    else for (auto tag : mobile_data["tags"])
+                    {
+                        const std::string tag_str = StrX::str_tolower(tag.as<std::string>());
+                        const auto tag_it = MOBILE_TAG_MAP.find(tag_str);
+                        if (tag_it == MOBILE_TAG_MAP.end()) core()->guru()->nonfatal("Unrecognized mobile tag (" + tag_str + "): " + mobile_id_str, Guru::ERROR);
+                        else new_mob->set_tag(tag_it->second);
+                    }
+                }
+
+                // The Mobile's gear list.
+                std::string gear_list;
+                if (mobile_data["gear"]) gear_list = mobile_data["gear"].as<std::string>();
+
+                // Add the Mobile to the mob pool.
+                m_mob_pool.insert(std::make_pair(mobile_id, new_mob));
+                m_mob_gear.insert(std::make_pair(mobile_id, gear_list));
             }
-
-            // The Mobile's gear list.
-            std::string gear_list;
-            if (mobile_data["gear"]) gear_list = mobile_data["gear"].as<std::string>();
-
-            // Add the Mobile to the mob pool.
-            m_mob_pool.insert(std::make_pair(mobile_id, new_mob));
-            m_mob_gear.insert(std::make_pair(mobile_id, gear_list));
         }
+    }
+    catch (std::exception& e)
+    {
+        if (current_file.size()) throw std::runtime_error("YAML error while loading data/mobiles/" + current_file + ": " + std::string(e.what()));
+        else throw e;
     }
 }
 
 // Loads the Room YAML data into memory.
 void World::load_room_pool()
 {
-    const std::vector<std::string> area_files = FileX::files_in_dir("data/areas", true);
-    for (auto area_file : area_files)
+    std::string current_file;
+    try
     {
-        const YAML::Node yaml_rooms = YAML::LoadFile("data/areas/" + area_file);
-        for (auto room : yaml_rooms)
+        const std::vector<std::string> area_files = FileX::files_in_dir("data/areas", true);
+        for (auto area_file : area_files)
         {
-            const YAML::Node room_data = room.second;
-
-            // Create a new Room object, and set its unique ID.
-            const std::string room_id = room.first.as<std::string>();
-            const auto new_room(std::make_shared<Room>(room_id));
-
-            // Verify all keys in this file.
-            for (auto key_value : room_data)
+            current_file = area_file;
+            const YAML::Node yaml_rooms = YAML::LoadFile("data/areas/" + area_file);
+            for (auto room : yaml_rooms)
             {
-                const std::string key = key_value.first.as<std::string>();
-                if (VALID_YAML_KEYS_AREAS.find(key) == VALID_YAML_KEYS_AREAS.end())
-                    core()->guru()->nonfatal("Invalid key in room YAML data (" + key + "): " + room_id, Guru::WARN);
-            }
+                const YAML::Node room_data = room.second;
 
-            // Check to make sure there are no hash collisions.
-            if (m_room_pool.find(new_room->id()) != m_room_pool.end()) throw std::runtime_error("Room ID hash conflict: " + room_id);
+                // Create a new Room object, and set its unique ID.
+                const std::string room_id = room.first.as<std::string>();
+                const auto new_room(std::make_shared<Room>(room_id));
 
-            // The Room's long and short names.
-            if (!room_data["name"] || room_data["name"].size() < 2) core()->guru()->nonfatal("Missing or invalid room name(s): " + room_id, Guru::ERROR);
-            else new_room->set_name(room_data["name"][0].as<std::string>(), room_data["name"][1].as<std::string>());
-
-            // The Room's description.
-            if (!room_data["desc"]) core()->guru()->nonfatal("Missing room description: " + room_id, Guru::WARN);
-            else
-            {
-                const std::string desc = room_data["desc"].as<std::string>();
-                if (desc != "-") new_room->set_desc(desc);
-            }
-
-            // Links to other Rooms.
-            if (room_data["exits"])
-            {
-                for (unsigned int e = 0; e < Room::ROOM_LINKS_MAX; e++)
+                // Verify all keys in this file.
+                for (auto key_value : room_data)
                 {
-                    const Direction dir = static_cast<Direction>(e);
-                    const std::string dir_str = StrX::dir_to_name(dir);
-                    if (room_data["exits"][dir_str]) new_room->set_link(dir, room_data["exits"][dir_str].as<std::string>());
+                    const std::string key = key_value.first.as<std::string>();
+                    if (VALID_YAML_KEYS_AREAS.find(key) == VALID_YAML_KEYS_AREAS.end())
+                        core()->guru()->nonfatal("Invalid key in room YAML data (" + key + "): " + room_id, Guru::WARN);
                 }
-            }
 
-            // The light level of the Room.
-            if (!room_data["light"]) core()->guru()->nonfatal("Missing room light level: " + room_id, Guru::ERROR);
-            else
-            {
-                const std::string light_str = room_data["light"].as<std::string>();
-                auto level_it = LIGHT_LEVEL_MAP.find(light_str);
-                if (level_it == LIGHT_LEVEL_MAP.end()) core()->guru()->nonfatal("Invalid light level value: " + room_id, Guru::ERROR);
-                else new_room->set_base_light(level_it->second);
-            }
+                // Check to make sure there are no hash collisions.
+                if (m_room_pool.find(new_room->id()) != m_room_pool.end()) throw std::runtime_error("Room ID hash conflict: " + room_id);
 
-            // The security level of this Room.
-            if (!room_data["security"]) core()->guru()->nonfatal("Missing room security level: " + room_id, Guru::ERROR);
-            else
-            {
-                const std::string sec_str = room_data["security"].as<std::string>();
-                auto sec_it = SECURITY_MAP.find(sec_str);
-                if (sec_it == SECURITY_MAP.end()) core()->guru()->nonfatal("Invalid security level value: " + room_id, Guru::ERROR);
-                else new_room->set_security(sec_it->second);
-            }
+                // The Room's long and short names.
+                if (!room_data["name"] || room_data["name"].size() < 2) core()->guru()->nonfatal("Missing or invalid room name(s): " + room_id, Guru::ERROR);
+                else new_room->set_name(room_data["name"][0].as<std::string>(), room_data["name"][1].as<std::string>());
 
-            // Room tags, if any.
-            if (room_data["tags"])
-            {
-                if (!room_data["tags"].IsSequence()) core()->guru()->nonfatal("{r}Malformed room tags: " + room_id, Guru::ERROR);
-                else for (auto tag : room_data["tags"])
+                // The Room's description.
+                if (!room_data["desc"]) core()->guru()->nonfatal("Missing room description: " + room_id, Guru::WARN);
+                else
                 {
-                    const std::string tag_str = StrX::str_tolower(tag.as<std::string>());
-                    bool directional_tag = false;
-                    int dt_int = 0, dt_offset = 0;
+                    const std::string desc = room_data["desc"].as<std::string>();
+                    if (desc != "-") new_room->set_desc(desc);
+                }
 
-                    if (tag_str.size() > 9)
+                // Links to other Rooms.
+                if (room_data["exits"])
+                {
+                    for (unsigned int e = 0; e < Room::ROOM_LINKS_MAX; e++)
                     {
-                        if (tag_str.substr(0, 9) == "northeast")
-                        {
-                            directional_tag = true;
-                            dt_int = static_cast<unsigned int>(Direction::NORTHEAST);
-                            dt_offset = 9;
-                        }
-                        else if (tag_str.substr(0, 9) == "northwest")
-                        {
-                            directional_tag = true;
-                            dt_int = static_cast<unsigned int>(Direction::NORTHWEST);
-                            dt_offset = 9;
-                        }
-                        else if (tag_str.substr(0, 9) == "southeast")
-                        {
-                            directional_tag = true;
-                            dt_int = static_cast<unsigned int>(Direction::SOUTHEAST);
-                            dt_offset = 9;
-                        }
-                        else if (tag_str.substr(0, 9) == "southwest")
-                        {
-                            directional_tag = true;
-                            dt_int = static_cast<unsigned int>(Direction::SOUTHWEST);
-                            dt_offset = 9;
-                        }
+                        const Direction dir = static_cast<Direction>(e);
+                        const std::string dir_str = StrX::dir_to_name(dir);
+                        if (room_data["exits"][dir_str]) new_room->set_link(dir, room_data["exits"][dir_str].as<std::string>());
                     }
-                    if (tag_str.size() > 5 && !directional_tag)
-                    {
-                        if (tag_str.substr(0, 5) == "north")
-                        {
-                            directional_tag = true;
-                            dt_int = static_cast<unsigned int>(Direction::NORTH);
-                            dt_offset = 5;
-                        }
-                        else if (tag_str.substr(0, 5) == "south")
-                        {
-                            directional_tag = true;
-                            dt_int = static_cast<unsigned int>(Direction::SOUTH);
-                            dt_offset = 5;
-                        }
-                    }
-                    if (tag_str.size() > 4 && !directional_tag)
-                    {
-                        if (tag_str.substr(0, 4) == "east")
-                        {
-                            directional_tag = true;
-                            dt_int = static_cast<unsigned int>(Direction::EAST);
-                            dt_offset = 4;
-                        }
-                        else if (tag_str.substr(0, 4) == "west")
-                        {
-                            directional_tag = true;
-                            dt_int = static_cast<unsigned int>(Direction::WEST);
-                            dt_offset = 4;
-                        }
-                        else if (tag_str.substr(0, 4) == "down")
-                        {
-                            directional_tag = true;
-                            dt_int = static_cast<unsigned int>(Direction::DOWN);
-                            dt_offset = 4;
-                        }
-                    }
-                    if (tag_str.size() > 2 && !directional_tag)
-                    {
-                        if (tag_str.substr(0, 2) == "up")
-                        {
-                            directional_tag = true;
-                            dt_int = static_cast<unsigned int>(Direction::UP);
-                            dt_offset = 2;
-                        }
-                    }
+                }
 
-                    if (!directional_tag)
+                // The light level of the Room.
+                if (!room_data["light"]) core()->guru()->nonfatal("Missing room light level: " + room_id, Guru::ERROR);
+                else
+                {
+                    const std::string light_str = room_data["light"].as<std::string>();
+                    auto level_it = LIGHT_LEVEL_MAP.find(light_str);
+                    if (level_it == LIGHT_LEVEL_MAP.end()) core()->guru()->nonfatal("Invalid light level value: " + room_id, Guru::ERROR);
+                    else new_room->set_base_light(level_it->second);
+                }
+
+                // The security level of this Room.
+                if (!room_data["security"]) core()->guru()->nonfatal("Missing room security level: " + room_id, Guru::ERROR);
+                else
+                {
+                    const std::string sec_str = room_data["security"].as<std::string>();
+                    auto sec_it = SECURITY_MAP.find(sec_str);
+                    if (sec_it == SECURITY_MAP.end()) core()->guru()->nonfatal("Invalid security level value: " + room_id, Guru::ERROR);
+                    else new_room->set_security(sec_it->second);
+                }
+
+                // Room tags, if any.
+                if (room_data["tags"])
+                {
+                    if (!room_data["tags"].IsSequence()) core()->guru()->nonfatal("{r}Malformed room tags: " + room_id, Guru::ERROR);
+                    else for (auto tag : room_data["tags"])
                     {
-                        const auto tag_it = ROOM_TAG_MAP.find(tag_str);
-                        if (tag_it == ROOM_TAG_MAP.end()) core()->guru()->nonfatal("Unrecognized room tag (" + tag_str + "): " + room_id, Guru::WARN);
-                        else new_room->set_tag(tag_it->second);
-                    }
-                    else
-                    {
-                        const std::string dtag_str = tag_str.substr(dt_offset);
-                        const auto dtag_it = LINK_TAG_MAP.find(dtag_str);
-                        if (dtag_it == LINK_TAG_MAP.end()) core()->guru()->nonfatal("Unrecognized link tag (" + dtag_str + "): " + room_id, Guru::WARN);
+                        const std::string tag_str = StrX::str_tolower(tag.as<std::string>());
+                        bool directional_tag = false;
+                        int dt_int = 0, dt_offset = 0;
+
+                        if (tag_str.size() > 9)
+                        {
+                            if (tag_str.substr(0, 9) == "northeast")
+                            {
+                                directional_tag = true;
+                                dt_int = static_cast<unsigned int>(Direction::NORTHEAST);
+                                dt_offset = 9;
+                            }
+                            else if (tag_str.substr(0, 9) == "northwest")
+                            {
+                                directional_tag = true;
+                                dt_int = static_cast<unsigned int>(Direction::NORTHWEST);
+                                dt_offset = 9;
+                            }
+                            else if (tag_str.substr(0, 9) == "southeast")
+                            {
+                                directional_tag = true;
+                                dt_int = static_cast<unsigned int>(Direction::SOUTHEAST);
+                                dt_offset = 9;
+                            }
+                            else if (tag_str.substr(0, 9) == "southwest")
+                            {
+                                directional_tag = true;
+                                dt_int = static_cast<unsigned int>(Direction::SOUTHWEST);
+                                dt_offset = 9;
+                            }
+                        }
+                        if (tag_str.size() > 5 && !directional_tag)
+                        {
+                            if (tag_str.substr(0, 5) == "north")
+                            {
+                                directional_tag = true;
+                                dt_int = static_cast<unsigned int>(Direction::NORTH);
+                                dt_offset = 5;
+                            }
+                            else if (tag_str.substr(0, 5) == "south")
+                            {
+                                directional_tag = true;
+                                dt_int = static_cast<unsigned int>(Direction::SOUTH);
+                                dt_offset = 5;
+                            }
+                        }
+                        if (tag_str.size() > 4 && !directional_tag)
+                        {
+                            if (tag_str.substr(0, 4) == "east")
+                            {
+                                directional_tag = true;
+                                dt_int = static_cast<unsigned int>(Direction::EAST);
+                                dt_offset = 4;
+                            }
+                            else if (tag_str.substr(0, 4) == "west")
+                            {
+                                directional_tag = true;
+                                dt_int = static_cast<unsigned int>(Direction::WEST);
+                                dt_offset = 4;
+                            }
+                            else if (tag_str.substr(0, 4) == "down")
+                            {
+                                directional_tag = true;
+                                dt_int = static_cast<unsigned int>(Direction::DOWN);
+                                dt_offset = 4;
+                            }
+                        }
+                        if (tag_str.size() > 2 && !directional_tag)
+                        {
+                            if (tag_str.substr(0, 2) == "up")
+                            {
+                                directional_tag = true;
+                                dt_int = static_cast<unsigned int>(Direction::UP);
+                                dt_offset = 2;
+                            }
+                        }
+
+                        if (!directional_tag)
+                        {
+                            const auto tag_it = ROOM_TAG_MAP.find(tag_str);
+                            if (tag_it == ROOM_TAG_MAP.end()) core()->guru()->nonfatal("Unrecognized room tag (" + tag_str + "): " + room_id, Guru::WARN);
+                            else new_room->set_tag(tag_it->second);
+                        }
                         else
                         {
-                            const LinkTag lt = dtag_it->second;
-                            switch (lt)
+                            const std::string dtag_str = tag_str.substr(dt_offset);
+                            const auto dtag_it = LINK_TAG_MAP.find(dtag_str);
+                            if (dtag_it == LINK_TAG_MAP.end()) core()->guru()->nonfatal("Unrecognized link tag (" + dtag_str + "): " + room_id, Guru::WARN);
+                            else
                             {
-                                case LinkTag::Lockable:
-                                case LinkTag::Window:
-                                    new_room->set_link_tag(dt_int, LinkTag::Openable);
-                                    break;
-                                case LinkTag::LockedByDefault:
-                                    new_room->set_link_tag(dt_int, LinkTag::Lockable);
-                                    new_room->set_link_tag(dt_int, LinkTag::Openable);
-                                    break;
-                                case LinkTag::Open:
-                                    new_room->set_link_tag(dt_int, LinkTag::Openable);
-                                    break;
-                                default: break;
+                                const LinkTag lt = dtag_it->second;
+                                switch (lt)
+                                {
+                                    case LinkTag::Lockable:
+                                    case LinkTag::Window:
+                                        new_room->set_link_tag(dt_int, LinkTag::Openable);
+                                        break;
+                                    case LinkTag::LockedByDefault:
+                                        new_room->set_link_tag(dt_int, LinkTag::Lockable);
+                                        new_room->set_link_tag(dt_int, LinkTag::Openable);
+                                        break;
+                                    case LinkTag::Open:
+                                        new_room->set_link_tag(dt_int, LinkTag::Openable);
+                                        break;
+                                    default: break;
+                                }
+                                new_room->set_link_tag(dt_int, lt);
                             }
-                            new_room->set_link_tag(dt_int, lt);
                         }
                     }
                 }
-            }
 
-            // Mobile spawns, if any.
-            if (room_data["spawn_mobs"])
-            {
-                if (room_data["spawn_mobs"].IsSequence())
+                // Mobile spawns, if any.
+                if (room_data["spawn_mobs"])
                 {
-                    for (auto e : room_data["spawn_mobs"])
-                        new_room->add_mob_spawn(e.as<std::string>());
+                    if (room_data["spawn_mobs"].IsSequence())
+                    {
+                        for (auto e : room_data["spawn_mobs"])
+                            new_room->add_mob_spawn(e.as<std::string>());
+                    }
+                    else new_room->add_mob_spawn(room_data["spawn_mobs"].as<std::string>());
                 }
-                else new_room->add_mob_spawn(room_data["spawn_mobs"].as<std::string>());
+
+                // The Room's metadata, if any.
+                if (room_data["metadata"]) StrX::string_to_metadata(room_data["metadata"].as<std::string>(), *new_room->meta_raw());
+
+                // Wilderness type for this room, if any.
+                if (room_data["wilderness"]) new_room->set_meta("wilderness", room_data["wilderness"].as<std::string>());
+
+                // Clear the meta changed tag, since this is static data.
+                new_room->clear_tag(RoomTag::MetaChanged);
+
+                // Add the new Room to the room pool.
+                m_room_pool.insert(std::make_pair(new_room->id(), new_room));
             }
-
-            // The Room's metadata, if any.
-            if (room_data["metadata"]) StrX::string_to_metadata(room_data["metadata"].as<std::string>(), *new_room->meta_raw());
-
-            // Wilderness type for this room, if any.
-            if (room_data["wilderness"]) new_room->set_meta("wilderness", room_data["wilderness"].as<std::string>());
-
-            // Clear the meta changed tag, since this is static data.
-            new_room->clear_tag(RoomTag::MetaChanged);
-
-            // Add the new Room to the room pool.
-            m_room_pool.insert(std::make_pair(new_room->id(), new_room));
         }
+    }
+    catch (std::exception& e)
+    {
+        if (current_file.size()) throw std::runtime_error("YAML error while loading data/areas/" + current_file + ": " + std::string(e.what()));
+        else throw e;
     }
 }
 
 // Laods the skills YAML data into memory.
 void World::load_skills()
 {
-    const YAML::Node skills_yaml = YAML::LoadFile("data/misc/skills.yml");
-    for (const auto skill : skills_yaml)
+    try
     {
-        const std::string skill_id = skill.first.as<std::string>();
-        const YAML::Node skill_data = skill.second;
-        if (!skill_data["name"]) throw std::runtime_error("Skill name not specified: " + skill_id);
-        if (!skill_data["xp_multi"]) throw std::runtime_error("Skill XP multiplier not specified: " + skill_id);
-        SkillData new_skill = { skill_data["name"].as<std::string>(), skill_data["xp_multi"].as<float>() };
-        m_skills.insert(std::make_pair(skill_id, new_skill));
+        const YAML::Node skills_yaml = YAML::LoadFile("data/misc/skills.yml");
+        for (const auto skill : skills_yaml)
+        {
+            const std::string skill_id = skill.first.as<std::string>();
+            const YAML::Node skill_data = skill.second;
+            if (!skill_data["name"]) throw std::runtime_error("Skill name not specified: " + skill_id);
+            if (!skill_data["xp_multi"]) throw std::runtime_error("Skill XP multiplier not specified: " + skill_id);
+            SkillData new_skill = { skill_data["name"].as<std::string>(), skill_data["xp_multi"].as<float>() };
+            m_skills.insert(std::make_pair(skill_id, new_skill));
+        }
+    }
+    catch (std::exception& e)
+    {
+        throw std::runtime_error("YAML error while loading data/misc/skills.yml: " + std::string(e.what()));
     }
 }
 

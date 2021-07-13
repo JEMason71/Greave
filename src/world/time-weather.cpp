@@ -40,18 +40,25 @@ const uint32_t TimeWeather::HEARTBEAT_TIMERS[TimeWeather::Heartbeat::_TOTAL] = {
 TimeWeather::TimeWeather() : m_day(80), m_moon(1), m_time(39660), m_time_passed(0), m_subsecond(0), m_weather(Weather::FAIR)
 {
     m_weather_change_map.resize(9);
-    const YAML::Node yaml_weather = YAML::LoadFile("data/misc/weather.yml");
-    for (auto w : yaml_weather)
+    try
     {
-        const std::string id = w.first.as<std::string>();
-        const std::string text = w.second.as<std::string>();
-        if (id.size() == 5 && id.substr(0, 4) == "WMAP")
+        const YAML::Node yaml_weather = YAML::LoadFile("data/misc/weather.yml");
+        for (auto w : yaml_weather)
         {
-            const int map_id = id[4] - '0';
-            if (map_id < 0 || map_id > 8) throw std::runtime_error("Invalid weather map strings.");
-            m_weather_change_map.at(map_id) = StrX::decode_compressed_string(text);
+            const std::string id = w.first.as<std::string>();
+            const std::string text = w.second.as<std::string>();
+            if (id.size() == 5 && id.substr(0, 4) == "WMAP")
+            {
+                const int map_id = id[4] - '0';
+                if (map_id < 0 || map_id > 8) throw std::runtime_error("Invalid weather map strings.");
+                m_weather_change_map.at(map_id) = StrX::decode_compressed_string(text);
+            }
+            else m_tw_string_map.insert(std::pair<std::string, std::string>(id, text));
         }
-        else m_tw_string_map.insert(std::pair<std::string, std::string>(id, text));
+    }
+    catch (std::exception& e)
+    {
+        throw std::runtime_error("Error while loading data/misc/weather.yml: " + std::string(e.what()));
     }
 
     // Reset all the heartbeats.

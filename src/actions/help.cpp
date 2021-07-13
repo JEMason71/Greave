@@ -4,7 +4,6 @@
 #include "3rdparty/yaml-cpp/yaml.h"
 #include "actions/help.hpp"
 #include "core/core.hpp"
-#include "core/guru.hpp"
 #include "core/strx.hpp"
 
 
@@ -50,6 +49,6 @@ void ActionHelp::load_pages()
     }
     catch (std::exception &e)
     {
-        core()->guru()->nonfatal("Error while loading help file data: " + std::string(e.what()), Guru::ERROR);
+        throw std::runtime_error("Error while loading help data/misc/help.yml: " + std::string(e.what()));
     }
 }
