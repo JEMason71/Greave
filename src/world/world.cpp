@@ -879,6 +879,7 @@ void World::new_game()
 {
     m_player->set_meta_uint("bones_id", Bones::unique_id());
     m_player->set_location("OUTSIDE_QUEENS_GATE");
+    starter_equipment("STARTING_GEAR");
     ActionLook::look();
 }
 
@@ -953,6 +954,22 @@ void World::save(std::shared_ptr<SQLite::Database> save_db)
     }
     for (auto mob : m_mobiles)
         mob->save(save_db);
+}
+
+// Assigns the player starter equipment from a list.
+void World::starter_equipment(const std::string &list_name)
+{
+    const auto list = get_list(list_name);
+    for (size_t i = 0; i < list->size(); i++)
+    {
+        const auto item = get_item(list->at(i).str, list->at(i).count);
+        if (item->type() == ItemType::WEAPON || item->type() == ItemType::ARMOUR || item->type() == ItemType::SHIELD)
+        {
+            if (item->type() == ItemType::SHIELD) item->set_equip_slot(EquipSlot::HAND_OFF);
+            player()->equ()->add_item(item);
+        }
+        else player()->inv()->add_item(item);
+    }
 }
 
 // Gets a pointer to the TimeWeather object.

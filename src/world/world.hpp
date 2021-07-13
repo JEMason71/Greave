@@ -50,6 +50,7 @@ public:
     bool            room_active(uint32_t id) const;                             // Checks if a room is currently active.
     bool            room_exists(const std::string &str) const;                  // Checks if a specified room ID exists.
     void            save(std::shared_ptr<SQLite::Database> save_db);            // Saves the World and all things within it.
+    void            starter_equipment(const std::string &list_name);            // Assigns the player starter equipment from a list.
     const std::shared_ptr<TimeWeather> time_weather() const;                    // Gets a pointer to the TimeWeather object.
     void            wilderness_spawns();                                        // Triggers wilderness respawns near the player.
 
