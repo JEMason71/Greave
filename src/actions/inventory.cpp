@@ -85,7 +85,7 @@ void ActionInventory::drop(std::shared_ptr<Mobile> mob, size_t item_pos, int cou
 
     if (!mob->pass_time(TIME_DROP_ITEM, !confirm))
     {
-        core()->parser()->interrupted("drop " + item->name());
+        core()->parser()->interrupted("drop " + item->stack_name(count, Item::NAME_FLAG_THE));
         return;
     }
     if (mob->is_dead()) return;
@@ -223,11 +223,11 @@ bool ActionInventory::equip(std::shared_ptr<Mobile> mob, size_t item_pos, bool c
 
     if (!mob->pass_time(time_taken, !confirm))
     {
-        core()->parser()->interrupted(action + " the " + item->name());
+        core()->parser()->interrupted(action + " " + item->name(Item::NAME_FLAG_THE));
         return false;
     }
     if (mob->is_dead()) return false;
-    core()->message("{U}You " + action + " the " + item->name() + " {U}" + slot_name + ".");
+    core()->message("{U}You " + action + " " + item->name(Item::NAME_FLAG_THE) + " {U}" + slot_name + ".");
 
     const auto room = core()->world()->get_room(mob->location());
     equ->add_item(item);
@@ -358,7 +358,7 @@ bool ActionInventory::unequip(std::shared_ptr<Mobile> mob, size_t item_pos, bool
     if (!time_taken) core()->guru()->nonfatal("Could not determine unequip time for " + item->name(), Guru::ERROR);
     if (!mob->pass_time(time_taken, !confirm))
     {
-        core()->parser()->interrupted(action + " the " + item->name());
+        core()->parser()->interrupted(action + " " + item->name(Item::NAME_FLAG_THE));
         return false;
     }
     if (mob->is_dead()) return false;
