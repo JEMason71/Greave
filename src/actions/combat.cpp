@@ -45,6 +45,7 @@ const int   Combat::POISON_SEVERITY_BASE =                      4;      // The b
 const int   Combat::POISON_SEVERITY_RANGE =                     6;      // The range of variation on the poison severity.
 const int   Combat::POISON_TIME_RANGE =                         5;      // The range of time (1 - X) that a weapon poison effect can cause.
 const int   Combat::SCAR_BLEED_INTENSITY_FROM_BLEED_ATTACK =    2;      // Blood type scar intensity for attacks that cause bleeding.
+const int   Combat::SCAR_BLEED_INTENSITY_FROM_DEATH =           5;      // As above, but for NPCs (which bleed) dying here.
 const float Combat::STANCE_CHANGE_TIME =                        1.0f;   // The time it takes to change combat stances.
 const float Combat::STANCE_DAMAGE_MULTIPLIER_AGGRESSIVE =       1.2f;   // The multiplier to melee damage when in an aggressive stance.
 const float Combat::STANCE_DAMAGE_MULTIPLIER_DEFENSIVE =        0.8f;   // The multiplier to melee damage when in a defensive stance.
@@ -583,6 +584,7 @@ void Combat::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mo
                     player->set_death_reason("slain by " + attacker->name(Mobile::NAME_FLAG_A | Mobile::NAME_FLAG_NO_COLOUR));
                 }
                 else death_str = " {U}" + defender_name_c + (defender->tag(MobileTag::Unliving) ? " is destroyed!" : " is slain!");
+                if (!defender->tag(MobileTag::ImmunityBleed)) core()->world()->get_room(defender->location())->add_scar(ScarType::BLOOD, SCAR_BLEED_INTENSITY_FROM_DEATH);
             }
             core()->message(block_str + damage_colour + attacker_your_string_c + " " + weapon_name + " " + damage_word + " " + damage_colour +
                 (blocked ? defender_name : defender_name_s + " " + def_location_hit_str) + "!" + threshold_string + absorb_str + " " +

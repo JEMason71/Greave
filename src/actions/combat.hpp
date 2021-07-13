@@ -57,6 +57,7 @@ private:
     static const float  PARRY_PENALTY_TWO_HANDED;                   // The penalty % chance to parry when using a two-handed weapon.
     static const float  PARRY_SKILL_BONUS_PER_LEVEL;                // The bonus % chance to parry per level of parry skill.
     static const int    SCAR_BLEED_INTENSITY_FROM_BLEED_ATTACK;     // Blood type scar intensity for attacks that cause bleeding.
+    static const int    SCAR_BLEED_INTENSITY_FROM_DEATH;            // As above, but for NPCs (which bleed) dying here.
     static const float  STANCE_DAMAGE_MULTIPLIER_AGGRESSIVE;        // The multiplier to melee damage when in an aggressive stance.
     static const float  STANCE_DAMAGE_MULTIPLIER_DEFENSIVE;         // The multiplier to melee damage when in a defensive stance.
     static const float  STANCE_DAMAGE_TAKEN_MULTIPLIER_AGGRESSIVE;  // The multiplier to melee damage *taken* when in an aggressive stance.
