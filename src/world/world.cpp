@@ -326,13 +326,13 @@ void World::load_generic_descs()
 {
     try
     {
-        const YAML::Node yaml_descs = YAML::LoadFile("data/misc/generic descriptions.yml");
+        const YAML::Node yaml_descs = YAML::LoadFile("data/misc/generic-descriptions.yml");
         for (auto desc : yaml_descs)
             m_generic_descs.insert(std::make_pair(desc.first.as<std::string>(), desc.second.as<std::string>()));
     }
     catch (std::exception& e)
     {
-        throw std::runtime_error("Error while loading data/misc/generic descriptions.yml: " + std::string(e.what()));
+        throw std::runtime_error("Error while loading data/misc/generic-descriptions.yml: " + std::string(e.what()));
     }
 }
 

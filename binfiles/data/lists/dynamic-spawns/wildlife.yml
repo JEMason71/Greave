@@ -1,4 +1,4 @@
-# data/lists/dynamic spawns/wildlife.yml -- Dynamic spawns for wildlife in the wilderness.
+# data/lists/dynamic-spawns/wildlife.yml -- Dynamic spawns for wildlife in the wilderness.
 # Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 SPAWN_WILDERNESS_HILLS: [ "&SPAWN_WILDERNESS_HILLS" ]

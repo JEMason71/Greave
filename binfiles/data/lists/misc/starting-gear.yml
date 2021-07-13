@@ -1,4 +1,4 @@
-# data/lists/misc/starting gear.yml -- Equipment that the player starts the game with.
+# data/lists/misc/starting-gear.yml -- Equipment that the player starts the game with.
 # Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 STARTING_GEAR: [ KNIGHTLY_SWORD, -1, SHIELD_WOOD, -1, ARMOUR_HIDE, -1, ARMOUR_CLOTH, -1, CAP_LEATHER, -1, GAUNTLETS_LEATHER, -1, BOOTS_LEATHER, -1, BREAD, 20, WATERSKIN, -1 ]

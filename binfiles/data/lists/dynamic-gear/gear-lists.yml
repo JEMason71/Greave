@@ -1,4 +1,4 @@
-# data/lists/dynamic gear/gear lists.yml -- Dynamic gear/clothing assignments for NPCs.
+# data/lists/dynamic-gear/gear-lists.yml -- Dynamic gear/clothing assignments for NPCs.
 # Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 GEAR_BADGER: [ MONSTER_BITE_0, -1, MONSTER_HIDE_1, -1 ]
