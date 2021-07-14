@@ -26,15 +26,16 @@ const int   TimeWeather::XP_WHILE_ENCUMBERED =  1;      // How much XP to grant 
 
 // The heartbeat timers, for triggering various events at periodic intervals.
 const uint32_t TimeWeather::HEARTBEAT_TIMERS[TimeWeather::Heartbeat::_TOTAL] = {
+    10 * Time::SECOND,  // BUFFS, for ticking down buffs/debuffs on Mobiles and the Player.
+    17 * Time::MINUTE,  // CARRY, increases the player's hauling skill if they're heavily loaded.
+    16 * Time::MINUTE,  // DISEASE, ticks diseases and reduces blood toxicity in the player's body.
+    2 * Time::MINUTE,   // HP_REGEN, causes health to regenerate over time.
+    432 * Time::MINUTE, // HUNGER. Pretty slow, as you can live for a long time without food.
     30 * Time::MINUTE,  // MOBILE_SPAWN, used to trigger Mobiles (re)spawning.
     10 * Time::MINUTE,  // ROOM_SCARS, for decreasing the intensity of room scars.
-    10 * Time::SECOND,  // BUFFS, for ticking down buffs/debuffs on Mobiles and the Player.
-    5 * Time::MINUTE,   // WILDERNESS_SPAWN, for spawning beasts in the wilderness.
-    432 * Time::MINUTE, // HUNGER. Pretty slow, as you can live for a long time without food.
+    1,                  // SP_REGEN, regenerates stamina points over time.
     311 * Time::MINUTE, // THIRST. More rapid than hunger.
-    2 * Time::MINUTE,   // HP_REGEN, causes health to regenerate over time.
-    16 * Time::MINUTE,  // DISEASE, ticks diseases and reduces blood toxicity in the player's body.
-    17 * Time::MINUTE,  // CARRY, increases the player's hauling skill if they're heavily loaded.
+    5 * Time::MINUTE,   // WILDERNESS_SPAWN, for spawning beasts in the wilderness.
 };
 
 
@@ -349,6 +350,9 @@ bool TimeWeather::pass_time(float seconds, bool interruptable)
             for (unsigned int i = 0; i < world->mob_count(); i++)
                 world->mob_vec(i)->tick_hp_regen();
         }
+
+        // Regenerates stamina points over time.
+        if (heartbeat_ready(Heartbeat::SP_REGEN)) player->tick_sp_regen();
 
         // Ticks diseases and reduces blood toxicity.
         if (heartbeat_ready(Heartbeat::DISEASE))

@@ -43,6 +43,7 @@ public:
     void        thirst_tick();                      // The player gets a little more thirsty.
     void        tick_blood_tox();                   // Reduces blood toxicity.
     void        tick_hp_regen() override;           // Regenerates HP over time.
+    void        tick_sp_regen();                    // Regenerates SP over time.
 
 private:
     static const float  BASE_SKILL_COST_MULTIPLIER;     // The higher this number, the slower player skill levels increase.
@@ -60,6 +61,7 @@ private:
     static const int    REGEN_TIME_COST_THIRST;         // How many thirst ticks it costs to regenerate a unit of health.
     static const float  SKILL_HAULING_DIVISOR;          // This number affects how effective the Hauling skill is at increasing maximum carry weight. LOWER number = skill allows more carry weight.
     static const int    SP_DEFAULT;                     // The default stamina points maximum for the player.
+    static const int    SP_REGEN_PER_TICK;              // How much stamina is regenerated each stamina heartbeat tick?
     static const int    THIRST_MAX;                     // The maximum thirst value (when this is maxed, the player is fully quenched.)
 
     int         m_blood_tox;    // Blood toxicity level.

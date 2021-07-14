@@ -29,6 +29,7 @@ const int   Player::REGEN_TIME_COST_HUNGER =        60;     // How many hunger t
 const int   Player::REGEN_TIME_COST_THIRST =        30;     // How many thirst ticks it costs to regenerate a unit of health.
 const float Player::SKILL_HAULING_DIVISOR =         50;     // This number affects how effective the Hauling skill is at increasing maximum carry weight. LOWER number = skill allows more carry weight.
 const int   Player::SP_DEFAULT =                    100;    // The default stamina points maximum for the player.
+const int   Player::SP_REGEN_PER_TICK =             1;      // How much stamina is regenerated each stamina heartbeat tick?
 const int   Player::THIRST_MAX =                    20;     // The maximum thirst value (when this is maxed, the player is fully quenched.)
 
 // The SQL table construction string for the player data.
@@ -345,3 +346,6 @@ void Player::tick_hp_regen()
     }
     Mobile::tick_hp_regen();
 }
+
+// Regenerates SP over time.
+void Player::tick_sp_regen() { restore_sp(SP_REGEN_PER_TICK); }
