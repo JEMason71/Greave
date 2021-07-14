@@ -1,6 +1,7 @@
 // core/parser.cpp -- The command parser! Converts player input into commands that the game can understand.
 // Copyright (c) 2021 Raine "Gravecat" Simmons and the Greave contributors. Licensed under the GNU Affero General Public License v3 or any later version.
 
+#include "actions/abilities.hpp"
 #include "actions/arena.hpp"
 #include "actions/cheat.hpp"
 #include "actions/combat.hpp"
@@ -28,6 +29,7 @@
 Parser::Parser() : m_special_state(SpecialState::NONE)
 {
     add_command("! <txt>", ParserCommand::EXCLAIM);
+    add_command("abilities", ParserCommand::ABILITIES);
     add_command("[attack|kill|k] <mobile>", ParserCommand::ATTACK);
     add_command("close <dir>", ParserCommand::CLOSE);
     add_command("drink <item:i>", ParserCommand::DRINK);
@@ -432,6 +434,7 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
     switch (pcd.command)
     {
         case ParserCommand::NONE: break;
+        case ParserCommand::ABILITIES: Abilities::abilities(); break;
         case ParserCommand::ADD_MONEY:
             if (!words.size() || !StrX::is_number(words.at(0))) core()->message("{y}Please specify {Y}how many coins to add{y}.");
             else ActionCheat::add_money(parse_int(words.at(0)));

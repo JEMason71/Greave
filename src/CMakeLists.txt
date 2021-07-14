@@ -67,6 +67,7 @@ endif(TARGET_WINDOWS)
 
 # Source files.
 set(GREAVE_CPPS
+  actions/abilities.cpp
   actions/ai.cpp
   actions/arena.cpp
   actions/cheat.cpp
