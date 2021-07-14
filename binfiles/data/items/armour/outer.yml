@@ -26,7 +26,7 @@ ARMOUR_BRIGANDINE:
   weight: 2600
 
 ARMOUR_FULL_PLATE:
-  desc: A heavy steel breastplate and jointed armour pieces with a chain hauberk beneath offers maximum protection at the cost of mobility.
+  desc: A heavy steel breastplate and jointed armour pieces offers maximum protection at the cost of mobility.
   dodge_mod: -40
   name: [ full plate armour, suits of full plate armour ]
   power: 22
