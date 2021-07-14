@@ -27,8 +27,8 @@ const int Mobile::NAME_FLAG_CAPITALIZE_FIRST =  2;  // Capitalize the first lett
 const int Mobile::NAME_FLAG_HEALTH =            4;  // Display the mobile's health in brackets after its name.
 const int Mobile::NAME_FLAG_NO_COLOUR =         8;  // Strip colour codes from the name.
 const int Mobile::NAME_FLAG_PLURAL =            16; // Return a plural of the mobile's name (e.g. apple -> apples).
-const int Mobile::NAME_FLAG_POSSESSIVE =        64; // Change the mobile's name to a possessive noun (e.g. goblin -> goblin's).
-const int Mobile::NAME_FLAG_THE =               32; // Precede the mobile's name with 'the', unless the name is a proper noun.
+const int Mobile::NAME_FLAG_POSSESSIVE =        32; // Change the mobile's name to a possessive noun (e.g. goblin -> goblin's).
+const int Mobile::NAME_FLAG_THE =               64; // Precede the mobile's name with 'the', unless the name is a proper noun.
 
 // The SQL table construction string for Buffs.
 const std::string   Buff::SQL_BUFFS =       "CREATE TABLE buffs ( owner INTEGER, power INTEGER, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, time INTEGER, type INTEGER NOT NULL )";
