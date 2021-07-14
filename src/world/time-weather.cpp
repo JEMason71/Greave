@@ -22,6 +22,7 @@ const std::string TimeWeather::SQL_TIME_WEATHER = "CREATE TABLE time_weather ( d
 
 const int   TimeWeather::LUNAR_CYCLE_DAYS =     29;     // How many days are in a lunar cycle?
 const float TimeWeather::UNINTERRUPTABLE_TIME = 5.0f;   // The maximum amount of time for an action that cannot be interrupted.
+const int   TimeWeather::XP_WHILE_ENCUMBERED =  1;      // How much XP to grant per carry tick for encumbered players.
 
 // The heartbeat timers, for triggering various events at periodic intervals.
 const uint32_t TimeWeather::HEARTBEAT_TIMERS[TimeWeather::Heartbeat::_TOTAL] = {
@@ -33,6 +34,7 @@ const uint32_t TimeWeather::HEARTBEAT_TIMERS[TimeWeather::Heartbeat::_TOTAL] = {
     311 * Time::MINUTE, // THIRST. More rapid than hunger.
     2 * Time::MINUTE,   // HP_REGEN, causes health to regenerate over time.
     16 * Time::MINUTE,  // DISEASE, ticks diseases and reduces blood toxicity in the player's body.
+    17 * Time::MINUTE,  // CARRY, increases the player's hauling skill if they're heavily loaded.
 };
 
 
@@ -353,6 +355,10 @@ bool TimeWeather::pass_time(float seconds, bool interruptable)
         {
             player->tick_blood_tox();
         }
+
+        // Increases the player's hauling skill if they are over-encumbered.
+        if (heartbeat_ready(Heartbeat::CARRY))
+            if (player->carry_weight() > std::round(static_cast<float>(player->max_carry()) * 0.75f)) player->gain_skill_xp("HAULING", XP_WHILE_ENCUMBERED);
     }
 
     return true;

@@ -26,6 +26,7 @@ const int   Player::BLOOD_TOX_VOMIT_CHANCE =        4;      // 1 in X chance of 
 const int   Player::BLOOD_TOX_WARNING =             4;      // The level at which the player is warned of increasing blood toxicity.
 const int   Player::REGEN_TIME_COST_HUNGER =        60;     // How many hunger ticks it costs to regenerate a unit of health.
 const int   Player::REGEN_TIME_COST_THIRST =        30;     // How many thirst ticks it costs to regenerate a unit of health.
+const float Player::SKILL_HAULING_DIVISOR =         50;     // This number affects how effective the Hauling skill is at increasing maximum carry weight. LOWER number = skill allows more carry weight.
 
 // The SQL table construction string for the player data.
 const std::string Player::SQL_PLAYER = "CREATE TABLE player ( blood_tox INTEGER, hunger INTEGER NOT NULL, mob_target INTEGER, money INTEGER NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, thirst INTEGET NOT NULL )";
@@ -190,6 +191,13 @@ uint32_t Player::load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id
     }
 
     return Mobile::load(save_db, sql_id);
+}
+
+// The maximum weight the player can carry.
+uint32_t Player::max_carry() const
+{
+    const uint32_t base_carry = Mobile::max_carry();
+    return base_carry + std::round(base_carry * (static_cast<float>(skill_level("HAULING")) / SKILL_HAULING_DIVISOR));
 }
 
 // Retrieves the Mobile target if it's still valid, or sets it to 0 if not.

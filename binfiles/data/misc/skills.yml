@@ -21,6 +21,10 @@ EVASION:
   name: evasion
   xp_multi: 8
 
+HAULING:
+  name: hauling
+  xp_multi: 1
+
 ONE_HANDED:
   name: one-handed weapons
   xp_multi: 6.5

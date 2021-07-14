@@ -26,6 +26,7 @@ public:
     bool        is_dead() const override;           // Checks if this Player is dead.
     bool        is_player() const override;         // Returns true if this Mobile is a Player, false if not.
     uint32_t    load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id) override;  // Loads the Player data.
+    uint32_t    max_carry() const override;         // The maximum weight the player can carry.
     uint32_t    mob_target();                       // Retrieves the Mobile target if it's still valid, or sets it to 0 if not.
     uint32_t    money() const;                      // Check how much money we're carrying.
     void        reduce_hp(int amount, bool death_message = true) override;  // Reduces the player's hit points.
@@ -53,6 +54,7 @@ private:
     static const int    BLOOD_TOX_VOMIT_CHANCE;         // 1 in X chance of vomiting past the above level of toxicity.
     static const int    REGEN_TIME_COST_HUNGER;         // How many hunger ticks it costs to regenerate a unit of health.
     static const int    REGEN_TIME_COST_THIRST;         // How many thirst ticks it costs to regenerate a unit of health.
+    static const float  SKILL_HAULING_DIVISOR;          // This number affects how effective the Hauling skill is at increasing maximum carry weight. LOWER number = skill allows more carry weight.
 
     int         m_blood_tox;    // Blood toxicity level.
     std::string m_death_reason; // The cause of death, when it happens.

@@ -11,7 +11,7 @@ namespace SQLite { class Database; }    // defined in 3rdparty/SQLiteCpp/Databas
 class TimeWeather
 {
 public:
-    enum Heartbeat : uint32_t { MOBILE_SPAWN, ROOM_SCARS, BUFFS, WILDERNESS_SPAWN, HUNGER, THIRST, HP_REGEN, DISEASE, _TOTAL };
+    enum Heartbeat : uint32_t { MOBILE_SPAWN, ROOM_SCARS, BUFFS, WILDERNESS_SPAWN, HUNGER, THIRST, HP_REGEN, DISEASE, CARRY, _TOTAL };
     enum class LightDark : uint8_t { LIGHT, DARK, NIGHT };
     enum class LunarPhase : uint8_t { NEW, WAXING_CRESCENT, FIRST_QUARTER, WAXING_GIBBOUS, FULL, WANING_GIBBOUS, THIRD_QUARTER, WANING_CRESCENT };
     enum class Season : uint8_t { AUTO, WINTER, SPRING, SUMMER, AUTUMN };
@@ -48,6 +48,7 @@ public:
 private:
     static const int    LUNAR_CYCLE_DAYS;       // How many days are in a lunar cycle?
     static const float  UNINTERRUPTABLE_TIME;   // The maximum amount of time for an action that cannot be interrupted.
+    static const int    XP_WHILE_ENCUMBERED;    // How much XP to grant per carry tick for encumbered players.
 
     // The heartbeat timers, for triggering various events at periodic intervals.
     static const uint32_t   HEARTBEAT_TIMERS[Heartbeat::_TOTAL];

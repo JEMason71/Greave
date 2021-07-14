@@ -106,7 +106,7 @@ public:
     virtual bool        is_player() const;                          // Returns true if this Mobile is a Player, false if not.
     virtual uint32_t    load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id);   // Loads a Mobile.
     uint32_t            location() const;                           // Retrieves the location of this Mobile, in the form of a Room ID.
-    uint32_t            max_carry() const;                          // The maximum weight this Mobile can carry.
+    virtual uint32_t    max_carry() const;                          // The maximum weight this mobile can carry.
     std::string         meta(const std::string &key) const;         // Retrieves Mobile metadata.
     float               meta_float(const std::string &key) const;   // Retrieves metadata, in float format.
     int                 meta_int(const std::string &key) const;     // Retrieves metadata, in int format.
