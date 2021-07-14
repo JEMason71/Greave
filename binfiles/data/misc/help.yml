@@ -6,6 +6,8 @@ ABILITIES: [ "The {C}ABILITIES {w}command lists all available special abilities,
 
 ATTACK: "The {C}ATTACK {w}command (can also be written as {C}KILL {w}or shortened to {C}K{w}) is your primary means of fighting creatures and people in the game world. Simply type {C}ATTACK {w}followed by the name of your target (for example, {C}ATTACK GOBLIN{w}) to attack with your currently-equipped weapon."
 
+CAREFUL_AIM: "The {C}CAREFUL AIM {w}ability allows you to focus your mind, granting a bonus to-hit chance on your next attack."
+
 CLOSE: "You can close doors (or windows, grates, or other door-like things) with the {C}CLOSE {w}command. Simply type {C}CLOSE {w}followed by a direction (for example, {C}CLOSE NORTHEAST {w}to attempt to close something in that direction."
 
 COMMAND: "#COMMANDS"

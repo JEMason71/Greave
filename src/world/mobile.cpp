@@ -631,8 +631,9 @@ void Mobile::tick_buffs()
     for (size_t i = 0; i < m_buffs.size(); i++)
     {
         if (m_buffs.at(i)->time == USHRT_MAX) continue;
+        const auto type = m_buffs.at(i)->type;
 
-        switch (m_buffs.at(i)->type)
+        switch (type)
         {
             case Buff::Type::BLEED:
                 if (!tick_bleed(m_buffs.at(i)->power, m_buffs.at(i)->time)) return;
@@ -641,6 +642,15 @@ void Mobile::tick_buffs()
                 if (!tick_poison(m_buffs.at(i)->power, m_buffs.at(i)->time)) return;
                 break;
             default: break;
+        }
+
+        if (m_buffs.at(i)->time == 1)
+        {
+            switch (type)
+            {
+                case Buff::Type::CD_CAREFUL_AIM: core()->message("{m}The {M}Careful Aim {m}ability is ready to use again."); break;
+                default: break;
+            }
         }
 
         if (!--m_buffs.at(i)->time)

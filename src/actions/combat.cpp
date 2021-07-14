@@ -139,6 +139,7 @@ bool Combat::attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mobile> de
         attacked = true;
     }
     attacker->pass_time(attack_speed, false);
+    attacker->clear_buff(Buff::Type::CAREFUL_AIM);
     return attacked;
 }
 
@@ -382,6 +383,7 @@ void Combat::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mo
         default: break;
     }
     float to_hit = BASE_HIT_CHANCE_MELEE;
+    if (attacker->has_buff(Buff::Type::CAREFUL_AIM)) to_hit += attacker->buff_power(Buff::Type::CAREFUL_AIM);
     if (attacker_is_player) to_hit += (WEAPON_SKILL_TO_HIT_PER_LEVEL * player->skill_level(weapon_skill));
     else if (defender_is_player) to_hit -= (EVASION_SKILL_BONUS_PER_LEVEL * player->skill_level("EVASION"));
     to_hit *= hit_multiplier;

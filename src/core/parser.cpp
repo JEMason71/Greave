@@ -29,8 +29,10 @@
 Parser::Parser() : m_special_state(SpecialState::NONE)
 {
     add_command("! <txt>", ParserCommand::EXCLAIM);
-    add_command("abilities", ParserCommand::ABILITIES);
+    add_command("[abilities|ability]", ParserCommand::ABILITIES);
     add_command("[attack|kill|k] <mobile>", ParserCommand::ATTACK);
+    add_command("ca", ParserCommand::CAREFUL_AIM);
+    add_command("careful aim", ParserCommand::CAREFUL_AIM);
     add_command("close <dir>", ParserCommand::CLOSE);
     add_command("drink <item:i>", ParserCommand::DRINK);
     add_command("drop <item:i>", ParserCommand::DROP);
@@ -444,6 +446,7 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             else if (!words.size()) specify("attack");
             else if (parsed_target_type == ParserTarget::TARGET_NONE) not_here();
             break;
+        case ParserCommand::CAREFUL_AIM: Abilities::careful_aim(confirm); break;
         case ParserCommand::DIRECTION: ActionTravel::travel(player, parse_direction(first_word), confirm); break;
         case ParserCommand::DRINK:
             if (!words.size()) specify("drink");

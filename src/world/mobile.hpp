@@ -58,7 +58,7 @@ struct BodyPart
 
 struct Buff
 {
-    enum class Type : uint8_t { NONE, BLEED, POISON, RECENT_DAMAGE, RECENTLY_FLED };
+    enum class Type : uint8_t { NONE, BLEED, CAREFUL_AIM, CD_CAREFUL_AIM, POISON, RECENT_DAMAGE, RECENTLY_FLED };
 
     static const std::string    SQL_BUFFS;  // The SQL table construction string for Buffs.
 

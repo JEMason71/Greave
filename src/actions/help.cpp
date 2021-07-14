@@ -15,6 +15,7 @@ void ActionHelp::help(std::string topic)
 {
     if (!topic.size()) topic = "HELP";
     else topic = StrX::str_toupper(topic);
+    StrX::find_and_replace(topic, " ", "_");
 
     const auto it = m_help_pages.find(topic);
     if (it == m_help_pages.end())

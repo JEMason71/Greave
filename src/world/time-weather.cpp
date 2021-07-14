@@ -32,9 +32,9 @@ const uint32_t TimeWeather::HEARTBEAT_TIMERS[TimeWeather::Heartbeat::_TOTAL] = {
     2 * Time::MINUTE,   // HP_REGEN, causes health to regenerate over time.
     432 * Time::MINUTE, // HUNGER. Pretty slow, as you can live for a long time without food.
     30 * Time::MINUTE,  // MOBILE_SPAWN, used to trigger Mobiles (re)spawning.
-    2 * Time::SECOND,   // MP_REGEN, regenerates mana points over time.
+    20 * Time::SECOND,  // MP_REGEN, regenerates mana points over time.
     10 * Time::MINUTE,  // ROOM_SCARS, for decreasing the intensity of room scars.
-    1 * Time::SECOND,   // SP_REGEN, regenerates stamina points over time.
+    10 * Time::SECOND,  // SP_REGEN, regenerates stamina points over time.
     311 * Time::MINUTE, // THIRST. More rapid than hunger.
     5 * Time::MINUTE,   // WILDERNESS_SPAWN, for spawning beasts in the wilderness.
 };
