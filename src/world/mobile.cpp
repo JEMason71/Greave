@@ -2,6 +2,7 @@
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #include "3rdparty/SQLiteCpp/SQLiteCpp.h"
+#include "actions/arena.hpp"
 #include "actions/combat.hpp"
 #include "core/core.hpp"
 #include "core/guru.hpp"
@@ -409,6 +410,7 @@ void Mobile::reduce_hp(int amount, bool death_message)
     }
     core()->world()->player()->add_score(m_score);
     if (m_spawn_room) core()->world()->get_room(m_spawn_room)->clear_tag(RoomTag::MobSpawned);
+    if (tag(MobileTag::ArenaFighter)) Arena::combatant_died();
     core()->world()->remove_mobile(m_id);
 }
 

@@ -1,6 +1,7 @@
 // actions/travel.cpp -- Actions allowing the player and NPCs to move around the game world.
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
+#include "actions/arena.hpp"
 #include "actions/combat.hpp"
 #include "actions/doors.hpp"
 #include "actions/look.hpp"
@@ -43,10 +44,11 @@ const float ActionTravel::XP_PER_SAFE_FALL_SUCCESS =    8.0f;   // How much base
 // Attempts to move from one Room to another.
 bool ActionTravel::travel(std::shared_ptr<Mobile> mob, Direction dir, bool confirm)
 {
+    const auto world = core()->world();
     const uint32_t mob_loc = mob->location();
-    const auto player = core()->world()->player();
+    const auto player = world->player();
     const uint32_t player_loc = player->location();
-    const std::shared_ptr<Room> room = core()->world()->get_room(mob_loc);
+    const std::shared_ptr<Room> room = world->get_room(mob_loc);
     const bool is_player = mob->is_player();
     const uint32_t room_link = room->link(dir);
     const bool player_resting = player->tag(MobileTag::Resting);
@@ -159,7 +161,7 @@ bool ActionTravel::travel(std::shared_ptr<Mobile> mob, Direction dir, bool confi
             }
             if (!mob->tag(MobileTag::ImmunityBleed))
             {
-                core()->world()->get_room(mob->location())->add_scar(ScarType::BLOOD, MathX::mixup(blood_intensity, FALL_BLEED_INTENSITY_RANGE));
+                world->get_room(mob->location())->add_scar(ScarType::BLOOD, MathX::mixup(blood_intensity, FALL_BLEED_INTENSITY_RANGE));
                 mob->set_buff(Buff::Type::BLEED, blood_intensity, hp_damage / core()->rng()->rnd(FALL_BLEED_DIVISOR_MIN, FALL_BLEED_DIVISOR_MAX));
             }
             if (mob->hp() <= 0)
@@ -178,6 +180,8 @@ bool ActionTravel::travel(std::shared_ptr<Mobile> mob, Direction dir, bool confi
             player->gain_skill_xp("SAFE_FALL", XP_PER_SAFE_FALL_SUCCESS * fallen_dist);
         }
     }
+
+    if (is_player && mob->tag(MobileTag::ArenaFighter) && world->get_room(mob->location())->tag(RoomTag::Arena)) Arena::reward();
 
     return true;
 }

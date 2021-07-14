@@ -28,6 +28,7 @@ public:
     uint32_t    load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id) override;  // Loads the Player data.
     uint32_t    mob_target();                       // Retrieves the Mobile target if it's still valid, or sets it to 0 if not.
     uint32_t    money() const;                      // Check how much money we're carrying.
+    void        reduce_hp(int amount, bool death_message = true) override;  // Reduces the player's hit points.
     void        remove_money(uint32_t amount);      // Removes money from the player.
     uint32_t    save(std::shared_ptr<SQLite::Database> save_db) override;   // Saves this Player.
     void        set_death_reason(const std::string &reason);    // Sets the reason for this Player dying.

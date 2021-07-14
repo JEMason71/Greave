@@ -101,11 +101,31 @@ BRASS_DIRK:
   desc: Dim light shining in through grubby, cracked windows glitters through the thick smoke hanging heavy in the air. What was once a warehouse is now a disreputable-looking tavern, a set of creaking wooden stairs curving up from the entrance to an old wooden floor bearing sinister stains and a strong scent of stale ale. Simple wooden stools sit around a number of round tables, while a stained bar is poorly-lit by flickering aether-lanterhs. {lb} ```Another flight of stairs leads northward, up from the tavern area, past which you can see a large metal cage.
   exits:
     east: CUTPURSE_ALLEY
-    north: UNFINISHED
+    north: BRASS_DIRK_ARENA
   light: dim
   name: [ The Brass Dirk, tavern ]
   security: low
-  tags: [ EastLockable, Indoors, Wide ]
+  tags: [ EastLockable, Indoors, NorthIncline, Wide ]
+
+BRASS_DIRK_ARENA:
+  desc: The upper floor of this converted warehouse composes what can be called an 'arena' in the loosest sense of the word. The stained, hardwood floorboards creak and groan in protest as you stand here, a wide area to allow crowds to gather around the main event, a large and heavy steel cage dominating the middle of the floor. {lb} ```A counter is set up at the side of the floor, numerous tattered papers hanging from the side advertising upcoming fights and betting odds, while the only other way out is the rickety stairway leading back down, south to the tavern. {lb} ```{c}If you wish, you can {C}PARTICIPATE {c}in a fight.
+  exits:
+    south: BRASS_DIRK
+  light: dim
+  metadata: "arena_area:arena_cage arena_door:door arena_room:BRASS_DIRK_ARENA_CAGE"
+  name: [ Brass Dirk Arena, arena ]
+  security: low
+  tags: [ Arena, Indoors, SouthDecline, Wide ]
+
+BRASS_DIRK_ARENA_CAGE:
+  desc: And here you find yourself inside the large metal cage of the Brass Dirk 'arena', the heavy metal door to the south the only exit back to the tavern. The wooden floor here is marred with scratches and dents, and despite some evidently half-hearted attempts at keeping it clean, numerous dark stains pattern the uneven ground.
+  exits:
+    south: BRASS_DIRK_ARENA
+  light: dim
+  metadata: "arena_door:cage_door arena_exit:south"
+  name: [ Brass Dirk Arena, cage ]
+  security: anarchy
+  tags: [ Indoors, SouthLocked, Wide ]
 
 BROKEN_ALLEY:
   desc: The walls of the two bordering buildings rise in jagged lines to either side, the melted glass and shattered brick of their construction lying strewn all about the alley amid the trash. The alley runs to a 90-degree turn where it dives down a darker corridor.
@@ -349,7 +369,7 @@ CUTPURSE_ALLEY:
     south: UNFINISHED
     west: BRASS_DIRK
   light: dim
-  name: [ Cutpurse Alley, Cutpurse ]
+  name: [ Cutpurse Alley, alley ]
   security: low
   tags: [ NorthDoubleLength, Wide, WestLockable ]
 

@@ -275,7 +275,7 @@ const std::shared_ptr<Inventory> Room::inv() const { return m_inventory; }
 bool Room::key_can_unlock(std::shared_ptr<Item> key, Direction dir)
 {
     // Ignore fake links (FALSE_ROOM, UNFINISHED, BLOCKED, etc.), permalocks, non-lockable exits, and non-key items.
-    if (fake_link(dir) || link_tag(dir, LinkTag::Permalock) || !link_tag(dir, LinkTag::Lockable) || key->type() != ItemType::KEY) return false;
+    if (fake_link(dir) || link_tag(dir, LinkTag::Permalock) || link_tag(dir, LinkTag::TempPermalock) || !link_tag(dir, LinkTag::Lockable) || key->type() != ItemType::KEY) return false;
 
     // Get the key's metadata. If none, it can't open anything.
     const std::string key_meta = key->meta("key");
@@ -336,7 +336,7 @@ bool Room::link_tag(uint8_t id, LinkTag the_tag) const
     if (id >= ROOM_LINKS_MAX) throw std::runtime_error("Invalid direction specified when checking room link tag.");
     if (the_tag == LinkTag::Lockable || the_tag == LinkTag::Openable || the_tag == LinkTag::Locked)
     {
-        if (m_tags_link[id].count(LinkTag::Permalock) > 0) return true; // If checking for Lockable, Openable or Locked, also check for Permalock.
+        if (m_tags_link[id].count(LinkTag::Permalock) > 0 || m_tags_link[id].count(LinkTag::TempPermalock) > 0) return true;    // If checking for Lockable, Openable or Locked, also check for Permalock.
         if (m_links[id] == FALSE_ROOM) return true; // Links to FALSE_ROOM are always considered to be permalocked.
 
         // Special rules check here. Because exits are usually unlocked by default, but may have the LockedByDefault tag, they then require Unlocked to mark them as currently unlocked. To simplify things, we'll just check for the Locked tag externally, and handle this special case here.
@@ -405,11 +405,11 @@ void Room::load(std::shared_ptr<SQLite::Database> save_db)
 }
 
 // Retrieves Room metadata.
-std::string Room::meta(const std::string &key) const
+std::string Room::meta(const std::string &key, bool spaces) const
 {
     if (m_metadata.find(key) == m_metadata.end()) return "";
     std::string result = m_metadata.at(key);
-    StrX::find_and_replace(result, "_", " ");
+    if (spaces) StrX::find_and_replace(result, "_", " ");
     return result;
 }
 

@@ -81,6 +81,7 @@ std::string Player::death_reason() const { return m_death_reason; }
 // Gains experience in a skill.
 void Player::gain_skill_xp(const std::string& skill_id, float xp)
 {
+    if (is_dead()) return;
     xp *= core()->world()->get_skill_multiplier(skill_id);
     if (xp <= 0)
     {
@@ -222,6 +223,13 @@ void Player::remove_money(uint32_t amount)
         core()->guru()->nonfatal("Attempt to remove more money than the player owns!", Guru::ERROR);
     }
     else m_money -= amount;
+}
+
+// Reduces the player's hit points.
+void Player::reduce_hp(int amount, bool death_message)
+{
+    if (amount >= m_hp[0] && tag(MobileTag::ArenaFighter)) core()->message("{m}The last thing you hear as your lifeless body hits the ground is the sadistic cheering of the crowd and the victorious yell of your opponent.");
+    Mobile::reduce_hp(amount, death_message);
 }
 
 // Saves this Player.

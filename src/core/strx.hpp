@@ -13,7 +13,7 @@ public:
     static const int    CL_FLAG_USE_AND, CL_FLAG_OXFORD_COMMA;  // comma_list() flags
 
     enum class DirNameType : uint8_t { NORMAL, TO_THE, TO_THE_ALT, FROM_THE, FROM_THE_ALT };
-    enum class MGSC : uint8_t { SHORT, SHORT_ROUND, LONG }; // mgsc_string() modes.
+    enum class MGSC : uint8_t { SHORT, SHORT_ROUND, LONG, LONG_COINS }; // mgsc_string() modes.
 
     static std::string  capitalize_first_letter(std::string str);   // Capitalizes the first letter of a string.
     static std::string  collapse_vector(std::vector<std::string> vec);  // Simple function to collapse a string vector into words.

@@ -27,6 +27,7 @@ enum class LinkTag : uint16_t {
     Locked,             // A closed door etc. that is currently locked.
     Unlocked,           // As above, but one that is explicitly unlocked.
     KnownLocked,        // The player is aware that this exit is locked.
+    TempPermalock,      // Like Permalock, but a temporary version.
 
     // ****************************************************************************************************
     // Tags at 10,000 or above are considered *permanent tags*. These tags WILL NOT be saved to save files.
@@ -118,13 +119,14 @@ enum class RoomTag : uint16_t {
     Smelly,                 // As with the Gross tag, but in this case the effect is triggered by smell, not sight. [CURRENTLY UNUSED]
 
     // Special types of rooms.
+    Arena,                  // This room contains an arena, where you can fight for money.
+    ChurchAltar,            // This room is a church altar, we can respawn here. [CURRENTLY UNUSED]
+    GamePoker,              // This room contains a video poker minigame. [CURRENTLY UNUSED]
+    GameSlots,              // This room contains a slot machine minigame. [CURRENTLY UNUSED]
     Maze,                   // This Room is part of a maze, and should not have its exit names labeled.
     Nexus,                  // This room contains a nexus transportation system. [CURRENTLY UNUSED]
     RadiationLight,         // This area is lightly irradiated. [CURRENTLY UNUSED]
     SludgePit,              // We got a sinky sludge pit here, guys. [CURRENTLY UNUSED]
-    GameSlots,              // This room contains a slot machine minigame. [CURRENTLY UNUSED]
-    GamePoker,              // This room contains a video poker minigame. [CURRENTLY UNUSED]
-    ChurchAltar,            // This room is a church altar, we can respawn here. [CURRENTLY UNUSED]
 };
 
 class Room
@@ -169,7 +171,7 @@ public:
     bool        link_tag(uint8_t id, LinkTag the_tag) const;            // Checks if a tag is set on this Room's link.
     bool        link_tag(Direction dir, LinkTag the_tag) const;         // As above, but with a Direction enum.
     void        load(std::shared_ptr<SQLite::Database> save_db);        // Loads the Room and anything it contains.
-    std::string meta(const std::string &key) const;                     // Retrieves Room metadata.
+    std::string meta(const std::string &key, bool spaces = true) const; // Retrieves Room metadata.
     std::map<std::string, std::string>* meta_raw();                     // Accesses the metadata map directly. Use with caution!
     std::string name(bool short_name = false) const;                    // Returns the Room's full or short name.
     void        respawn_mobs();                                         // Respawn Mobiles in this Room, if possible.

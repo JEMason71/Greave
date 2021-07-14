@@ -109,6 +109,8 @@ NW: "#TRAVEL"
 
 OPEN: "You can attempt to open doors (or windows, grates, or other door-like things) with the {C}OPEN {w}command. Simply type {C}OPEN {w}followed by a direction (for example, {C}OPEN SOUTHWEST {w}to attempt to open something in that direction."
 
+PARTICIPATE: "If you are at an arena, you may {C}PARTICIPATE {w}in a fight, though be warned - the fights are to the death!"
+
 QUIT: "To quit the game, simply type {C}QUIT{w}, followed by {C}YES {w}to confirm. {W}Please note, the game will not be automatically saved.{w} If you wish to save first, use the {C}SAVE {w}command."
 
 REMOVE: "#UNEQUIP"

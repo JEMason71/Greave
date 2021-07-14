@@ -270,6 +270,7 @@ std::string StrX::mgsc_string(uint32_t coin, StrX::MGSC mode)
     const uint32_t gold = (coin - (mithril * 1000000)) / 1000;
     const uint32_t silver = (coin - (mithril * 1000000) - (gold * 1000)) / 10;
     const uint32_t copper = (coin - (mithril * 1000000) - (gold * 1000) - (silver * 10));
+    const uint32_t total_coins = mithril + gold + silver + copper;
     if (mode == MGSC::SHORT || mode == MGSC::SHORT_ROUND)
     {
         std::string mithril_string, gold_string, silver_string, copper_string;
@@ -292,7 +293,7 @@ std::string StrX::mgsc_string(uint32_t coin, StrX::MGSC mode)
         if (gold) result_vec.push_back(std::to_string(gold) + " gold");
         if (silver) result_vec.push_back(std::to_string(silver) + " silver");
         if (copper) result_vec.push_back(std::to_string(copper) + " copper");
-        if (result_vec.size()) return comma_list(result_vec, CL_FLAG_USE_AND);
+        if (result_vec.size()) return comma_list(result_vec, CL_FLAG_USE_AND) + (mode == MGSC::LONG_COINS ? (total_coins  == 1 ? " {w}coin" : " {w}coins") : "");
         else return "zero";
     }
 }
