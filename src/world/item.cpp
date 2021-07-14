@@ -4,9 +4,12 @@
 #include "3rdparty/SQLiteCpp/SQLiteCpp.h"
 #include "core/core.hpp"
 #include "core/guru.hpp"
+#include "core/mathx.hpp"
 #include "core/random.hpp"
 #include "core/strx.hpp"
 #include "world/item.hpp"
+#include "world/player.hpp"
+#include "world/world.hpp"
 
 
 const int Item::NAME_FLAG_A =                   1;      // Much like NAME_FLAG_THE, but using 'a' or 'an' instead of 'the'.
@@ -23,7 +26,11 @@ const int Item::NAME_FLAG_THE =                 512;    // Precede the Item's na
 // The SQL table construction string for saving items.
 const std::string Item::SQL_ITEMS = "CREATE TABLE items ( description TEXT, metadata TEXT, name TEXT NOT NULL, owner_id INTEGER NOT NULL, parser_id INTEGER NOT NULL, rare INTEGER NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, stack INTEGER, subtype INTEGER, tags TEXT, type INTEGER, value INTEGER, weight INTEGER NOT NULL )";
 
-const float Item::WATER_WEIGHT =    58.68f; // The weight of 1 unit of water.
+const int   Item::APPRAISAL_XP_EASY =               1;      // The amount of appraisal XP gained for an easy item appraisal.
+const int   Item::APPRAISAL_XP_HARD =               5;      // The amount of appraisal XP gained for a difficult item appraisal.
+const int   Item::APPRAISAL_BASE_SKILL_REQUIRED =   -11;    // The base modifier to appraisal skill required for an item, after taking rarity into account.
+const int   Item::APPRAISAL_RARITY_MULTIPLIER =     9;      // The multiplier to the appraisal skill required for an item, per rarity level.
+const float Item::WATER_WEIGHT =                    58.68f; // The weight of 1 unit of water.
 
 
 // Constructor, sets default values.
@@ -31,6 +38,41 @@ Item::Item() : m_parser_id(0), m_rarity(1), m_stack(1), m_type(ItemType::NONE), 
 
 // The damage multiplier for ammunition.
 float Item::ammo_power() const { return meta_float("ammo_power"); }
+
+// Attempts to guess the value of an item.
+int Item::appraised_value()
+{
+    if (!m_value) return 0;
+    else if (meta_int("appraised_value")) return meta_int("appraised_value");
+
+    int required_skill = (m_rarity * APPRAISAL_RARITY_MULTIPLIER) + APPRAISAL_BASE_SKILL_REQUIRED;
+    if (required_skill < 0) required_skill = 0;
+    const int appraisal_skill = core()->world()->player()->skill_level("APPRAISAL");
+    if (appraisal_skill >= required_skill)
+    {
+        int value_fuzzed = MathX::fuzz(m_value);
+        set_meta("appraised_value", value_fuzzed);
+        core()->world()->player()->gain_skill_xp("APPRAISAL", APPRAISAL_XP_EASY);
+        if (tag(ItemTag::Stackable)) value_fuzzed *= m_stack;
+        return value_fuzzed;
+    }
+
+    const int diff = required_skill - appraisal_skill;
+    int penalty = 0;
+    if (diff >= 50) penalty = 1000;
+    else if (diff >= 25) penalty = 100;
+    else if (diff >= 20) penalty = 50;
+    else if (diff >= 10) penalty = 10;
+    else penalty = 1;
+    const int rolled_penalty = core()->rng()->rnd(penalty);
+    int value_appraised;
+    if (core()->rng()->rnd(3) == 1) value_appraised = MathX::fuzz(MathX::mixup(m_value / rolled_penalty, true));
+    else value_appraised = MathX::fuzz(MathX::mixup(m_value * rolled_penalty, true));
+    set_meta("appraised_value", value_appraised);
+    core()->world()->player()->gain_skill_xp("APPRAISAL", APPRAISAL_XP_HARD);
+    if (tag(ItemTag::Stackable)) value_appraised *= m_stack;
+    return value_appraised;
+}
 
 // Returns the armour damage reduction value of this Item, if any.
 float Item::armour(int bonus_power) const

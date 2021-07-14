@@ -53,6 +53,7 @@ public:
 
                 Item();                                     // Constructor, sets default values.
     float       ammo_power() const;                         // The damage multiplier for ammunition.
+    int         appraised_value();                          // Attempts to guess the value of an item.
     float       armour(int bonus_power = 0) const;          // Returns the armour damage reduction value of this Item, if any.
     int         bleed() const;                              // Returns thie bleed chance of this Item, if any.
     int         block_mod() const;                          // Returns the block modifier% for this Item, if any.
@@ -107,6 +108,11 @@ public:
     uint32_t    weight(bool individual = false) const;      // The Item's weight, in pacs.
 
 private:
+    static const int    APPRAISAL_BASE_SKILL_REQUIRED;      // The base modifier to appraisal skill required for an item, after taking rarity into account.
+    static const int    APPRAISAL_RARITY_MULTIPLIER;        // The multiplier to the appraisal skill required for an item, per rarity level.
+    static const int    APPRAISAL_XP_EASY;                  // The amount of appraisal XP gained for an easy item appraisal.
+    static const int    APPRAISAL_XP_HARD;                  // The amount of appraisal XP gained for a difficult item appraisal.
+
     std::string m_description;      // The description of this Item.
     std::map<std::string, std::string>  m_metadata; // The Item's metadata, if any.
     std::string m_name;             // The name of this Item!

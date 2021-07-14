@@ -32,6 +32,8 @@ void ActionLook::examine(ParserTarget target_type, size_t target)
 // Examines an Item.
 void ActionLook::examine_item(std::shared_ptr<Item> target)
 {
+    const int appraised_value = target->appraised_value();
+
     core()->message("You are looking at: " + target->name(Item::NAME_FLAG_FULL_STATS | Item::NAME_FLAG_ID | Item::NAME_FLAG_RARE));
     if (target->desc().size()) core()->message("{0}" + target->desc());
     std::string stat_string;
@@ -165,10 +167,16 @@ void ActionLook::examine_item(std::shared_ptr<Item> target)
 
     uint32_t weight = MathX::fuzz(target->weight());
     stat_string += (stackable ? "{w}The stack weighs around {U}" : "{w}It weighs around {U}") + StrX::intostr_pretty(weight) + (weight == 1 ? " pac" : " pacs");
-    const int actual_value = target->value();
-    const int appraised_value = MathX::fuzz(actual_value);
+
+    const uint32_t actual_value = target->value();
+    const uint32_t diff = std::abs(static_cast<int64_t>(actual_value) - static_cast<int64_t>(appraised_value));
+    std::string appraise_str;
+    if (diff >= 10000) appraise_str = "{M}you make a wild guess {w}and assume ";
+    else if (diff >= 1000) appraise_str = "{R}at a rough guess {w}you think ";
+    else if (diff >= 100) appraise_str = "{Y}you think {w}";
+
     if (!appraised_value) stat_string += (stackable ? "{w}, and {y}aren't worth anything{w}." : "{w}, and {y}isn't worth anything{w}. ");
-    else stat_string += (stackable ? "{w}, and they are worth around {U}" : "{w}, and is worth around {U}") + StrX::mgsc_string(appraised_value, StrX::MGSC::LONG) + "{w}. ";
+    else stat_string += (stackable ? "{w}, and " + appraise_str + "they're worth around {U}" : "{w}, and " + appraise_str + "it's worth around {U}") + StrX::mgsc_string(appraised_value, StrX::MGSC::LONG) + "{w}. ";
 
     if (stat_string.size())
     {
