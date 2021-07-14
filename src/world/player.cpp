@@ -26,6 +26,7 @@ const int   Player::BLOOD_TOX_VOMIT_CHANCE =        4;      // 1 in X chance of 
 const int   Player::BLOOD_TOX_WARNING =             4;      // The level at which the player is warned of increasing blood toxicity.
 const int   Player::HUNGER_MAX =                    20;     // The maximum hunger value (when this is maxed, the player is fully satiated.)
 const int   Player::MP_DEFAULT =                    100;    // THe default mana points maximum for the player.
+const int   Player::MP_REGEN_PER_TICK =             1;      // How much mana is regenerated each mana heartbeat tick?
 const int   Player::REGEN_TIME_COST_HUNGER =        60;     // How many hunger ticks it costs to regenerate a unit of health.
 const int   Player::REGEN_TIME_COST_THIRST =        30;     // How many thirst ticks it costs to regenerate a unit of health.
 const float Player::SKILL_HAULING_DIVISOR =         50;     // This number affects how effective the Hauling skill is at increasing maximum carry weight. LOWER number = skill allows more carry weight.
@@ -371,6 +372,8 @@ void Player::tick_hp_regen()
     }
     Mobile::tick_hp_regen();
 }
+// Regenerates MP over time.
+void Player::tick_mp_regen() { restore_mp(MP_REGEN_PER_TICK); }
 
 // Regenerates SP over time.
 void Player::tick_sp_regen() { restore_sp(SP_REGEN_PER_TICK); }

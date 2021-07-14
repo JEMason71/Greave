@@ -46,6 +46,7 @@ public:
     void        thirst_tick();                      // The player gets a little more thirsty.
     void        tick_blood_tox();                   // Reduces blood toxicity.
     void        tick_hp_regen() override;           // Regenerates HP over time.
+    void        tick_mp_regen();                    // Regenerates MP over time.
     void        tick_sp_regen();                    // Regenerates SP over time.
 
 private:
@@ -61,6 +62,7 @@ private:
     static const int    BLOOD_TOX_VOMIT_CHANCE;         // 1 in X chance of vomiting past the above level of toxicity.
     static const int    HUNGER_MAX;                     // The maximum hunger value (when this is maxed, the player is fully satiated.)
     static const int    MP_DEFAULT;                     // THe default mana points maximum for the player.
+    static const int    MP_REGEN_PER_TICK;              // How much mana is regenerated each mana heartbeat tick?
     static const int    REGEN_TIME_COST_HUNGER;         // How many hunger ticks it costs to regenerate a unit of health.
     static const int    REGEN_TIME_COST_THIRST;         // How many thirst ticks it costs to regenerate a unit of health.
     static const float  SKILL_HAULING_DIVISOR;          // This number affects how effective the Hauling skill is at increasing maximum carry weight. LOWER number = skill allows more carry weight.
