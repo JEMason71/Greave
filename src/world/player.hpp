@@ -29,9 +29,12 @@ public:
     uint32_t    max_carry() const override;         // The maximum weight the player can carry.
     uint32_t    mob_target();                       // Retrieves the Mobile target if it's still valid, or sets it to 0 if not.
     uint32_t    money() const;                      // Check how much money we're carrying.
+    int         mp(bool max = false) const;         // Retrieves the MP (or maximum MP) of the player.
     void        reduce_hp(int amount, bool death_message = true) override;  // Reduces the player's hit points.
+    void        reduce_mp(int amount);              // Reduces the player's mana points.
     void        reduce_sp(int amount);              // Reduces the player's stamina points.
     void        remove_money(uint32_t amount);      // Removes money from the player.
+    void        restore_mp(int amount);             // Restores the player's mana points.
     void        restore_sp(int amount);             // Restores the player's stamina points.
     uint32_t    save(std::shared_ptr<SQLite::Database> save_db) override;   // Saves this Player.
     void        set_death_reason(const std::string &reason);    // Sets the reason for this Player dying.
@@ -57,6 +60,7 @@ private:
     static const int    BLOOD_TOX_VOMIT_LEVEL;          // The level at which the player can vomit from blood toxicity.
     static const int    BLOOD_TOX_VOMIT_CHANCE;         // 1 in X chance of vomiting past the above level of toxicity.
     static const int    HUNGER_MAX;                     // The maximum hunger value (when this is maxed, the player is fully satiated.)
+    static const int    MP_DEFAULT;                     // THe default mana points maximum for the player.
     static const int    REGEN_TIME_COST_HUNGER;         // How many hunger ticks it costs to regenerate a unit of health.
     static const int    REGEN_TIME_COST_THIRST;         // How many thirst ticks it costs to regenerate a unit of health.
     static const float  SKILL_HAULING_DIVISOR;          // This number affects how effective the Hauling skill is at increasing maximum carry weight. LOWER number = skill allows more carry weight.
@@ -69,8 +73,9 @@ private:
     uint8_t     m_hunger;       // The hunger counter. 20 = completely full, 0 = starved to death.
     uint32_t    m_mob_target;   // The last Mobile to have been attacked.
     uint32_t    m_money;        // The amount of coin the player is carrying.
+    int         m_mp[2];        // The current and maximum mana points.
     std::map<std::string, int>      m_skill_levels; // The skill levels learned by this Player, if any.
     std::map<std::string, float>    m_skill_xp;     // The experience levels of skills on this Player, if any.
-    int         m_sp[2];        // The current maximum stamina points.
+    int         m_sp[2];        // The current and maximum stamina points.
     uint8_t     m_thirst;       // The thirst counter. 20 = compmpletely hydrated, 0 = died of dehydration.
 };

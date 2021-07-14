@@ -107,6 +107,7 @@ std::string MessageLog::render_message_log(bool accept_blank_input)
         }
         status_str = "{W}<" + stance_str + "{W}:" + coloured_value_indicator("hp", player->hp(), player->hp(true), 'R');
         if (player->sp() < player->sp(true)) status_str += "{W}:" + coloured_value_indicator("sp", player->sp(), player->sp(true), 'G');
+        if (player->mp() < player->mp(true)) status_str += "{W}:" + coloured_value_indicator("mp", player->mp(), player->mp(true), 'U');
         status_str += "{W}>";
         core()->screen_read(status_str, false);
     }

@@ -25,6 +25,7 @@ const int   Player::BLOOD_TOX_VOMIT_LEVEL =         6;      // The level at whic
 const int   Player::BLOOD_TOX_VOMIT_CHANCE =        4;      // 1 in X chance of vomiting past the above level of toxicity.
 const int   Player::BLOOD_TOX_WARNING =             4;      // The level at which the player is warned of increasing blood toxicity.
 const int   Player::HUNGER_MAX =                    20;     // The maximum hunger value (when this is maxed, the player is fully satiated.)
+const int   Player::MP_DEFAULT =                    100;    // THe default mana points maximum for the player.
 const int   Player::REGEN_TIME_COST_HUNGER =        60;     // How many hunger ticks it costs to regenerate a unit of health.
 const int   Player::REGEN_TIME_COST_THIRST =        30;     // How many thirst ticks it costs to regenerate a unit of health.
 const float Player::SKILL_HAULING_DIVISOR =         50;     // This number affects how effective the Hauling skill is at increasing maximum carry weight. LOWER number = skill allows more carry weight.
@@ -33,7 +34,7 @@ const int   Player::SP_REGEN_PER_TICK =             1;      // How much stamina 
 const int   Player::THIRST_MAX =                    20;     // The maximum thirst value (when this is maxed, the player is fully quenched.)
 
 // The SQL table construction string for the player data.
-const std::string Player::SQL_PLAYER = "CREATE TABLE player ( blood_tox INTEGER, hunger INTEGER NOT NULL, mob_target INTEGER, money INTEGER NOT NULL, sp INTEGER NOT NULL, sp_max INTEGER NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, thirst INTEGET NOT NULL )";
+const std::string Player::SQL_PLAYER = "CREATE TABLE player ( blood_tox INTEGER, hunger INTEGER NOT NULL, mob_target INTEGER, money INTEGER NOT NULL, mp INTEGER NOT NULL, mp_max INTEGER NOT NULL, sp INTEGER NOT NULL, sp_max INTEGER NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, thirst INTEGET NOT NULL )";
 
 // The SQL table construction string for the player skills data.
 const std::string Player::SQL_SKILLS = "CREATE TABLE skills ( id TEXT PRIMARY KEY UNIQUE NOT NULL, level INTEGER NOT NULL, xp REAL )";
@@ -44,6 +45,7 @@ Player::Player() : m_blood_tox(0), m_death_reason("the will of the gods"), m_hun
 {
     set_species("humanoid");
     set_name("Player");
+    m_mp[0] = m_mp[1] = MP_DEFAULT;
     m_sp[0] = m_sp[1] = SP_DEFAULT;
 }
 
@@ -182,6 +184,8 @@ uint32_t Player::load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id
         m_hunger = query.getColumn("hunger").getInt();
         if (!query.isColumnNull("mob_target")) m_mob_target = query.getColumn("mob_target").getUInt();
         m_money = query.getColumn("money").getUInt();
+        m_mp[0] = query.getColumn("mp").getInt();
+        m_mp[1] = query.getColumn("mp_max").getInt();
         m_sp[0] = query.getColumn("sp").getInt();
         m_sp[1] = query.getColumn("sp_max").getInt();
         sql_id = query.getColumn("sql_id").getUInt();
@@ -229,6 +233,9 @@ uint32_t Player::mob_target()
 // Check how much money we're carrying.
 uint32_t Player::money() const { return m_money; }
 
+// Retrieves the MP (or maximum MP) of the player.
+int Player::mp(bool max) const { return m_mp[max ? 1 : 0]; }
+
 // Removes money from the player.
 void Player::remove_money(uint32_t amount)
 {
@@ -247,12 +254,28 @@ void Player::reduce_hp(int amount, bool death_message)
     Mobile::reduce_hp(amount, death_message);
 }
 
+// Reduces the player's mana points.
+void Player::reduce_mp(int amount)
+{
+    if (amount <= 0) return;
+    if (amount > m_mp[0]) m_mp[0] = 0;
+    else m_mp[0] -= amount;
+}
+
 // Reduces the player's stamina points.
 void Player::reduce_sp(int amount)
 {
     if (amount <= 0) return;
     if (amount > m_sp[0]) m_sp[0] = 0;
     else m_sp[0] -= amount;
+}
+
+// Restores the player's mana points.
+void Player::restore_mp(int amount)
+{
+    if (amount <= 0) return;
+    if (amount + m_mp[0] >= m_mp[1]) m_mp[0] = m_mp[1];
+    else m_mp[0] += amount;
 }
 
 // Restores the player's stamina points.
@@ -267,11 +290,13 @@ void Player::restore_sp(int amount)
 uint32_t Player::save(std::shared_ptr<SQLite::Database> save_db)
 {
     const uint32_t sql_id = Mobile::save(save_db);
-    SQLite::Statement query(*save_db, "INSERT INTO player ( blood_tox, hunger, mob_target, money, sp, sp_max, sql_id, thirst ) VALUES ( :blood_tox, :hunger, :mob_target, :money, :sp, :sp_max, :sql_id, :thirst )");
+    SQLite::Statement query(*save_db, "INSERT INTO player ( blood_tox, hunger, mob_target, money, mp, mp_max, sp, sp_max, sql_id, thirst ) VALUES ( :blood_tox, :hunger, :mob_target, :money, :mp, :mp_max, :sp, :sp_max, :sql_id, :thirst )");
     if (m_blood_tox) query.bind(":blood_tox", m_blood_tox);
     query.bind(":hunger", m_hunger);
     if (m_mob_target) query.bind(":mob_target", m_mob_target);
     query.bind(":money", m_money);
+    query.bind(":mp", m_mp[0]);
+    query.bind(":mp_max", m_mp[1]);
     query.bind(":sp", m_sp[0]);
     query.bind(":sp_max", m_sp[1]);
     query.bind(":sql_id", sql_id);
