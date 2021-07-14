@@ -28,10 +28,11 @@ const int   Player::HUNGER_MAX =                    20;     // The maximum hunge
 const int   Player::REGEN_TIME_COST_HUNGER =        60;     // How many hunger ticks it costs to regenerate a unit of health.
 const int   Player::REGEN_TIME_COST_THIRST =        30;     // How many thirst ticks it costs to regenerate a unit of health.
 const float Player::SKILL_HAULING_DIVISOR =         50;     // This number affects how effective the Hauling skill is at increasing maximum carry weight. LOWER number = skill allows more carry weight.
+const int   Player::SP_DEFAULT =                    100;    // The default stamina points maximum for the player.
 const int   Player::THIRST_MAX =                    20;     // The maximum thirst value (when this is maxed, the player is fully quenched.)
 
 // The SQL table construction string for the player data.
-const std::string Player::SQL_PLAYER = "CREATE TABLE player ( blood_tox INTEGER, hunger INTEGER NOT NULL, mob_target INTEGER, money INTEGER NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, thirst INTEGET NOT NULL )";
+const std::string Player::SQL_PLAYER = "CREATE TABLE player ( blood_tox INTEGER, hunger INTEGER NOT NULL, mob_target INTEGER, money INTEGER NOT NULL, sp INTEGER NOT NULL, sp_max INTEGER NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, thirst INTEGET NOT NULL )";
 
 // The SQL table construction string for the player skills data.
 const std::string Player::SQL_SKILLS = "CREATE TABLE skills ( id TEXT PRIMARY KEY UNIQUE NOT NULL, level INTEGER NOT NULL, xp REAL )";
@@ -42,6 +43,7 @@ Player::Player() : m_blood_tox(0), m_death_reason("the will of the gods"), m_hun
 {
     set_species("humanoid");
     set_name("Player");
+    m_sp[0] = m_sp[1] = SP_DEFAULT;
 }
 
 // Eats food, increasing the hunger counter.
@@ -179,6 +181,8 @@ uint32_t Player::load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id
         m_hunger = query.getColumn("hunger").getInt();
         if (!query.isColumnNull("mob_target")) m_mob_target = query.getColumn("mob_target").getUInt();
         m_money = query.getColumn("money").getUInt();
+        m_sp[0] = query.getColumn("sp").getInt();
+        m_sp[1] = query.getColumn("sp_max").getInt();
         sql_id = query.getColumn("sql_id").getUInt();
         m_thirst = query.getColumn("thirst").getInt();
     }
@@ -242,15 +246,33 @@ void Player::reduce_hp(int amount, bool death_message)
     Mobile::reduce_hp(amount, death_message);
 }
 
+// Reduces the player's stamina points.
+void Player::reduce_sp(int amount)
+{
+    if (amount <= 0) return;
+    if (amount > m_sp[0]) m_sp[0] = 0;
+    else m_sp[0] -= amount;
+}
+
+// Restores the player's stamina points.
+void Player::restore_sp(int amount)
+{
+    if (amount <= 0) return;
+    if (amount + m_sp[0] >= m_sp[1]) m_sp[0] = m_sp[1];
+    else m_sp[0] += amount;
+}
+
 // Saves this Player.
 uint32_t Player::save(std::shared_ptr<SQLite::Database> save_db)
 {
     const uint32_t sql_id = Mobile::save(save_db);
-    SQLite::Statement query(*save_db, "INSERT INTO player ( blood_tox, hunger, mob_target, money, sql_id, thirst ) VALUES ( :blood_tox, :hunger, :mob_target, :money, :sql_id, :thirst )");
+    SQLite::Statement query(*save_db, "INSERT INTO player ( blood_tox, hunger, mob_target, money, sp, sp_max, sql_id, thirst ) VALUES ( :blood_tox, :hunger, :mob_target, :money, :sp, :sp_max, :sql_id, :thirst )");
     if (m_blood_tox) query.bind(":blood_tox", m_blood_tox);
     query.bind(":hunger", m_hunger);
     if (m_mob_target) query.bind(":mob_target", m_mob_target);
     query.bind(":money", m_money);
+    query.bind(":sp", m_sp[0]);
+    query.bind(":sp_max", m_sp[1]);
     query.bind(":sql_id", sql_id);
     query.bind(":thirst", m_thirst);
     query.exec();
@@ -284,6 +306,9 @@ int Player::skill_level(const std::string &skill_id) const
 
 // Returns read-only access to the player's skill levels.
 const std::map<std::string, int>& Player::skill_map() const { return m_skill_levels; }
+
+// Retrieves the SP (or maximum SP) of the player.
+int Player::sp(bool max) const { return m_sp[max ? 1 : 0]; }
 
 // Checks the current thirst level.
 int Player::thirst() const { return m_thirst; }

@@ -87,21 +87,10 @@ void MessageLog::recalc_window_sizes()
 // Renders the message log, returns user input.
 std::string MessageLog::render_message_log(bool accept_blank_input)
 {
-    const std::shared_ptr<Prefs> prefs = core()->prefs();
+    const auto prefs = core()->prefs();
 
-    auto coloured_value_indicator = [](const std::string &name, int current, int max) -> std::string {
-        std::string colour = "{G}", colour_dark = "{g}";
-        float percent = static_cast<float>(current) / static_cast<float>(max);
-        if (percent <= 0.2f)
-        {
-            colour = "{R}";
-            colour_dark = "{r}";
-        }
-        else if (percent <= 0.5f)
-        {
-            colour = "{Y}";
-            colour_dark = "{y}";
-        }
+    auto coloured_value_indicator = [](const std::string &name, int current, int max, char colour_ch) -> std::string {
+        std::string colour = "{" + std::string(1, colour_ch) + "}", colour_dark = "{" + std::string(1, colour_ch + 32) + "}";
         return colour + std::to_string(current) + colour_dark + "/" + colour + std::to_string(max) + colour_dark + name;
     };
 
@@ -109,13 +98,16 @@ std::string MessageLog::render_message_log(bool accept_blank_input)
     if (core()->world())
     {
         std::string stance_str;
-        switch (core()->world()->player()->stance())
+        const auto player = core()->world()->player();
+        switch (player->stance())
         {
             case CombatStance::AGGRESSIVE: stance_str = "{R}a"; break;
             case CombatStance::BALANCED: stance_str = "{G}b"; break;
             case CombatStance::DEFENSIVE: stance_str = "{U}d"; break;
         }
-        status_str = "{W}<" + stance_str + "{W}:" + coloured_value_indicator("hp", core()->world()->player()->hp(), core()->world()->player()->hp(true)) + "{W}>";
+        status_str = "{W}<" + stance_str + "{W}:" + coloured_value_indicator("hp", player->hp(), player->hp(true), 'R');
+        if (player->sp() < player->sp(true)) status_str += "{W}:" + coloured_value_indicator("sp", player->sp(), player->sp(true), 'G');
+        status_str += "{W}>";
         core()->screen_read(status_str, false);
     }
 

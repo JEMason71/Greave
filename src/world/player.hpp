@@ -30,12 +30,15 @@ public:
     uint32_t    mob_target();                       // Retrieves the Mobile target if it's still valid, or sets it to 0 if not.
     uint32_t    money() const;                      // Check how much money we're carrying.
     void        reduce_hp(int amount, bool death_message = true) override;  // Reduces the player's hit points.
+    void        reduce_sp(int amount);              // Reduces the player's stamina points.
     void        remove_money(uint32_t amount);      // Removes money from the player.
+    void        restore_sp(int amount);             // Restores the player's stamina points.
     uint32_t    save(std::shared_ptr<SQLite::Database> save_db) override;   // Saves this Player.
     void        set_death_reason(const std::string &reason);    // Sets the reason for this Player dying.
     void        set_mob_target(uint32_t target);    // Sets a new Mobile target.
     int         skill_level(const std::string &skill_id) const; // Returns the skill level of a specified skill of this Player.
     const std::map<std::string, int>&   skill_map() const;      // Returns read-only access to the player's skill levels.
+    int         sp(bool max = false) const;         // Retrieves the SP (or maximum SP) of the player.
     int         thirst() const;                     // Checks the current thirst level.
     void        thirst_tick();                      // The player gets a little more thirsty.
     void        tick_blood_tox();                   // Reduces blood toxicity.
@@ -56,6 +59,7 @@ private:
     static const int    REGEN_TIME_COST_HUNGER;         // How many hunger ticks it costs to regenerate a unit of health.
     static const int    REGEN_TIME_COST_THIRST;         // How many thirst ticks it costs to regenerate a unit of health.
     static const float  SKILL_HAULING_DIVISOR;          // This number affects how effective the Hauling skill is at increasing maximum carry weight. LOWER number = skill allows more carry weight.
+    static const int    SP_DEFAULT;                     // The default stamina points maximum for the player.
     static const int    THIRST_MAX;                     // The maximum thirst value (when this is maxed, the player is fully quenched.)
 
     int         m_blood_tox;    // Blood toxicity level.
@@ -65,5 +69,6 @@ private:
     uint32_t    m_money;        // The amount of coin the player is carrying.
     std::map<std::string, int>      m_skill_levels; // The skill levels learned by this Player, if any.
     std::map<std::string, float>    m_skill_xp;     // The experience levels of skills on this Player, if any.
+    int         m_sp[2];        // The current maximum stamina points.
     uint8_t     m_thirst;       // The thirst counter. 20 = compmpletely hydrated, 0 = died of dehydration.
 };

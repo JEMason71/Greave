@@ -19,6 +19,7 @@
 const float Mobile::ACTION_TIMER_CAP_MAX =                  3600.0f;    // The maximum value the action timer can ever reach.
 const int   Mobile::BASE_CARRY_WEIGHT =                     30000;      // The maximum amount of weight a Mobile can carry, before modifiers.
 const int   Mobile::DAMAGE_DEBUFF_TIME =                    60;         // How long the damage debuff that prevents HP regeneration lasts.
+const int   Mobile::HP_DEFAULT =                            100;        // The default HP value for mobiles.
 const int   Mobile::SCAR_BLEED_INTENSITY_FROM_BLEED_TICK =  1;          // Blood type scar intensity caused by each tick of the player or an NPC bleeding.
 
 // Flags for the name() function.
@@ -63,7 +64,7 @@ void Buff::save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id)
 // Constructor, sets default values.
 Mobile::Mobile() : m_action_timer(0), m_equipment(std::make_shared<Inventory>()), m_gender(Gender::IT), m_id(0), m_inventory(std::make_shared<Inventory>()), m_location(0), m_parser_id(0), m_score(0), m_spawn_room(0), m_stance(CombatStance::BALANCED)
 {
-    m_hp[0] = m_hp[1] = 100;
+    m_hp[0] = m_hp[1] = HP_DEFAULT;
 }
 
 // Adds a Mobile (or the player, with ID 0) to this Mobile's hostility list.

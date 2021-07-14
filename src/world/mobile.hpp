@@ -149,6 +149,7 @@ protected:
     static const float  ACTION_TIMER_CAP_MAX;                   // The maximum value the action timer can ever reach.
     static const int    BASE_CARRY_WEIGHT;                      // The maximum amount of weight a Mobile can carry, before modifiers.
     static const int    DAMAGE_DEBUFF_TIME;                     // How long the damage debuff that prevents HP regeneration lasts.
+    static const int    HP_DEFAULT;                             // The default HP value for mobiles.
     static const int    SCAR_BLEED_INTENSITY_FROM_BLEED_TICK;   // Blood type scar intensity caused by each tick of the player or an NPC bleeding.
 
     std::shared_ptr<Buff>   buff(Buff::Type type) const;    // Returns a pointer to a specified Buff.
