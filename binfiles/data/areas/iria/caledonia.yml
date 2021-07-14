@@ -97,6 +97,16 @@ BLUE_LINE:
   security: low
   tags: [ EastAutoClose, EastDoorMetal, EastOpenable, Indoors ]
 
+BRASS_DIRK:
+  desc: Dim light shining in through grubby, cracked windows glitters through the thick smoke hanging heavy in the air. What was once a warehouse is now a disreputable-looking tavern, a set of creaking wooden stairs curving up from the entrance to an old wooden floor bearing sinister stains and a strong scent of stale ale. Simple wooden stools sit around a number of round tables, while a stained bar is poorly-lit by flickering aether-lanterhs. {lb} ```Another flight of stairs leads northward, up from the tavern area, past which you can see a large metal cage.
+  exits:
+    east: CUTPURSE_ALLEY
+    north: UNFINISHED
+  light: dim
+  name: [ The Brass Dirk, tavern ]
+  security: low
+  tags: [ EastLockable, Indoors, Wide ]
+
 BROKEN_ALLEY:
   desc: The walls of the two bordering buildings rise in jagged lines to either side, the melted glass and shattered brick of their construction lying strewn all about the alley amid the trash. The alley runs to a 90-degree turn where it dives down a darker corridor.
   exits:
@@ -331,6 +341,17 @@ CROSSWOOD_ALLEY:
   name: [ Crosswood Alley, Crosswood ]
   security: low
   tags: [ EastDoubleLength, NorthDoubleLength, SouthDoubleLength, SouthwestOpenable, SouthwestDoorMetal, SouthwestNoMobRoam, VeryWide ]
+
+CUTPURSE_ALLEY:
+  desc: Tall brick buildings sit to either side of this winding alley, the walls nearest Miller's Way littered in faded adverts for restorative tonics and spices from a faraway land. The paving stones are cracked and worn, abandoned steam pipes lie partially uncovered and deep fissures cross the alley. {lb} ```There's a big metal sign leaning lengthwise against one building just beside a heavy door, though whatever was on it before has been obscured by a graffiti image of a minotaur. The alley continues southward into the warehouse district.
+  exits:
+    north: MILLERS_CROSSWOOD
+    south: UNFINISHED
+    west: BRASS_DIRK
+  light: dim
+  name: [ Cutpurse Alley, Cutpurse ]
+  security: low
+  tags: [ NorthDoubleLength, Wide, WestLockable ]
 
 DARKENED_ALLEY:
   desc: A large camouflage mesh has been strung over what remains of the collapsed walls of the alley, casting deep shade over the corridor. It's still wide enough for a cart to pass through, though cluttered with aged, broken machines and the everpresent rubble. {lb} ```The pathway makes one more sharp turn, diving south where it appears there used to be a T instead. The north path doesn't exist any longer; a building seems to have landed on it.
@@ -853,11 +874,11 @@ MILLERS_CHURCH:
   tags: [ NorthDoubleLength, NorthwestLockable, NorthwestLockWeak, VeryWide, WestTripleLength ]
 
 MILLERS_CROSSWOOD:
-  desc: Miller's Way, with its scarred paving stones, runs east to west at the junction. Little is of note, simply buildings lining the roads, small businesses and boarded up shops, with the park and tall pines behind a short wall nearby. Crosswood Alley, narrow and winding, disappears north between two buildings.
+  desc: Miller's Way, with its scarred paving stones, runs east to west at the junction. Little is of note, simply buildings lining the roads, small businesses and boarded up shops, with the park and tall pines behind a short wall nearby. Crosswood Alley, narrow and winding, disappears north between two buildings. A narrower gap winds between old warehouses to the south.
   exits:
     east: MILLERS_WAY
     north: CROSSWOOD_ALLEY
-    south: MORENO_ALLEY
+    south: CUTPURSE_ALLEY
     west: MILLERS_WAY_2
   light: dim
   name: [ Miller's/Crosswood, Miller's/Crosswood ]
@@ -940,17 +961,6 @@ MK_CASINO_2:
   name: [ MK's Casino, casino ]
   security: low
   tags: [ GamePoker, Indoors, EastLocked, EastLockStrong ]
-
-MORENO_ALLEY:
-  desc: Moreno Alley, best described as an absence of warehouses. Tall brick buildings sit to either side, the walls nearest Miller's Way littered in faded adverts for restorative tonics and spices from a faraway land. The paving stones are a bit worn, as abandoned steam pipes lie partially uncovered and deep fissures cross the alley. {lb} ```There's a big metal sign leaning lengthwise against one building just beside a heavy door, though whatever was on it before has been obscured by a graffiti image of a minotaur. The alley continues southward into the warehouse district.
-  exits:
-    north: MILLERS_CROSSWOOD
-    south: UNFINISHED
-    west: UNFINISHED
-  light: dim
-  name: [ Moreno Alley, Moreno ]
-  security: low
-  tags: [ NorthDoubleLength, Wide ]
 
 NORTHWATCH:
   desc: You find yourself in a wide, tall room, the wooden floor beneath well-worn from the passage of many feet. A number of aether-lanterns hang from chains below the heavy wooden rafters, illuminating the area and casting deep shadows on the flat roof above. A large table occupies the middle of the room, largely covered by a map and various tiny coloured flags and other markers, while decorative suits of armour flank dusty bookshelves around the room's edge. {lb} ```Doors lead west, northwest and south - the latter especially large and heavy - while an open corridor winds eastward. A spiral staircase in the corner of the room leads both up and down.
