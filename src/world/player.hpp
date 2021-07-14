@@ -52,9 +52,11 @@ private:
     static const int    BLOOD_TOX_POISON_TIME_RNG;      // The RNG variance additional time for the blood toxicity poison debuff.
     static const int    BLOOD_TOX_VOMIT_LEVEL;          // The level at which the player can vomit from blood toxicity.
     static const int    BLOOD_TOX_VOMIT_CHANCE;         // 1 in X chance of vomiting past the above level of toxicity.
+    static const int    HUNGER_MAX;                     // The maximum hunger value (when this is maxed, the player is fully satiated.)
     static const int    REGEN_TIME_COST_HUNGER;         // How many hunger ticks it costs to regenerate a unit of health.
     static const int    REGEN_TIME_COST_THIRST;         // How many thirst ticks it costs to regenerate a unit of health.
     static const float  SKILL_HAULING_DIVISOR;          // This number affects how effective the Hauling skill is at increasing maximum carry weight. LOWER number = skill allows more carry weight.
+    static const int    THIRST_MAX;                     // The maximum thirst value (when this is maxed, the player is fully quenched.)
 
     int         m_blood_tox;    // Blood toxicity level.
     std::string m_death_reason; // The cause of death, when it happens.

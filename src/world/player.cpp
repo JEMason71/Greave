@@ -24,9 +24,11 @@ const int   Player::BLOOD_TOX_POISON_TIME_RNG =     5;      // The RNG variance 
 const int   Player::BLOOD_TOX_VOMIT_LEVEL =         6;      // The level at which the player can vomit from blood toxicity.
 const int   Player::BLOOD_TOX_VOMIT_CHANCE =        4;      // 1 in X chance of vomiting past the above level of toxicity.
 const int   Player::BLOOD_TOX_WARNING =             4;      // The level at which the player is warned of increasing blood toxicity.
+const int   Player::HUNGER_MAX =                    20;     // The maximum hunger value (when this is maxed, the player is fully satiated.)
 const int   Player::REGEN_TIME_COST_HUNGER =        60;     // How many hunger ticks it costs to regenerate a unit of health.
 const int   Player::REGEN_TIME_COST_THIRST =        30;     // How many thirst ticks it costs to regenerate a unit of health.
 const float Player::SKILL_HAULING_DIVISOR =         50;     // This number affects how effective the Hauling skill is at increasing maximum carry weight. LOWER number = skill allows more carry weight.
+const int   Player::THIRST_MAX =                    20;     // The maximum thirst value (when this is maxed, the player is fully quenched.)
 
 // The SQL table construction string for the player data.
 const std::string Player::SQL_PLAYER = "CREATE TABLE player ( blood_tox INTEGER, hunger INTEGER NOT NULL, mob_target INTEGER, money INTEGER NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, thirst INTEGET NOT NULL )";
@@ -36,7 +38,7 @@ const std::string Player::SQL_SKILLS = "CREATE TABLE skills ( id TEXT PRIMARY KE
 
 
 // Constructor, sets default values.
-Player::Player() : m_blood_tox(0), m_death_reason("the will of the gods"), m_hunger(20), m_mob_target(0), m_money(0), m_thirst(20)
+Player::Player() : m_blood_tox(0), m_death_reason("the will of the gods"), m_hunger(HUNGER_MAX), m_mob_target(0), m_money(0), m_thirst(THIRST_MAX)
 {
     set_species("humanoid");
     set_name("Player");
@@ -61,7 +63,7 @@ void Player::add_money(uint32_t amount)
 void Player::add_water(int power)
 {
     m_thirst += power;
-    if (m_thirst > 20) m_thirst = 20;
+    if (m_thirst > THIRST_MAX) m_thirst = THIRST_MAX;
 }
 
 // Retrieves the player's blood toxicity level.
