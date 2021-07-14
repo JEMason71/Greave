@@ -9,6 +9,10 @@
 #include "core/strx.hpp"
 #include "core/terminal-sdl2.hpp"
 
+#ifdef GREAVE_TOLK
+#include "3rdparty/Tolk/Tolk.h"
+#endif
+
 #include <ctime>
 #include <thread>
 
@@ -144,6 +148,9 @@ int TerminalSDL2::get_key()
                     case SDLK_PAGEUP: case SDLK_KP_9: return Key::PAGE_UP;
                     case SDLK_PAGEDOWN: case SDLK_KP_3: return Key::PAGE_DOWN;
                     case SDLK_PRINTSCREEN: screenshot(); return Key::RESIZED;
+#ifdef GREAVE_TOLK
+                    case SDLK_ESCAPE: Tolk_Silence(); break;
+#endif
                 }
                 break;
             case SDL_TEXTINPUT:

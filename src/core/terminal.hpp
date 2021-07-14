@@ -10,10 +10,8 @@
 class Terminal
 {
 public:
-    enum class Colour : uint8_t { BLACK, BLACK_BOLD, RED, RED_BOLD, GREEN, GREEN_BOLD, YELLOW, YELLOW_BOLD, BLUE, BLUE_BOLD, MAGENTA, MAGENTA_BOLD, CYAN, CYAN_BOLD, WHITE, WHITE_BOLD,
-        WHITE_BG, DARKEST_GREY };
-    enum Key { BACKSPACE = 8, TAB = 9, LF = 10, CR = 13, CLOSE = 256, RESIZED, ARROW_UP, ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, HOME, END, PAGE_UP, PAGE_DOWN, MOUSE_SCROLL_UP,
-        MOUSE_SCROLL_DOWN, MOUSE_LEFT, MOUSE_LEFT_RELEASED, MOUSE_MOVED };
+    enum class Colour : uint8_t { BLACK, BLACK_BOLD, RED, RED_BOLD, GREEN, GREEN_BOLD, YELLOW, YELLOW_BOLD, BLUE, BLUE_BOLD, MAGENTA, MAGENTA_BOLD, CYAN, CYAN_BOLD, WHITE, WHITE_BOLD, WHITE_BG, DARKEST_GREY };
+    enum Key { BACKSPACE = 8, TAB = 9, LF = 10, CR = 13, ESCAPE = 27, CLOSE = 256, RESIZED, ARROW_UP, ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, HOME, END, PAGE_UP, PAGE_DOWN, MOUSE_SCROLL_UP, MOUSE_SCROLL_DOWN, MOUSE_LEFT, MOUSE_LEFT_RELEASED, MOUSE_MOVED };
 
     virtual             ~Terminal() { }                     // Virtual destructor, should clean up any terminal emulator-specific memory/states.
     virtual int         cell_height() const = 0;            // Returns the height of a single cell, in pixels.

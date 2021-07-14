@@ -14,6 +14,10 @@
 #include <curses.h>
 #endif
 
+#ifdef GREAVE_TOLK
+#include "3rdparty/Tolk/Tolk.h"
+#endif
+
 
 // Constructor, sets up Curses.
 TerminalCurses::TerminalCurses()
@@ -186,6 +190,9 @@ int TerminalCurses::get_key()
         case KEY_PPAGE: return Key::PAGE_UP;
         case KEY_NPAGE: return Key::PAGE_DOWN;
         case KEY_BACKSPACE: return Key::BACKSPACE;
+#ifdef GREAVE_TOLK
+        case Key::ESCAPE: Tolk_Silence(); break;
+#endif
     }
 
     if (key > 255 || key < 0) return -1;    // Any other unrecognized keys are just returned as -1.
