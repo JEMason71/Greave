@@ -22,12 +22,13 @@ const int   Mobile::DAMAGE_DEBUFF_TIME =                    60;         // How l
 const int   Mobile::SCAR_BLEED_INTENSITY_FROM_BLEED_TICK =  1;          // Blood type scar intensity caused by each tick of the player or an NPC bleeding.
 
 // Flags for the name() function.
-const int Mobile::NAME_FLAG_A =                 1;  // Precede the Mobile's name with 'a' or 'an', unless the name is a proper noun.
-const int Mobile::NAME_FLAG_CAPITALIZE_FIRST =  2;  // Capitalize the first letter of the Mobile's name (including the "The") if set.
-const int Mobile::NAME_FLAG_NO_COLOUR =         4;  // Strip colour codes from the name.
-const int Mobile::NAME_FLAG_PLURAL =            8;  // Return a plural of the Mobile's name (e.g. apple -> apples).
-const int Mobile::NAME_FLAG_POSSESSIVE =        16; // Change the Mobile's name to a possessive noun (e.g. goblin -> goblin's).
-const int Mobile::NAME_FLAG_THE =               32; // Precede the Mobile's name with 'the', unless the name is a proper noun.
+const int Mobile::NAME_FLAG_A =                 1;  // Precede the mobile's name with 'a' or 'an', unless the name is a proper noun.
+const int Mobile::NAME_FLAG_CAPITALIZE_FIRST =  2;  // Capitalize the first letter of the mobile's name (including the "The") if set.
+const int Mobile::NAME_FLAG_HEALTH =            4;  // Display the mobile's health in brackets after its name.
+const int Mobile::NAME_FLAG_NO_COLOUR =         8;  // Strip colour codes from the name.
+const int Mobile::NAME_FLAG_PLURAL =            16; // Return a plural of the mobile's name (e.g. apple -> apples).
+const int Mobile::NAME_FLAG_POSSESSIVE =        64; // Change the mobile's name to a possessive noun (e.g. goblin -> goblin's).
+const int Mobile::NAME_FLAG_THE =               32; // Precede the mobile's name with 'the', unless the name is a proper noun.
 
 // The SQL table construction string for Buffs.
 const std::string   Buff::SQL_BUFFS =       "CREATE TABLE buffs ( owner INTEGER, power INTEGER, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, time INTEGER, type INTEGER NOT NULL )";
@@ -340,6 +341,7 @@ std::string Mobile::name(int flags) const
     const bool a = ((flags & Mobile::NAME_FLAG_A) == Mobile::NAME_FLAG_A);
     const bool the = ((flags & Mobile::NAME_FLAG_THE) == Mobile::NAME_FLAG_THE);
     const bool capitalize_first = ((flags & Mobile::NAME_FLAG_CAPITALIZE_FIRST) == Mobile::NAME_FLAG_CAPITALIZE_FIRST);
+    const bool health = ((flags & Mobile::NAME_FLAG_HEALTH) == Mobile::NAME_FLAG_HEALTH);
     const bool possessive = ((flags & Mobile::NAME_FLAG_POSSESSIVE) == Mobile::NAME_FLAG_POSSESSIVE);
     const bool plural = ((flags & Mobile::NAME_FLAG_PLURAL) == Mobile::NAME_FLAG_PLURAL);
     const bool no_colour = ((flags & Mobile::NAME_FLAG_NO_COLOUR) == Mobile::NAME_FLAG_NO_COLOUR);
@@ -358,6 +360,43 @@ std::string Mobile::name(int flags) const
         else ret += "'s";
     }
     else if (plural && ret.back() != 's' && !tag(MobileTag::PluralName)) ret += "s";
+
+    if (health)
+    {
+        std::string health_str, health_str_unliving;
+        std::vector<std::string> health_vec;
+        const float hp_perc = static_cast<float>(hp()) / static_cast<float>(hp(true));
+        if (hp_perc <= 0.1f)
+        {
+            health_str = "{R}close to death{w}";
+            health_str_unliving = "{R}close to collapse{w}";
+        }
+        else if (hp_perc <= 0.2f)
+        {
+            health_str = "{R}badly injured{w}";
+            health_str_unliving = "{R}badly damaged{w}";
+        }
+        else if (hp_perc <= 0.5f)
+        {
+            health_str = "{Y}injured{w}";
+            health_str_unliving = "{Y}damaged{w}";
+        }
+        else if (hp_perc <= 0.75f)
+        {
+            health_str = "{Y}bruised{w}";
+            health_str_unliving = "{Y}scratched{w}";
+        }
+        else if (hp_perc < 1 && tag(MobileTag::Coward)) health_str = health_str_unliving = "{Y}shaken{w}";
+        if (health_str.size())
+        {
+            if (tag(MobileTag::Unliving)) health_vec.push_back(health_str_unliving);
+            else health_vec.push_back(health_str);
+        }
+        if (has_buff(Buff::Type::BLEED)) health_vec.push_back("{R}bleeding{w}");
+        if (has_buff(Buff::Type::POISON)) health_vec.push_back("{G}poisoned{w}");
+        if (health_vec.size()) ret += " (" + StrX::comma_list(health_vec, StrX::CL_FLAG_OXFORD_COMMA | StrX::CL_FLAG_NO_OR) + ")";
+    }
+
     if (no_colour) ret = StrX::strip_ansi(ret);
     return ret;
 }

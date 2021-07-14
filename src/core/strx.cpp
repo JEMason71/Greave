@@ -13,7 +13,7 @@
 #include <sstream>
 
 
-const int StrX::CL_FLAG_USE_AND = 1, StrX::CL_FLAG_OXFORD_COMMA = 2;    // comma_list() flags
+const int StrX::CL_FLAG_USE_AND = 1, StrX::CL_FLAG_OXFORD_COMMA = 2, StrX::CL_FLAG_NO_OR = 4;   // comma_list() flags
 
 
 // Capitalizes the first letter of a string.
@@ -48,6 +48,7 @@ std::string StrX::comma_list(std::vector<std::string> vec, int flags)
 {
     const bool use_and = ((flags & CL_FLAG_USE_AND) == CL_FLAG_USE_AND);
     const bool oxford_comma = ((flags & CL_FLAG_OXFORD_COMMA) == CL_FLAG_OXFORD_COMMA);
+    const bool no_or = ((flags & CL_FLAG_NO_OR) == CL_FLAG_NO_OR);
     if (!vec.size())
     {
         core()->guru()->nonfatal("Empty vector provided to comma_list!", Guru::WARN);
@@ -55,7 +56,11 @@ std::string StrX::comma_list(std::vector<std::string> vec, int flags)
     }
     if (vec.size() == 1) return vec.at(0);
     std::string plus = " and ";
-    if (!use_and) plus = " or ";
+    if (!use_and)
+    {
+        if (no_or) plus = " ";
+        else plus = " or ";
+    }
     if (oxford_comma) plus = "," + plus;
     else if (vec.size() == 2) return vec.at(0) + plus + vec.at(1);
 
