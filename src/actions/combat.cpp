@@ -146,7 +146,7 @@ bool Combat::attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mobile> de
 // Changes to a specified combat stance.
 void Combat::change_stance(std::shared_ptr<Mobile> mob, CombatStance stance)
 {
-    if (stance == mob->stance()) return;    // Do nothing if the stance doesn't change.
+    if (stance == mob->stance() && !mob->is_player()) return;   // Do nothing if the stance doesn't change, for NPCs.
     mob->set_stance(stance);
     std::string stance_str;
     switch (stance)
