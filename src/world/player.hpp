@@ -63,6 +63,7 @@ private:
     static const int    BLOOD_TOX_POISON_TIME_RNG;      // The RNG variance additional time for the blood toxicity poison debuff.
     static const int    BLOOD_TOX_VOMIT_LEVEL;          // The level at which the player can vomit from blood toxicity.
     static const int    BLOOD_TOX_VOMIT_CHANCE;         // 1 in X chance of vomiting past the above level of toxicity.
+    static const int    HP_PER_TOUGHNESS;               // How many extra hit points to gain per point of toughness.
     static const int    HUNGER_MAX;                     // The maximum hunger value (when this is maxed, the player is fully satiated.)
     static const int    MP_DEFAULT;                     // THe default mana points maximum for the player.
     static const int    MP_REGEN_PER_TICK;              // How much mana is regenerated each mana heartbeat tick?
@@ -72,6 +73,9 @@ private:
     static const int    SP_DEFAULT;                     // The default stamina points maximum for the player.
     static const int    SP_REGEN_PER_TICK;              // How much stamina is regenerated each stamina heartbeat tick?
     static const int    THIRST_MAX;                     // The maximum thirst value (when this is maxed, the player is fully quenched.)
+    static const float  TOUGHNESS_GAIN_MODIFIER;        // The higher this value, the faster toughness will increase in combat.
+
+    void        recalc_max_hp();    // Recalculates maximum HP, after toughness skill gains.
 
     int         m_blood_tox;    // Blood toxicity level.
     std::string m_death_reason; // The cause of death, when it happens.

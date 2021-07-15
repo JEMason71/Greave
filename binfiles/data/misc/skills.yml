@@ -37,6 +37,10 @@ SAFE_FALL:
   name: safe fall
   xp_multi: 2
 
+TOUGHNESS:
+  name: toughness
+  xp_multi: 1
+
 TWO_HANDED:
   name: two-handed weapons
   xp_multi: 6.5

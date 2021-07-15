@@ -24,6 +24,7 @@ const int   Player::BLOOD_TOX_POISON_TIME_RNG =     5;      // The RNG variance 
 const int   Player::BLOOD_TOX_VOMIT_LEVEL =         6;      // The level at which the player can vomit from blood toxicity.
 const int   Player::BLOOD_TOX_VOMIT_CHANCE =        4;      // 1 in X chance of vomiting past the above level of toxicity.
 const int   Player::BLOOD_TOX_WARNING =             4;      // The level at which the player is warned of increasing blood toxicity.
+const int   Player::HP_PER_TOUGHNESS =              2;      // How many extra hit points to gain per point of toughness.
 const int   Player::HUNGER_MAX =                    20;     // The maximum hunger value (when this is maxed, the player is fully satiated.)
 const int   Player::MP_DEFAULT =                    100;    // THe default mana points maximum for the player.
 const int   Player::MP_REGEN_PER_TICK =             1;      // How much mana is regenerated each mana heartbeat tick?
@@ -33,6 +34,7 @@ const float Player::SKILL_HAULING_DIVISOR =         50;     // This number affec
 const int   Player::SP_DEFAULT =                    100;    // The default stamina points maximum for the player.
 const int   Player::SP_REGEN_PER_TICK =             1;      // How much stamina is regenerated each stamina heartbeat tick?
 const int   Player::THIRST_MAX =                    20;     // The maximum thirst value (when this is maxed, the player is fully quenched.)
+const float Player::TOUGHNESS_GAIN_MODIFIER =       10;     // The higher this value, the faster toughness will increase in combat.
 
 // The SQL table construction string for the player data.
 const std::string Player::SQL_PLAYER = "CREATE TABLE player ( blood_tox INTEGER, hunger INTEGER NOT NULL, mob_target INTEGER, money INTEGER NOT NULL, mp INTEGER NOT NULL, mp_max INTEGER NOT NULL, sp INTEGER NOT NULL, sp_max INTEGER NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, thirst INTEGET NOT NULL )";
@@ -120,7 +122,15 @@ void Player::gain_skill_xp(const std::string& skill_id, float xp)
         }
         else break;
     }
-    if (level_increased) core()->message("{G}Your skill in {C}" + core()->world()->get_skill_name(skill_id) + " {G}has increased to {C}" + std::to_string(current_level) + "{G}!");
+    if (level_increased)
+    {
+        if (skill_id == "TOUGHNESS")
+        {
+            recalc_max_hp();
+            core()->message("{G}You feel more resilient! Your {C}toughness {G}has increased to {C}" + std::to_string(current_level) + "{G}!");
+        }
+        else core()->message("{G}Your skill in {C}" + core()->world()->get_skill_name(skill_id) + " {G}has increased to {C}" + std::to_string(current_level) + "{G}!");
+    }
 }
 
 // Checks the current hunger level.
@@ -237,15 +247,17 @@ uint32_t Player::money() const { return m_money; }
 // Retrieves the MP (or maximum MP) of the player.
 int Player::mp(bool max) const { return m_mp[max ? 1 : 0]; }
 
-// Removes money from the player.
-void Player::remove_money(uint32_t amount)
+// Recalculates maximum HP, after toughness skill gains.
+void Player::recalc_max_hp()
 {
-    if (amount > m_money)
-    {
-        m_money = 0;
-        core()->guru()->nonfatal("Attempt to remove more money than the player owns!", Guru::ERROR);
-    }
-    else m_money -= amount;
+    const float old_hpm = m_hp[1];
+
+    // Recalculate the new maximum HP value.
+    m_hp[1] = (HP_PER_TOUGHNESS * skill_level("TOUGHNESS")) + HP_DEFAULT;
+
+    // If max HP has been gained, increase current HP by the difference.
+    const float diff = m_hp[1] - old_hpm;
+    m_hp[0] += diff;
 }
 
 // Reduces the player's hit points.
@@ -253,6 +265,11 @@ void Player::reduce_hp(int amount, bool death_message)
 {
     if (amount >= m_hp[0] && tag(MobileTag::ArenaFighter)) core()->message("{m}The last thing you hear as your lifeless body hits the ground is the sadistic cheering of the crowd and the victorious yell of your opponent.");
     Mobile::reduce_hp(amount, death_message);
+    if (m_hp[0] > 0)
+    {
+        const float damage_perc = static_cast<float>(amount) / static_cast<float>(m_hp[1]);
+        gain_skill_xp("TOUGHNESS", damage_perc * TOUGHNESS_GAIN_MODIFIER);
+    }
 }
 
 // Reduces the player's mana points.
@@ -269,6 +286,17 @@ void Player::reduce_sp(int amount)
     if (amount <= 0) return;
     if (amount > m_sp[0]) m_sp[0] = 0;
     else m_sp[0] -= amount;
+}
+
+// Removes money from the player.
+void Player::remove_money(uint32_t amount)
+{
+    if (amount > m_money)
+    {
+        m_money = 0;
+        core()->guru()->nonfatal("Attempt to remove more money than the player owns!", Guru::ERROR);
+    }
+    else m_money -= amount;
 }
 
 // Restores the player's mana points.
