@@ -127,6 +127,14 @@ bool Combat::attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mobile> de
     if (attacker->tag(MobileTag::RapidStrike)) attack_speed *= (Abilities::RAPID_STRIKE_ATTACK_SPEED / 100.0f);
 
     bool attacked = false;
+
+    // RapidStrike is only for melee weapons.
+    if (attacker->tag(MobileTag::RapidStrike))
+    {
+        if (main_hand[0] && main_hand[0]->subtype() == ItemSub::RANGED) main_can_attack[0] = false;
+        if (off_hand[0] && off_hand[0]->subtype() == ItemSub::RANGED) off_can_attack[0] = false;
+    }
+
     if (main_can_attack[0])
     {
         perform_attack(attacker, defender, EquipSlot::HAND_MAIN, wield_type[0], wield_type[1]);
