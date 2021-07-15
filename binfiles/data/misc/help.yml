@@ -184,6 +184,12 @@ SD: "#STANCE"
 
 SE: "#TRAVEL"
 
+SH: "#SHIELDWALL"
+
+SHIELD_WALL: "#SHIELDWALL"
+
+SHIELDWALL: "The {C}SHIELDWALL {w}ability (can be shortened to {C}SH{w}) allows you to brace for an attack behind your shield, drastically increasing the odds of a successful block."
+
 SK: "#SKILLS"
 
 SKILL: "#SKILLS"

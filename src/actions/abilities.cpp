@@ -43,6 +43,11 @@ float   Abilities::RAPID_STRIKE_ACCURACY_PENALTY =  20; // The % accuracy penalt
 float   Abilities::RAPID_STRIKE_ATTACK_SPEED =      20; // The % of an attack's normal speed that it takes to do a Rapid Strike attack.
 int     Abilities::RAPID_STRIKE_COOLDOWN =          6;  // The cooldown for the Rapid Strike ability.
 int     Abilities::RAPID_STRIKE_SP_COST =           50; // The stamina points cost for the Rapid Strike ability.
+int     Abilities::SHIELD_WALL_BLOCK_BONUS  =       70; // The % bonus to blocking an attack with Shield Wall.
+int     Abilities::SHIELD_WALL_COOLDOWN =           6;  // The cooldwon for the Shield Wall ability.
+int     Abilities::SHIELD_WALL_LENGTH =             20; // The length of time the Shield Wall buff remains while activated, but before an enemy attack is made.
+int     Abilities::SHIELD_WALL_SP_COST =            20; // The stamina points cost for the Shield Wall ability.
+int     Abilities::SHIELD_WALL_TIME =               2;  // The time taken to use the Shield Wall ability.
 float   Abilities::SNAP_SHOT_ACCURACY_PENALTY =     20; // The % accuracy penalty for a Snap Shot.
 float   Abilities::SNAP_SHOT_ATTACK_SPEED =         20; // The % of an attack's normal speed that it takes to do a Snap Shot attack.
 int     Abilities::SNAP_SHOT_COOLDOWN =             6;  // The cooldown for the Snap Shot ability.
@@ -62,11 +67,12 @@ void Abilities::abilities()
         STANCE_ANY = 7,         // Any stance is fine.
         MELEE = 8,              // Requires melee weapon.
         RANGED = 16,            // Requires ranged weapon.
-        ARMOUR_HEAVY = 32,      // Requires heavy armour.
-        ARMOUR_MEDIUM = 64,     // Requires medium armour.
-        ARMOUR_LIGHT = 128,     // Requires light armour.
-        ARMOUR_NO_HEAVY = 256,  // Requires NOT using heavy armour.
-        LUCKY_DICE = 512,       // Requires lucky dice.
+        SHIELD = 32,            // Requires a shield.
+        ARMOUR_HEAVY = 64,      // Requires heavy armour.
+        ARMOUR_MEDIUM = 128,    // Requires medium armour.
+        ARMOUR_LIGHT = 256,     // Requires light armour.
+        ARMOUR_NO_HEAVY = 512,  // Requires NOT using heavy armour.
+        LUCKY_DICE = 1024,      // Requires lucky dice.
     };
 
     auto display_ability = [&player](const std::string &name, Buff::Type cd_buff, int cost_hp, int cost_sp, int cost_mp, int flags, bool available)
@@ -76,6 +82,7 @@ void Abilities::abilities()
         const bool stance_d = (flags & STANCE_D);
         const bool needs_melee = (flags & MELEE);
         const bool needs_ranged = (flags & RANGED);
+        const bool needs_shield = (flags & SHIELD);
         const bool needs_heavy = (flags & ARMOUR_HEAVY);
         const bool needs_medium = (flags & ARMOUR_MEDIUM);
         const bool needs_light = (flags & ARMOUR_LIGHT);
@@ -88,6 +95,7 @@ void Abilities::abilities()
         const bool using_heavy = player->wearing_armour(ItemSub::HEAVY);
         const bool using_medium = player->wearing_armour(ItemSub::MEDIUM);
         const bool using_light = player->wearing_armour(ItemSub::LIGHT) || player->wearing_armour(ItemSub::NONE);
+        const bool using_shield = player->using_shield();
         const bool lucky_dice = true;   // todo: Add a check for lucky dice here, when they're added to the game.
 
         bool can_use = true, bad_stance = false, bad_cost = false, bad_buff = false, bad_gear = false;
@@ -106,7 +114,7 @@ void Abilities::abilities()
             can_use = false;
             bad_buff = true;
         }
-        if ((needs_melee && !using_melee) || (needs_ranged && !using_ranged))
+        if ((needs_melee && !using_melee) || (needs_ranged && !using_ranged) || (no_heavy && using_heavy) || (needs_lucky_dice && !lucky_dice) || (needs_shield && !using_shield))
         {
             can_use = false;
             bad_gear = true;
@@ -124,16 +132,6 @@ void Abilities::abilities()
                 can_use = false;
                 bad_gear = true;
             }
-        }
-        if (no_heavy && using_heavy)
-        {
-            can_use = false;
-            bad_gear = true;
-        }
-        if (needs_lucky_dice && !lucky_dice)
-        {
-            can_use = false;
-            bad_gear = true;
         }
 
         if (can_use != available) return;
@@ -180,6 +178,15 @@ void Abilities::abilities()
                 else armour_str += "heavy";
             }
             ability_str += armour_str + "{W}> ";
+            angle_str = true;
+        }
+
+        if (needs_shield)
+        {
+            if (angle_str) ability_str = ability_str.substr(0, ability_str.size() - 5) + "{W}, ";
+            else ability_str += "{W}<";
+            if (bad_gear) ability_str += "{c}"; else ability_str += "{C}";
+            ability_str += "shield{W}> ";
             angle_str = true;
         }
 
@@ -232,6 +239,7 @@ void Abilities::abilities()
         display_ability("LadyLuck", Buff::Type::CD_LADY_LUCK, 0, 0, LADY_LUCK_MP_COST, LUCKY_DICE | STANCE_ANY, valid);
         display_ability("QuickRoll", Buff::Type::CD_QUICK_ROLL, 0, QUICK_ROLL_SP_COST, 0, STANCE_B | STANCE_D | ARMOUR_LIGHT | ARMOUR_MEDIUM | ARMOUR_NO_HEAVY, valid);
         display_ability("RapidStrike", Buff::Type::CD_RAPID_STRIKE, 0, RAPID_STRIKE_SP_COST, 0, STANCE_B | MELEE, valid);
+        display_ability("ShieldWall", Buff::Type::CD_SHIELD_WALL, 0, SHIELD_WALL_SP_COST, 0, STANCE_D | SHIELD, valid);
         display_ability("SnapShot", Buff::Type::CD_SNAP_SHOT, 0, SNAP_SHOT_SP_COST, 0, STANCE_B | RANGED, valid);
     }
 }
@@ -521,6 +529,39 @@ void Abilities::rapid_strike(size_t target)
     player->set_tag(MobileTag::RapidStrike);
     Combat::attack(player, mob);
     player->clear_tag(MobileTag::RapidStrike);
+}
+
+// Attempt to use the Shield Wall ability.
+void Abilities::shield_wall(bool confirm)
+{
+    const auto player = core()->world()->player();
+    if (player->has_buff(Buff::Type::CD_SHIELD_WALL))
+    {
+        core()->message("{m}You must wait a while before using the {M}ShieldWall {m}ability again.");
+        return;
+    }
+    if (player->stance() != CombatStance::DEFENSIVE)
+    {
+        core()->message("{m}ShieldWall can only be used in a {M}defensive {m}combat stance.");
+        return;
+    }
+    if (player->sp() < SHIELD_WALL_SP_COST)
+    {
+        core()->message("{m}You do not have enough stamina points to use {M}ShieldWall{m}.");
+        return;
+    }
+    if (!player->using_shield())
+    {
+        core()->message("{m}ShieldWall can only be used with a {M}shield{m}.");
+        return;
+    }
+
+    if (!player->pass_time(SHIELD_WALL_TIME, !confirm)) return;
+    if (player->is_dead()) return;
+    core()->message("{M}You brace yourself behind your shield for an incoming blow.");
+    player->set_buff(Buff::Type::CD_SHIELD_WALL, SHIELD_WALL_COOLDOWN);
+    player->set_buff(Buff::Type::SHIELD_WALL, SHIELD_WALL_TIME, SHIELD_WALL_BLOCK_BONUS, false, false);
+    player->reduce_sp(SHIELD_WALL_SP_COST);
 }
 
 // Attempt to use the Snap Shot ability.

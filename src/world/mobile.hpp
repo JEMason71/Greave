@@ -56,6 +56,7 @@ enum class MobileTag : uint16_t { None = 0,
     Success_EFAE,       // The mobile successfully performed an Eye for an Eye attack.
     Success_Grit,       // The mobile successfully absorbed damage with the Grit ability.
     Success_QuickRoll,  // The mobile successfully used QuickRoll to give a bonus to dodging an attack.
+    Success_ShieldWall, // The mobile successfully used ShieldWall to give a bonus to blocking an attack.
 };
 
 struct BodyPart
@@ -67,7 +68,7 @@ struct BodyPart
 
 struct Buff
 {
-    enum class Type : uint8_t { NONE, BLEED, CAREFUL_AIM, CD_CAREFUL_AIM, CD_EYE_FOR_AN_EYE, CD_GRIT, CD_HEADLONG_STRIKE, CD_LADY_LUCK, CD_QUICK_ROLL, CD_RAPID_STRIKE, CD_SNAP_SHOT, EYE_FOR_AN_EYE, GRIT, POISON, QUICK_ROLL, RECENT_DAMAGE, RECENTLY_FLED };
+    enum class Type : uint8_t { NONE, BLEED, CAREFUL_AIM, CD_CAREFUL_AIM, CD_EYE_FOR_AN_EYE, CD_GRIT, CD_HEADLONG_STRIKE, CD_LADY_LUCK, CD_QUICK_ROLL, CD_RAPID_STRIKE, CD_SHIELD_WALL, CD_SNAP_SHOT, EYE_FOR_AN_EYE, GRIT, POISON, QUICK_ROLL, RECENT_DAMAGE, RECENTLY_FLED, SHIELD_WALL };
 
     static const std::string    SQL_BUFFS;  // The SQL table construction string for Buffs.
 
@@ -155,6 +156,7 @@ public:
     bool                tick_poison(uint32_t power, uint16_t time); // Triggers a single poison tick.
     bool                using_melee() const;                        // Checks if a mobile is using at least one melee weapon.
     bool                using_ranged() const;                       // Checks if a mobile is using at least one ranged weapon.
+    bool                using_shield() const;                       // Checks if a mobile is using a shield.
 
 protected:
     static const float  ACTION_TIMER_CAP_MAX;                   // The maximum value the action timer can ever reach.

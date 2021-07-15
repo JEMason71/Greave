@@ -61,6 +61,7 @@ Parser::Parser() : m_special_state(SpecialState::NONE)
     add_command("save", ParserCommand::SAVE);
     add_command("[sa|sb|sd]", ParserCommand::STANCE);
     add_command("[score|sc]", ParserCommand::SCORE);
+    add_command("[shieldwall|sh]", ParserCommand::SHIELD_WALL);
     add_command("[skills|skill|sk]", ParserCommand::SKILLS);
     add_command("[snapshot|ss] <mobile>", ParserCommand::SNAP_SHOT);
     add_command("stance <txt>", ParserCommand::STANCE);
@@ -540,6 +541,7 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             break;
         case ParserCommand::SAVE: core()->save(); break;
         case ParserCommand::SCORE: ActionStatus::score(); break;
+        case ParserCommand::SHIELD_WALL: Abilities::shield_wall(confirm); break;
         case ParserCommand::SKILLS: ActionStatus::skills(); break;
         case ParserCommand::SNAP_SHOT:
             if (parsed_target_type == ParserTarget::TARGET_MOBILE) Abilities::snap_shot(parsed_target);

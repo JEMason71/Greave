@@ -22,6 +22,7 @@ public:
     static void lady_luck(size_t target, bool confirm);         // Attempt to use the Lady Luck ability.
     static void quick_roll(bool confirm);                       // Attempt to use the Quick Roll ability.
     static void rapid_strike(size_t target);                    // Attempt to use the Rapid Strike ability.
+    static void shield_wall(bool confirm);                      // Attempt to use the Shield Wall ability.
     static void snap_shot(size_t target);                       // Attempt to use the Snap Shot ability.
 
 private:
@@ -52,6 +53,11 @@ private:
     static int      QUICK_ROLL_TIME;                // The time it takes to do a Quick Roll.
     static int      RAPID_STRIKE_COOLDOWN;          // The cooldown for the Rapid Strike ability.
     static int      RAPID_STRIKE_SP_COST;           // The stamina points cost for the Rapid Strike ability.
+    static int      SHIELD_WALL_BLOCK_BONUS;        // The % bonus to blocking an attack with Shield Wall.
+    static int      SHIELD_WALL_COOLDOWN;           // The cooldwon for the Shield Wall ability.
+    static int      SHIELD_WALL_LENGTH;             // The length of time the Shield Wall buff remains while activated, but before an enemy attack is made.
+    static int      SHIELD_WALL_SP_COST;            // The stamina points cost for the Shield Wall ability.
+    static int      SHIELD_WALL_TIME;               // The time taken to use the Shield Wall ability.
     static int      SNAP_SHOT_COOLDOWN;             // The cooldown for the Snap Shot ability.
     static int      SNAP_SHOT_SP_COST;              // The stamina points cost for the Snap Shot ability.
 };

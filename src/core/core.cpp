@@ -35,7 +35,7 @@
 std::shared_ptr<Core> greave = nullptr;   // The main Core object.
 
 const std::string   Core::GAME_VERSION =    "pre-alpha";    // The game's version number.
-const uint32_t      Core::SAVE_VERSION =    78;             // The version number for saved game files. This should increment when old saves can no longer be loaded.
+const uint32_t      Core::SAVE_VERSION =    79;             // The version number for saved game files. This should increment when old saves can no longer be loaded.
 const uint16_t      Core::TAGS_PERMANENT =  10000;          // The tag number at which tags are considered permanent.
 
 
@@ -216,6 +216,13 @@ void Core::main_loop()
         {
             player->clear_tag(MobileTag::Success_QuickRoll);
             player->clear_buff(Buff::Type::QUICK_ROLL);
+        }
+
+        // As does ShieldWall.
+        if (player->has_buff(Buff::Type::SHIELD_WALL) && player->tag(MobileTag::Success_ShieldWall))
+        {
+            player->clear_tag(MobileTag::Success_ShieldWall);
+            player->clear_buff(Buff::Type::SHIELD_WALL);
         }
 
         const std::string input = m_message_log->render_message_log();

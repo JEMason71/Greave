@@ -655,6 +655,7 @@ void Mobile::tick_buffs()
                 case Buff::Type::CD_LADY_LUCK: core()->message("{m}The {M}LadyLuck {m}ability is ready to use again."); break;
                 case Buff::Type::CD_QUICK_ROLL: core()->message("{m}The {M}QuickRoll {m}ability is ready to use again."); break;
                 case Buff::Type::CD_RAPID_STRIKE: core()->message("{m}The {M}RapidStrike {m}ability is ready to use again."); break;
+                case Buff::Type::CD_SHIELD_WALL: core()->message("{m}The {M}ShieldWall {m}ability is ready to use again."); break;
                 case Buff::Type::CD_SNAP_SHOT: core()->message("{m}The {M}SnapShot {m}ability is ready to use again."); break;
                 default: break;
             }
@@ -718,5 +719,13 @@ bool Mobile::using_ranged() const
     if (main_hand && main_hand->type() == ItemType::WEAPON && main_hand->subtype() == ItemSub::RANGED) return true;
     if (main_hand && main_hand->tag(ItemTag::TwoHanded)) return false;
     if (off_hand && off_hand->type() == ItemType::WEAPON && off_hand->subtype() == ItemSub::RANGED) return true;
+    return false;
+}
+
+// Checks if a mobile is using a shield.
+bool Mobile::using_shield() const
+{
+    const auto off_hand = equ()->get(EquipSlot::HAND_OFF);
+    if (off_hand && off_hand->type() == ItemType::SHIELD) return true;
     return false;
 }

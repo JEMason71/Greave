@@ -471,6 +471,11 @@ void Combat::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mo
         {
             float block_chance = BASE_BLOCK_CHANCE_MELEE;
             if (defender_is_player) block_chance += (BLOCK_SKILL_BONUS_PER_LEVEL * player->skill_level("BLOCK"));
+            if (defender->has_buff(Buff::Type::SHIELD_WALL))
+            {
+                block_chance += defender->buff_power(Buff::Type::SHIELD_WALL);
+                defender->set_tag(MobileTag::Success_ShieldWall);
+            }
             block_chance *= defender->block_mod();
             if (rng->frnd(100) <= block_chance) blocked = true;
         }
