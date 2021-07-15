@@ -165,7 +165,8 @@ void Combat::change_stance(std::shared_ptr<Mobile> mob, CombatStance stance)
 std::string Combat::damage_number_str(uint32_t damage, uint32_t blocked, bool crit, bool bleed, bool poison)
 {
     std::string dmg_str;
-    if (crit) dmg_str = "{w}[{m}*{M}-"; else dmg_str = "{w}[{R}-";
+    if (crit) dmg_str = "{w}[{m}*{M}"; else dmg_str = "{w}[{R}";
+    if (damage > 0) dmg_str += "-";
     dmg_str += StrX::intostr_pretty(damage);
     if (bleed && !crit) dmg_str += "B";
     if (poison && !crit) dmg_str += "P";
