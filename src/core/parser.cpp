@@ -76,6 +76,7 @@ Parser::Parser() : m_special_state(SpecialState::NONE)
     add_command("[xyzzy|frotz|plugh|plover]", ParserCommand::XYZZY);
     add_command("yes", ParserCommand::YES);
     add_command("#bix <txt>", ParserCommand::MIXUP_BIG);
+    add_command("[#colours|#colour|#colors|#color]", ParserCommand::COLOUR_TEST);
     add_command("#hash <txt>", ParserCommand::HASH);
     add_command("#mix <txt>", ParserCommand::MIXUP);
     add_command("#money <txt>", ParserCommand::ADD_MONEY);
@@ -454,6 +455,7 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             else if (parsed_target_type == ParserTarget::TARGET_NONE) not_here();
             break;
         case ParserCommand::CAREFUL_AIM: Abilities::careful_aim(confirm); break;
+        case ParserCommand::COLOUR_TEST: ActionCheat::colours(); break;
         case ParserCommand::DIRECTION: ActionTravel::travel(player, parse_direction(first_word), confirm); break;
         case ParserCommand::DRINK:
             if (!words.size()) specify("drink");

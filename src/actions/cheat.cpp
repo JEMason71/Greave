@@ -23,6 +23,20 @@ void ActionCheat::add_money(int32_t amount)
     core()->message("{G}Your purse suddenly feels heavier!");
 }
 
+// Displays all the colours!
+void ActionCheat::colours()
+{
+    core()->message(StrX::rainbow_text("COLOUR TESTING", "RYGCUM"));
+    core()->message("{b}BLACK```{B}BOLD BLACK");
+    core()->message("{0}{w}WHITE```{W}BOLD WHITE");
+    core()->message("{0}{r}RED`````{R}BOLD RED");
+    core()->message("{0}{y}YELLOW``{Y}BOLD YELLOW");
+    core()->message("{0}{g}GREEN```{G}BOLD GREEN");
+    core()->message("{0}{c}CYAN````{C}BOLD CYAN");
+    core()->message("{0}{u}BLUE````{U}BOLD BLUE");
+    core()->message("{0}{m}MAGENTA`{M}BOLD MAGENTA");
+}
+
 // Attempts to spawn an item.
 void ActionCheat::spawn_item(std::string item)
 {
