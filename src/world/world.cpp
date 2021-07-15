@@ -67,7 +67,7 @@ const std::set<std::string> World::VALID_YAML_KEYS_MOBS = { "gear", "hp", "name"
 
 
 // Constructor, loads the room YAML data.
-World::World() : m_mob_unique_id(0), m_player(std::make_shared<Player>()), m_time_weather(std::make_shared<TimeWeather>())
+World::World() : m_mob_unique_id(0), m_old_light_level(0), m_old_location(0), m_player(std::make_shared<Player>()), m_time_weather(std::make_shared<TimeWeather>())
 {
     load_room_pool();
     load_item_pool();
@@ -274,6 +274,53 @@ void World::load(std::shared_ptr<SQLite::Database> save_db)
         new_mob->load(save_db, query.getColumn("sql_id").getUInt());
         add_mobile(new_mob);
     }
+}
+
+// Triggers events that happen during the main loop, just after player input.
+void World::main_loop_events_post_input()
+{
+    // Check to see if the light level has changed.
+    if (m_player->location() == m_old_location)
+    {
+        const auto room = get_room(m_old_location);
+        int new_light = room->light();
+        if (m_old_light_level >= Room::LIGHT_VISIBLE && new_light < Room::LIGHT_VISIBLE) core()->message("{u}You are plunged into {B}darkness{u}!");
+        else if (m_old_light_level < Room::LIGHT_VISIBLE && new_light >= Room::LIGHT_VISIBLE)
+        {
+            core()->message("{U}You can now see {W}clearly{U}!");
+            ActionLook::look();
+        }
+    }
+}
+
+// Triggers events that happen during the main loop, just before player input.
+void World::main_loop_events_pre_input()
+{
+    // The Grit buff falls off as soon as it's the player's turn to act, if they took damage.
+    if (m_player->has_buff(Buff::Type::GRIT) && m_player->tag(MobileTag::Success_Grit))
+    {
+        m_player->clear_tag(MobileTag::Success_Grit);
+        m_player->clear_buff(Buff::Type::GRIT);
+    }
+
+    // Similarly, QuickRoll falls off if it was used.
+    if (m_player->has_buff(Buff::Type::QUICK_ROLL) && m_player->tag(MobileTag::Success_QuickRoll))
+    {
+        m_player->clear_tag(MobileTag::Success_QuickRoll);
+        m_player->clear_buff(Buff::Type::QUICK_ROLL);
+    }
+
+    // As does ShieldWall.
+    if (m_player->has_buff(Buff::Type::SHIELD_WALL) && m_player->tag(MobileTag::Success_ShieldWall))
+    {
+        m_player->clear_tag(MobileTag::Success_ShieldWall);
+        m_player->clear_buff(Buff::Type::SHIELD_WALL);
+    }
+
+    // For checking if the light level has changed due to something that happened this turn.
+    m_old_location = m_player->location();
+    const auto room = get_room(m_old_location);
+    m_old_light_level = room->light();
 }
 
 // Loads the anatomy YAML data into memory.

@@ -40,6 +40,8 @@ public:
     std::string     get_skill_name(const std::string &skill);                   // Retrieves the name of a specified skill.
     bool            item_exists(const std::string &str) const;                  // Checks if a specified item ID exists.
     void            load(std::shared_ptr<SQLite::Database> save_db);            // Loads the World and all things within it.
+    void            main_loop_events_post_input();                              // Triggers events that happen during the main loop, just after player input.
+    void            main_loop_events_pre_input();                               // Triggers events that happen during the main loop, just before player input.
     size_t          mob_count() const;                                          // Returns the number of Mobiles currently active.
     bool            mob_exists(const std::string &str) const;                   // Checks if a specified mobile ID exists.
     const std::shared_ptr<Mobile>   mob_vec(size_t vec_pos) const;              // Retrieves a Mobile by vector position.
@@ -86,6 +88,8 @@ private:
     std::map<uint32_t, std::shared_ptr<Mobile>>     m_mob_pool;         // All the Mobile templates in the game.
     uint32_t                                        m_mob_unique_id;    // The unique ID counter for Mobiles.
     std::vector<std::shared_ptr<Mobile>>            m_mobiles;          // All the Mobiles currently active in the game.
+    int                                             m_old_light_level;  // Used to check when the light level changes in the player's room.
+    uint32_t                                        m_old_location;     // Also used for light level change checks.
     std::shared_ptr<Player>                         m_player;           // The player character.
     std::map<uint32_t, std::shared_ptr<Room>>       m_room_pool;        // All the Room templates in the game.
     std::map<std::string, SkillData>                m_skills;           // The skills the player can use.

@@ -199,46 +199,10 @@ void Core::main_loop()
     // bröther may I have some lööps
     do
     {
-        // For checking if the light level has changed due to something that happened this turn.
-        const uint32_t location = player->location();
-        const auto room = m_world->get_room(location);
-        int old_light = room->light();
-
-        // The Grit buff falls off as soon as it's the player's turn to act, if they took damage.
-        if (player->has_buff(Buff::Type::GRIT) && player->tag(MobileTag::Success_Grit))
-        {
-            player->clear_tag(MobileTag::Success_Grit);
-            player->clear_buff(Buff::Type::GRIT);
-        }
-
-        // Similarly, QuickRoll falls off if it was used.
-        if (player->has_buff(Buff::Type::QUICK_ROLL) && player->tag(MobileTag::Success_QuickRoll))
-        {
-            player->clear_tag(MobileTag::Success_QuickRoll);
-            player->clear_buff(Buff::Type::QUICK_ROLL);
-        }
-
-        // As does ShieldWall.
-        if (player->has_buff(Buff::Type::SHIELD_WALL) && player->tag(MobileTag::Success_ShieldWall))
-        {
-            player->clear_tag(MobileTag::Success_ShieldWall);
-            player->clear_buff(Buff::Type::SHIELD_WALL);
-        }
-
+        m_world->main_loop_events_pre_input();
         const std::string input = m_message_log->render_message_log();
         m_parser->parse(input);
-
-        // Check to see if the light level has changed.
-        if (player->location() == location)
-        {
-            int new_light = room->light();
-            if (old_light >= Room::LIGHT_VISIBLE && new_light < Room::LIGHT_VISIBLE) message("{u}You are plunged into {B}darkness{u}!");
-            else if (old_light < Room::LIGHT_VISIBLE && new_light >= Room::LIGHT_VISIBLE)
-            {
-                message("{U}You can now see {W}clearly{U}!");
-                ActionLook::look();
-            }
-        }
+        m_world->main_loop_events_post_input();
     } while (!player->is_dead());
 
     Bones::record_death();
