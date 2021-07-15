@@ -377,3 +377,17 @@ void Player::tick_mp_regen() { restore_mp(MP_REGEN_PER_TICK); }
 
 // Regenerates SP over time.
 void Player::tick_sp_regen() { restore_sp(SP_REGEN_PER_TICK); }
+
+// Checks if the player is wearing a certain type of armour (light/medium/heavy).
+bool Player::wearing_armour(ItemSub type)
+{
+    if (type == ItemSub::NONE) return (!wearing_armour(ItemSub::HEAVY) && !wearing_armour(ItemSub::MEDIUM) && !wearing_armour(ItemSub::LIGHT));
+    const auto armour = equ()->get(EquipSlot::ARMOUR);
+    const auto body = equ()->get(EquipSlot::BODY);
+    const auto shield = equ()->get(EquipSlot::HAND_OFF);
+
+    if (body && body->subtype() == type) return true;
+    if (armour && armour->subtype() == type) return true;
+    if (shield && shield->type() == ItemType::SHIELD && shield->subtype() == type) return true;
+    return false;
+}

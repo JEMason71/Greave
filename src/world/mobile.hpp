@@ -52,6 +52,7 @@ enum class MobileTag : uint16_t { None = 0,
     SnakeEyes,          // This mobile is likely to take a critical hit.
     Success_EFAE,       // The mobile successfully performed an Eye for an Eye attack.
     Success_Grit,       // The mobile successfully absorbed damage with the Grit ability.
+    Success_QuickRoll,  // The mobile successfully used QuickRoll to give a bonus to dodging an attack.
 };
 
 struct BodyPart
@@ -63,7 +64,7 @@ struct BodyPart
 
 struct Buff
 {
-    enum class Type : uint8_t { NONE, BLEED, CAREFUL_AIM, CD_CAREFUL_AIM, CD_EYE_FOR_AN_EYE, CD_GRIT, CD_LADY_LUCK, EYE_FOR_AN_EYE, GRIT, POISON, RECENT_DAMAGE, RECENTLY_FLED };
+    enum class Type : uint8_t { NONE, BLEED, CAREFUL_AIM, CD_CAREFUL_AIM, CD_EYE_FOR_AN_EYE, CD_GRIT, CD_LADY_LUCK, CD_QUICK_ROLL, EYE_FOR_AN_EYE, GRIT, POISON, QUICK_ROLL, RECENT_DAMAGE, RECENTLY_FLED };
 
     static const std::string    SQL_BUFFS;  // The SQL table construction string for Buffs.
 

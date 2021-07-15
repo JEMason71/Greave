@@ -652,6 +652,7 @@ void Mobile::tick_buffs()
                 case Buff::Type::CD_EYE_FOR_AN_EYE: core()->message("{m}The {M}EyeForAnEye {m}ability is ready to use again."); break;
                 case Buff::Type::CD_GRIT: core()->message("{m}The {M}Grit {m}ability is ready to use again."); break;
                 case Buff::Type::CD_LADY_LUCK: core()->message("{m}The {M}LadyLuck {m}ability is ready to use again."); break;
+                case Buff::Type::CD_QUICK_ROLL: core()->message("{m}The {M}QuickRoll {m}ability is ready to use again."); break;
                 default: break;
             }
         }

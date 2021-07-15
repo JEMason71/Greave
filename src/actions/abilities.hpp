@@ -13,6 +13,7 @@ public:
     static void eye_for_an_eye(bool confirm);   // Attempt to use the Eye for an Eye ability.
     static void grit(bool confirm);             // Attempt to use the Grit ability.
     static void lady_luck(size_t target, bool confirm); // Attempt to use the Lady Luck ability.
+    static void quick_roll(bool confirm);       // Attempt to use the Quick Roll ability.
 
 private:
     static float    CAREFUL_AIM_BONUS_HIT;      // The bonus hit% chance from using the Careful Aim ability.
@@ -33,4 +34,9 @@ private:
     static int      LADY_LUCK_LENGTH;           // The buff/debuff time for the Lady Luck ability.
     static int      LADY_LUCK_MP_COST;          // The mana cost for using the Lady Luck ability.
     static float    LADY_LUCK_TIME;             // The time taken by using the Lady Luck ability.
+    static int      QUICK_ROLL_BONUS_DODGE;     // The bonus dodge% chance from using the Quick Roll ability.
+    static int      QUICK_ROLL_COOLDOWN;        // The cooldown for the Quick Roll ability.
+    static int      QUICK_ROLL_LENGTH;          // The length of time the Quick Roll buff remains when activated, but before an enemy attack is made.
+    static int      QUICK_ROLL_SP_COST;         // The stamina point cost for the Quick Roll ability.
+    static int      QUICK_ROLL_TIME;            // The time it takes to do a Quick Roll.
 };

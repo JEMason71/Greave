@@ -211,6 +211,13 @@ void Core::main_loop()
             player->clear_buff(Buff::Type::GRIT);
         }
 
+        // Similarly, QuickRoll falls off if it was used.
+        if (player->has_buff(Buff::Type::QUICK_ROLL) && player->tag(MobileTag::Success_QuickRoll))
+        {
+            player->clear_tag(MobileTag::Success_QuickRoll);
+            player->clear_buff(Buff::Type::QUICK_ROLL);
+        }
+
         const std::string input = m_message_log->render_message_log();
         m_parser->parse(input);
 

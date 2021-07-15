@@ -54,6 +54,7 @@ Parser::Parser() : m_special_state(SpecialState::NONE)
     add_command("[north|n|east|e|south|s|west|w|northeast|ne|northwest|nw|southeast|se|southwest|sw|up|u|down|d]", ParserCommand::DIRECTION);
     add_command("open <dir>", ParserCommand::OPEN);
     add_command("participate", ParserCommand::PARTICIPATE);
+    add_command("[quickroll|qr]", ParserCommand::QUICK_ROLL);
     add_command("[quit|exit]", ParserCommand::QUIT);
     add_command("save", ParserCommand::SAVE);
     add_command("[sa|sb|sd]", ParserCommand::STANCE);
@@ -519,6 +520,7 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             else ActionDoors::open_or_close(player, parsed_direction, pcd.command == ParserCommand::OPEN, confirm);
             break;
         case ParserCommand::PARTICIPATE: Arena::participate(); break;
+        case ParserCommand::QUICK_ROLL: Abilities::quick_roll(confirm); break;
         case ParserCommand::QUIT:
             core()->message("{R}Are you sure you want to quit? {M}Your game will not be saved. {R}Type {C}yes {R}to confirm.");
             m_special_state = SpecialState::QUIT_CONFIRM;

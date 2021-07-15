@@ -2,7 +2,7 @@
 # Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 ABILITIES: [ "The {C}ABILITIES {w}command lists all available special abilities, their costs, and whether you can use them right now. Certain special abilities can only be used with particular types of weapons and armour.",
-             "To use any particular ability, simply type its name -- for example, to use Quick Roll, type {C}QUICK ROLL{w}. Abilities often have shorter abbreviated names that can be used (for example, {C}QR {w}for Quick Roll). See their individual help pages for more details." ]
+             "To use any particular ability, simply type its name -- for example, to use QuickRoll, type {C}QUICKROLL{w}. Abilities often have shorter abbreviated names that can be used (for example, {C}QR {w}for QuickRoll). See their individual help pages for more details." ]
 
 ATTACK: "The {C}ATTACK {w}command (can also be written as {C}KILL {w}or shortened to {C}K{w}) is your primary means of fighting creatures and people in the game world. Simply type {C}ATTACK {w}followed by the name of your target (for example, {C}ATTACK GOBLIN{w}) to attack with your currently-equipped weapon."
 
@@ -139,6 +139,12 @@ NW: "#TRAVEL"
 OPEN: "You can attempt to open doors (or windows, grates, or other door-like things) with the {C}OPEN {w}command. Simply type {C}OPEN {w}followed by a direction (for example, {C}OPEN SOUTHWEST {w}to attempt to open something in that direction."
 
 PARTICIPATE: "If you are at an arena, you may {C}PARTICIPATE {w}in a fight, though be warned - the fights are to the death!"
+
+QR: "#QUICKROLL"
+
+QUICK_ROLL: "#QUICKROLL"
+
+QUICKROLL: "The {C}QUICKROLL {w}ability (can be shortened to {C}QR{w}) allows you to make a rapid rolling dodge in combat, attempting to avoid an incoming attack."
 
 QUIT: "To quit the game, simply type {C}QUIT{w}, followed by {C}YES {w}to confirm. {W}Please note, the game will not be automatically saved.{w} If you wish to save first, use the {C}SAVE {w}command."
 

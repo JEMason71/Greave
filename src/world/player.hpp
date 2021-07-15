@@ -4,6 +4,8 @@
 #pragma once
 #include "world/mobile.hpp"
 
+enum class ItemSub : uint16_t;  // defined in world/item.hpp
+
 
 class Player : public Mobile
 {
@@ -48,6 +50,7 @@ public:
     void        tick_hp_regen() override;           // Regenerates HP over time.
     void        tick_mp_regen();                    // Regenerates MP over time.
     void        tick_sp_regen();                    // Regenerates SP over time.
+    bool        wearing_armour(ItemSub type);       // Checks if the player is wearing a certain type of armour (light/medium/heavy).
 
 private:
     static const float  BASE_SKILL_COST_MULTIPLIER;     // The higher this number, the slower player skill levels increase.

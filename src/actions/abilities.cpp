@@ -31,6 +31,11 @@ int     Abilities::LADY_LUCK_COOLDOWN =         20; // The cooldown for the Lady
 int     Abilities::LADY_LUCK_LENGTH =           60; // The buff/debuff time for the Lady Luck ability.
 int     Abilities::LADY_LUCK_MP_COST =          50; // The mana cost for using the Lady Luck ability.
 float   Abilities::LADY_LUCK_TIME =             2;  // The time taken by using the Lady Luck ability.
+int     Abilities::QUICK_ROLL_BONUS_DODGE =     40; // The bonus dodge% chance from using the Quick Roll ability.
+int     Abilities::QUICK_ROLL_COOLDOWN =        8;  // The cooldown for the Quick Roll ability.
+int     Abilities::QUICK_ROLL_LENGTH =          5;  // The length of time the Quick Roll buff remains when activated, but before an enemy attack is made.
+int     Abilities::QUICK_ROLL_SP_COST =         25; // The stamina point cost for the Quick Roll ability.
+int     Abilities::QUICK_ROLL_TIME =            4;  // The time it takes to do a Quick Roll.
 
 
 // Check cooldowns and availability of abilities.
@@ -40,14 +45,16 @@ void Abilities::abilities()
 
     enum AbilityRequirements {
         NONE = 0,
-        STANCE_A = 1,       // Requires aggressive stance.
-        STANCE_B = 2,       // Requires balanced stance.
-        STANCE_D = 4,       // Requires defensive stance.
-        STANCE_ANY = 7,     // Any stance is fine.
-        MELEE = 8,          // Requires melee weapon.
-        ARMOUR_HEAVY = 16,  // Requires heavy outer armour.
-        ARMOUR_MEDIUM = 32, // Requires medium outer armour.
-        LUCKY_DICE = 64,    // Requires lucky dice.
+        STANCE_A = 1,           // Requires aggressive stance.
+        STANCE_B = 2,           // Requires balanced stance.
+        STANCE_D = 4,           // Requires defensive stance.
+        STANCE_ANY = 7,         // Any stance is fine.
+        MELEE = 8,              // Requires melee weapon.
+        ARMOUR_HEAVY = 16,      // Requires heavy armour.
+        ARMOUR_MEDIUM = 32,     // Requires medium armour.
+        ARMOUR_LIGHT = 64,      // Requires light armour.
+        ARMOUR_NO_HEAVY = 128,  // Requires NOT using heavy armour.
+        LUCKY_DICE = 256,       // Requires lucky dice.
     };
 
     auto display_ability = [&player](const std::string &name, Buff::Type cd_buff, int cost_hp, int cost_sp, int cost_mp, int flags, bool available)
@@ -58,14 +65,15 @@ void Abilities::abilities()
         const bool needs_melee = (flags & MELEE);
         const bool needs_heavy = (flags & ARMOUR_HEAVY);
         const bool needs_medium = (flags & ARMOUR_MEDIUM);
+        const bool needs_light = (flags & ARMOUR_LIGHT);
+        const bool no_heavy = (flags & ARMOUR_NO_HEAVY);
         const bool needs_lucky_dice = (flags & LUCKY_DICE);
 
         const CombatStance stance = player->stance();
         bool using_melee = Combat::using_melee(player);
-        const auto armour = player->equ()->get(EquipSlot::ARMOUR);
-        const auto inner = player->equ()->get(EquipSlot::BODY);
-        const bool using_heavy = (armour && armour->subtype() == ItemSub::HEAVY) || (inner && inner->subtype() == ItemSub::HEAVY);
-        const bool using_medium = (armour && armour->subtype() == ItemSub::MEDIUM) || (inner && inner->subtype() == ItemSub::MEDIUM);
+        const bool using_heavy = player->wearing_armour(ItemSub::HEAVY);
+        const bool using_medium = player->wearing_armour(ItemSub::MEDIUM);
+        const bool using_light = player->wearing_armour(ItemSub::LIGHT) || player->wearing_armour(ItemSub::NONE);
         const bool lucky_dice = true;   // todo: Add a check for lucky dice here, when they're added to the game.
 
         bool can_use = true, bad_stance = false, bad_cost = false, bad_buff = false, bad_gear = false;
@@ -89,10 +97,11 @@ void Abilities::abilities()
             can_use = false;
             bad_gear = true;
         }
-        if (needs_medium || needs_heavy)
+        if (needs_light || needs_medium || needs_heavy)
         {
             bool acceptable = false;
 
+            if (needs_light && using_light) acceptable = true;
             if (needs_medium && using_medium) acceptable = true;
             if (needs_heavy && using_heavy) acceptable = true;
 
@@ -101,6 +110,11 @@ void Abilities::abilities()
                 can_use = false;
                 bad_gear = true;
             }
+        }
+        if (no_heavy && using_heavy)
+        {
+            can_use = false;
+            bad_gear = true;
         }
         if (needs_lucky_dice && !lucky_dice)
         {
@@ -140,7 +154,12 @@ void Abilities::abilities()
             if (bad_gear) ability_str += "{r}"; else ability_str += "{G}";
 
             std::string armour_str;
-            if (needs_medium) armour_str += "medium";
+            if (needs_light) armour_str += "light";
+            if (needs_medium)
+            {
+                if (armour_str.size()) armour_str += "/medium";
+                else armour_str += "medium";
+            }
             if (needs_heavy)
             {
                 if (armour_str.size()) armour_str += "/heavy";
@@ -195,6 +214,7 @@ void Abilities::abilities()
         display_ability("EyeForAnEye", Buff::Type::CD_EYE_FOR_AN_EYE, EYE_FOR_AN_EYE_HP_COST, 0, 0, STANCE_A | MELEE, valid);
         display_ability("Grit", Buff::Type::CD_GRIT, 0, GRIT_SP_COST, 0, STANCE_D | ARMOUR_HEAVY | ARMOUR_MEDIUM, valid);
         display_ability("LadyLuck", Buff::Type::CD_LADY_LUCK, 0, 0, LADY_LUCK_MP_COST, LUCKY_DICE | STANCE_ANY, valid);
+        display_ability("QuickRoll", Buff::Type::CD_QUICK_ROLL, 0, QUICK_ROLL_SP_COST, 0, STANCE_B | STANCE_D | ARMOUR_LIGHT | ARMOUR_MEDIUM | ARMOUR_NO_HEAVY, valid);
     }
 }
 
@@ -263,10 +283,6 @@ void Abilities::eye_for_an_eye(bool confirm)
 void Abilities::grit(bool confirm)
 {
     const auto player = core()->world()->player();
-    const auto armour = player->equ()->get(EquipSlot::ARMOUR);
-    const auto inner = player->equ()->get(EquipSlot::BODY);
-    const bool using_heavy = (armour && armour->subtype() == ItemSub::HEAVY) || (inner && inner->subtype() == ItemSub::HEAVY);
-    const bool using_medium = (armour && armour->subtype() == ItemSub::MEDIUM) || (inner && inner->subtype() == ItemSub::MEDIUM);
     
     if (player->has_buff(Buff::Type::CD_GRIT))
     {
@@ -278,7 +294,7 @@ void Abilities::grit(bool confirm)
         core()->message("{m}Grit can only be used in a {M}defensive {m}combat stance.");
         return;
     }
-    if (!using_heavy && !using_medium)
+    if (!player->wearing_armour(ItemSub::HEAVY) && !player->wearing_armour(ItemSub::MEDIUM))
     {
         core()->message("{m}Grit requires the use of {M}medium or heavy armour{m}.");
         return;
@@ -360,7 +376,7 @@ void Abilities::lady_luck(size_t target, bool confirm)
     if (total == 4 || total == 10)
     {
         core()->message(dice_string('U', 'U') + " {G}You anticipate " + mob->name(Mobile::NAME_FLAG_POSSESSIVE | Mobile::NAME_FLAG_THE) + " {G}next move...");
-        // todo: add quick roll buff here
+        player->set_buff(Buff::Type::QUICK_ROLL, QUICK_ROLL_TIME, QUICK_ROLL_BONUS_DODGE, false, false);
         return;
     }
     if (dice[0] == dice[1])
@@ -373,4 +389,38 @@ void Abilities::lady_luck(size_t target, bool confirm)
         return;
     }
     core()->message(dice_string('Y', 'Y') + " {Y}Nothing happens...");
+}
+
+// Attempt to use the Quick Roll ability.
+void Abilities::quick_roll(bool confirm)
+{
+    const auto player = core()->world()->player();
+    if (player->has_buff(Buff::Type::CD_QUICK_ROLL))
+    {
+        core()->message("{m}You must wait a while before using the {M}QuickRoll {m}ability again.");
+        return;
+    }
+    if (player->wearing_armour(ItemSub::HEAVY))
+    {
+        core()->message("{m}You armour is too heavy to be able to {M}QuickRoll{m}.");
+        return;
+    }
+    if (player->sp() < QUICK_ROLL_SP_COST)
+    {
+        core()->message("{m}You do not have enough stamina points to use {M}QuickRoll{m}.");
+        return;
+    }
+    if (player->stance() == CombatStance::AGGRESSIVE)
+    {
+        core()->message("{m}QuickRoll can only be used in {M}balanced {m}or {M}defensive {m}stances.");
+        return;
+    }
+
+    if (!player->pass_time(QUICK_ROLL_TIME, !confirm)) return;
+    if (player->is_dead()) return;
+
+    core()->message("{U}You make a quick combat roll, attempting to dodge an incoming attack.");
+    player->set_buff(Buff::Type::CD_QUICK_ROLL, QUICK_ROLL_COOLDOWN);
+    player->set_buff(Buff::Type::QUICK_ROLL, QUICK_ROLL_LENGTH, QUICK_ROLL_BONUS_DODGE, false, false);
+    player->reduce_sp(QUICK_ROLL_SP_COST);
 }

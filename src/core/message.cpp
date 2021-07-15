@@ -105,9 +105,10 @@ std::string MessageLog::render_message_log(bool accept_blank_input)
             case CombatStance::BALANCED: stance_str = "{G}b"; break;
             case CombatStance::DEFENSIVE: stance_str = "{U}d"; break;
         }
-        if (player->has_buff(Buff::Type::CAREFUL_AIM)) stance_str += "{W}:{U}ca";
+        if (player->has_buff(Buff::Type::CAREFUL_AIM)) stance_str += "{W}:{G}ca";
         if (player->has_buff(Buff::Type::EYE_FOR_AN_EYE)) stance_str += "{W}:{R}ef";
         if (player->has_buff(Buff::Type::GRIT)) stance_str += "{W}:{U}gr";
+        if (player->has_buff(Buff::Type::QUICK_ROLL)) stance_str += "{W}:{U}qr";
         status_str = "{W}<" + stance_str + "{W}:" + coloured_value_indicator("hp", player->hp(), player->hp(true), 'R');
         if (player->sp() < player->sp(true)) status_str += "{W}:" + coloured_value_indicator("sp", player->sp(), player->sp(true), 'G');
         if (player->mp() < player->mp(true)) status_str += "{W}:" + coloured_value_indicator("mp", player->mp(), player->mp(true), 'U');
