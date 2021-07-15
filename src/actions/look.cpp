@@ -203,8 +203,10 @@ void ActionLook::examine_item(std::shared_ptr<Item> target)
     const bool stackable = target->tag(ItemTag::Stackable);
     if (stackable) stat_string += it_can_string_caps + " be {U}stacked {w}with other identical items. ";
 
-    uint32_t weight = MathX::fuzz(target->weight());
-    stat_string += (stackable ? "{w}The stack weighs around {U}" : "{w}" + it_weighs_string_caps + " around {U}") + StrX::intostr_pretty(weight) + (weight == 1 ? " pac" : " pacs");
+    uint32_t weight = MathX::fuzz(target->weight()), weight_individual = MathX::fuzz(target->weight(true));
+    stat_string += it_weighs_string_caps + " around {U}" + StrX::intostr_pretty(weight) + (weight > 1 ? " pacs" : " pac");
+    if (stackable && target->stack() > 1) stat_string += " {w}(around {U}" + StrX::intostr_pretty(weight_individual) + (weight_individual > 1 ? " pacs" : " pac") + " {w}each)";
+    else stat_string += "{w}";
 
     const uint32_t actual_value = target->value();
     const uint32_t diff = std::abs(static_cast<int64_t>(actual_value) - static_cast<int64_t>(appraised_value));
