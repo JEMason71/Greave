@@ -33,6 +33,16 @@ void ActionLook::examine(ParserTarget target_type, size_t target)
 void ActionLook::examine_item(std::shared_ptr<Item> target)
 {
     const int appraised_value = target->appraised_value();
+    //const std::string it_has_string = (
+    const bool plural_name = target->tag(ItemTag::PluralName) || (target->tag(ItemTag::Stackable) && target->stack() > 1);
+    const std::string it_has_string_caps = (plural_name ? "They have" : "It has");
+    const std::string it_is_string_caps = (plural_name ? "They are" : "It is");
+    const std::string this_is_string_caps = (plural_name ? "These are" : "This is");
+    const std::string it_uses_string_caps = (plural_name ? "They use" : "It uses");
+    const std::string it_boosts_string_caps = (plural_name ? "They {G}boost" : "It {G}boosts");
+    const std::string it_reduces_string_caps = (plural_name ? "They {Y}reduce" : "It {Y}reduces");
+    const std::string it_can_string_caps = (plural_name ? "They can" : "It can");
+    const std::string it_weighs_string_caps = (plural_name ? "They weigh" : "It weighs");
 
     core()->message("You are looking at: " + target->name(Item::NAME_FLAG_FULL_STATS | Item::NAME_FLAG_ID | Item::NAME_FLAG_RARE));
     if (target->desc().size()) core()->message("{0}" + target->desc());
@@ -41,13 +51,13 @@ void ActionLook::examine_item(std::shared_ptr<Item> target)
     {
         case ItemType::AMMO:
         {
-            stat_string = "This is {U}ammunition {w}that can be fired from ";
+            stat_string = this_is_string_caps + " {U}ammunition {w}that can be fired from ";
             if (target->tag(ItemTag::AmmoArrow)) stat_string += "a bow. ";
             else if (target->tag(ItemTag::AmmoBolt)) stat_string += "a crossbow. ";
             else throw std::runtime_error("Unknown ammo type: " + target->name());
 
             std::vector<std::string> damage_str_vec;
-            damage_str_vec.push_back("It has a damage multiplier of {U}" + StrX::ftos(target->ammo_power()) + "x{w}");
+            damage_str_vec.push_back(it_has_string_caps + "a damage multiplier of {U}" + StrX::ftos(target->ammo_power()) + "x{w}");
             if (target->crit()) damage_str_vec.push_back("a critical hit bonus of {U}" + std::to_string(target->crit()) + "%{w}");
             if (target->bleed()) damage_str_vec.push_back("a bleeding bonus of {U}" + std::to_string(target->bleed()) + "%{w}");
             if (target->poison()) damage_str_vec.push_back("a poison bonus of {U}" + std::to_string(target->poison()) + "%{w}");
@@ -59,10 +69,10 @@ void ActionLook::examine_item(std::shared_ptr<Item> target)
         {
             switch (target->subtype())
             {
-                case ItemSub::CLOTHING: stat_string = "This is {U}clothing {w}that can be worn"; break;
-                case ItemSub::HEAVY: stat_string = "This is {U}heavy armour {w}that can be worn"; break;
-                case ItemSub::LIGHT: stat_string = "This is {U}lightweight armour {w}that can be worn"; break;
-                case ItemSub::MEDIUM: stat_string = "This is {U}medium armour {w}that can be worn"; break;
+                case ItemSub::CLOTHING: stat_string = this_is_string_caps + " {U}clothing {w}that can be worn"; break;
+                case ItemSub::HEAVY: stat_string = this_is_string_caps + " {U}heavy armour {w}that can be worn"; break;
+                case ItemSub::LIGHT: stat_string = this_is_string_caps + " {U}lightweight armour {w}that can be worn"; break;
+                case ItemSub::MEDIUM: stat_string = this_is_string_caps + " {U}medium armour {w}that can be worn"; break;
                 default: break;
             }
             std::string slot;
@@ -76,7 +86,7 @@ void ActionLook::examine_item(std::shared_ptr<Item> target)
                 case EquipSlot::HEAD: slot = "on your head"; break;
                 default: break;
             }
-            stat_string += " {U}" + slot + "{w}. It has an armour value of {U}" + std::to_string(target->power());
+            stat_string += " {U}" + slot + "{w}. " + it_has_string_caps + " an armour value of {U}" + std::to_string(target->power());
             const int warmth = target->warmth();
             if (warmth) stat_string += "{w}, and a warmth rating of {U}" + std::to_string(warmth);
             stat_string += "{w}. ";
@@ -86,40 +96,40 @@ void ActionLook::examine_item(std::shared_ptr<Item> target)
         {
             switch (target->subtype())
             {
-                case ItemSub::BOOZE: stat_string = "This is an {U}alcoholic beverage{w}. "; break;
-                case ItemSub::WATER_CONTAINER: stat_string = "This is a {U}water container{w}. "; break;
+                case ItemSub::BOOZE: stat_string = this_is_string_caps + " an {U}alcoholic beverage{w}. "; break;
+                case ItemSub::WATER_CONTAINER: stat_string = this_is_string_caps + " a {U}water container{w}. "; break;
                 default: break;
             }
             const int capacity = target->capacity(), charge = target->charge();
-            stat_string += "It has a capacity of {U}" + std::to_string(capacity) + (capacity > 1 ? " units" : " unit") + "{w}";
+            stat_string += it_has_string_caps + " a capacity of {U}" + std::to_string(capacity) + (capacity > 1 ? " units" : " unit") + "{w}";
             if (charge)
             {
                 stat_string += ", and currently holds {U}" + std::to_string(charge) + (charge > 1 ? " units of " : " unit of ") + target->liquid_type() + "{w}, and will take {U}" + StrX::time_string_rough(target->speed()) + " {w}to drink. ";
-                if (target->subtype() == ItemSub::BOOZE) stat_string += "It has a potency rating of {U}" + std::to_string(target->power()) + "{w}. ";
+                if (target->subtype() == ItemSub::BOOZE) stat_string += it_has_string_caps + " a potency rating of {U}" + std::to_string(target->power()) + "{w}. ";
             }
             else stat_string += ", and is currently {U}empty{w}. ";
             break;
         }
         case ItemType::FOOD:
         {
-            stat_string = "This is something you can {U}consume{w}. ";
-            stat_string += "It has a food value of {U}" + std::to_string(target->power()) + "{w}, and will take {U}" + StrX::time_string_rough(target->speed()) + " {w}to eat. ";
+            stat_string = this_is_string_caps + " something you can {U}consume{w}. ";
+            stat_string += it_has_string_caps + " a food value of {U}" + std::to_string(target->power()) + "{w}, and will take {U}" + StrX::time_string_rough(target->speed()) + " {w}to eat. ";
             break;
         }
-        case ItemType::KEY: stat_string = "This is a {U}key {w}which can unlock certain doors. "; break;
-        case ItemType::LIGHT: stat_string = "This is a {U}light source {w}which can be held. It provides a brightness level of {Y}" + std::to_string(target->power()) + "{w} when used. "; break;
+        case ItemType::KEY: stat_string = this_is_string_caps + " a {U}key {w}which can unlock certain doors. "; break;
+        case ItemType::LIGHT: stat_string = this_is_string_caps + " a {U}light source {w}which can be held. It provides a brightness level of {Y}" + std::to_string(target->power()) + "{w} when used. "; break;
         case ItemType::NONE: break;
-        case ItemType::SHIELD: stat_string = "This is a {U}shield {w}which can be wielded. It has an armour value of {U}" + std::to_string(target->power()) + "{w}. "; break;
+        case ItemType::SHIELD: stat_string = this_is_string_caps + " a {U}shield {w}which can be wielded. It has an armour value of {U}" + std::to_string(target->power()) + "{w}. "; break;
         case ItemType::WEAPON:
         {
             switch (target->subtype())
             {
-                case ItemSub::MELEE: stat_string = "This is a {U}melee weapon {w}which can be wielded. "; break;
-                case ItemSub::RANGED: stat_string = "This is a {U}ranged weapon {w}which can be widled. "; break;
+                case ItemSub::MELEE: stat_string = this_is_string_caps + " a {U}melee weapon {w}which can be wielded. "; break;
+                case ItemSub::RANGED: stat_string = this_is_string_caps + " a {U}ranged weapon {w}which can be widled. "; break;
                 default: break;
             }
-            if (target->tag(ItemTag::TwoHanded)) stat_string += "It is heavy and requires {U}two hands {w}to wield. ";
-            else if (target->tag(ItemTag::HandAndAHalf)) stat_string += "It is versatile and can be wielded in {U}either one or two hands{w}. ";
+            if (target->tag(ItemTag::TwoHanded)) stat_string += it_is_string_caps + " heavy and requires {U}two hands {w}to wield. ";
+            else if (target->tag(ItemTag::HandAndAHalf)) stat_string += it_is_string_caps + " versatile and can be wielded in {U}either one or two hands{w}. ";
             std::string damage_type_str;
             switch (target->damage_type())
             {
@@ -137,36 +147,36 @@ void ActionLook::examine_item(std::shared_ptr<Item> target)
                 default: core()->guru()->nonfatal("Unable to determine item damage type: " + target->name(), Guru::ERROR);
             }
             std::vector<std::string> damage_str_vec;
-            damage_str_vec.push_back("It has a damage value of {U}" + std::to_string(target->power()) + " " + damage_type_str + "{w}");
+            damage_str_vec.push_back(it_has_string_caps + " a damage value of {U}" + std::to_string(target->power()) + " " + damage_type_str + "{w}");
             damage_str_vec.push_back("a speed of {U}" + StrX::ftos(target->speed(), true) + "{w}");
             if (target->crit()) damage_str_vec.push_back("a critical hit chance of {U}" + std::to_string(target->crit()) + "%{w}");
             if (target->bleed()) damage_str_vec.push_back("a {U}" + std::to_string(target->bleed()) + "%{w} chance to cause bleeding wounds");
             if (target->poison()) damage_str_vec.push_back("a {U}" + std::to_string(target->poison()) + "%{w} chance to inflict poison");
             stat_string += StrX::comma_list(damage_str_vec, StrX::CL_FLAG_USE_AND | StrX::CL_FLAG_OXFORD_COMMA) + ". ";
 
-            if (target->tag(ItemTag::AmmoArrow)) stat_string += "It uses {U}arrows {w}for ammunition. ";
-            if (target->tag(ItemTag::AmmoBolt)) stat_string += "It uses {U}bolts {w}for ammunition. ";
+            if (target->tag(ItemTag::AmmoArrow)) stat_string += it_uses_string_caps + " {U}arrows {w}for ammunition. ";
+            if (target->tag(ItemTag::AmmoBolt)) stat_string += it_uses_string_caps + " {U}bolts {w}for ammunition. ";
             break;
         }
     }
 
     const int dodge_mod = target->dodge_mod();
-    if (dodge_mod > 0) stat_string += "It {G}boosts your chance to dodge {w}by {G}" + std::to_string(dodge_mod) + "%{w}. ";
-    else if (dodge_mod < 0) stat_string += "It {Y}reduces your chance to dodge {w}by {R}" + std::to_string(-dodge_mod) + "%{w}. ";
+    if (dodge_mod > 0) stat_string += it_boosts_string_caps + " your chance to dodge {w}by {G}" + std::to_string(dodge_mod) + "%{w}. ";
+    else if (dodge_mod < 0) stat_string += it_reduces_string_caps + " your chance to dodge {w}by {R}" + std::to_string(-dodge_mod) + "%{w}. ";
 
     const int parry_mod = target->parry_mod();
-    if (parry_mod > 0) stat_string += "It {G}boosts your chance to parry {w}by {G}" + std::to_string(parry_mod) + "%{w}. ";
-    else if (parry_mod < 0) stat_string += "It {Y}reduces your chance to parry {w}by {R}" + std::to_string(-parry_mod) + "%{w}. ";
+    if (parry_mod > 0) stat_string += it_boosts_string_caps + " your chance to parry {w}by {G}" + std::to_string(parry_mod) + "%{w}. ";
+    else if (parry_mod < 0) stat_string += it_reduces_string_caps + " your chance to parry {w}by {R}" + std::to_string(-parry_mod) + "%{w}. ";
 
     const int block_mod = target->block_mod();
-    if (block_mod > 0) stat_string += "It {G}boosts your chance to shield-block {w}by {G}" + std::to_string(block_mod) + "%{w}. ";
-    else if (block_mod < 0) stat_string += "It {Y}reduces your chance to shield-block {w}by {R}" + std::to_string(-block_mod) + "%{w}. ";
+    if (block_mod > 0) stat_string += it_boosts_string_caps + " your chance to shield-block {w}by {G}" + std::to_string(block_mod) + "%{w}. ";
+    else if (block_mod < 0) stat_string += it_reduces_string_caps + " your chance to shield-block {w}by {R}" + std::to_string(-block_mod) + "%{w}. ";
 
     const bool stackable = target->tag(ItemTag::Stackable);
-    if (stackable) stat_string += "It can be {U}stacked {w}with other identical items. ";
+    if (stackable) stat_string += it_can_string_caps + " be {U}stacked {w}with other identical items. ";
 
     uint32_t weight = MathX::fuzz(target->weight());
-    stat_string += (stackable ? "{w}The stack weighs around {U}" : "{w}It weighs around {U}") + StrX::intostr_pretty(weight) + (weight == 1 ? " pac" : " pacs");
+    stat_string += (stackable ? "{w}The stack weighs around {U}" : "{w}" + it_weighs_string_caps + " around {U}") + StrX::intostr_pretty(weight) + (weight == 1 ? " pac" : " pacs");
 
     const uint32_t actual_value = target->value();
     const uint32_t diff = std::abs(static_cast<int64_t>(actual_value) - static_cast<int64_t>(appraised_value));
@@ -176,7 +186,7 @@ void ActionLook::examine_item(std::shared_ptr<Item> target)
     else if (diff >= 100) appraise_str = "{Y}you think {w}";
 
     if (!appraised_value) stat_string += (stackable ? "{w}, and {y}aren't worth anything{w}." : "{w}, and {y}isn't worth anything{w}. ");
-    else stat_string += (stackable ? "{w}, and " + appraise_str + "they're worth around {U}" : "{w}, and " + appraise_str + "it's worth around {U}") + StrX::mgsc_string(appraised_value, StrX::MGSC::LONG) + "{w}. ";
+    else stat_string += (stackable || plural_name ? "{w}, and " + appraise_str + "they're worth around {U}" : "{w}, and " + appraise_str + "it's worth around {U}") + StrX::mgsc_string(appraised_value, StrX::MGSC::LONG) + "{w}. ";
 
     if (stat_string.size())
     {
