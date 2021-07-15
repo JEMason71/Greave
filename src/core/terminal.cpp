@@ -3,7 +3,6 @@
 // The base Terminal class is mostly virtual; derived classes should handle code specific to their specific terminal emulator.
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#include "core/strx.hpp"
 #include "core/terminal.hpp"
 
 

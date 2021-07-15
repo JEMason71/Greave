@@ -5,7 +5,6 @@
 #include "core/filex.hpp"
 #include "core/guru.hpp"
 #include "core/message.hpp"
-#include "core/terminal.hpp"
 
 #include <csignal>
 #include <ctime>
@@ -30,8 +29,7 @@ const std::string   Guru::FILENAME_LOG =    "log.txt";  // The default name of t
 void guru_intercept_signal(int sig) { core()->guru()->intercept_signal(sig); }
 
 // Opens the output log for messages.
-Guru::Guru(std::string log_filename) : m_cache_nonfatal(false), m_cascade_count(0), m_cascade_failure(false), m_cascade_timer(std::time(0)), m_console_ready(false),
-    m_dead_already(false)
+Guru::Guru(std::string log_filename) : m_cache_nonfatal(false), m_cascade_count(0), m_cascade_failure(false), m_cascade_timer(std::time(0)), m_console_ready(false), m_dead_already(false)
 {
     if (!log_filename.size()) log_filename = Guru::FILENAME_LOG;
     FileX::delete_file(log_filename);

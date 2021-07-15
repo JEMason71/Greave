@@ -3,6 +3,7 @@
 
 #include "actions/abilities.hpp"
 #include "actions/combat.hpp"
+#include "core/core.hpp"
 #include "core/mathx.hpp"
 #include "core/random.hpp"
 #include "core/strx.hpp"

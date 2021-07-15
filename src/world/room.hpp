@@ -6,7 +6,6 @@
 
 class Inventory;                        // defined in world/inventory.hpp
 class Item;                             // defined in world/item.hpp
-class Mobile;                           // defined in world/mobile.hpp
 namespace SQLite { class Database; }    // defined in 3rdparty/SQLiteCpp/Database.h
 
 

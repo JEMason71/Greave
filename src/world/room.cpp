@@ -3,9 +3,7 @@
 
 #include "3rdparty/SQLiteCpp/SQLiteCpp.h"
 #include "core/core.hpp"
-#include "core/filex.hpp"
 #include "core/list.hpp"
-#include "core/message.hpp"
 #include "core/random.hpp"
 #include "core/strx.hpp"
 #include "world/inventory.hpp"

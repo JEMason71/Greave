@@ -3,6 +3,7 @@
 
 #include "actions/cheat.hpp"
 #include "actions/look.hpp"
+#include "core/core.hpp"
 #include "core/parser.hpp"
 #include "core/strx.hpp"
 #include "world/inventory.hpp"

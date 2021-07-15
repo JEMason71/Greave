@@ -8,6 +8,7 @@ class Inventory;                // defined in world/inventory.hpp
 enum class EquipSlot : uint8_t; // defined in world/item.hpp
 namespace SQLite { class Database; class Statement; }   // defined in 3rdparty/SQLiteCpp/Database.h
 
+
 enum class Gender : uint8_t { FEMALE, MALE, IT, THEY };
 
 enum class CombatStance : uint8_t { BALANCED, AGGRESSIVE, DEFENSIVE };

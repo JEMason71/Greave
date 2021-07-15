@@ -3,12 +3,10 @@
 
 #include "3rdparty/SQLiteCpp/SQLiteCpp.h"
 #include "actions/help.hpp"
-#include "actions/look.hpp"
 #include "core/bones.hpp"
 #include "core/core.hpp"
 #include "core/filex.hpp"
 #include "core/guru.hpp"
-#include "core/list.hpp"
 #include "core/message.hpp"
 #include "core/parser.hpp"
 #include "core/prefs.hpp"
@@ -17,7 +15,6 @@
 #include "core/terminal-curses.hpp"
 #include "core/terminal-sdl2.hpp"
 #include "world/player.hpp"
-#include "world/room.hpp"
 #include "world/world.hpp"
 
 #include <thread>
