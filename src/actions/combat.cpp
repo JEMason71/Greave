@@ -160,6 +160,9 @@ void Combat::change_stance(std::shared_ptr<Mobile> mob, CombatStance stance)
     if (mob->is_player()) core()->message("{W}You assume " + stance_str + "{W}.");
     else if (mob->location() == core()->world()->player()->location() && core()->world()->get_room(mob->location())->light() >= Room::LIGHT_VISIBLE)
         core()->message("{W}" + mob->name(Mobile::NAME_FLAG_THE | Mobile::NAME_FLAG_CAPITALIZE_FIRST) + " {W}assumes " + stance_str + "{W}!");
+    if (mob->has_buff(Buff::Type::CAREFUL_AIM) && stance == CombatStance::AGGRESSIVE) mob->clear_buff(Buff::Type::CAREFUL_AIM);
+    if (mob->has_buff(Buff::Type::EYE_FOR_AN_EYE) && stance != CombatStance::AGGRESSIVE) mob->clear_buff(Buff::Type::EYE_FOR_AN_EYE);
+    if (mob->has_buff(Buff::Type::GRIT) && stance != CombatStance::DEFENSIVE) mob->clear_buff(Buff::Type::GRIT);
     mob->pass_time(STANCE_CHANGE_TIME, false);
 }
 
@@ -533,6 +536,20 @@ void Combat::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mo
             if (armour_piece_hit) damage_blocked = damage * armour_piece_hit->armour();
             damage_blocked = apply_damage_modifiers(damage_blocked, (ammo_ptr ? ammo_ptr : weapon_ptr), defender, hit_loc);
         }
+
+        // Reduced damage for Grit.
+        if (defender->has_buff(Buff::Type::GRIT) && damage >= 1.0f)
+        {
+            const float grit_power = defender->buff_power(Buff::Type::GRIT);
+            const float damage_reduced = std::min(damage, damage * (grit_power / 100.0f));
+            if (damage_reduced >= 1.0f)
+            {
+                damage -= damage_reduced;
+                damage_blocked += damage_reduced;
+                player->set_tag(MobileTag::Success_Grit);
+            }
+        }
+
         if (blocked)
         {
             const std::shared_ptr<Item> shield_item = defender->equ()->get(EquipSlot::HAND_OFF);

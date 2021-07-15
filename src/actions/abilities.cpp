@@ -20,6 +20,11 @@ int     Abilities::EYE_FOR_AN_EYE_COOLDOWN =    30; // The cooldown for the Eye 
 int     Abilities::EYE_FOR_AN_EYE_HP_COST =     30; // The hit points cost for using Eye for an Eye.
 int     Abilities::EYE_FOR_AN_EYE_LENGTH =      10; // The length of time the Eye For An Eye buff remains when activated but unused.
 float   Abilities::EYE_FOR_AN_EYE_MULTI =       5;  // The damage multiplier for the Eye For An Eye ability.
+int     Abilities::GRIT_COOLDOWN =              5;  // The cooldown for the Grit ability.
+float   Abilities::GRIT_DAMAGE_REDUCTION =      30; // The % of damage reduced by using the Grit ability.
+int     Abilities::GRIT_LENGTH =                30; // The Grit ability lasts this long, or until the player is hit by an attack.
+int     Abilities::GRIT_SP_COST =               30; // The stamina point cost for the Grit ability.
+float   Abilities::GRIT_TIME =                  2;  // The time taken by using the Grit ability.
 
 
 // Check cooldowns and availability of abilities.
@@ -27,12 +32,31 @@ void Abilities::abilities()
 {
     const auto player = core()->world()->player();
 
-    core()->message("{M}Available combat abilites:");
+    enum AbilityRequirements {
+        NONE = 0,
+        STANCE_A = 1,       // Requires aggressive stance.
+        STANCE_B = 2,       // Requires balanced stance.
+        STANCE_D = 4,       // Requires defensive stance.
+        MELEE = 8,          // Requires melee weapon.
+        ARMOUR_HEAVY = 16,  // Requires heavy outer armour.
+        ARMOUR_MEDIUM = 32, // Requires medium outer armour.
+    };
 
-    auto display_ability = [&player](const std::string &name, bool stance_a, bool stance_b, bool stance_d, Buff::Type cd_buff, int cost_hp, int cost_sp, int cost_mp, bool needs_melee)
+    auto display_ability = [&player](const std::string &name, Buff::Type cd_buff, int cost_hp, int cost_sp, int cost_mp, int flags, bool available)
     {
+        const bool stance_a = (flags & STANCE_A);
+        const bool stance_b = (flags & STANCE_B);
+        const bool stance_d = (flags & STANCE_D);
+        const bool needs_melee = (flags & MELEE);
+        const bool needs_heavy = (flags & ARMOUR_HEAVY);
+        const bool needs_medium = (flags & ARMOUR_MEDIUM);
+
         const CombatStance stance = player->stance();
         bool using_melee = Combat::using_melee(player);
+        const auto armour = player->equ()->get(EquipSlot::ARMOUR);
+        const auto inner = player->equ()->get(EquipSlot::BODY);
+        const bool using_heavy = (armour && armour->subtype() == ItemSub::HEAVY) || (inner && inner->subtype() == ItemSub::HEAVY);
+        const bool using_medium = (armour && armour->subtype() == ItemSub::MEDIUM) || (inner && inner->subtype() == ItemSub::MEDIUM);
 
         bool can_use = true, bad_stance = false, bad_cost = false, bad_buff = false, bad_gear = false;
         if ((!stance_a && stance == CombatStance::AGGRESSIVE) || (!stance_b && stance == CombatStance::BALANCED) || (!stance_d && stance == CombatStance::DEFENSIVE))
@@ -55,25 +79,56 @@ void Abilities::abilities()
             can_use = false;
             bad_gear = true;
         }
+        if (needs_medium || needs_heavy)
+        {
+            bool acceptable = false;
+
+            if (needs_medium && using_medium) acceptable = true;
+            if (needs_heavy && using_heavy) acceptable = true;
+
+            if (!acceptable)
+            {
+                can_use = false;
+                bad_gear = true;
+            }
+        }
+
+        if (can_use != available) return;
 
         std::string ability_str = (can_use ? "{G}" : "{r}") + name + " ";
         
-        if (!stance_a || !stance_b || !stance_d)
+        if (stance_a || stance_b || stance_d)
         {
             ability_str += "{W}<" + std::string(bad_stance ? "{r}" : "{G}") + "stance:";
-            if (stance_a) ability_str += "A/";
-            if (stance_b) ability_str += "B/";
-            if (stance_d) ability_str += "D/";
+            if (stance_a) ability_str += "a/";
+            if (stance_b) ability_str += "b/";
+            if (stance_d) ability_str += "d/";
             ability_str.pop_back();
             ability_str += "{W}> ";
         }
 
         if (needs_melee)
         {
-            if (!stance_a || !stance_b || !stance_d) ability_str = ability_str.substr(0, ability_str.size() - 5) + "{W}, ";
+            if (stance_a || stance_b || stance_d) ability_str = ability_str.substr(0, ability_str.size() - 5) + "{W}, ";
             else ability_str += "{W}<";
             if (bad_gear) ability_str += "{r}"; else ability_str += "{G}";
             ability_str += "melee{W}> ";
+        }
+        
+        if (needs_medium || needs_heavy)
+        {
+            if (stance_a || stance_b || stance_d || needs_melee) ability_str = ability_str.substr(0, ability_str.size() - 5) + "{W}, ";
+            else ability_str += "{W}<";
+            if (bad_gear) ability_str += "{r}"; else ability_str += "{G}";
+
+            std::string armour_str;
+            if (needs_medium) armour_str += "medium";
+            if (needs_heavy)
+            {
+                if (armour_str.size()) armour_str += "/heavy";
+                else armour_str += "heavy";
+            }
+            ability_str += armour_str + "{W}> ";
         }
 
         if (cost_hp)
@@ -103,8 +158,15 @@ void Abilities::abilities()
         core()->message("{0}" + ability_str);
     };
 
-    display_ability("Careful Aim", false, true, true, Buff::Type::CD_CAREFUL_AIM, 0, 0, CAREFUL_AIM_MP_COST, false);
-    display_ability("Eye for an Eye", true, false, false, Buff::Type::CD_EYE_FOR_AN_EYE, EYE_FOR_AN_EYE_HP_COST, 0, 0, true);
+    for (int i = 0; i < 2; i++)
+    {
+        bool valid = (i == 0);
+        if (valid) core()->message("{M}Available combat abilites:");
+        else core()->message("{M}Unavailable abilities:");
+        display_ability("Careful Aim", Buff::Type::CD_CAREFUL_AIM, 0, 0, CAREFUL_AIM_MP_COST, STANCE_B | STANCE_D, valid);
+        display_ability("Eye for an Eye", Buff::Type::CD_EYE_FOR_AN_EYE, EYE_FOR_AN_EYE_HP_COST, 0, 0, STANCE_A | MELEE, valid);
+        display_ability("Grit", Buff::Type::CD_GRIT, 0, GRIT_SP_COST, 0, STANCE_D | ARMOUR_HEAVY | ARMOUR_MEDIUM, valid);
+    }
 }
 
 // Attempt to use the Careful Aim ability.
@@ -166,4 +228,42 @@ void Abilities::eye_for_an_eye(bool confirm)
     player->set_buff(Buff::Type::CD_EYE_FOR_AN_EYE, EYE_FOR_AN_EYE_COOLDOWN);
     player->set_buff(Buff::Type::EYE_FOR_AN_EYE, EYE_FOR_AN_EYE_LENGTH, EYE_FOR_AN_EYE_MULTI, false, false);
     player->reduce_hp(EYE_FOR_AN_EYE_HP_COST);
+}
+
+// Attempt to use the Grit ability.
+void Abilities::grit(bool confirm)
+{
+    const auto player = core()->world()->player();
+    const auto armour = player->equ()->get(EquipSlot::ARMOUR);
+    const auto inner = player->equ()->get(EquipSlot::BODY);
+    const bool using_heavy = (armour && armour->subtype() == ItemSub::HEAVY) || (inner && inner->subtype() == ItemSub::HEAVY);
+    const bool using_medium = (armour && armour->subtype() == ItemSub::MEDIUM) || (inner && inner->subtype() == ItemSub::MEDIUM);
+    
+    if (player->has_buff(Buff::Type::CD_GRIT))
+    {
+        core()->message("{m}You must wait a while before using the {M}Grit {m}ability again.");
+        return;
+    }
+    if (player->stance() != CombatStance::DEFENSIVE)
+    {
+        core()->message("{m}Grit can only be used in a {M}defensive {m}combat stance.");
+        return;
+    }
+    if (!using_heavy && !using_medium)
+    {
+        core()->message("{m}Grit requires the use of {M}medium or heavy armour{m}.");
+        return;
+    }
+    if (player->sp() < GRIT_SP_COST)
+    {
+        core()->message("{m}You do not have enough stamina points to use {M}Grit{m}.");
+        return;
+    }
+
+    if (!player->pass_time(GRIT_TIME, !confirm)) return;
+    if (player->is_dead()) return;
+    core()->message("{M}You brace yourself for an incoming attack.");
+    player->set_buff(Buff::Type::CD_GRIT, GRIT_COOLDOWN);
+    player->set_buff(Buff::Type::GRIT, GRIT_TIME, GRIT_DAMAGE_REDUCTION, false, false);
+    player->reduce_sp(GRIT_SP_COST);
 }

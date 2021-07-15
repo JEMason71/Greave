@@ -11,6 +11,7 @@ public:
     static void abilities();                    // Check cooldowns and availability of abilities.
     static void careful_aim(bool confirm);      // Attempt to use the Careful Aim ability.
     static void eye_for_an_eye(bool confirm);   // Attempt to use the Eye for an Eye ability.
+    static void grit(bool confirm);             // Attempt to use the Grit ability.
 
 private:
     static float    CAREFUL_AIM_BONUS_HIT;      // The bonus hit% chance from using the Careful Aim ability.
@@ -22,4 +23,9 @@ private:
     static int      EYE_FOR_AN_EYE_HP_COST;     // The hit points cost for using Eye for an Eye.
     static int      EYE_FOR_AN_EYE_LENGTH;      // The length of time the Eye For An Eye buff remains when activated but unused.
     static float    EYE_FOR_AN_EYE_MULTI;       // The damage multiplier for the Eye For An Eye ability.
+    static int      GRIT_COOLDOWN;              // The cooldown for the Grit ability.
+    static float    GRIT_DAMAGE_REDUCTION;      // The % of damage reduced by using the Grit ability.
+    static int      GRIT_LENGTH;                // The Grit ability lasts this long, or until the player is hit by an attack.
+    static int      GRIT_SP_COST;               // The stamina point cost for the Grit ability.
+    static float    GRIT_TIME;                  // The time taken by using the Grit ability.
 };

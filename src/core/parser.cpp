@@ -45,6 +45,7 @@ Parser::Parser() : m_special_state(SpecialState::NONE)
     add_command("eye for an eye", ParserCommand::EYE_FOR_AN_EYE);
     add_command("[fuck|shit|piss|bastard] *", ParserCommand::SWEAR);
     add_command("[go|travel|walk|run|move] <dir>", ParserCommand::GO);
+    add_command("[grit|gr]", ParserCommand::GRIT);
     add_command("help *", ParserCommand::HELP);
     add_command("[inventory|invent|inv|i]", ParserCommand::INVENTORY);
     add_command("lock <dir>", ParserCommand::LOCK);
@@ -483,6 +484,7 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             if (parsed_direction == Direction::NONE) specify_direction("travel");
             else ActionTravel::travel(player, parsed_direction, confirm);
             break;
+        case ParserCommand::GRIT: Abilities::grit(confirm); break;
         case ParserCommand::HASH:
             if (!words.size()) core()->message("{y}Please specify a {Y}string to hash{y}.");
             else

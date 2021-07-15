@@ -35,7 +35,7 @@
 std::shared_ptr<Core> greave = nullptr;   // The main Core object.
 
 const std::string   Core::GAME_VERSION =    "pre-alpha";    // The game's version number.
-const uint32_t      Core::SAVE_VERSION =    73;             // The version number for saved game files. This should increment when old saves can no longer be loaded.
+const uint32_t      Core::SAVE_VERSION =    74;             // The version number for saved game files. This should increment when old saves can no longer be loaded.
 const uint16_t      Core::TAGS_PERMANENT =  10000;          // The tag number at which tags are considered permanent.
 
 
@@ -203,6 +203,13 @@ void Core::main_loop()
         const uint32_t location = player->location();
         const auto room = m_world->get_room(location);
         int old_light = room->light();
+
+        // The Grit buff falls off as soon as it's the player's turn to act, if they took damage.
+        if (player->has_buff(Buff::Type::GRIT) && player->tag(MobileTag::Success_Grit))
+        {
+            player->clear_tag(MobileTag::Success_Grit);
+            player->clear_buff(Buff::Type::GRIT);
+        }
 
         const std::string input = m_message_log->render_message_log();
         m_parser->parse(input);
