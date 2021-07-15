@@ -654,6 +654,7 @@ void Mobile::tick_buffs()
                 case Buff::Type::CD_LADY_LUCK: core()->message("{m}The {M}LadyLuck {m}ability is ready to use again."); break;
                 case Buff::Type::CD_QUICK_ROLL: core()->message("{m}The {M}QuickRoll {m}ability is ready to use again."); break;
                 case Buff::Type::CD_RAPID_STRIKE: core()->message("{m}The {M}RapidStrike {m}ability is ready to use again."); break;
+                case Buff::Type::CD_SNAP_SHOT: core()->message("{m}The {M}SnapShot {m}ability is ready to use again."); break;
                 default: break;
             }
         }

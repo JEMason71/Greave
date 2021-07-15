@@ -61,6 +61,7 @@ Parser::Parser() : m_special_state(SpecialState::NONE)
     add_command("[sa|sb|sd]", ParserCommand::STANCE);
     add_command("[score|sc]", ParserCommand::SCORE);
     add_command("[skills|skill|sk]", ParserCommand::SKILLS);
+    add_command("[snapshot|ss] <mobile>", ParserCommand::SNAP_SHOT);
     add_command("stance <txt>", ParserCommand::STANCE);
     add_command("[status|stat|st]", ParserCommand::STATUS);
     add_command("[take|get] <item:r>", ParserCommand::TAKE);
@@ -534,6 +535,11 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
         case ParserCommand::SAVE: core()->save(); break;
         case ParserCommand::SCORE: ActionStatus::score(); break;
         case ParserCommand::SKILLS: ActionStatus::skills(); break;
+        case ParserCommand::SNAP_SHOT:
+            if (parsed_target_type == ParserTarget::TARGET_MOBILE) Abilities::snap_shot(parsed_target);
+            else if (!words.size()) specify("snapshot");
+            else if (parsed_target_type == ParserTarget::TARGET_NONE) not_here();
+            break;
         case ParserCommand::SPAWN_ITEM:
             if (!words.size()) core()->message("{y}Please specify an {Y}item ID{y}.");
             else ActionCheat::spawn_item(collapsed_words);

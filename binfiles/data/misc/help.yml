@@ -150,7 +150,7 @@ QUIT: "To quit the game, simply type {C}QUIT{w}, followed by {C}YES {w}to confir
 
 RAPID_STRIKE: "#RAPIDSTRIKE"
 
-RAPIDSTRIKE: "The {C}RAPIDSTRIKE {w}ability (can be shortened to {C}RS{w}) allows you to make a very quick attack against your opponent, at the cost of accuracy."
+RAPIDSTRIKE: "The {C}RAPIDSTRIKE {w}ability (can be shortened to {C}RS{w}) allows you to make a very quick melee attack against your opponent, at the cost of accuracy."
 
 REMOVE: "#UNEQUIP"
 
@@ -189,6 +189,12 @@ SOUTH: "#TRAVEL"
 SOUTHEAST: "#TRAVEL"
 
 SOUTHWEST: "#TRAVEL"
+
+SS: "#SNAPSHOT"
+
+SNAP_SHOT: "#SNAPSHOT"
+
+SNAPSHOT: "The {C}SNAPSHOT {w}ability (can be shortened to {C}SS{w}) allows you to make a very quick ranged attack against your opponent, at the cost of accuracy."
 
 ST: "#STATUS"
 

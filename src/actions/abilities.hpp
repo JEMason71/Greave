@@ -10,6 +10,8 @@ class Abilities
 public:
     static float    RAPID_STRIKE_ACCURACY_PENALTY;          // The % accuracy penalty for a Rapid Strike.
     static float    RAPID_STRIKE_ATTACK_SPEED;              // The % of an attack's normal speed that it takes to do a Rapid Strike attack.
+    static float    SNAP_SHOT_ACCURACY_PENALTY;             // The % accuracy penalty for a Snap Shot.
+    static float    SNAP_SHOT_ATTACK_SPEED;                 // The % of an attack's normal speed that it takes to do a Snap Shot attack.
 
     static void abilities();                                // Check cooldowns and availability of abilities.
     static void careful_aim(bool confirm);                  // Attempt to use the Careful Aim ability.
@@ -18,6 +20,7 @@ public:
     static void lady_luck(size_t target, bool confirm);     // Attempt to use the Lady Luck ability.
     static void quick_roll(bool confirm);                   // Attempt to use the Quick Roll ability.
     static void rapid_strike(size_t target);                // Attempt to use the Rapid Strike ability.
+    static void snap_shot(size_t target);                   // Attempt to use the Snap Shot ability.
 
 private:
     static float    CAREFUL_AIM_BONUS_HIT;      // The bonus hit% chance from using the Careful Aim ability.
@@ -45,4 +48,6 @@ private:
     static int      QUICK_ROLL_TIME;            // The time it takes to do a Quick Roll.
     static int      RAPID_STRIKE_COOLDOWN;      // The cooldown for the Rapid Strike ability.
     static int      RAPID_STRIKE_SP_COST;       // The stamina points cost for the Rapid Strike ability.
+    static int      SNAP_SHOT_COOLDOWN;         // The cooldown for the Snap Shot ability.
+    static int      SNAP_SHOT_SP_COST;          // The stamina points cost for the Snap Shot ability.
 };

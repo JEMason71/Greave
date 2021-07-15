@@ -40,6 +40,10 @@ float   Abilities::RAPID_STRIKE_ACCURACY_PENALTY =  20; // The % accuracy penalt
 float   Abilities::RAPID_STRIKE_ATTACK_SPEED =      20; // The % of an attack's normal speed that it takes to do a Rapid Strike attack.
 int     Abilities::RAPID_STRIKE_COOLDOWN =          6;  // The cooldown for the Rapid Strike ability.
 int     Abilities::RAPID_STRIKE_SP_COST =           50; // The stamina points cost for the Rapid Strike ability.
+float   Abilities::SNAP_SHOT_ACCURACY_PENALTY =     20; // The % accuracy penalty for a Snap Shot.
+float   Abilities::SNAP_SHOT_ATTACK_SPEED =         20; // The % of an attack's normal speed that it takes to do a Snap Shot attack.
+int     Abilities::SNAP_SHOT_COOLDOWN =             6;  // The cooldown for the Snap Shot ability.
+int     Abilities::SNAP_SHOT_SP_COST =              50; // The stamina points cost for the Snap Shot ability.
 
 
 // Check cooldowns and availability of abilities.
@@ -54,11 +58,12 @@ void Abilities::abilities()
         STANCE_D = 4,           // Requires defensive stance.
         STANCE_ANY = 7,         // Any stance is fine.
         MELEE = 8,              // Requires melee weapon.
-        ARMOUR_HEAVY = 16,      // Requires heavy armour.
-        ARMOUR_MEDIUM = 32,     // Requires medium armour.
-        ARMOUR_LIGHT = 64,      // Requires light armour.
-        ARMOUR_NO_HEAVY = 128,  // Requires NOT using heavy armour.
-        LUCKY_DICE = 256,       // Requires lucky dice.
+        RANGED = 16,            // Requires ranged weapon.
+        ARMOUR_HEAVY = 32,      // Requires heavy armour.
+        ARMOUR_MEDIUM = 64,     // Requires medium armour.
+        ARMOUR_LIGHT = 128,     // Requires light armour.
+        ARMOUR_NO_HEAVY = 256,  // Requires NOT using heavy armour.
+        LUCKY_DICE = 512,       // Requires lucky dice.
     };
 
     auto display_ability = [&player](const std::string &name, Buff::Type cd_buff, int cost_hp, int cost_sp, int cost_mp, int flags, bool available)
@@ -67,6 +72,7 @@ void Abilities::abilities()
         const bool stance_b = (flags & STANCE_B);
         const bool stance_d = (flags & STANCE_D);
         const bool needs_melee = (flags & MELEE);
+        const bool needs_ranged = (flags & RANGED);
         const bool needs_heavy = (flags & ARMOUR_HEAVY);
         const bool needs_medium = (flags & ARMOUR_MEDIUM);
         const bool needs_light = (flags & ARMOUR_LIGHT);
@@ -74,7 +80,8 @@ void Abilities::abilities()
         const bool needs_lucky_dice = (flags & LUCKY_DICE);
 
         const CombatStance stance = player->stance();
-        bool using_melee = Combat::using_melee(player);
+        const bool using_melee = Combat::using_melee(player);
+        const bool using_ranged = Combat::using_ranged(player);
         const bool using_heavy = player->wearing_armour(ItemSub::HEAVY);
         const bool using_medium = player->wearing_armour(ItemSub::MEDIUM);
         const bool using_light = player->wearing_armour(ItemSub::LIGHT) || player->wearing_armour(ItemSub::NONE);
@@ -96,7 +103,7 @@ void Abilities::abilities()
             can_use = false;
             bad_buff = true;
         }
-        if (needs_melee && !using_melee)
+        if ((needs_melee && !using_melee) || (needs_ranged && !using_ranged))
         {
             can_use = false;
             bad_gear = true;
@@ -142,12 +149,12 @@ void Abilities::abilities()
             angle_str = true;
         }
 
-        if (needs_melee)
+        if (needs_melee || needs_ranged)
         {
             if (angle_str) ability_str = ability_str.substr(0, ability_str.size() - 5) + "{W}, ";
             else ability_str += "{W}<";
             if (bad_gear) ability_str += "{c}"; else ability_str += "{C}";
-            ability_str += "melee{W}> ";
+            ability_str += (needs_melee ? "melee{W}> " : "ranged{W}> ");
             angle_str = true;
         }
         
@@ -203,7 +210,7 @@ void Abilities::abilities()
             ability_str += std::to_string(cost_mp) + "mp{W}] ";
         }
 
-        if (bad_buff) ability_str += "{W}[{r}on cooldown{W}] ";
+        if (bad_buff) ability_str += "{W}({c}on cooldown{W}) ";
 
         ability_str.pop_back();
         if (!available) StrX::find_and_replace(ability_str, "{W}", "{w}");
@@ -221,6 +228,7 @@ void Abilities::abilities()
         display_ability("LadyLuck", Buff::Type::CD_LADY_LUCK, 0, 0, LADY_LUCK_MP_COST, LUCKY_DICE | STANCE_ANY, valid);
         display_ability("QuickRoll", Buff::Type::CD_QUICK_ROLL, 0, QUICK_ROLL_SP_COST, 0, STANCE_B | STANCE_D | ARMOUR_LIGHT | ARMOUR_MEDIUM | ARMOUR_NO_HEAVY, valid);
         display_ability("RapidStrike", Buff::Type::CD_RAPID_STRIKE, 0, RAPID_STRIKE_SP_COST, 0, STANCE_B | MELEE, valid);
+        display_ability("SnapShot", Buff::Type::CD_SNAP_SHOT, 0, SNAP_SHOT_SP_COST, 0, STANCE_B | RANGED, valid);
     }
 }
 
@@ -387,10 +395,20 @@ void Abilities::lady_luck(size_t target, bool confirm)
     }
     if (dice[0] == dice[1])
     {
-        core()->message(dice_string('C', 'C') + " {U}An opportunity presents itself for a rapid strike...");
-        player->set_tag(MobileTag::RapidStrike);
+        const bool ranged = Combat::using_ranged(player);
+        if (ranged)
+        {
+            core()->message(dice_string('C', 'C') + " {U}An opportunity presents itself for a snap shot...");
+            player->set_tag(MobileTag::SnapShot);
+        }
+        else
+        {
+            core()->message(dice_string('C', 'C') + " {U}An opportunity presents itself for a rapid strike...");
+            player->set_tag(MobileTag::RapidStrike);
+        }
         player->set_tag(MobileTag::FreeAttack);
         Combat::attack(player, mob);
+        player->clear_tag(MobileTag::SnapShot);
         player->clear_tag(MobileTag::RapidStrike);
         player->clear_tag(MobileTag::FreeAttack);   // This should be auto-cleared in Combat::attack(), but just in case...
         return;
@@ -457,9 +475,43 @@ void Abilities::rapid_strike(size_t target)
         return;
     }
 
-    core()->message("{M}You strike rapidly at your opponent!");
+    const auto mob = core()->world()->mob_vec(target);
+    core()->message("{M}You strike rapidly at " + mob->name(Mobile::NAME_FLAG_THE) + "{M}!");
     player->set_buff(Buff::Type::CD_RAPID_STRIKE, RAPID_STRIKE_COOLDOWN);
     player->set_tag(MobileTag::RapidStrike);
-    Combat::attack(player, core()->world()->mob_vec(target));
+    Combat::attack(player, mob);
     player->clear_tag(MobileTag::RapidStrike);
+}
+
+// Attempt to use the Snap Shot ability.
+void Abilities::snap_shot(size_t target)
+{
+    const auto player = core()->world()->player();
+    if (player->has_buff(Buff::Type::CD_SNAP_SHOT))
+    {
+        core()->message("{m}You must wait a while before using the {M}SnapShot {m}ability again.");
+        return;
+    }
+    if (player->stance() != CombatStance::BALANCED)
+    {
+        core()->message("{m}SnapShot can only be used in a {M}balanced {m}combat stance.");
+        return;
+    }
+    if (player->sp() < SNAP_SHOT_SP_COST)
+    {
+        core()->message("{m}You do not have enough stamina points to use {M}SnapShot{m}.");
+        return;
+    }
+    if (!Combat::using_ranged(player))
+    {
+        core()->message("{m}SnapShot can only be used with {M}ranged weapons{m}.");
+        return;
+    }
+
+    const auto mob = core()->world()->mob_vec(target);
+    core()->message("{M}You take a quick snap shot at " + mob->name(Mobile::NAME_FLAG_THE) + "{M}!");
+    player->set_buff(Buff::Type::CD_SNAP_SHOT, SNAP_SHOT_COOLDOWN);
+    player->set_tag(MobileTag::SnapShot);
+    Combat::attack(player, mob);
+    player->clear_tag(MobileTag::SnapShot);
 }

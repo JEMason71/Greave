@@ -117,6 +117,8 @@ bool Combat::attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mobile> de
     for (int i = 0; i < 2; i++)
     {
         std::shared_ptr<Mobile> mob = (i == 0 ? attacker : defender);
+        main_hand[i] = mob->equ()->get(EquipSlot::HAND_MAIN);
+        off_hand[i] = mob->equ()->get(EquipSlot::HAND_OFF);
         determine_wield_type(mob, &wield_type[i], &main_can_attack[i], &off_can_attack[i]);
         if (i == 0 && wield_type[i] == WieldType::NONE) return false;   // Just give up here if the attacker can't attack.
     }
@@ -125,6 +127,7 @@ bool Combat::attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mobile> de
     const bool unarmed_only = (wield_type[0] == WieldType::UNARMED || wield_type[0] == WieldType::UNARMED_PLUS_SHIELD);
     float attack_speed = attacker->attack_speed();
     if (attacker->tag(MobileTag::RapidStrike)) attack_speed *= (Abilities::RAPID_STRIKE_ATTACK_SPEED / 100.0f);
+    if (attacker->tag(MobileTag::SnapShot)) attack_speed *= (Abilities::SNAP_SHOT_ATTACK_SPEED / 100.0f);
 
     bool attacked = false;
 
@@ -133,6 +136,13 @@ bool Combat::attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mobile> de
     {
         if (main_hand[0] && main_hand[0]->subtype() == ItemSub::RANGED) main_can_attack[0] = false;
         if (off_hand[0] && off_hand[0]->subtype() == ItemSub::RANGED) off_can_attack[0] = false;
+    }
+
+    // Conversely, SnapShot is only for ranged weapons.
+    if (attacker->tag(MobileTag::SnapShot))
+    {
+        if (!main_hand[0] || main_hand[0]->subtype() != ItemSub::RANGED) main_can_attack[0] = false;
+        if (!off_hand[0] || off_hand[0]->subtype() != ItemSub::RANGED) off_can_attack[0] = false;
     }
 
     if (main_can_attack[0])
@@ -403,7 +413,8 @@ void Combat::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mo
     }
     float to_hit = BASE_HIT_CHANCE_MELEE;
     if (attacker->has_buff(Buff::Type::CAREFUL_AIM)) to_hit += attacker->buff_power(Buff::Type::CAREFUL_AIM);
-    if (attacker->tag(MobileTag::RapidStrike)) to_hit *= (Abilities::RAPID_STRIKE_ACCURACY_PENALTY / 100.0f);
+    if (attacker->tag(MobileTag::RapidStrike)) to_hit -= Abilities::RAPID_STRIKE_ACCURACY_PENALTY;
+    if (attacker->tag(MobileTag::SnapShot)) to_hit -= Abilities::SNAP_SHOT_ACCURACY_PENALTY;
     if (defender->has_buff(Buff::Type::QUICK_ROLL))
     {
         to_hit -= defender->buff_power(Buff::Type::QUICK_ROLL);
@@ -728,6 +739,17 @@ bool Combat::using_melee(std::shared_ptr<Mobile> mob)
     if (main_hand && main_hand->type() == ItemType::WEAPON && main_hand->subtype() == ItemSub::MELEE) return true;
     if (main_hand && main_hand->tag(ItemTag::TwoHanded)) return false;
     if (off_hand && off_hand->type() == ItemType::WEAPON && off_hand->subtype() == ItemSub::MELEE) return true;
+    return false;
+}
+
+// Checks if a mobile is using at least one ranged weapon.
+bool Combat::using_ranged(std::shared_ptr<Mobile> mob)
+{
+    const auto main_hand = mob->equ()->get(EquipSlot::HAND_MAIN);
+    const auto off_hand = mob->equ()->get(EquipSlot::HAND_OFF);
+    if (main_hand && main_hand->type() == ItemType::WEAPON && main_hand->subtype() == ItemSub::RANGED) return true;
+    if (main_hand && main_hand->tag(ItemTag::TwoHanded)) return false;
+    if (off_hand && off_hand->type() == ItemType::WEAPON && off_hand->subtype() == ItemSub::RANGED) return true;
     return false;
 }
 
