@@ -75,10 +75,7 @@ const float Combat::DAMAGE_MODIFIER_PLASMA[4] =     { 1.5f, 1.2f, 1.0f, 1.2f };
 const float Combat::DAMAGE_MODIFIER_POISON[4] =     { 1.8f, 1.2f, 1.0f, 0.8f };
 const float Combat::DAMAGE_MODIFIER_RENDING[4] =    { 1.5f, 1.3f, 1.1f, 1.1f };
 
-const std::map<DamageType, const float*>    Combat::DAMAGE_TYPE_MAP = { { DamageType::ACID, DAMAGE_MODIFIER_ACID }, { DamageType::BALLISTIC, DAMAGE_MODIFIER_BALLISTIC },
-    { DamageType::CRUSHING, DAMAGE_MODIFIER_CRUSHING }, { DamageType::EDGED, DAMAGE_MODIFIER_EDGED }, { DamageType::ENERGY, DAMAGE_MODIFIER_ENERGY },
-    { DamageType::KINETIC, DAMAGE_MODIFIER_KINETIC }, { DamageType::PIERCING, DAMAGE_MODIFIER_PIERCING }, { DamageType::PLASMA, DAMAGE_MODIFIER_PLASMA },
-    { DamageType::POISON, DAMAGE_MODIFIER_POISON },  { DamageType::RENDING, DAMAGE_MODIFIER_RENDING }, { DamageType::EXPLOSIVE, DAMAGE_MODIFIER_EXPLOSIVE } };
+const std::map<DamageType, const float*>    Combat::DAMAGE_TYPE_MAP = { { DamageType::ACID, DAMAGE_MODIFIER_ACID }, { DamageType::BALLISTIC, DAMAGE_MODIFIER_BALLISTIC }, { DamageType::CRUSHING, DAMAGE_MODIFIER_CRUSHING }, { DamageType::EDGED, DAMAGE_MODIFIER_EDGED }, { DamageType::ENERGY, DAMAGE_MODIFIER_ENERGY }, { DamageType::KINETIC, DAMAGE_MODIFIER_KINETIC }, { DamageType::PIERCING, DAMAGE_MODIFIER_PIERCING }, { DamageType::PLASMA, DAMAGE_MODIFIER_PLASMA }, { DamageType::POISON, DAMAGE_MODIFIER_POISON },  { DamageType::RENDING, DAMAGE_MODIFIER_RENDING }, { DamageType::EXPLOSIVE, DAMAGE_MODIFIER_EXPLOSIVE } };
 
 
 // Applies damage modifiers based on weapon type.
@@ -245,42 +242,42 @@ std::string Combat::damage_str(uint32_t damage, std::shared_ptr<Mobile> def, boo
 }
 
 // Determines type of weapons wielded by a Mobile.
-void Combat::determine_wield_type(std::shared_ptr<Mobile> mob, WieldType* wield_type, bool* can_main_melee, bool* can_off_melee)
+void Combat::determine_wield_type(std::shared_ptr<Mobile> mob, WieldType* wield_type, bool* can_main_attack, bool* can_off_attack)
 {
     std::shared_ptr<Item> main_hand = mob->equ()->get(EquipSlot::HAND_MAIN);
     std::shared_ptr<Item> off_hand = mob->equ()->get(EquipSlot::HAND_OFF);
-    *can_main_melee = (main_hand && main_hand->type() == ItemType::WEAPON && main_hand->subtype() == ItemSub::MELEE);
-    *can_off_melee = (off_hand && off_hand->type() == ItemType::WEAPON && off_hand->subtype() == ItemSub::MELEE);
+    *can_main_attack = main_hand && main_hand->type() == ItemType::WEAPON;
+    *can_off_attack = off_hand && off_hand->type() == ItemType::WEAPON;
     const bool off_shield = (off_hand && off_hand->type() == ItemType::SHIELD);
 
     // If both hands are empty, it's a melee attack.
     if (!main_hand && !off_hand)
     {
         *wield_type = WieldType::UNARMED;
-        *can_main_melee = true;
-        *can_off_melee = true;
+        *can_main_attack = true;
+        *can_off_attack = true;
     }
 
     // Dual-wielding is an easy one to detect. One melee weapon in each hand.
-    else if (*can_main_melee && *can_off_melee) *wield_type = WieldType::DUAL_WIELD;
+    else if (*can_main_attack && *can_off_attack) *wield_type = WieldType::DUAL_WIELD;
 
     // Good old sword and board: melee weapon in one hand, shield in the other.
-    else if (*can_main_melee && off_shield) *wield_type = WieldType::ONE_HAND_PLUS_SHIELD;
+    else if (*can_main_attack && off_shield) *wield_type = WieldType::ONE_HAND_PLUS_SHIELD;
 
     // Two-handers can only be equipped in the main hand.
-    else if (*can_main_melee && main_hand->tag(ItemTag::TwoHanded)) *wield_type = WieldType::TWO_HAND;
+    else if (*can_main_attack && main_hand->tag(ItemTag::TwoHanded)) *wield_type = WieldType::TWO_HAND;
 
     // Single-wielding a one-handed weapon isn't the best choice, but it can be done.
-    else if ((*can_main_melee && !off_hand) || (*can_off_melee && !main_hand))
+    else if ((*can_main_attack && !off_hand) || (*can_off_attack && !main_hand))
     {
         // Check if we're using a hand-and-a-half weapon with the other hand free, or just a regular one-hander on its own.
-        if ((*can_main_melee && main_hand->tag(ItemTag::HandAndAHalf)) || (*can_off_melee && off_hand->tag(ItemTag::HandAndAHalf))) *wield_type = WieldType::HAND_AND_A_HALF_2H;
+        if ((*can_main_attack && main_hand->tag(ItemTag::HandAndAHalf)) || (*can_off_attack && off_hand->tag(ItemTag::HandAndAHalf))) *wield_type = WieldType::HAND_AND_A_HALF_2H;
         else *wield_type = WieldType::SINGLE_WIELD;
     }
 
     // We've already checked for sword-and-board above, so the only option left if one hand is holding a weapon is that the other hand is holding something
     // non-combat related. Yay for the process of elimination!
-    else if (*can_main_melee || *can_off_melee) *wield_type = WieldType::ONE_HAND_PLUS_EXTRA;
+    else if (*can_main_attack || *can_off_attack) *wield_type = WieldType::ONE_HAND_PLUS_EXTRA;
 
     // Now we're getting into the silly options, but gotta cover every base. Is the Mobile wielding a shield in one hand, and nothing in the other?
     // As ridiculous as that is for a loadout, punching while holding a shield should be allowed.
@@ -290,8 +287,8 @@ void Combat::determine_wield_type(std::shared_ptr<Mobile> mob, WieldType* wield_
     else if (!main_hand || !off_hand)
     {
         *wield_type = WieldType::UNARMED;
-        if (main_hand) *can_main_melee = true;
-        if (off_hand) *can_off_melee = true;
+        if (!main_hand) *can_main_attack = true;
+        if (!off_hand) *can_off_attack = true;
     }
 
     // The only other possible configurations, through process of elimination, is shield+misc:
@@ -341,9 +338,7 @@ void Combat::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mo
     const bool is_dark_here = world->get_room(attacker->location())->light() < Room::LIGHT_VISIBLE;
     const bool player_can_see_attacker = attacker_is_player || !is_dark_here;
     const bool player_can_see_defender = defender_is_player || !is_dark_here;
-    const bool defender_melee = (wield_type_defender != WieldType::UNARMED && wield_type_defender != WieldType::UNARMED_PLUS_SHIELD) &&
-        ((def_weapon_main && def_weapon_main->type() == ItemType::WEAPON && def_weapon_main->subtype() == ItemSub::MELEE) ||
-        (def_weapon_off && def_weapon_off->type() == ItemType::WEAPON && def_weapon_off->subtype() == ItemSub::MELEE));
+    const bool defender_melee = (wield_type_defender != WieldType::UNARMED && wield_type_defender != WieldType::UNARMED_PLUS_SHIELD) && ((def_weapon_main && def_weapon_main->type() == ItemType::WEAPON && def_weapon_main->subtype() == ItemSub::MELEE) || (def_weapon_off && def_weapon_off->type() == ItemType::WEAPON && def_weapon_off->subtype() == ItemSub::MELEE));
 
     const std::string attacker_name = (attacker_is_player ? "you" : (player_can_see_attacker ? attacker->name(Mobile::NAME_FLAG_THE) : "something"));
     const std::string defender_name = (defender_is_player ? "you" : (player_can_see_defender ? defender->name(Mobile::NAME_FLAG_THE) : "something"));
@@ -364,8 +359,7 @@ void Combat::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mo
         const WieldType wt = (attacker_is_player ? wield_type_attacker : wield_type_defender);
         switch (wt)
         {
-            case WieldType::NONE: case WieldType::SHIELD_ONLY: case WieldType::UNARMED: case WieldType::UNARMED_PLUS_SHIELD:
-                weapon_skill = "UNARMED"; break;
+            case WieldType::NONE: case WieldType::SHIELD_ONLY: case WieldType::UNARMED: case WieldType::UNARMED_PLUS_SHIELD: weapon_skill = "UNARMED"; break;
             case WieldType::DUAL_WIELD: weapon_skill = "DUAL_WIELD"; break;
             case WieldType::ONE_HAND_PLUS_EXTRA: case WieldType::ONE_HAND_PLUS_SHIELD: case WieldType::SINGLE_WIELD: weapon_skill = "ONE_HANDED"; break;
             case WieldType::TWO_HAND: case WieldType::HAND_AND_A_HALF_2H: weapon_skill = "TWO_HANDED"; break;
@@ -379,8 +373,7 @@ void Combat::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mo
     {
         case WieldType::DUAL_WIELD: hit_multiplier = HIT_CHANCE_MULTIPLIER_DUAL_WIELD; break;
         case WieldType::SINGLE_WIELD: hit_multiplier = HIT_CHANCE_MULTIPLIER_SINGLE_WIELD; break;
-        case WieldType::ONE_HAND_PLUS_SHIELD: case WieldType::UNARMED_PLUS_SHIELD: case WieldType::ONE_HAND_PLUS_EXTRA:
-            hit_multiplier = HIT_CHANCE_MULTIPLIER_SWORD_AND_BOARD; break;
+        case WieldType::ONE_HAND_PLUS_SHIELD: case WieldType::UNARMED_PLUS_SHIELD: case WieldType::ONE_HAND_PLUS_EXTRA: hit_multiplier = HIT_CHANCE_MULTIPLIER_SWORD_AND_BOARD; break;
         default: break;
     }
     float to_hit = BASE_HIT_CHANCE_MELEE;
@@ -390,12 +383,9 @@ void Combat::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mo
     to_hit *= hit_multiplier;
 
     // Check if the defender can attempt to block or parry.
-    bool can_block = (wield_type_defender == WieldType::ONE_HAND_PLUS_SHIELD || wield_type_defender == WieldType::SHIELD_ONLY ||
-        wield_type_defender == WieldType::UNARMED_PLUS_SHIELD) && !defender->tag(MobileTag::CannotBlock);
-    bool can_parry = wield_type_defender != WieldType::UNARMED && wield_type_defender != WieldType::SHIELD_ONLY && wield_type_defender != WieldType::UNARMED_PLUS_SHIELD &&
-        defender_melee && !defender->tag(MobileTag::CannotParry);
-    if ((def_weapon_main && def_weapon_main->subtype() == ItemSub::RANGED) || (def_weapon_off && def_weapon_off->subtype() == ItemSub::RANGED) ||
-        (weapon_ptr->subtype() == ItemSub::RANGED)) can_parry = false;
+    bool can_block = (wield_type_defender == WieldType::ONE_HAND_PLUS_SHIELD || wield_type_defender == WieldType::SHIELD_ONLY || wield_type_defender == WieldType::UNARMED_PLUS_SHIELD) && !defender->tag(MobileTag::CannotBlock);
+    bool can_parry = wield_type_defender != WieldType::UNARMED && wield_type_defender != WieldType::SHIELD_ONLY && wield_type_defender != WieldType::UNARMED_PLUS_SHIELD && defender_melee && !defender->tag(MobileTag::CannotParry);
+    if ((def_weapon_main && def_weapon_main->subtype() == ItemSub::RANGED) || (def_weapon_off && def_weapon_off->subtype() == ItemSub::RANGED) || (weapon_ptr->subtype() == ItemSub::RANGED)) can_parry = false;
 
     // Check for Agile or Clumsy defender.
     if (defender->tag(MobileTag::Agile)) to_hit *= DEFENDER_TO_HIT_MODIFIER_AGILE;
@@ -425,8 +415,7 @@ void Combat::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mo
             if (rng->frnd(100) <= parry_chance) parried = true;
         }
 
-        // If evasion and parry both fail, we can try to block. Parrying is better than blocking (parrying negates damage entirely) so there's no reason to run a block check
-        // after a successful parry.
+        // If evasion and parry both fail, we can try to block. Parrying is better than blocking (parrying negates damage entirely) so there's no reason to run a block check after a successful parry.
         if (!parried && can_block)
         {
             float block_chance = BASE_BLOCK_CHANCE_MELEE;
@@ -540,14 +529,12 @@ void Combat::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mo
         if (player_is_here && (player_can_see_attacker || player_can_see_defender))
         {
             std::string damage_word = damage_str(damage, defender, false);
-            std::string threshold_string = threshold_str(defender, damage, (attacker_is_player ? "{G}" : (defender_is_player ? "{R}" : "{U}")), (defender_is_player ? "{Y}" :
-                (attacker_is_player ? "{y}" : "{U}")));
+            std::string threshold_string = threshold_str(defender, damage, (attacker_is_player ? "{G}" : (defender_is_player ? "{R}" : "{U}")), (defender_is_player ? "{Y}" : (attacker_is_player ? "{y}" : "{U}")));
             std::string damage_colour = (attacker_is_player ? (damage > 0.0f ? "{G}" : "{y}") : (defender_is_player ? (damage > 0.0f ? "{R}" : "{Y}") : "{U}"));
             std::string absorb_str, block_str, death_str;
             if (damage_blocked)
             {
-                std::shared_ptr<Item> armour_piece_hit = defender->equ()->get(blocked ? EquipSlot::HAND_OFF :
-                    (defender->tag(MobileTag::Beast) ? EquipSlot::BODY : def_location_hit_es));
+                std::shared_ptr<Item> armour_piece_hit = defender->equ()->get(blocked ? EquipSlot::HAND_OFF : (defender->tag(MobileTag::Beast) ? EquipSlot::BODY : def_location_hit_es));
                 if (def_location_hit_es == EquipSlot::BODY && !blocked && defender->equ()->get(EquipSlot::ARMOUR))
                     armour_piece_hit = defender->equ()->get(EquipSlot::ARMOUR);
                 std::string lessens_str, lessens_plural_str, lessening_str;
@@ -589,9 +576,7 @@ void Combat::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mo
                 else death_str = " {U}" + defender_name_c + (defender->tag(MobileTag::Unliving) ? " is destroyed!" : " is slain!");
                 if (!defender->tag(MobileTag::ImmunityBleed)) core()->world()->get_room(defender->location())->add_scar(ScarType::BLOOD, SCAR_BLEED_INTENSITY_FROM_DEATH);
             }
-            core()->message(block_str + damage_colour + attacker_your_string_c + " " + weapon_name + " " + damage_word + " " + damage_colour +
-                (blocked ? defender_name : defender_name_s + " " + def_location_hit_str) + "!" + threshold_string + absorb_str + " " +
-                damage_number_str(damage, damage_blocked, critical_hit, bleed, poison) + death_str);
+            core()->message(block_str + damage_colour + attacker_your_string_c + " " + weapon_name + " " + damage_word + " " + damage_colour + (blocked ? defender_name : defender_name_s + " " + def_location_hit_str) + "!" + threshold_string + absorb_str + " " + damage_number_str(damage, damage_blocked, critical_hit, bleed, poison) + death_str);
         }
         if (bleed) weapon_bleed_effect(defender, damage);
         if (poison) weapon_poison_effect(defender, damage);
@@ -661,23 +646,28 @@ std::string Combat::threshold_str(std::shared_ptr<Mobile> defender, uint32_t dam
     float new_perc = (defender->hp() - damage) / static_cast<float>(defender->hp(true));
     if (defender->hp() <= static_cast<int32_t>(damage)) new_perc = 0;
 
-    if (old_perc >= 0.99f && new_perc >= 0.95f) return bad_colour + name + (alive ? (plural ? "barely notice." : "barely notices.") :
-        (plural ? "are barely scratched." : "is barely scratched."));
-    if (old_perc >= 0.99f && new_perc >= 0.95f) return bad_colour + name + (alive ? (plural ? "barely notice." : "barely notices.") :
-        (plural ? "are barely scratched." : "is barely scratched."));
-    if (old_perc >= 0.95f && new_perc >= 0.90f) return bad_colour + name + (alive ? (plural ? "shrug it off." : "shrugs it off.") :
-        (plural ? "are hardly damaged." : "is hardly damaged."));
+    if (old_perc >= 0.99f && new_perc >= 0.95f) return bad_colour + name + (alive ? (plural ? "barely notice." : "barely notices.") : (plural ? "are barely scratched." : "is barely scratched."));
+    if (old_perc >= 0.99f && new_perc >= 0.95f) return bad_colour + name + (alive ? (plural ? "barely notice." : "barely notices.") : (plural ? "are barely scratched." : "is barely scratched."));
+    if (old_perc >= 0.95f && new_perc >= 0.90f) return bad_colour + name + (alive ? (plural ? "shrug it off." : "shrugs it off.") : (plural ? "are hardly damaged." : "is hardly damaged."));
     if (old_perc >= 0.9f && new_perc == 0.0f) return good_colour + name + (plural ? "are utterly annihilated!" : "is utterly annihilated!");
     if (old_perc >= 0.9f && new_perc <= 0.2f) return good_colour + name + (plural ? "almost collapse!" : "almost collapses!");
     if (old_perc >= 0.9f && new_perc <= 0.4f) return good_colour + name + (plural ? "reel from the blow!" : "reels from the blow!");
     if (!new_perc) return "";
-    if (old_perc > 0.1f && new_perc <= 0.1f) return good_colour + name + (alive ? (plural ? "are very close to death!" : "is very close to death!") :
-        (plural ? "are very close to collapse!" : "is very close to collapse!"));
-    if (old_perc > 0.2f && new_perc <= 0.2f) return good_colour + name + (alive ? (plural ? "look badly injured!" : "looks badly injured!") :
-        (plural ? "look badly damaged!" : "looks badly damaged!"));
-    if (old_perc > 0.5f && new_perc <= 0.5f) return good_colour + name + (alive ? (plural ? "have a few cuts and bruises." : "has a few cuts and bruises.") :
-        (plural ? "have a few scratches and dents." : "has a few scratches and dents."));
+    if (old_perc > 0.1f && new_perc <= 0.1f) return good_colour + name + (alive ? (plural ? "are very close to death!" : "is very close to death!") : (plural ? "are very close to collapse!" : "is very close to collapse!"));
+    if (old_perc > 0.2f && new_perc <= 0.2f) return good_colour + name + (alive ? (plural ? "look badly injured!" : "looks badly injured!") : (plural ? "look badly damaged!" : "looks badly damaged!"));
+    if (old_perc > 0.5f && new_perc <= 0.5f) return good_colour + name + (alive ? (plural ? "have a few cuts and bruises." : "has a few cuts and bruises.") : (plural ? "have a few scratches and dents." : "has a few scratches and dents."));
     return "";
+}
+
+// Checks if a mobile is using at least one melee weapon.
+bool Combat::using_melee(std::shared_ptr<Mobile> mob)
+{
+    const auto main_hand = mob->equ()->get(EquipSlot::HAND_MAIN);
+    const auto off_hand = mob->equ()->get(EquipSlot::HAND_OFF);
+    if (main_hand && main_hand->type() == ItemType::WEAPON && main_hand->subtype() == ItemSub::MELEE) return true;
+    if (main_hand && main_hand->tag(ItemTag::TwoHanded)) return false;
+    if (off_hand && off_hand->type() == ItemType::WEAPON && off_hand->subtype() == ItemSub::MELEE) return true;
+    return false;
 }
 
 // Applies a weapon bleed debuff and applies room scars.

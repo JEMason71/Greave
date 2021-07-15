@@ -20,10 +20,10 @@ public:
     static bool         attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mobile> defender); // A basic attack, no special moves being used.
     static void         change_stance(std::shared_ptr<Mobile> mob, CombatStance stance);            // Changes to a specified combat stance.
     static std::string  damage_str(uint32_t damage, std::shared_ptr<Mobile> def, bool heat);        // Returns an appropriate damage string.
+    static bool         using_melee(std::shared_ptr<Mobile> mob);   // Checks if a mobile is using at least one melee weapon.
 
 private:
-    enum class WieldType : uint8_t { NONE, UNARMED, ONE_HAND_PLUS_EXTRA, TWO_HAND, DUAL_WIELD, HAND_AND_A_HALF_2H, SINGLE_WIELD, ONE_HAND_PLUS_SHIELD, SHIELD_ONLY,
-        UNARMED_PLUS_SHIELD };
+    enum class WieldType : uint8_t { NONE, UNARMED, ONE_HAND_PLUS_EXTRA, TWO_HAND, DUAL_WIELD, HAND_AND_A_HALF_2H, SINGLE_WIELD, ONE_HAND_PLUS_SHIELD, SHIELD_ONLY, UNARMED_PLUS_SHIELD };
 
     static const float  ATTACKER_DAMAGE_MODIFIER_ANEMIC;            // The damage multiplier when a Mobile with the Anemic tag attacks in melee combat.
     static const float  ATTACKER_DAMAGE_MODIFIER_BRAWNY;            // The damage multiplier when a Mobile with the Brawny tag attacks in melee combat.
@@ -74,24 +74,16 @@ private:
     static const float  XP_PER_SUCCESSFUL_HIT;                      // Weapon experience gained per successful weapon attack in combat.
 
     // Weapon type damage modifiers to unarmoured, light, medium and heavy armour targets.
-    static const float DAMAGE_MODIFIER_ACID[4], DAMAGE_MODIFIER_BALLISTIC[4], DAMAGE_MODIFIER_CRUSHING[4], DAMAGE_MODIFIER_EDGED[4], DAMAGE_MODIFIER_EXPLOSIVE[4],
-        DAMAGE_MODIFIER_ENERGY[4], DAMAGE_MODIFIER_KINETIC[4], DAMAGE_MODIFIER_PIERCING[4], DAMAGE_MODIFIER_PLASMA[4], DAMAGE_MODIFIER_POISON[4], DAMAGE_MODIFIER_RENDING[4];
+    static const float DAMAGE_MODIFIER_ACID[4], DAMAGE_MODIFIER_BALLISTIC[4], DAMAGE_MODIFIER_CRUSHING[4], DAMAGE_MODIFIER_EDGED[4], DAMAGE_MODIFIER_EXPLOSIVE[4], DAMAGE_MODIFIER_ENERGY[4], DAMAGE_MODIFIER_KINETIC[4], DAMAGE_MODIFIER_PIERCING[4], DAMAGE_MODIFIER_PLASMA[4], DAMAGE_MODIFIER_POISON[4], DAMAGE_MODIFIER_RENDING[4];
     static const std::map<DamageType, const float*> DAMAGE_TYPE_MAP;
 
-                        // Applies damage modifiers based on weapon type.
-    static float        apply_damage_modifiers(float damage, std::shared_ptr<Item> weapon, std::shared_ptr<Mobile> defender, EquipSlot slot);
+    static float        apply_damage_modifiers(float damage, std::shared_ptr<Item> weapon, std::shared_ptr<Mobile> defender, EquipSlot slot);   // Applies damage modifiers based on weapon type.
     static std::string  damage_number_str(uint32_t damage, uint32_t blocked, bool crit, bool bleed, bool poison);   // Generates a standard-format damage number string.
-                        // Determines type of weapons wielded by a Mobile.
-    static void         determine_wield_type(std::shared_ptr<Mobile> mob, WieldType* wield_type, bool* can_main_melee = nullptr, bool* can_off_melee = nullptr);
-                        // Performs an attack with a single weapon.
-    static void         perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mobile> defender, EquipSlot weapon, WieldType wield_type_attacker,
-                            WieldType wield_type_defender);
-                        // Picks a random hit location, returns an EquipSlot and the name of the anatomy part that was hit.
-    static void         pick_hit_location(std::shared_ptr<Mobile> mob, EquipSlot* slot, std::string* slot_name);
-                        // Returns a threshold string, if a damage threshold has been passed.
+    static void         determine_wield_type(std::shared_ptr<Mobile> mob, WieldType* wield_type, bool* can_main_attack = nullptr, bool* can_off_attack = nullptr);  // Determines type of weapons wielded by a Mobile.
+    static void         perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mobile> defender, EquipSlot weapon, WieldType wield_type_attacker, WieldType wield_type_defender); // Performs an attack with a single weapon.
+    static void         pick_hit_location(std::shared_ptr<Mobile> mob, EquipSlot* slot, std::string* slot_name);    // Picks a random hit location, returns an EquipSlot and the name of the anatomy part that was hit.
     static int          stance_compare(CombatStance atk, CombatStance def); // Compares two combat stances; returns -1 for an unfavourable match-up, 0 for neutral, 1 for favourable.
-                        // Returns a threshold string, if a damage threshold has been passed.
-    static std::string  threshold_str(std::shared_ptr<Mobile> defender, uint32_t damage, const std::string& good_colour, const std::string& bad_colour);
+    static std::string  threshold_str(std::shared_ptr<Mobile> defender, uint32_t damage, const std::string& good_colour, const std::string& bad_colour);    // Returns a threshold string, if a damage threshold has been passed.
     static void         weapon_bleed_effect(std::shared_ptr<Mobile> defender, uint32_t damage);     // Applies a weapon bleed debuff and applies room scars.
     static void         weapon_poison_effect(std::shared_ptr<Mobile> defender, uint32_t damage);    // Applies a weapon poison debuff.
 };
