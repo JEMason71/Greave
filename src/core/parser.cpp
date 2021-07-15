@@ -37,10 +37,12 @@ Parser::Parser() : m_special_state(SpecialState::NONE)
     add_command("drink <item:i>", ParserCommand::DRINK);
     add_command("drop <item:i>", ParserCommand::DROP);
     add_command("[eat|consume] <item:i>", ParserCommand::EAT);
+    add_command("[efae|ef]", ParserCommand::EYE_FOR_AN_EYE);
     add_command("[equipment|equip|eq]", ParserCommand::EQUIPMENT);
     add_command("[equip|eq|wield|hold|wear] <item:i>", ParserCommand::EQUIP);
     add_command("[examine|exam|ex|x] <item:i|item:e|item:r|mobile>", ParserCommand::EXAMINE);
     add_command("exits", ParserCommand::EXITS);
+    add_command("eye for an eye", ParserCommand::EYE_FOR_AN_EYE);
     add_command("[fuck|shit|piss|bastard] *", ParserCommand::SWEAR);
     add_command("[go|travel|walk|run|move] <dir>", ParserCommand::GO);
     add_command("help *", ParserCommand::HELP);
@@ -476,6 +478,7 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             break;
         case ParserCommand::EXCLAIM: core()->message("{m}Please type your command {M}without any spaces {m}between the exclamation mark and the rest of the command (for example, {M}!" + StrX::collapse_vector(words) + "{m})."); break;
         case ParserCommand::EXITS: ActionLook::obvious_exits(false); break;
+        case ParserCommand::EYE_FOR_AN_EYE: Abilities::eye_for_an_eye(confirm); break;
         case ParserCommand::GO:
             if (parsed_direction == Direction::NONE) specify_direction("travel");
             else ActionTravel::travel(player, parsed_direction, confirm);

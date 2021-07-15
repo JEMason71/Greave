@@ -6,7 +6,9 @@ ABILITIES: [ "The {C}ABILITIES {w}command lists all available special abilities,
 
 ATTACK: "The {C}ATTACK {w}command (can also be written as {C}KILL {w}or shortened to {C}K{w}) is your primary means of fighting creatures and people in the game world. Simply type {C}ATTACK {w}followed by the name of your target (for example, {C}ATTACK GOBLIN{w}) to attack with your currently-equipped weapon."
 
-CAREFUL_AIM: "The {C}CAREFUL AIM {w}ability allows you to focus your mind, granting a bonus to-hit chance on your next attack."
+CA: "#CAREFUL_AIM"
+
+CAREFUL_AIM: "The {C}CAREFUL AIM {w}ability (can be shortened to {C}CA{w}) allows you to focus your mind, granting a bonus to-hit chance on your next attack."
 
 CLOSE: "You can close doors (or windows, grates, or other door-like things) with the {C}CLOSE {w}command. Simply type {C}CLOSE {w}followed by a direction (for example, {C}CLOSE NORTHEAST {w}to attempt to close something in that direction."
 
@@ -36,6 +38,10 @@ EAST: "#TRAVEL"
 
 EAT: "To eat some food, type {C}EAT {w}followed by the name of the item (e.g. {C}EAT FISH{w})."
 
+EF: "#EYE_FOR_AN_EYE"
+
+EFAE: "#EYE_FOR_AN_EYE"
+
 EQ: "#EQUIP"
 
 EQUIP: "The {C}EQUIP {w}(or {C}EQ{w}) command allows you to equip gear - wield weapons, wear clothing or armour, and so on. Simply type {C}EQUIP {w}followed by the name of something in your inventory (e.g. {C}EQUIP LEATHER BOOTS{w}). You can also write {C}WEAR {w}or {C}WIELD {w}for the same effect. Typing {C}EQUIP {w}with no item specified will show your currently-equipped gear."
@@ -53,6 +59,8 @@ EXAMINE: "You can look at any items (either in your inventory, equipped, or in t
 EXIT: "#QUIT"
 
 EXITS: "You can see what exits from your current room lead to adjacent rooms by typing {C}EXITS{w}."
+
+EYE_FOR_AN_EYE: "The {C}EYE FOR AN EYE {w}ability (can be shortened to {C}EFAE{w} or {C}EF{w}) deals damage to your opponent based on how much damage you have already taken. The more wounded you are, the more powerful the attack will be."
 
 GET: "#TAKE"
 

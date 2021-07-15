@@ -8,13 +8,18 @@
 class Abilities
 {
 public:
-    static void abilities();                // Check cooldowns and availability of abilities.
-    static void careful_aim(bool confirm);  // Attempt to use the Careful Aim ability.
+    static void abilities();                    // Check cooldowns and availability of abilities.
+    static void careful_aim(bool confirm);      // Attempt to use the Careful Aim ability.
+    static void eye_for_an_eye(bool confirm);   // Attempt to use the Eye for an Eye ability.
 
 private:
-    static float    CAREFUL_AIM_BONUS_HIT;  // The bonus hit% chance from using the Careful Aim ability.
-    static int      CAREFUL_AIM_COOLDOWN;   // The length of the Careful Aim cooldown.
-    static int      CAREFUL_AIM_LENGTH;     // How many buff ticks the Careful Aim ability lasts for.
-    static float    CAREFUL_AIM_TIME;       // The time taken by the Careful Aim ability.
-    static int      MP_COST_CAREFUL_AIM;    // The mana point cost for the Careful Aim ability.
+    static float    CAREFUL_AIM_BONUS_HIT;      // The bonus hit% chance from using the Careful Aim ability.
+    static int      CAREFUL_AIM_COOLDOWN;       // The length of the Careful Aim cooldown.
+    static int      CAREFUL_AIM_LENGTH;         // How many buff ticks the Careful Aim ability lasts for.
+    static int      CAREFUL_AIM_MP_COST;        // The mana point cost for the Careful Aim ability.
+    static float    CAREFUL_AIM_TIME;           // The time taken by the Careful Aim ability.
+    static int      EYE_FOR_AN_EYE_COOLDOWN;    // The cooldown for the Eye For An Eye ability.
+    static int      EYE_FOR_AN_EYE_HP_COST;     // The hit points cost for using Eye for an Eye.
+    static int      EYE_FOR_AN_EYE_LENGTH;      // The length of time the Eye For An Eye buff remains when activated but unused.
+    static float    EYE_FOR_AN_EYE_MULTI;       // The damage multiplier for the Eye For An Eye ability.
 };

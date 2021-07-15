@@ -47,6 +47,7 @@ enum class MobileTag : uint16_t { None = 0,
 
     // Temporary tags assigned by the game.
     ArenaFighter,       // This Mobile is your opponent in an arena fight. (Or, when set on the player, they are currently engaged in an arena fight.)
+    Success_EFAE,       // The mobile successfully performed an Eye for an Eye attack.
 };
 
 struct BodyPart
@@ -58,7 +59,7 @@ struct BodyPart
 
 struct Buff
 {
-    enum class Type : uint8_t { NONE, BLEED, CAREFUL_AIM, CD_CAREFUL_AIM, POISON, RECENT_DAMAGE, RECENTLY_FLED };
+    enum class Type : uint8_t { NONE, BLEED, CAREFUL_AIM, CD_CAREFUL_AIM, CD_EYE_FOR_AN_EYE, EYE_FOR_AN_EYE, POISON, RECENT_DAMAGE, RECENTLY_FLED };
 
     static const std::string    SQL_BUFFS;  // The SQL table construction string for Buffs.
 

@@ -137,6 +137,11 @@ bool Combat::attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mobile> de
     }
     attacker->pass_time(attack_speed, false);
     attacker->clear_buff(Buff::Type::CAREFUL_AIM);
+    if (attacker->tag(MobileTag::Success_EFAE))
+    {
+        attacker->clear_tag(MobileTag::Success_EFAE);
+        attacker->clear_buff(Buff::Type::EYE_FOR_AN_EYE);
+    }
     return attacked;
 }
 
@@ -319,6 +324,7 @@ void Combat::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mo
     const bool attacker_is_player = attacker->is_player();
     const bool defender_is_player = defender->is_player();
     const bool no_ammo = (ranged_attack && weapon_ptr->tag(ItemTag::NoAmmo));
+    const bool eye_for_an_eye = (attacker->has_buff(Buff::Type::EYE_FOR_AN_EYE) && !ranged_attack);
 
     const size_t ammo_pos = (ranged_attack ? attacker->inv()->ammo_pos(weapon_ptr) : SIZE_MAX);
     if (ranged_attack && !no_ammo && ammo_pos == SIZE_MAX)
@@ -399,6 +405,14 @@ void Combat::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mo
     // Defenders that cannot dodge always get hit.
     if (defender->tag(MobileTag::CannotDodge)) to_hit = 100;
     else to_hit *= defender->dodge_mod();
+
+    // Check for the Eye for an Eye buff.
+    if (eye_for_an_eye)
+    {
+        to_hit = 100;
+        can_block = can_parry = false;
+        attacker->set_tag(MobileTag::Success_EFAE);
+    }
 
     bool evaded = false, blocked = false, parried = false;
     if (rng->frnd(100) <= to_hit)  // Evasion failed; the target was hit.
@@ -489,6 +503,13 @@ void Combat::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mo
         else if (attacker->tag(MobileTag::Brawny)) damage *= ATTACKER_DAMAGE_MODIFIER_BRAWNY;
         else if (attacker->tag(MobileTag::Vigorous)) damage *= ATTACKER_DAMAGE_MODIFIER_VIGOROUS;
         else if (attacker->tag(MobileTag::Mighty)) damage *= ATTACKER_DAMAGE_MODIFIER_MIGHTY;
+
+        // Bonus damage for Eye for an Eye.
+        if (eye_for_an_eye)
+        {
+            const float bonus = (1.0f - (attacker->hp() / attacker->hp(true))) * attacker->buff_power(Buff::Type::EYE_FOR_AN_EYE);
+            damage *= bonus;
+        }
 
         if (defender->tag(MobileTag::ImmunityBleed)) bleed = false;
         if (defender->tag(MobileTag::ImmunityPoison)) poison = false;

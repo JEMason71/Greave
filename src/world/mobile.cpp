@@ -649,6 +649,7 @@ void Mobile::tick_buffs()
             switch (type)
             {
                 case Buff::Type::CD_CAREFUL_AIM: core()->message("{m}The {M}Careful Aim {m}ability is ready to use again."); break;
+                case Buff::Type::CD_EYE_FOR_AN_EYE: core()->message("{m}The {M}Eye for an Eye {m}ability is ready to use again."); break;
                 default: break;
             }
         }
