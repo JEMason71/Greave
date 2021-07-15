@@ -56,6 +56,7 @@ Parser::Parser() : m_special_state(SpecialState::NONE)
     add_command("participate", ParserCommand::PARTICIPATE);
     add_command("[quickroll|qr]", ParserCommand::QUICK_ROLL);
     add_command("[quit|exit]", ParserCommand::QUIT);
+    add_command("[rapidstrike|rs] <mobile>", ParserCommand::RAPID_STRIKE);
     add_command("save", ParserCommand::SAVE);
     add_command("[sa|sb|sd]", ParserCommand::STANCE);
     add_command("[score|sc]", ParserCommand::SCORE);
@@ -525,6 +526,11 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             core()->message("{R}Are you sure you want to quit? {M}Your game will not be saved. {R}Type {C}yes {R}to confirm.");
             m_special_state = SpecialState::QUIT_CONFIRM;
             return; // not break
+        case ParserCommand::RAPID_STRIKE:
+            if (parsed_target_type == ParserTarget::TARGET_MOBILE) Abilities::rapid_strike(parsed_target);
+            else if (!words.size()) specify("rapidstrike");
+            else if (parsed_target_type == ParserTarget::TARGET_NONE) not_here();
+            break;
         case ParserCommand::SAVE: core()->save(); break;
         case ParserCommand::SCORE: ActionStatus::score(); break;
         case ParserCommand::SKILLS: ActionStatus::skills(); break;

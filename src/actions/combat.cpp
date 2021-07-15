@@ -1,6 +1,7 @@
 // actions/combat.cpp -- Generic combat routines that apply to multiple types of combat.
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
+#include "actions/abilities.hpp"
 #include "actions/combat.hpp"
 #include "core/mathx.hpp"
 #include "core/random.hpp"
@@ -122,7 +123,8 @@ bool Combat::attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mobile> de
     if (!main_can_attack[0] && !off_can_attack[0]) return false;        // Should be impossible, but can't hurt to be safe.
 
     const bool unarmed_only = (wield_type[0] == WieldType::UNARMED || wield_type[0] == WieldType::UNARMED_PLUS_SHIELD);
-    const float attack_speed = attacker->attack_speed();
+    float attack_speed = attacker->attack_speed();
+    if (attacker->tag(MobileTag::RapidStrike)) attack_speed *= (Abilities::RAPID_STRIKE_ATTACK_SPEED / 100.0f);
 
     bool attacked = false;
     if (main_can_attack[0])
@@ -393,6 +395,7 @@ void Combat::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mo
     }
     float to_hit = BASE_HIT_CHANCE_MELEE;
     if (attacker->has_buff(Buff::Type::CAREFUL_AIM)) to_hit += attacker->buff_power(Buff::Type::CAREFUL_AIM);
+    if (attacker->tag(MobileTag::RapidStrike)) to_hit *= (Abilities::RAPID_STRIKE_ACCURACY_PENALTY / 100.0f);
     if (defender->has_buff(Buff::Type::QUICK_ROLL))
     {
         to_hit -= defender->buff_power(Buff::Type::QUICK_ROLL);

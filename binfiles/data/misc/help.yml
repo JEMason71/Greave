@@ -148,11 +148,17 @@ QUICKROLL: "The {C}QUICKROLL {w}ability (can be shortened to {C}QR{w}) allows yo
 
 QUIT: "To quit the game, simply type {C}QUIT{w}, followed by {C}YES {w}to confirm. {W}Please note, the game will not be automatically saved.{w} If you wish to save first, use the {C}SAVE {w}command."
 
+RAPID_STRIKE: "#RAPIDSTRIKE"
+
+RAPIDSTRIKE: "The {C}RAPIDSTRIKE {w}ability (can be shortened to {C}RS{w}) allows you to make a very quick attack against your opponent, at the cost of accuracy."
+
 REMOVE: "#UNEQUIP"
 
 ROOM: "A {C}ROOM {w}is a singular area in the game world, with links leading to adjacent rooms in cardinal compass directions (as well as up and down). 'Rooms' do not necessarily mean literal rooms - a room could be a forest clearing, a mountain lake, or an empty stretch of road."
 
 ROOMS: "#ROOM"
+
+RS: "#RAPIDSTRIKE"
 
 RUN: "#TRAVEL"
 

@@ -13,29 +13,33 @@
 #include "world/world.hpp"
 
 
-float   Abilities::CAREFUL_AIM_BONUS_HIT =      25; // The bonus hit% chance from using the Careful Aim ability.
-int     Abilities::CAREFUL_AIM_COOLDOWN =       8;  // The length of the Careful Aim cooldown.
-int     Abilities::CAREFUL_AIM_LENGTH =         2;  // How many buff ticks the Careful Aim ability lasts for.
-int     Abilities::CAREFUL_AIM_MP_COST =        20; // The mana point cost for the Careful Aim ability.
-float   Abilities::CAREFUL_AIM_TIME =           2;  // The time taken by the Careful Aim ability.
-int     Abilities::EYE_FOR_AN_EYE_COOLDOWN =    30; // The cooldown for the Eye For An Eye ability.
-int     Abilities::EYE_FOR_AN_EYE_HP_COST =     30; // The hit points cost for using Eye for an Eye.
-int     Abilities::EYE_FOR_AN_EYE_LENGTH =      10; // The length of time the Eye For An Eye buff remains when activated but unused.
-float   Abilities::EYE_FOR_AN_EYE_MULTI =       5;  // The damage multiplier for the Eye For An Eye ability.
-int     Abilities::GRIT_COOLDOWN =              5;  // The cooldown for the Grit ability.
-float   Abilities::GRIT_DAMAGE_REDUCTION =      30; // The % of damage reduced by using the Grit ability.
-int     Abilities::GRIT_LENGTH =                30; // The Grit ability lasts this long, or until the player is hit by an attack.
-int     Abilities::GRIT_SP_COST =               30; // The stamina point cost for the Grit ability.
-float   Abilities::GRIT_TIME =                  2;  // The time taken by using the Grit ability.
-int     Abilities::LADY_LUCK_COOLDOWN =         20; // The cooldown for the Lady Luck ability.
-int     Abilities::LADY_LUCK_LENGTH =           60; // The buff/debuff time for the Lady Luck ability.
-int     Abilities::LADY_LUCK_MP_COST =          50; // The mana cost for using the Lady Luck ability.
-float   Abilities::LADY_LUCK_TIME =             2;  // The time taken by using the Lady Luck ability.
-int     Abilities::QUICK_ROLL_BONUS_DODGE =     40; // The bonus dodge% chance from using the Quick Roll ability.
-int     Abilities::QUICK_ROLL_COOLDOWN =        8;  // The cooldown for the Quick Roll ability.
-int     Abilities::QUICK_ROLL_LENGTH =          5;  // The length of time the Quick Roll buff remains when activated, but before an enemy attack is made.
-int     Abilities::QUICK_ROLL_SP_COST =         25; // The stamina point cost for the Quick Roll ability.
-int     Abilities::QUICK_ROLL_TIME =            4;  // The time it takes to do a Quick Roll.
+float   Abilities::CAREFUL_AIM_BONUS_HIT =          25; // The bonus hit% chance from using the Careful Aim ability.
+int     Abilities::CAREFUL_AIM_COOLDOWN =           8;  // The length of the Careful Aim cooldown.
+int     Abilities::CAREFUL_AIM_LENGTH =             2;  // How many buff ticks the Careful Aim ability lasts for.
+int     Abilities::CAREFUL_AIM_MP_COST =            20; // The mana point cost for the Careful Aim ability.
+float   Abilities::CAREFUL_AIM_TIME =               2;  // The time taken by the Careful Aim ability.
+int     Abilities::EYE_FOR_AN_EYE_COOLDOWN =        30; // The cooldown for the Eye For An Eye ability.
+int     Abilities::EYE_FOR_AN_EYE_HP_COST =         30; // The hit points cost for using Eye for an Eye.
+int     Abilities::EYE_FOR_AN_EYE_LENGTH =          10; // The length of time the Eye For An Eye buff remains when activated but unused.
+float   Abilities::EYE_FOR_AN_EYE_MULTI =           5;  // The damage multiplier for the Eye For An Eye ability.
+int     Abilities::GRIT_COOLDOWN =                  5;  // The cooldown for the Grit ability.
+float   Abilities::GRIT_DAMAGE_REDUCTION =          30; // The % of damage reduced by using the Grit ability.
+int     Abilities::GRIT_LENGTH =                    30; // The Grit ability lasts this long, or until the player is hit by an attack.
+int     Abilities::GRIT_SP_COST =                   30; // The stamina point cost for the Grit ability.
+float   Abilities::GRIT_TIME =                      2;  // The time taken by using the Grit ability.
+int     Abilities::LADY_LUCK_COOLDOWN =             20; // The cooldown for the Lady Luck ability.
+int     Abilities::LADY_LUCK_LENGTH =               60; // The buff/debuff time for the Lady Luck ability.
+int     Abilities::LADY_LUCK_MP_COST =              50; // The mana cost for using the Lady Luck ability.
+float   Abilities::LADY_LUCK_TIME =                 2;  // The time taken by using the Lady Luck ability.
+int     Abilities::QUICK_ROLL_BONUS_DODGE =         40; // The bonus dodge% chance from using the Quick Roll ability.
+int     Abilities::QUICK_ROLL_COOLDOWN =            8;  // The cooldown for the Quick Roll ability.
+int     Abilities::QUICK_ROLL_LENGTH =              5;  // The length of time the Quick Roll buff remains when activated, but before an enemy attack is made.
+int     Abilities::QUICK_ROLL_SP_COST =             25; // The stamina point cost for the Quick Roll ability.
+int     Abilities::QUICK_ROLL_TIME =                4;  // The time it takes to do a Quick Roll.
+float   Abilities::RAPID_STRIKE_ACCURACY_PENALTY =  20; // The % accuracy penalty for a Rapid Strike.
+float   Abilities::RAPID_STRIKE_ATTACK_SPEED =      20; // The % of an attack's normal speed that it takes to do a Rapid Strike attack.
+int     Abilities::RAPID_STRIKE_COOLDOWN =          6;  // The cooldown for the Rapid Strike ability.
+int     Abilities::RAPID_STRIKE_SP_COST =           50; // The stamina points cost for the Rapid Strike ability.
 
 
 // Check cooldowns and availability of abilities.
@@ -124,12 +128,12 @@ void Abilities::abilities()
 
         if (can_use != available) return;
 
-        std::string ability_str = (can_use ? "{G}" : "{r}") + name + " ";
+        std::string ability_str = (can_use ? "{C}" : "{c}") + name + " ";
         bool angle_str = false;
         
         if ((stance_a || stance_b || stance_d) && !(stance_a && stance_b && stance_d))
         {
-            ability_str += "{W}<" + std::string(bad_stance ? "{r}" : "{G}") + "stance:";
+            ability_str += "{W}<" + std::string(bad_stance ? "{c}" : "{C}") + "stance:";
             if (stance_a) ability_str += "a/";
             if (stance_b) ability_str += "b/";
             if (stance_d) ability_str += "d/";
@@ -142,7 +146,7 @@ void Abilities::abilities()
         {
             if (angle_str) ability_str = ability_str.substr(0, ability_str.size() - 5) + "{W}, ";
             else ability_str += "{W}<";
-            if (bad_gear) ability_str += "{r}"; else ability_str += "{G}";
+            if (bad_gear) ability_str += "{c}"; else ability_str += "{C}";
             ability_str += "melee{W}> ";
             angle_str = true;
         }
@@ -151,7 +155,7 @@ void Abilities::abilities()
         {
             if (angle_str) ability_str = ability_str.substr(0, ability_str.size() - 5) + "{W}, ";
             else ability_str += "{W}<";
-            if (bad_gear) ability_str += "{r}"; else ability_str += "{G}";
+            if (bad_gear) ability_str += "{c}"; else ability_str += "{C}";
 
             std::string armour_str;
             if (needs_light) armour_str += "light";
@@ -173,7 +177,7 @@ void Abilities::abilities()
         {
             if (angle_str) ability_str = ability_str.substr(0, ability_str.size() - 5) + "{W}, ";
             else ability_str += "{W}<";
-            if (bad_gear) ability_str += "{r}"; else ability_str += "{G}";
+            if (bad_gear) ability_str += "{c}"; else ability_str += "{C}";
             ability_str += "dice{W}> ";
             angle_str = true;
         }
@@ -202,19 +206,21 @@ void Abilities::abilities()
         if (bad_buff) ability_str += "{W}[{r}on cooldown{W}] ";
 
         ability_str.pop_back();
+        if (!available) StrX::find_and_replace(ability_str, "{W}", "{w}");
         core()->message("{0}" + ability_str);
     };
 
     for (int i = 0; i < 2; i++)
     {
         bool valid = (i == 0);
-        if (valid) core()->message("{M}Available combat abilites:");
+        if (valid) core()->message("{M}Available combat abilities:");
         else core()->message("{M}Unavailable abilities:");
         display_ability("CarefulAim", Buff::Type::CD_CAREFUL_AIM, 0, 0, CAREFUL_AIM_MP_COST, STANCE_B | STANCE_D, valid);
         display_ability("EyeForAnEye", Buff::Type::CD_EYE_FOR_AN_EYE, EYE_FOR_AN_EYE_HP_COST, 0, 0, STANCE_A | MELEE, valid);
         display_ability("Grit", Buff::Type::CD_GRIT, 0, GRIT_SP_COST, 0, STANCE_D | ARMOUR_HEAVY | ARMOUR_MEDIUM, valid);
         display_ability("LadyLuck", Buff::Type::CD_LADY_LUCK, 0, 0, LADY_LUCK_MP_COST, LUCKY_DICE | STANCE_ANY, valid);
         display_ability("QuickRoll", Buff::Type::CD_QUICK_ROLL, 0, QUICK_ROLL_SP_COST, 0, STANCE_B | STANCE_D | ARMOUR_LIGHT | ARMOUR_MEDIUM | ARMOUR_NO_HEAVY, valid);
+        display_ability("RapidStrike", Buff::Type::CD_RAPID_STRIKE, 0, RAPID_STRIKE_SP_COST, 0, STANCE_B | MELEE, valid);
     }
 }
 
@@ -382,9 +388,10 @@ void Abilities::lady_luck(size_t target, bool confirm)
     if (dice[0] == dice[1])
     {
         core()->message(dice_string('C', 'C') + " {U}An opportunity presents itself for a rapid strike...");
-        // todo: add rapid strike buff tag here
+        player->set_tag(MobileTag::RapidStrike);
         player->set_tag(MobileTag::FreeAttack);
         Combat::attack(player, mob);
+        player->clear_tag(MobileTag::RapidStrike);
         player->clear_tag(MobileTag::FreeAttack);   // This should be auto-cleared in Combat::attack(), but just in case...
         return;
     }
@@ -423,4 +430,36 @@ void Abilities::quick_roll(bool confirm)
     player->set_buff(Buff::Type::CD_QUICK_ROLL, QUICK_ROLL_COOLDOWN);
     player->set_buff(Buff::Type::QUICK_ROLL, QUICK_ROLL_LENGTH, QUICK_ROLL_BONUS_DODGE, false, false);
     player->reduce_sp(QUICK_ROLL_SP_COST);
+}
+
+// Attempt to use the Rapid Strike ability.
+void Abilities::rapid_strike(size_t target)
+{
+    const auto player = core()->world()->player();
+    if (player->has_buff(Buff::Type::CD_RAPID_STRIKE))
+    {
+        core()->message("{m}You must wait a while before using the {M}RapidStrike {m}ability again.");
+        return;
+    }
+    if (player->stance() != CombatStance::BALANCED)
+    {
+        core()->message("{m}RapidStrike can only be used in a {M}balanced {m}combat stance.");
+        return;
+    }
+    if (player->sp() < RAPID_STRIKE_SP_COST)
+    {
+        core()->message("{m}You do not have enough stamina points to use {M}RapidStrike{m}.");
+        return;
+    }
+    if (!Combat::using_melee(player))
+    {
+        core()->message("{m}RapidStrike can only be used with {M}melee weapons{m}.");
+        return;
+    }
+
+    core()->message("{M}You strike rapidly at your opponent!");
+    player->set_buff(Buff::Type::CD_RAPID_STRIKE, RAPID_STRIKE_COOLDOWN);
+    player->set_tag(MobileTag::RapidStrike);
+    Combat::attack(player, core()->world()->mob_vec(target));
+    player->clear_tag(MobileTag::RapidStrike);
 }

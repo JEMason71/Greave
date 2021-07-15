@@ -8,12 +8,16 @@
 class Abilities
 {
 public:
-    static void abilities();                    // Check cooldowns and availability of abilities.
-    static void careful_aim(bool confirm);      // Attempt to use the Careful Aim ability.
-    static void eye_for_an_eye(bool confirm);   // Attempt to use the Eye for an Eye ability.
-    static void grit(bool confirm);             // Attempt to use the Grit ability.
-    static void lady_luck(size_t target, bool confirm); // Attempt to use the Lady Luck ability.
-    static void quick_roll(bool confirm);       // Attempt to use the Quick Roll ability.
+    static float    RAPID_STRIKE_ACCURACY_PENALTY;          // The % accuracy penalty for a Rapid Strike.
+    static float    RAPID_STRIKE_ATTACK_SPEED;              // The % of an attack's normal speed that it takes to do a Rapid Strike attack.
+
+    static void abilities();                                // Check cooldowns and availability of abilities.
+    static void careful_aim(bool confirm);                  // Attempt to use the Careful Aim ability.
+    static void eye_for_an_eye(bool confirm);               // Attempt to use the Eye for an Eye ability.
+    static void grit(bool confirm);                         // Attempt to use the Grit ability.
+    static void lady_luck(size_t target, bool confirm);     // Attempt to use the Lady Luck ability.
+    static void quick_roll(bool confirm);                   // Attempt to use the Quick Roll ability.
+    static void rapid_strike(size_t target);                // Attempt to use the Rapid Strike ability.
 
 private:
     static float    CAREFUL_AIM_BONUS_HIT;      // The bonus hit% chance from using the Careful Aim ability.
@@ -39,4 +43,6 @@ private:
     static int      QUICK_ROLL_LENGTH;          // The length of time the Quick Roll buff remains when activated, but before an enemy attack is made.
     static int      QUICK_ROLL_SP_COST;         // The stamina point cost for the Quick Roll ability.
     static int      QUICK_ROLL_TIME;            // The time it takes to do a Quick Roll.
+    static int      RAPID_STRIKE_COOLDOWN;      // The cooldown for the Rapid Strike ability.
+    static int      RAPID_STRIKE_SP_COST;       // The stamina points cost for the Rapid Strike ability.
 };
