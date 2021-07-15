@@ -8,7 +8,7 @@
 
 colour_black:           000000                  # Hex colour definition for black.
 colour_blue:            80befa                  # Hex colour definition for bold blue.
-colour_blue_dark:       2c4c96                  # Hex colour definition for dark blue.
+colour_blue_dark:       2d55b3                  # Hex colour definition for dark blue.
 colour_cyan:            64f0e6                  # Hex colour definition for bold cyan.
 colour_cyan_dark:       169e94                  # Hex colour definition for dark cyan.
 colour_green:           5bf050                  # Hex colour definition for bold green.
