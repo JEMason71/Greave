@@ -36,6 +36,7 @@ void ActionLook::examine_item(std::shared_ptr<Item> target)
     //const std::string it_has_string = (
     const bool plural_name = target->tag(ItemTag::PluralName) || (target->tag(ItemTag::Stackable) && target->stack() > 1);
     const std::string it_has_string_caps = (plural_name ? "They have" : "It has");
+    const std::string it_is_string= (plural_name ? "they are" : "it is");
     const std::string it_is_string_caps = (plural_name ? "They are" : "It is");
     const std::string this_is_string_caps = (plural_name ? "These are" : "This is");
     const std::string it_uses_string_caps = (plural_name ? "They use" : "It uses");
@@ -43,6 +44,26 @@ void ActionLook::examine_item(std::shared_ptr<Item> target)
     const std::string it_reduces_string_caps = (plural_name ? "They {Y}reduce" : "It {Y}reduces");
     const std::string it_can_string_caps = (plural_name ? "They can" : "It can");
     const std::string it_weighs_string_caps = (plural_name ? "They weigh" : "It weighs");
+
+    auto rarity_msg = [&target, &it_is_string_caps, &it_is_string]() -> std::string {
+        switch (target->rare())
+        {
+            case 1: return it_is_string_caps + " commonplace and inexpensive. ";
+            case 2: return it_is_string_caps + " fairly common. ";
+            case 3: return "The craftsmanship is decent. ";
+            case 4: return "{G}" + it_is_string_caps + " of fine quality.{w} ";
+            case 5: return "{G}" + it_is_string_caps + " of excellent quality.{w} ";
+            case 6: return "{G}" + it_is_string_caps + " of exceptional quality.{w} ";
+            case 7: return "{G}The craftsmanship is superb!{w} ";
+            case 8: return "{G}The craftsmanship is of masterful quality!{w} ";
+            case 9: return "{G}" + it_is_string_caps + " the stuff of legends!{w} ";
+            case 10: return "{G}This is a fabled artifact!{w} ";
+            case 11: return "{G}You can scarecely believe " + it_is_string + " real!{w} ";
+            case 12: return "{G}This is truly an artifact of the gods!{w} ";
+            default: core()->guru()->nonfatal("Invalid rarity value!", Guru::WARN);
+        }
+        return "";
+    };
 
     core()->message("You are looking at: " + target->name(Item::NAME_FLAG_FULL_STATS | Item::NAME_FLAG_ID | Item::NAME_FLAG_RARE));
     if (target->desc().size()) core()->message("{0}" + target->desc());
@@ -61,7 +82,7 @@ void ActionLook::examine_item(std::shared_ptr<Item> target)
             if (target->crit()) damage_str_vec.push_back("a critical hit bonus of {U}" + std::to_string(target->crit()) + "%{w}");
             if (target->bleed()) damage_str_vec.push_back("a bleeding bonus of {U}" + std::to_string(target->bleed()) + "%{w}");
             if (target->poison()) damage_str_vec.push_back("a poison bonus of {U}" + std::to_string(target->poison()) + "%{w}");
-            stat_string += StrX::comma_list(damage_str_vec, StrX::CL_FLAG_USE_AND | StrX::CL_FLAG_OXFORD_COMMA) + ". ";
+            stat_string += rarity_msg() + StrX::comma_list(damage_str_vec, StrX::CL_FLAG_USE_AND | StrX::CL_FLAG_OXFORD_COMMA) + ". ";
 
             break;
         }
@@ -86,7 +107,7 @@ void ActionLook::examine_item(std::shared_ptr<Item> target)
                 case EquipSlot::HEAD: slot = "on your head"; break;
                 default: break;
             }
-            stat_string += " {U}" + slot + "{w}. " + it_has_string_caps + " an armour value of {U}" + std::to_string(target->power());
+            stat_string += " {U}" + slot + "{w}. " + rarity_msg() + it_has_string_caps + " an armour value of {U}" + std::to_string(target->power());
             const int warmth = target->warmth();
             if (warmth) stat_string += "{w}, and a warmth rating of {U}" + std::to_string(warmth);
             stat_string += "{w}. ";
@@ -101,7 +122,7 @@ void ActionLook::examine_item(std::shared_ptr<Item> target)
                 default: break;
             }
             const int capacity = target->capacity(), charge = target->charge();
-            stat_string += it_has_string_caps + " a capacity of {U}" + std::to_string(capacity) + (capacity > 1 ? " units" : " unit") + "{w}";
+            stat_string += rarity_msg() + it_has_string_caps + " a capacity of {U}" + std::to_string(capacity) + (capacity > 1 ? " units" : " unit") + "{w}";
             if (charge)
             {
                 stat_string += ", and currently holds {U}" + std::to_string(charge) + (charge > 1 ? " units of " : " unit of ") + target->liquid_type() + "{w}, and will take {U}" + StrX::time_string_rough(target->speed()) + " {w}to drink. ";
@@ -112,14 +133,20 @@ void ActionLook::examine_item(std::shared_ptr<Item> target)
         }
         case ItemType::FOOD:
         {
-            stat_string = this_is_string_caps + " something you can {U}consume{w}. ";
+            stat_string = this_is_string_caps + " something you can {U}consume{w}. " + rarity_msg();
             stat_string += it_has_string_caps + " a food value of {U}" + std::to_string(target->power()) + "{w}, and will take {U}" + StrX::time_string_rough(target->speed()) + " {w}to eat. ";
             break;
         }
-        case ItemType::KEY: stat_string = this_is_string_caps + " a {U}key {w}which can unlock certain doors. "; break;
-        case ItemType::LIGHT: stat_string = this_is_string_caps + " a {U}light source {w}which can be held. It provides a brightness level of {Y}" + std::to_string(target->power()) + "{w} when used. "; break;
+        case ItemType::KEY: stat_string = this_is_string_caps + " a {U}key {w}which can unlock certain doors. " + rarity_msg(); break;
+        case ItemType::LIGHT:
+            stat_string = this_is_string_caps + " a {U}light source {w}which can be held. " + rarity_msg();
+            stat_string += "It provides a brightness level of {Y}" + std::to_string(target->power()) + "{w} when used. ";
+            break;
         case ItemType::NONE: break;
-        case ItemType::SHIELD: stat_string = this_is_string_caps + " a {U}shield {w}which can be wielded. It has an armour value of {U}" + std::to_string(target->power()) + "{w}. "; break;
+        case ItemType::SHIELD:
+            stat_string = this_is_string_caps + " a {U}shield {w}which can be wielded. " + rarity_msg();
+            stat_string += "It has an armour value of {U}" + std::to_string(target->power()) + "{w}. ";
+            break;
         case ItemType::WEAPON:
         {
             switch (target->subtype())
@@ -128,6 +155,7 @@ void ActionLook::examine_item(std::shared_ptr<Item> target)
                 case ItemSub::RANGED: stat_string = this_is_string_caps + " a {U}ranged weapon {w}which can be widled. "; break;
                 default: break;
             }
+            stat_string += rarity_msg();
             if (target->tag(ItemTag::TwoHanded)) stat_string += it_is_string_caps + " heavy and requires {U}two hands {w}to wield. ";
             else if (target->tag(ItemTag::HandAndAHalf)) stat_string += it_is_string_caps + " versatile and can be wielded in {U}either one or two hands{w}. ";
             std::string damage_type_str;
