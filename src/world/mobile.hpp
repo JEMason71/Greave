@@ -49,6 +49,7 @@ enum class MobileTag : uint16_t { None = 0,
     ArenaFighter,       // This mobile is your opponent in an arena fight. (Or, when set on the player, they are currently engaged in an arena fight.)
     Boxcars,            // The mobile is about to make an automatic critical hit.
     FreeAttack,         // This mobile is allowed to make a free attack, without causing time to pass.
+    HeadlongStrike,     // This mobile is making a rapid, dangerous melee attack.
     RapidStrike,        // The mobile is making a rapid, inaccurate melee attack.
     SnakeEyes,          // This mobile is likely to take a critical hit.
     SnapShot,           // This mobiile is making a rapid, inaccurate ranged attack.
@@ -66,7 +67,7 @@ struct BodyPart
 
 struct Buff
 {
-    enum class Type : uint8_t { NONE, BLEED, CAREFUL_AIM, CD_CAREFUL_AIM, CD_EYE_FOR_AN_EYE, CD_GRIT, CD_LADY_LUCK, CD_QUICK_ROLL, CD_RAPID_STRIKE, CD_SNAP_SHOT, EYE_FOR_AN_EYE, GRIT, POISON, QUICK_ROLL, RECENT_DAMAGE, RECENTLY_FLED };
+    enum class Type : uint8_t { NONE, BLEED, CAREFUL_AIM, CD_CAREFUL_AIM, CD_EYE_FOR_AN_EYE, CD_GRIT, CD_HEADLONG_STRIKE, CD_LADY_LUCK, CD_QUICK_ROLL, CD_RAPID_STRIKE, CD_SNAP_SHOT, EYE_FOR_AN_EYE, GRIT, POISON, QUICK_ROLL, RECENT_DAMAGE, RECENTLY_FLED };
 
     static const std::string    SQL_BUFFS;  // The SQL table construction string for Buffs.
 

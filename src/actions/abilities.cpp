@@ -27,6 +27,9 @@ float   Abilities::GRIT_DAMAGE_REDUCTION =          30; // The % of damage reduc
 int     Abilities::GRIT_LENGTH =                    30; // The Grit ability lasts this long, or until the player is hit by an attack.
 int     Abilities::GRIT_SP_COST =                   30; // The stamina point cost for the Grit ability.
 float   Abilities::GRIT_TIME =                      2;  // The time taken by using the Grit ability.
+int     Abilities::HEADLONG_STRIKE_ATTACK_SPEED =   20; // The % of an attack's normal speed that it takes to do a Headlong Strike attack.
+int     Abilities::HEADLONG_STRIKE_COOLDOWN =       6;  // The cooldown for the Headlong Strike ability.
+int     Abilities::HEADLONG_STRIKE_HP_COST =        10; // The hit points cost to use the Headlong Strike abiliy.
 int     Abilities::LADY_LUCK_COOLDOWN =             20; // The cooldown for the Lady Luck ability.
 int     Abilities::LADY_LUCK_LENGTH =               60; // The buff/debuff time for the Lady Luck ability.
 int     Abilities::LADY_LUCK_MP_COST =              50; // The mana cost for using the Lady Luck ability.
@@ -225,6 +228,7 @@ void Abilities::abilities()
         display_ability("CarefulAim", Buff::Type::CD_CAREFUL_AIM, 0, 0, CAREFUL_AIM_MP_COST, STANCE_B | STANCE_D, valid);
         display_ability("EyeForAnEye", Buff::Type::CD_EYE_FOR_AN_EYE, EYE_FOR_AN_EYE_HP_COST, 0, 0, STANCE_A | MELEE, valid);
         display_ability("Grit", Buff::Type::CD_GRIT, 0, GRIT_SP_COST, 0, STANCE_D | ARMOUR_HEAVY | ARMOUR_MEDIUM, valid);
+        display_ability("HeadlongStrike", Buff::Type::CD_HEADLONG_STRIKE, HEADLONG_STRIKE_HP_COST, 0, 0, STANCE_A | MELEE, valid);
         display_ability("LadyLuck", Buff::Type::CD_LADY_LUCK, 0, 0, LADY_LUCK_MP_COST, LUCKY_DICE | STANCE_ANY, valid);
         display_ability("QuickRoll", Buff::Type::CD_QUICK_ROLL, 0, QUICK_ROLL_SP_COST, 0, STANCE_B | STANCE_D | ARMOUR_LIGHT | ARMOUR_MEDIUM | ARMOUR_NO_HEAVY, valid);
         display_ability("RapidStrike", Buff::Type::CD_RAPID_STRIKE, 0, RAPID_STRIKE_SP_COST, 0, STANCE_B | MELEE, valid);
@@ -287,7 +291,7 @@ void Abilities::eye_for_an_eye(bool confirm)
         return;
     }
 
-    core()->message("{M}Your vision goes red and you prepare for a brutal retaliatory strike.");
+    core()->message("{M}Your vision goes red and you prepare for a brutal retaliatory strike! " + Combat::damage_number_str(EYE_FOR_AN_EYE_HP_COST, 0, false, false, false));
     player->set_buff(Buff::Type::CD_EYE_FOR_AN_EYE, EYE_FOR_AN_EYE_COOLDOWN);
     player->set_buff(Buff::Type::EYE_FOR_AN_EYE, EYE_FOR_AN_EYE_LENGTH, EYE_FOR_AN_EYE_MULTI, false, false);
     player->reduce_hp(EYE_FOR_AN_EYE_HP_COST);
@@ -325,6 +329,42 @@ void Abilities::grit(bool confirm)
     player->set_buff(Buff::Type::CD_GRIT, GRIT_COOLDOWN);
     player->set_buff(Buff::Type::GRIT, GRIT_TIME, GRIT_DAMAGE_REDUCTION, false, false);
     player->reduce_sp(GRIT_SP_COST);
+}
+
+// Attempt to use the HeadlongStrike ability.
+void Abilities::headlong_strike(size_t target, bool confirm)
+{
+    const auto player = core()->world()->player();
+    const auto mob = core()->world()->mob_vec(target);
+    if (player->has_buff(Buff::Type::CD_HEADLONG_STRIKE))
+    {
+        core()->message("{m}You must wait a while before using the {M}HeadlongStrike {m}ability again.");
+        return;
+    }
+    if (player->stance() != CombatStance::AGGRESSIVE)
+    {
+        core()->message("{m}HeadlongStrike can only be used in an {M}aggressive {m}combat stance.");
+        return;
+    }
+    if (!Combat::using_melee(player))
+    {
+        core()->message("{m}HeadlongStrike can only be used with {M}melee weapons{m}!");
+        return;
+    }
+    if (player->hp() <= HEADLONG_STRIKE_HP_COST && !confirm)
+    {
+        core()->message("{m}You do not have enough hit points to use {M}HeadlongStrike{m}. You can force it, but that would result in your death!");
+        core()->parser()->confirm_message();
+        return;
+    }
+
+    core()->message("{M}Disregarding your own safety, you lunge into an aggressive attack! " + Combat::damage_number_str(HEADLONG_STRIKE_HP_COST, 0, false, false, false));
+    if (player->is_dead()) return;
+    player->set_buff(Buff::Type::CD_HEADLONG_STRIKE, HEADLONG_STRIKE_COOLDOWN);
+    player->set_tag(MobileTag::HeadlongStrike);
+    Combat::attack(player, mob);
+    player->clear_tag(MobileTag::HeadlongStrike);
+    player->reduce_hp(HEADLONG_STRIKE_HP_COST);
 }
 
 // Attempt to use the Lady Luck ability.

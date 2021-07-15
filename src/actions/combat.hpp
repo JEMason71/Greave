@@ -19,6 +19,7 @@ public:
 
     static bool         attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mobile> defender); // A basic attack, no special moves being used.
     static void         change_stance(std::shared_ptr<Mobile> mob, CombatStance stance);            // Changes to a specified combat stance.
+    static std::string  damage_number_str(uint32_t damage, uint32_t blocked, bool crit, bool bleed, bool poison);   // Generates a standard-format damage number string.
     static std::string  damage_str(uint32_t damage, std::shared_ptr<Mobile> def, bool heat);        // Returns an appropriate damage string.
     static bool         using_melee(std::shared_ptr<Mobile> mob);   // Checks if a mobile is using at least one melee weapon.
     static bool         using_ranged(std::shared_ptr<Mobile> mob);  // Checks if a mobile is using at least one ranged weapon.
@@ -79,7 +80,6 @@ private:
     static const std::map<DamageType, const float*> DAMAGE_TYPE_MAP;
 
     static float        apply_damage_modifiers(float damage, std::shared_ptr<Item> weapon, std::shared_ptr<Mobile> defender, EquipSlot slot);   // Applies damage modifiers based on weapon type.
-    static std::string  damage_number_str(uint32_t damage, uint32_t blocked, bool crit, bool bleed, bool poison);   // Generates a standard-format damage number string.
     static void         determine_wield_type(std::shared_ptr<Mobile> mob, WieldType* wield_type, bool* can_main_attack = nullptr, bool* can_off_attack = nullptr);  // Determines type of weapons wielded by a Mobile.
     static void         perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mobile> defender, EquipSlot weapon, WieldType wield_type_attacker, WieldType wield_type_defender); // Performs an attack with a single weapon.
     static void         pick_hit_location(std::shared_ptr<Mobile> mob, EquipSlot* slot, std::string* slot_name);    // Picks a random hit location, returns an EquipSlot and the name of the anatomy part that was hit.

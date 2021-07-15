@@ -74,10 +74,16 @@ GR: "#GRIT"
 
 GRIT: "The {C}GRIT {w}ability (can be shortened to {C}GR{w}) anticipates an incoming attack and braces, taking less damage until your next action."
 
+HEADLONG_STRIKE: "#HEADLONGSTRIKE"
+
+HEADLONGSTRIKE: "The {C}HEADLONGSTRIKE {w}ability (can be shortened to {C}HS{w}) makes a rapid, risky melee attack that causes the attacker some damage in return for an extremely quick strike."
+
 HELP: [ "Welcome to the in-game manual! Please type {C}HELP {w}followed by another word for more information on a command or other topic. If you see a word written in {C}CYAN {w}in a help entry, you can type {C}HELP {w}followed by that word (e.g. {C}HELP CYAN{w}) to read more.",
         "If you are new to the game, type {C}HELP NEWPLAYER {w}for basic controls, and {C}HELP COMMANDS {w}for a complete list of commands." ]
 
 HOLD: "#EQUIP"
+
+HS: "#HEADLONGSTRIKE"
 
 I: "#INVENTORY"
 

@@ -128,6 +128,7 @@ bool Combat::attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mobile> de
     float attack_speed = attacker->attack_speed();
     if (attacker->tag(MobileTag::RapidStrike)) attack_speed *= (Abilities::RAPID_STRIKE_ATTACK_SPEED / 100.0f);
     if (attacker->tag(MobileTag::SnapShot)) attack_speed *= (Abilities::SNAP_SHOT_ATTACK_SPEED / 100.0f);
+    if (attacker->tag(MobileTag::HeadlongStrike)) attack_speed *= (Abilities::HEADLONG_STRIKE_ATTACK_SPEED / 100.0f);
 
     bool attacked = false;
 
