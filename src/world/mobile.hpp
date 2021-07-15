@@ -153,6 +153,8 @@ public:
     void                tick_buffs();                               // Reduce the timer on all buffs.
     virtual void        tick_hp_regen();                            // Regenerates HP over time.
     bool                tick_poison(uint32_t power, uint16_t time); // Triggers a single poison tick.
+    bool                using_melee() const;                        // Checks if a mobile is using at least one melee weapon.
+    bool                using_ranged() const;                       // Checks if a mobile is using at least one ranged weapon.
 
 protected:
     static const float  ACTION_TIMER_CAP_MAX;                   // The maximum value the action timer can ever reach.

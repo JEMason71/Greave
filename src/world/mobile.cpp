@@ -698,3 +698,25 @@ bool Mobile::tick_poison(uint32_t power, uint16_t time)
     if (!fatal && is_player() && time == 1) core()->message("{g}You feel much better as the poison fades from your system.");
     return !fatal;
 }
+
+// Checks if a mobile is using at least one melee weapon.
+bool Mobile::using_melee() const
+{
+    const auto main_hand = equ()->get(EquipSlot::HAND_MAIN);
+    const auto off_hand = equ()->get(EquipSlot::HAND_OFF);
+    if (main_hand && main_hand->type() == ItemType::WEAPON && main_hand->subtype() == ItemSub::MELEE) return true;
+    if (main_hand && main_hand->tag(ItemTag::TwoHanded)) return false;
+    if (off_hand && off_hand->type() == ItemType::WEAPON && off_hand->subtype() == ItemSub::MELEE) return true;
+    return false;
+}
+
+// Checks if a mobile is using at least one ranged weapon.
+bool Mobile::using_ranged() const
+{
+    const auto main_hand = equ()->get(EquipSlot::HAND_MAIN);
+    const auto off_hand = equ()->get(EquipSlot::HAND_OFF);
+    if (main_hand && main_hand->type() == ItemType::WEAPON && main_hand->subtype() == ItemSub::RANGED) return true;
+    if (main_hand && main_hand->tag(ItemTag::TwoHanded)) return false;
+    if (off_hand && off_hand->type() == ItemType::WEAPON && off_hand->subtype() == ItemSub::RANGED) return true;
+    return false;
+}

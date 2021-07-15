@@ -732,28 +732,6 @@ std::string Combat::threshold_str(std::shared_ptr<Mobile> defender, uint32_t dam
     return "";
 }
 
-// Checks if a mobile is using at least one melee weapon.
-bool Combat::using_melee(std::shared_ptr<Mobile> mob)
-{
-    const auto main_hand = mob->equ()->get(EquipSlot::HAND_MAIN);
-    const auto off_hand = mob->equ()->get(EquipSlot::HAND_OFF);
-    if (main_hand && main_hand->type() == ItemType::WEAPON && main_hand->subtype() == ItemSub::MELEE) return true;
-    if (main_hand && main_hand->tag(ItemTag::TwoHanded)) return false;
-    if (off_hand && off_hand->type() == ItemType::WEAPON && off_hand->subtype() == ItemSub::MELEE) return true;
-    return false;
-}
-
-// Checks if a mobile is using at least one ranged weapon.
-bool Combat::using_ranged(std::shared_ptr<Mobile> mob)
-{
-    const auto main_hand = mob->equ()->get(EquipSlot::HAND_MAIN);
-    const auto off_hand = mob->equ()->get(EquipSlot::HAND_OFF);
-    if (main_hand && main_hand->type() == ItemType::WEAPON && main_hand->subtype() == ItemSub::RANGED) return true;
-    if (main_hand && main_hand->tag(ItemTag::TwoHanded)) return false;
-    if (off_hand && off_hand->type() == ItemType::WEAPON && off_hand->subtype() == ItemSub::RANGED) return true;
-    return false;
-}
-
 // Applies a weapon bleed debuff and applies room scars.
 void Combat::weapon_bleed_effect(std::shared_ptr<Mobile> defender, uint32_t damage)
 {

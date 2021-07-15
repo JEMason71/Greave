@@ -21,8 +21,6 @@ public:
     static void         change_stance(std::shared_ptr<Mobile> mob, CombatStance stance);            // Changes to a specified combat stance.
     static std::string  damage_number_str(uint32_t damage, uint32_t blocked, bool crit, bool bleed, bool poison);   // Generates a standard-format damage number string.
     static std::string  damage_str(uint32_t damage, std::shared_ptr<Mobile> def, bool heat);        // Returns an appropriate damage string.
-    static bool         using_melee(std::shared_ptr<Mobile> mob);   // Checks if a mobile is using at least one melee weapon.
-    static bool         using_ranged(std::shared_ptr<Mobile> mob);  // Checks if a mobile is using at least one ranged weapon.
 
 private:
     enum class WieldType : uint8_t { NONE, UNARMED, ONE_HAND_PLUS_EXTRA, TWO_HAND, DUAL_WIELD, HAND_AND_A_HALF_2H, SINGLE_WIELD, ONE_HAND_PLUS_SHIELD, SHIELD_ONLY, UNARMED_PLUS_SHIELD };

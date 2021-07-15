@@ -83,8 +83,8 @@ void Abilities::abilities()
         const bool needs_lucky_dice = (flags & LUCKY_DICE);
 
         const CombatStance stance = player->stance();
-        const bool using_melee = Combat::using_melee(player);
-        const bool using_ranged = Combat::using_ranged(player);
+        const bool using_melee = player->using_melee();
+        const bool using_ranged = player->using_ranged();
         const bool using_heavy = player->wearing_armour(ItemSub::HEAVY);
         const bool using_medium = player->wearing_armour(ItemSub::MEDIUM);
         const bool using_light = player->wearing_armour(ItemSub::LIGHT) || player->wearing_armour(ItemSub::NONE);
@@ -279,7 +279,7 @@ void Abilities::eye_for_an_eye(bool confirm)
         core()->message("{m}EyeForAnEye can only be used in an {M}aggressive {m}combat stance.");
         return;
     }
-    if (!Combat::using_melee(player))
+    if (!player->using_melee())
     {
         core()->message("{m}EyeForAnEye can only be used with {M}melee weapons{m}!");
         return;
@@ -346,7 +346,7 @@ void Abilities::headlong_strike(size_t target, bool confirm)
         core()->message("{m}HeadlongStrike can only be used in an {M}aggressive {m}combat stance.");
         return;
     }
-    if (!Combat::using_melee(player))
+    if (!player->using_melee())
     {
         core()->message("{m}HeadlongStrike can only be used with {M}melee weapons{m}!");
         return;
@@ -435,7 +435,7 @@ void Abilities::lady_luck(size_t target, bool confirm)
     }
     if (dice[0] == dice[1])
     {
-        const bool ranged = Combat::using_ranged(player);
+        const bool ranged = player->using_ranged();
         if (ranged)
         {
             core()->message(dice_string('C', 'C') + " {U}An opportunity presents itself for a snap shot...");
@@ -509,7 +509,7 @@ void Abilities::rapid_strike(size_t target)
         core()->message("{m}You do not have enough stamina points to use {M}RapidStrike{m}.");
         return;
     }
-    if (!Combat::using_melee(player))
+    if (!player->using_melee())
     {
         core()->message("{m}RapidStrike can only be used with {M}melee weapons{m}.");
         return;
@@ -542,7 +542,7 @@ void Abilities::snap_shot(size_t target)
         core()->message("{m}You do not have enough stamina points to use {M}SnapShot{m}.");
         return;
     }
-    if (!Combat::using_ranged(player))
+    if (!player->using_ranged())
     {
         core()->message("{m}SnapShot can only be used with {M}ranged weapons{m}.");
         return;
