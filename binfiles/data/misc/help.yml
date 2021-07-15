@@ -6,9 +6,11 @@ ABILITIES: [ "The {C}ABILITIES {w}command lists all available special abilities,
 
 ATTACK: "The {C}ATTACK {w}command (can also be written as {C}KILL {w}or shortened to {C}K{w}) is your primary means of fighting creatures and people in the game world. Simply type {C}ATTACK {w}followed by the name of your target (for example, {C}ATTACK GOBLIN{w}) to attack with your currently-equipped weapon."
 
-CA: "#CAREFUL_AIM"
+CA: "#CAREFULAIM"
 
-CAREFUL_AIM: "The {C}CAREFUL AIM {w}ability (can be shortened to {C}CA{w}) allows you to focus your mind, granting a bonus to-hit chance on your next attack."
+CAREFUL_AIM: "#CAREFULAIM"
+
+CAREFULAIM: "The {C}CAREFULAIM {w}ability (can be shortened to {C}CA{w}) allows you to focus your mind, granting a bonus to-hit chance on your next attack."
 
 CLOSE: "You can close doors (or windows, grates, or other door-like things) with the {C}CLOSE {w}command. Simply type {C}CLOSE {w}followed by a direction (for example, {C}CLOSE NORTHEAST {w}to attempt to close something in that direction."
 
@@ -38,9 +40,9 @@ EAST: "#TRAVEL"
 
 EAT: "To eat some food, type {C}EAT {w}followed by the name of the item (e.g. {C}EAT FISH{w})."
 
-EF: "#EYE_FOR_AN_EYE"
+EF: "#EYEFORANEYE"
 
-EFAE: "#EYE_FOR_AN_EYE"
+EFAE: "#EYEFORANEYE"
 
 EQ: "#EQUIP"
 
@@ -60,7 +62,9 @@ EXIT: "#QUIT"
 
 EXITS: "You can see what exits from your current room lead to adjacent rooms by typing {C}EXITS{w}."
 
-EYE_FOR_AN_EYE: "The {C}EYE FOR AN EYE {w}ability (can be shortened to {C}EFAE{w} or {C}EF{w}) deals damage to your opponent based on how much damage you have already taken. The more wounded you are, the more powerful the attack will be."
+EYE_FOR_AN_EYE: "#EYEFORANEYE"
+
+EYEFORANEYE: "The {C}EYEFORANEYE {w}ability (can be shortened to {C}EFAE{w} or {C}EF{w}) deals damage to your opponent based on how much damage you have already taken. The more wounded you are, the more powerful the attack will be."
 
 GET: "#TAKE"
 
@@ -94,6 +98,14 @@ K: "#ATTACK"
 KILL: "#ATTACK"
 
 L: "#LOOK"
+
+LADY: "#LADYLUCK"
+
+LL: "#LADYLUCK"
+
+LADY_LUCK: "#LADYLUCK"
+
+LADYLUCK: "The {C}LADYLUCK {w}ability (can be shortened to {C}LADY {w}or {C}LL{w}) puts your fate at the whims of the gods. It produces a variety of effects in combat, some of which are good, some of which are bad... but you won't know which it'll be until you use it."
 
 LOCK: "If you have the right key, you can attempt to lock a nearby door. Simply type {C}LOCK {w}followed by the direction of the door (e.g. {C}LOCK EAST{w}). You do not need to specify which key to use."
 

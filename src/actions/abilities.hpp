@@ -12,6 +12,7 @@ public:
     static void careful_aim(bool confirm);      // Attempt to use the Careful Aim ability.
     static void eye_for_an_eye(bool confirm);   // Attempt to use the Eye for an Eye ability.
     static void grit(bool confirm);             // Attempt to use the Grit ability.
+    static void lady_luck(size_t target, bool confirm); // Attempt to use the Lady Luck ability.
 
 private:
     static float    CAREFUL_AIM_BONUS_HIT;      // The bonus hit% chance from using the Careful Aim ability.
@@ -28,4 +29,8 @@ private:
     static int      GRIT_LENGTH;                // The Grit ability lasts this long, or until the player is hit by an attack.
     static int      GRIT_SP_COST;               // The stamina point cost for the Grit ability.
     static float    GRIT_TIME;                  // The time taken by using the Grit ability.
+    static int      LADY_LUCK_COOLDOWN;         // The cooldown for the Lady Luck ability.
+    static int      LADY_LUCK_LENGTH;           // The buff/debuff time for the Lady Luck ability.
+    static int      LADY_LUCK_MP_COST;          // The mana cost for using the Lady Luck ability.
+    static float    LADY_LUCK_TIME;             // The time taken by using the Lady Luck ability.
 };

@@ -135,13 +135,17 @@ bool Combat::attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mobile> de
         perform_attack(attacker, defender, EquipSlot::HAND_OFF, wield_type[0], wield_type[1]);
         attacked = true;
     }
-    attacker->pass_time(attack_speed, false);
+
+    if (attacker->tag(MobileTag::FreeAttack)) attacker->clear_tag(MobileTag::FreeAttack);
+    else attacker->pass_time(attack_speed, false);
+
     attacker->clear_buff(Buff::Type::CAREFUL_AIM);
     if (attacker->tag(MobileTag::Success_EFAE))
     {
         attacker->clear_tag(MobileTag::Success_EFAE);
         attacker->clear_buff(Buff::Type::EYE_FOR_AN_EYE);
     }
+
     return attacked;
 }
 
@@ -328,6 +332,8 @@ void Combat::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mo
     const bool defender_is_player = defender->is_player();
     const bool no_ammo = (ranged_attack && weapon_ptr->tag(ItemTag::NoAmmo));
     const bool eye_for_an_eye = (attacker->has_buff(Buff::Type::EYE_FOR_AN_EYE) && !ranged_attack);
+    const bool snake_eyes = (defender->tag(MobileTag::SnakeEyes));
+    const bool boxcars = (attacker->tag(MobileTag::Boxcars));
 
     const size_t ammo_pos = (ranged_attack ? attacker->inv()->ammo_pos(weapon_ptr) : SIZE_MAX);
     if (ranged_attack && !no_ammo && ammo_pos == SIZE_MAX)
@@ -409,12 +415,12 @@ void Combat::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mo
     if (defender->tag(MobileTag::CannotDodge)) to_hit = 100;
     else to_hit *= defender->dodge_mod();
 
-    // Check for the Eye for an Eye buff.
-    if (eye_for_an_eye)
+    // Check for the Eye for an Eye, Snake Eyes or Boxcars buffs.
+    if (eye_for_an_eye || snake_eyes || boxcars)
     {
         to_hit = 100;
         can_block = can_parry = false;
-        attacker->set_tag(MobileTag::Success_EFAE);
+        if (eye_for_an_eye) attacker->set_tag(MobileTag::Success_EFAE);
     }
 
     bool evaded = false, blocked = false, parried = false;
@@ -488,6 +494,7 @@ void Combat::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mo
         bool critical_hit = false, bleed = false, poison = false;
         float crit_chance = weapon_ptr->crit();
         if (wield_type_attacker == WieldType::SINGLE_WIELD) crit_chance *= CRIT_CHANCE_MULTIPLIER_SINGLE_WIELD;
+        if (snake_eyes || boxcars) crit_chance = 100;
         if (crit_chance >= 100.0f || rng->frnd(100) <= crit_chance)
         {
             critical_hit = true;

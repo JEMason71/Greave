@@ -31,23 +31,22 @@ Parser::Parser() : m_special_state(SpecialState::NONE)
     add_command("! <txt>", ParserCommand::EXCLAIM);
     add_command("[abilities|ability]", ParserCommand::ABILITIES);
     add_command("[attack|kill|k] <mobile>", ParserCommand::ATTACK);
-    add_command("ca", ParserCommand::CAREFUL_AIM);
-    add_command("careful aim", ParserCommand::CAREFUL_AIM);
+    add_command("[carefulaim|ca]", ParserCommand::CAREFUL_AIM);
     add_command("close <dir>", ParserCommand::CLOSE);
     add_command("drink <item:i>", ParserCommand::DRINK);
     add_command("drop <item:i>", ParserCommand::DROP);
     add_command("[eat|consume] <item:i>", ParserCommand::EAT);
-    add_command("[efae|ef]", ParserCommand::EYE_FOR_AN_EYE);
     add_command("[equipment|equip|eq]", ParserCommand::EQUIPMENT);
     add_command("[equip|eq|wield|hold|wear] <item:i>", ParserCommand::EQUIP);
     add_command("[examine|exam|ex|x] <item:i|item:e|item:r|mobile>", ParserCommand::EXAMINE);
     add_command("exits", ParserCommand::EXITS);
-    add_command("eye for an eye", ParserCommand::EYE_FOR_AN_EYE);
+    add_command("[eyeforaneye|efae|ef]", ParserCommand::EYE_FOR_AN_EYE);
     add_command("[fuck|shit|piss|bastard] *", ParserCommand::SWEAR);
     add_command("[go|travel|walk|run|move] <dir>", ParserCommand::GO);
     add_command("[grit|gr]", ParserCommand::GRIT);
     add_command("help *", ParserCommand::HELP);
     add_command("[inventory|invent|inv|i]", ParserCommand::INVENTORY);
+    add_command("[ladyluck|lady|ll] <mobile>", ParserCommand::LADY_LUCK);
     add_command("lock <dir>", ParserCommand::LOCK);
     add_command("[look|l]", ParserCommand::LOOK);
     add_command("[look|l] <item:i|item:e|item:r|mobile>", ParserCommand::EXAMINE);
@@ -495,6 +494,11 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             break;
         case ParserCommand::HELP: ActionHelp::help(StrX::collapse_vector(words)); break;
         case ParserCommand::INVENTORY: ActionInventory::check_inventory(); break;
+        case ParserCommand::LADY_LUCK:
+            if (parsed_target_type == ParserTarget::TARGET_MOBILE) Abilities::lady_luck(parsed_target, confirm);
+            else if (!words.size()) specify("use lady luck against");
+            else if (parsed_target_type == ParserTarget::TARGET_NONE) not_here();
+            break;
         case ParserCommand::LOCK: case ParserCommand::UNLOCK:
             if (parsed_direction == Direction::NONE) specify_direction(first_word);
             else ActionDoors::lock_or_unlock(player, parsed_direction, pcd.command == ParserCommand::UNLOCK, confirm);

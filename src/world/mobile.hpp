@@ -46,7 +46,10 @@ enum class MobileTag : uint16_t { None = 0,
     Resting,            // This Mobile is currently resting.
 
     // Temporary tags assigned by the game.
-    ArenaFighter,       // This Mobile is your opponent in an arena fight. (Or, when set on the player, they are currently engaged in an arena fight.)
+    ArenaFighter,       // This mobile is your opponent in an arena fight. (Or, when set on the player, they are currently engaged in an arena fight.)
+    Boxcars,            // The mobile is about to make an automatic critical hit.
+    FreeAttack,         // This mobile is allowed to make a free attack, without causing time to pass.
+    SnakeEyes,          // This mobile is likely to take a critical hit.
     Success_EFAE,       // The mobile successfully performed an Eye for an Eye attack.
     Success_Grit,       // The mobile successfully absorbed damage with the Grit ability.
 };
@@ -60,7 +63,7 @@ struct BodyPart
 
 struct Buff
 {
-    enum class Type : uint8_t { NONE, BLEED, CAREFUL_AIM, CD_CAREFUL_AIM, CD_EYE_FOR_AN_EYE, CD_GRIT, EYE_FOR_AN_EYE, GRIT, POISON, RECENT_DAMAGE, RECENTLY_FLED };
+    enum class Type : uint8_t { NONE, BLEED, CAREFUL_AIM, CD_CAREFUL_AIM, CD_EYE_FOR_AN_EYE, CD_GRIT, CD_LADY_LUCK, EYE_FOR_AN_EYE, GRIT, POISON, RECENT_DAMAGE, RECENTLY_FLED };
 
     static const std::string    SQL_BUFFS;  // The SQL table construction string for Buffs.
 
