@@ -122,6 +122,7 @@ IRONROOT_1:
   light: wilderness
   name: [ Lake's Edge, lake's edge ]
   security: anarchy
+  spawn_mobs: "#SPAWN_WILDERNESS_FOREST"
   tags: [ DigOK, EastDoubleLength, NorthDoubleLength, SouthwestDoubleLength, Trees, WaterClean ]
 
 IRONROOT_2:
@@ -155,6 +156,7 @@ IRONROOT_4:
   light: wilderness
   name: [ Ironroot Forest, deep forest ]
   security: anarchy
+  spawn_mobs: "#SPAWN_WILDERNESS_FOREST"
   tags: [ DigOK, SouthDoubleLength, Trees, WestDoubleLength ]
 
 IRONROOT_5:
@@ -178,6 +180,7 @@ IRONROOT_6:
   light: wilderness
   name: [ Clearing's Edge, clearing's edge ]
   security: anarchy
+  spawn_mobs: "#SPAWN_WILDERNESS_FOREST"
   tags: [ DigOK, EastDoubleLength, NortheastDoubleLength, SouthDoubleLength, SoutheastDoubleLength, SouthwestDoubleLength, Trees, WestDoubleLength ]
 
 IRONROOT_7:
@@ -239,6 +242,7 @@ IRONROOT_11:
   light: wilderness
   name: [ Lake's Edge, lake's edge ]
   security: anarchy
+  spawn_mobs: "#SPAWN_WILDERNESS_FOREST"
   tags: [ DigOK, NorthDoubleLength, SouthDoubleLength, Trees, WaterClean, WestDoubleLength ]
 
 IRONROOT_12:
@@ -249,6 +253,7 @@ IRONROOT_12:
   light: wilderness
   name: [ Ironroot Forest, deep forest ]
   security: anarchy
+  spawn_mobs: "#SPAWN_WILDERNESS_FOREST"
   tags: [ DigOK, EastDoubleLength, Trees, WestDoubleLength ]
 
 IRONROOT_13:
@@ -284,6 +289,7 @@ IRONROOT_15:
   light: wilderness
   name: [ Clearing's Edge, clearing's edge ]
   security: anarchy
+  spawn_mobs: "#SPAWN_WILDERNESS_FOREST"
   tags: [ DigOK, NorthDoubleLength, NortheastDoubleLength, NorthwestDoubleLength, Trees, WestDoubleLength ]
 
 IRONROOT_16:
@@ -307,6 +313,7 @@ IRONROOT_17:
   light: wilderness
   name: [ Lake's Edge, lake's edge ]
   security: anarchy
+  spawn_mobs: "#SPAWN_WILDERNESS_FOREST"
   tags: [ DigOK, EastDoubleLength, NorthwestDoubleLength, Trees, WaterClean ]
 
 IRONROOT_CLEARING_N:
@@ -361,6 +368,7 @@ IRONROOT_FOREST_E:
   light: wilderness
   name: [ Eastern Ironroot Forest, trail ]
   security: anarchy
+  spawn_mobs: "#SPAWN_WILDERNESS_FOREST_EDGE"
   tags: [ DigOK, EastDoubleLength, NorthwestDoubleLength, Trees, Wide ]
 
 IRONROOT_FOREST_S:
@@ -412,6 +420,7 @@ IRONROOT_MAZE_D:
   light: wilderness
   name: [ Lost in the Forest, deep forest ]
   security: anarchy
+  spawn_mobs: "#SPAWN_WILDERNESS_FOREST_DEEP"
   tags: [ DigOK, Maze, Trees ]
 
 IRONROOT_MAZE_E:
@@ -423,6 +432,7 @@ IRONROOT_MAZE_E:
   light: wilderness
   name: [ Lost in the Forest, deep forest ]
   security: anarchy
+  spawn_mobs: "#SPAWN_WILDERNESS_FOREST_DEEP"
   tags: [ DigOK, Maze, Trees ]
 
 IRONROOT_MAZE_F:
@@ -444,6 +454,7 @@ IRONROOT_MAZE_G:
   light: wilderness
   name: [ Lost in the Forest, deep forest ]
   security: anarchy
+  spawn_mobs: "#SPAWN_WILDERNESS_FOREST_DEEP"
   tags: [ DigOK, Maze, Trees ]
 
 IRONROOT_MAZE_H:
@@ -474,6 +485,7 @@ IRONROOT_MAZE_J:
   light: wilderness
   name: [ Lost in the Forest, deep forest ]
   security: anarchy
+  spawn_mobs: "#SPAWN_WILDERNESS_FOREST_DEEP"
   tags: [ DigOK, Maze, Trees ]
 
 IRONROOT_MAZE_K:
@@ -515,6 +527,7 @@ IRONROOT_MAZE_N:
   light: wilderness
   name: [ Lost in the Forest, deep forest ]
   security: anarchy
+  spawn_mobs: "#SPAWN_WILDERNESS_FOREST_DEEP"
   tags: [ DigOK, Maze, Trees ]
 
 IRONROOT_MAZE_O:
@@ -558,6 +571,7 @@ IRONROOT_TRAIL:
   light: wilderness
   name: [ Forest Trail Junction, trail ]
   security: anarchy
+  spawn_mobs: "#SPAWN_WILDERNESS_FOREST_EDGE"
   tags: [ DigOK, EastDoubleLength, SouthDoubleLength, Trees, WestDoubleLength, Wide ]
 
 IRONROOT_TRAIL_2:
