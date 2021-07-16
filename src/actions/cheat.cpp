@@ -38,6 +38,38 @@ void ActionCheat::colours()
     core()->message("{0}{m}MAGENTA`{M}BOLD MAGENTA");
 }
 
+// Heals the player or an NPC.
+void ActionCheat::heal(size_t target)
+{
+    const auto player = core()->world()->player();
+    std::shared_ptr<Mobile> mob;
+    if (target == SIZE_MAX) mob = player;
+    else mob = core()->world()->mob_vec(target);
+    
+    if (mob->is_dead())
+    {
+        core()->message("{r}It's a little bit too late for that...");
+        return;
+    }
+
+    mob->restore_hp(mob->hp(true));
+    mob->clear_buff(Buff::Type::BLEED);
+    mob->clear_buff(Buff::Type::POISON);
+    mob->clear_tag(MobileTag::SnakeEyes);
+    if (target == SIZE_MAX)
+    {
+        core()->message("{G}You feel hale and hearty!");
+        player->restore_sp(player->sp(true));
+        player->restore_mp(player->mp(true));
+    }
+    else
+    {
+        const std::string mob_name = mob->name(Mobile::NAME_FLAG_THE | Mobile::NAME_FLAG_CAPITALIZE_FIRST);
+        if (mob->tag(MobileTag::Unliving)) core()->message("{G}" + mob_name + " {G}is fully restored!");
+        else core()->message("{G}" + mob_name + " {G}is fully healed!");
+    }
+}
+
 // Attempts to spawn an item.
 void ActionCheat::spawn_item(std::string item)
 {

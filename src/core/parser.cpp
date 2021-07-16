@@ -77,6 +77,7 @@ Parser::Parser() : m_special_state(SpecialState::NONE)
     add_command("#bix <txt>", ParserCommand::MIXUP_BIG);
     add_command("[#colours|#colour|#colors|#color]", ParserCommand::COLOUR_TEST);
     add_command("#hash <txt>", ParserCommand::HASH);
+    add_command("#heal <mobile>", ParserCommand::HEAL_CHEAT);
     add_command("#mix <txt>", ParserCommand::MIXUP);
     add_command("#money <txt>", ParserCommand::ADD_MONEY);
     add_command("[#spawnitem|#si] <txt>", ParserCommand::SPAWN_ITEM);
@@ -381,7 +382,7 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             if (words.size() <= i)
             {
                 // Normally we'd just skip trying to parse this if the player hasn't given enough input. BUT...! For target-only matches, there's a special exception. This allows the player to do something like "kill goblin", then just type "kill" again to keep attacking the same target without naming it over and over.
-                if (target_flags == ParserTarget::TARGET_MOBILE)
+                if (target_flags == ParserTarget::TARGET_MOBILE && pcd.command != ParserCommand::HEAL_CHEAT)
                 {
                     // Check if the player has a *valid* Mobile targetted already. mob_target() will return 0 if there is no target, no valid target, or the valid target is no longer in the same room, which saves us some effort here.
                     uint32_t target_id = core()->world()->player()->mob_target();
@@ -501,6 +502,11 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
         case ParserCommand::HEADLONG_STRIKE:
             if (parsed_target_type == ParserTarget::TARGET_MOBILE) Abilities::headlong_strike(parsed_target, confirm);
             else if (!words.size()) specify("headlongstrike");
+            else if (parsed_target_type == ParserTarget::TARGET_NONE) not_here();
+            break;
+        case ParserCommand::HEAL_CHEAT:
+            if (parsed_target_type == ParserTarget::TARGET_MOBILE) ActionCheat::heal(parsed_target);
+            else if (!words.size()) ActionCheat::heal(SIZE_MAX);
             else if (parsed_target_type == ParserTarget::TARGET_NONE) not_here();
             break;
         case ParserCommand::HELP: ActionHelp::help(StrX::collapse_vector(words)); break;
