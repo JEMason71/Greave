@@ -49,46 +49,46 @@ const uint32_t  Room::TEMPERATURE_FLAG_IGNORE_PLAYER_CLOTHES =  4;  // Ignore th
 // The descriptions for different types of room scars.
 const std::vector<std::vector<std::string>> Room::ROOM_SCAR_DESCS = {
     // Room scar type 0: blood.
-    { "There are a few drops of blood on the ground nearby.",
-      "There is a large splash of blood on the ground nearby.",
-      "There are a few splashes of blood here and there.",
-      "Splashes of blood coat the floor and nearby surfaces." },
+    { "There are a few drops of {R}b{r}l{R}o{r}o{R}d {w}on the ground nearby.",
+      "There is a large splash of {R}b{r}l{R}o{r}o{R}d {w}on the ground nearby.",
+      "There are a few splashes of {R}b{r}l{R}o{r}o{R}d {w}here and there.",
+      "Splashes of {R}b{r}l{R}o{r}o{R}d {w}coat the floor and nearby surfaces." },
 
     // Room scar type 1: burns.
-    { "There are a few small burn marks here and there.",
-      "There are a few scorch marks from fire nearby.",
-      "The ground nearby is scorched and charred.",
-      "The ground and nearby surfaces are badly charred and scorched." },
+    { "There are a few small {B}b{w}u{B}r{w}n marks here and there.",
+      "There are a few {B}s{w}c{B}o{w}r{B}c{w}h marks from fire nearby.",
+      "The ground nearby is {B}s{w}c{B}o{w}r{B}c{w}h{B}e{w}d and charred.",
+      "The ground and nearby surfaces are badly {B}c{w}h{B}a{w}r{B}r{w}e{B}d and scorched." },
 
     // Room scar type 2: debris.
-    { "There are a few worthless pieces of metal and debris scattered about.",
-      "A few pieces of metal and other mechanical debris are strewn around.",
-      "Pieces of scorched metal and other mechanical debris are strewn around.",
-      "Large chunks of twisted metal and other mechanical debris are strewn all around." },
+    { "There are a few worthless pieces of metal and {y}d{w}e{y}b{b}r{y}i{w}s scattered about.",
+      "A few pieces of metal and other mechanical {y}d{w}e{y}b{w}r{y}i{w}s are strewn around.",
+      "Pieces of scorched metal and other mechanical {y}d{w}e{y}b{w}r{y}i{w}s are strewn around.",
+      "Large chunks of twisted metal and other mechanical {y}d{w}e{y}b{w}r{y}i{w}s are strewn all around." },
 
     // Room scar type 3: dirt.
-    { "Some of the dirt nearby has been moved into an uneven mound.",
-      "Several mounds of dirt are visible, the dirt recently unsettled.",
-      "Someone has been busy, the dirt nearby churned up and uneven.",
-      "The dirt has been dug up and moved around repeatedly, as if someone has been digging many holes here." },
+    { "Some of the {y}dirt {w}nearby has been moved into an uneven mound.",
+      "Several mounds of {y}dirt {w}are visible, the dirt recently unsettled.",
+      "Someone has been busy, the {y}dirt {w}nearby churned up and uneven.",
+      "The {y}dirt {w}has been dug up and moved around repeatedly, as if someone has been digging many holes here." },
 
     // Room scar type 4: vomit.
-    { "There are some bits of half-digested food on the ground.",
-      "Someone appears to have violently vomited nearby.",
-      "Several splashes of vomit mar the ground.",
-      "The area reeks of vomit, which appears to be splattered everywhere nearby." },
+    { "There are some bits of {y}h{g}a{y}l{g}f{y}-{g}d{y}i{g}g{y}e{g}s{y}t{g}e{y}d {w}food on the ground.",
+      "Someone appears to have violently {y}v{g}o{y}m{g}i{y}t{g}e{y}d {w}nearby.",
+      "Several splashes of {y}v{g}o{y}m{g}i{y}t {w}mar the ground.",
+      "The area reeks of {y}v{g}o{y}m{g}i{y}t{w}, which appears to be splattered everywhere nearby." },
 
     // Room scar type 5: campfires.
-    { "Some ashes and remains of a campfire litter the ground.",
-      "The fading remains of a campfire burn nearby, casting flickering lights.",
-      "A crackling campfire burns nearby, warming the area.",
-      "A bright, crackling campfire burns cheerfully nearby, warming the area." },
+    { "Some ashes and remains of a {r}c{y}a{r}m{y}p{r}f{y}i{r}r{y}e {w}litter the ground.",
+      "The fading remains of a {r}c{y}a{r}m{y}p{r}f{y}i{r}r{y}e {w}burn nearby, casting flickering lights.",
+      "A crackling {r}c{y}a{r}m{y}p{r}f{y}i{r}r{y}e {w}burns nearby, warming the area.",
+      "A bright, crackling {r}c{y}a{r}m{y}p{r}f{y}i{r}r{y}e {w}burns cheerfully nearby, warming the area." },
 
     // Room scar type 6: water.
-    { "A few drops of water glisten on the ground.",
-      "A little water has been splashed around nearby.",
-      "Someone seems to have splashed a lot of water around nearby.",
-      "A great deal of water has been splashed around nearby, getting everything wet." }
+    { "A few drops of {U}w{c}a{U}t{c}e{U}r {w}glisten on the ground.",
+      "A little {U}w{c}a{U}t{c}e{U}r {w}has been splashed around nearby.",
+      "Someone seems to have splashed a lot of {U}w{c}a{U}t{c}e{U}r {w}around nearby.",
+      "A great deal of {U}w{c}a{U}t{c}e{U}r {w}has been splashed around nearby, getting everything wet." }
 };
 
 // The SQL table construction string for the saved rooms.
