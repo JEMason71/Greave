@@ -45,6 +45,7 @@ enum class ItemTag : uint16_t { _None = 0,  // Do not use this tag, it's just a 
 
     // Tags specific to consumable items.
     DiscardWhenEmpty,   // Throw this item away automatically when it's empty.
+    TavernOnly,         // This item will have to be left behind if you leave a tavern.
 };
 
 class Item

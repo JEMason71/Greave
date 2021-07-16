@@ -126,6 +126,7 @@ enum class RoomTag : uint16_t {
     Nexus,                  // This room contains a nexus transportation system. [CURRENTLY UNUSED]
     RadiationLight,         // This area is lightly irradiated. [CURRENTLY UNUSED]
     SludgePit,              // We got a sinky sludge pit here, guys. [CURRENTLY UNUSED]
+    Tavern,                 // This room is a tavern, or part of a tavern.
 };
 
 class Room

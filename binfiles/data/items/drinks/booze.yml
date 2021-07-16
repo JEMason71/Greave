@@ -10,7 +10,7 @@ ALE_FLAGON:
   power: 1
   rare: 2
   speed: 30
-  tags: [ DiscardWhenEmpty ]
+  tags: [ DiscardWhenEmpty, TavernOnly ]
   type: [ drink, booze ]
   value: 4c
   weight: 210
@@ -24,7 +24,7 @@ WINE_PITCHER:
   power: 2
   rare: 3
   speed: 40
-  tags: [ DiscardWhenEmpty ]
+  tags: [ DiscardWhenEmpty, TavernOnly ]
   type: [ drink, booze ]
   value: 2s
   weight: 400

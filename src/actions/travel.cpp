@@ -11,6 +11,8 @@
 #include "core/parser.hpp"
 #include "core/random.hpp"
 #include "core/strx.hpp"
+#include "world/inventory.hpp"
+#include "world/item.hpp"
 #include "world/player.hpp"
 #include "world/room.hpp"
 #include "world/world.hpp"
@@ -84,6 +86,40 @@ bool ActionTravel::travel(std::shared_ptr<Mobile> mob, Direction dir, bool confi
         core()->message("{r}You risk taking damage or even dying from making a jump like that!");
         core()->parser()->confirm_message();
         return false;
+    }
+
+    // Check if the player has any items that will have to be left behind.
+    if (is_player && room->tag(RoomTag::Tavern) && !world->get_room(room_link)->tag(RoomTag::Tavern))
+    {
+        std::vector<size_t> item_vec_ids;
+        for (size_t i = 0; i < mob->inv()->count(); i++)
+        {
+            const auto item = mob->inv()->get(i);
+            if (!item->tag(ItemTag::TavernOnly)) continue;
+            item_vec_ids.push_back(i);
+        }
+        if (item_vec_ids.size())
+        {
+            std::vector<std::string> item_names;
+            for (auto vi : item_vec_ids)
+                item_names.push_back("{C}" + mob->inv()->get(vi)->name(Item::NAME_FLAG_NO_COLOUR | Item::NAME_FLAG_NO_COUNT) + "{c}");
+            StrX::collapse_list(item_names);
+            std::string cl_str = StrX::comma_list(item_names, StrX::CL_AND);
+            if (!confirm)
+            {
+                core()->message("{c}You will have to leave behind your " + cl_str + ".");
+                core()->parser()->confirm_message();
+                return false;
+            }
+            StrX::find_and_replace(cl_str, "{c}", "{m}");
+            StrX::find_and_replace(cl_str, "{C}", "{m}");
+            core()->message("{m}(leaving behind your " + cl_str + ")");
+            for (ssize_t i = item_vec_ids.size() - 1; i >= 0; i--)
+            {
+                room->inv()->add_item(mob->inv()->get(item_vec_ids.at(i)));
+                mob->inv()->erase(item_vec_ids.at(i));
+            }
+        }
     }
 
     float travel_time = TRAVEL_TIME_NORMAL;

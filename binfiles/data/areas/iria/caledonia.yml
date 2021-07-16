@@ -106,7 +106,7 @@ BRASS_DIRK:
   name: [ The Brass Dirk, tavern ]
   security: low
   shop_type: tavern
-  tags: [ EastLockable, Indoors, NorthIncline, Shop, Wide ]
+  tags: [ EastLockable, Indoors, NorthIncline, Shop, Tavern, Wide ]
 
 BRASS_DIRK_ARENA:
   desc: The upper floor of this converted warehouse composes what can be called an 'arena' in the loosest sense of the word. The stained, hardwood floorboards creak and groan in protest as you stand here, a wide area to allow crowds to gather around the main event, a large and heavy steel cage dominating the middle of the floor. {lb} ```A counter is set up at the side of the floor, numerous tattered papers hanging from the side advertising upcoming fights and betting odds, while the only other way out is the rickety stairway leading back down, south to the tavern.
@@ -116,7 +116,7 @@ BRASS_DIRK_ARENA:
   metadata: "arena_area:arena_cage arena_door:door arena_room:BRASS_DIRK_ARENA_CAGE"
   name: [ Brass Dirk Arena, arena ]
   security: low
-  tags: [ Arena, Indoors, SouthDecline, Wide ]
+  tags: [ Arena, Indoors, SouthDecline, Tavern, Wide ]
 
 BRASS_DIRK_ARENA_CAGE:
   desc: And here you find yourself inside the large metal cage of the Brass Dirk 'arena', the heavy metal door to the south the only exit back to the tavern. The wooden floor here is marred with scratches and dents, and despite some evidently half-hearted attempts at keeping it clean, numerous dark stains pattern the uneven ground.
@@ -126,7 +126,7 @@ BRASS_DIRK_ARENA_CAGE:
   metadata: "arena_door:cage_door arena_exit:south"
   name: [ Brass Dirk Arena, cage ]
   security: anarchy
-  tags: [ Indoors, SouthLocked, Wide ]
+  tags: [ Indoors, SouthLocked, Tavern, Wide ]
 
 BROKEN_ALLEY:
   desc: The walls of the two bordering buildings rise in jagged lines to either side, the melted glass and shattered brick of their construction lying strewn all about the alley amid the trash. The alley runs to a 90-degree turn where it dives down a darker corridor.
