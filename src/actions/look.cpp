@@ -247,9 +247,12 @@ void ActionLook::look()
 
     room->set_tag(RoomTag::Explored);
 
-    // Room name, description, and obvious exits.
+    // Room name and description.
     core()->message("{G}" + room->name());
     core()->message("{0}```" + room->desc());
+
+    // Special features on this room.
+    if (room->tag(RoomTag::Arena)) core()->message("{0}```{c}If you wish, you can {C}PARTICIPATE {c}in a fight.");
 
     // Show any scar effects on the room.
     const std::string scar_desc = room->scar_desc();

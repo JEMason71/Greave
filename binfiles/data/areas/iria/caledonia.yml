@@ -108,7 +108,7 @@ BRASS_DIRK:
   tags: [ EastLockable, Indoors, NorthIncline, Wide ]
 
 BRASS_DIRK_ARENA:
-  desc: The upper floor of this converted warehouse composes what can be called an 'arena' in the loosest sense of the word. The stained, hardwood floorboards creak and groan in protest as you stand here, a wide area to allow crowds to gather around the main event, a large and heavy steel cage dominating the middle of the floor. {lb} ```A counter is set up at the side of the floor, numerous tattered papers hanging from the side advertising upcoming fights and betting odds, while the only other way out is the rickety stairway leading back down, south to the tavern. {lb} ```{c}If you wish, you can {C}PARTICIPATE {c}in a fight.
+  desc: The upper floor of this converted warehouse composes what can be called an 'arena' in the loosest sense of the word. The stained, hardwood floorboards creak and groan in protest as you stand here, a wide area to allow crowds to gather around the main event, a large and heavy steel cage dominating the middle of the floor. {lb} ```A counter is set up at the side of the floor, numerous tattered papers hanging from the side advertising upcoming fights and betting odds, while the only other way out is the rickety stairway leading back down, south to the tavern.
   exits:
     south: BRASS_DIRK
   light: dim
