@@ -296,7 +296,7 @@ std::string Item::name(int flags) const
 }
 
 // Generates a new parser ID for this Item.
-void Item::new_parser_id() { m_parser_id = core()->rng()->rnd(1, 9999); }
+void Item::new_parser_id(uint8_t prefix) { m_parser_id = core()->rng()->rnd(0, 999) + (prefix * 1000); }
 
 // Returns the parry% modifier of this Item, if any.
 int Item::parry_mod() const { return meta_int("parry_mod"); }
@@ -374,6 +374,19 @@ void Item::set_meta(const std::string &key, float value)
 
 // Sets the name of this Item.
 void Item::set_name(const std::string &name) { m_name = name; }
+
+// Sets this item's parser ID prefix.
+void Item::set_parser_id_prefix(uint8_t prefix)
+{
+    if (!m_parser_id)
+    {
+        new_parser_id(prefix);
+        return;
+    }
+    int old_prefix = m_parser_id / 1000;
+    m_parser_id -= (old_prefix * 1000);
+    m_parser_id += (prefix * 1000);
+}
 
 // Sets this Item's rarity.
 void Item::set_rare(int rarity) { m_rarity = rarity; }

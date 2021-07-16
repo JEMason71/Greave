@@ -75,7 +75,7 @@ public:
     int         meta_int(const std::string &key) const;     // Retrieves metadata, in int format.
     std::map<std::string, std::string>* meta_raw();         // Accesses the metadata map directly. Use with caution!
     std::string name(int flags = 0) const;                  // Retrieves the name of thie Item.
-    void        new_parser_id();                            // Generates a new parser ID for this Item.
+    void        new_parser_id(uint8_t prefix);              // Generates a new parser ID for this Item.
     int         parry_mod() const;                          // Returns the parry% modifier of this Item, if any.
     uint16_t    parser_id() const;                          // Retrieves the current ID of this Item, for parser differentiation.
     int         poison() const;                             // Returns the poison chance of this item, if any.
@@ -90,6 +90,7 @@ public:
     void        set_meta(const std::string &key, int value);            // As above, but with an integer value.
     void        set_meta(const std::string &key, float value);          // As above again, but this time for floats.
     void        set_name(const std::string &name);          // Sets the name of this Item.
+    void        set_parser_id_prefix(uint8_t prefix);       // Sets this item's parser ID prefix.
     void        set_rare(int rarity);                       // Sets this Item's rarity.
     void        set_stack(uint32_t size);                   // Sets the stack size for this Item.
     void        set_tag(ItemTag the_tag);                   // Sets a tag on this Item.

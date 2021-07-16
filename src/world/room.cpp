@@ -95,7 +95,7 @@ const std::vector<std::vector<std::string>> Room::ROOM_SCAR_DESCS = {
 const std::string   Room::SQL_ROOMS =   "CREATE TABLE rooms ( sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, id INTEGER UNIQUE NOT NULL, last_spawned_mobs INTEGER, metadata TEXT, scars TEXT, spawn_mobs TEXT, tags TEXT, link_tags TEXT, inventory INTEGER UNIQUE )";
 
 
-Room::Room(std::string new_id) : m_inventory(std::make_shared<Inventory>()), m_last_spawned_mobs(0), m_light(0), m_security(Security::ANARCHY)
+Room::Room(std::string new_id) : m_inventory(std::make_shared<Inventory>(Inventory::TagPrefix::ROOM)), m_last_spawned_mobs(0), m_light(0), m_security(Security::ANARCHY)
 {
     if (new_id.size()) m_id = StrX::hash(new_id);
     else m_id = 0;

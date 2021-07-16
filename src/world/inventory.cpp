@@ -3,12 +3,15 @@
 
 #include "3rdparty/SQLiteCpp/SQLiteCpp.h"
 #include "core/core.hpp"
+#include "core/guru.hpp"
 #include "world/inventory.hpp"
 #include "world/item.hpp"
 #include "world/world.hpp"
 
 
-#include "core/guru.hpp"
+// Creates a new, blank inventory.
+Inventory::Inventory(uint8_t tag_prefix) : m_tag_prefix(tag_prefix) { }
+
 // Adds an Item to this Inventory (this will later handle auto-stacking, etc.)
 void Inventory::add_item(std::shared_ptr<Item> item)
 {
@@ -29,8 +32,9 @@ void Inventory::add_item(std::shared_ptr<Item> item)
     // Check the Item's hex ID. If it's unset, or if another Item in the Inventory shares its ID, we'll need a new one.
     // Infinite loops relying on RNG to break out are VERY BAD so let's put a threshold on this bad boy.
     int tries = 0;
-    while ((!item->parser_id() || parser_id_exists(item->parser_id())) && ++tries < 10000)
-        item->new_parser_id();
+    item->set_parser_id_prefix(m_tag_prefix);
+    while (parser_id_exists(item->parser_id()) && ++tries < 10000)
+        item->new_parser_id(m_tag_prefix);
     m_items.push_back(item);
 }
 

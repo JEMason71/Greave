@@ -12,6 +12,9 @@ namespace SQLite { class Database; }    // defined in 3rdparty/SQLiteCpp/Databas
 class Inventory
 {
 public:
+    enum TagPrefix { NONE = 0, INVENTORY, EQUIPMENT, ROOM, SHOP, MOBILE };
+
+                Inventory(uint8_t tag_prefix);          // Creates a new, blank inventory.
     void        add_item(std::shared_ptr<Item> item);   // Adds an Item to this Inventory (this will later handle auto-stacking, etc.)
     void        add_item(const std::string &id);        // As above, but generates a new Item from a template with a specified ID.
     size_t      ammo_pos(std::shared_ptr<Item> item);   // Locates the position of an ammunition item used by the specified weapon.
@@ -27,5 +30,6 @@ public:
 private:
     bool        parser_id_exists(uint16_t id);          // Checks if a given parser ID already exists on an Item in this Inventory.
 
-    std::vector<std::shared_ptr<Item>>  m_items;            // The Items stored in this Inventory.
+    std::vector<std::shared_ptr<Item>>  m_items;        // The Items stored in this Inventory.
+    uint8_t     m_tag_prefix;                           // The prefix for all tag numbers in this Inventory.
 };
