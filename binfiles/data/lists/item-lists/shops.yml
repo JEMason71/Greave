@@ -2,7 +2,8 @@
 # Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 SHOP_TAVERN: [ "&SHOP_TAVERN" ]
-SHOP_TAVERN_SIZE: [ "tavern", 50 ]
+SHOP_TAVERN_SIZE: [ "tavern", 20 ]
+SHOP_TAVERN_ALWAYS_STOCK: [ ALE_FLAGON, 40, WINE_PITCHER, 20, BREAD, 30, CHEESE, 15, MEAT_COOKED, 20 ]
 SHOP_TAVERN_COMMON: [ ALE_FLAGON, -1, BREAD, -1, CHEESE, -1, MEAT_COOKED, -1 ]
 SHOP_TAVERN_UNCOMMON: [ WINE_PITCHER, -1 ]
 SHOP_TAVERN_RARE: [ WATERSKIN, -1 ]

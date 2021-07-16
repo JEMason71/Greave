@@ -131,15 +131,23 @@ void Shop::load(std::shared_ptr<SQLite::Database> save_db)
 // Restocks the contents of this shop.
 void Shop::restock()
 {
+    const auto world = core()->world();
     m_inventory->clear();
-    const std::string shop_list = "SHOP_" + StrX::str_toupper(core()->world()->get_room(m_room_id)->meta("shop_type"));
-    auto list = core()->world()->get_list(shop_list);
-    auto size_list = core()->world()->get_list(shop_list + "_SIZE");
+    const std::string shop_list = "SHOP_" + StrX::str_toupper(world->get_room(m_room_id)->meta("shop_type"));
+    auto list = world->get_list(shop_list);
+    auto always_stock_list = world->get_list(shop_list + "_ALWAYS_STOCK");
+    auto size_list = world->get_list(shop_list + "_SIZE");
     const int shop_size = MathX::mixup(size_list->at(0).count, 2);
+
+    for (size_t i = 0; i < always_stock_list->size(); i++)
+    {
+        const auto new_item = world->get_item(always_stock_list->at(i).str, always_stock_list->at(i).count);
+        add_item(new_item, false);
+    }
     for (int i = 0; i < shop_size; i++)
     {
         const auto random_item = list->rnd();
-        const auto new_item = core()->world()->get_item(random_item.str, random_item.count);
+        const auto new_item = world->get_item(random_item.str, random_item.count);
         add_item(new_item, false);
     }
     m_inventory->sort();
