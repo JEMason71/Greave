@@ -11,5 +11,4 @@ FOOT_OF_THE_MOUNTAIN:
   light: wilderness
   name: [ Foot of the Mountain, mountain trail ]
   security: anarchy
-  tags: [ DigOK, SouthDoubleLength, Trees, VeryWide, Wilderness ]
-  wilderness: grassland
+  tags: [ DigOK, SouthDoubleLength, Trees, VeryWide ]

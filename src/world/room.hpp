@@ -97,7 +97,6 @@ enum class RoomTag : uint16_t {
     HeatedInterior,         // Is this interior area heated?
     PermaCampfire,          // Treat this room like it always has a campfire burning.
     HideCampfireScar,       // This is a bit specific. It's for rooms with PermaCampfire, where we don't want the campfire 'scar' text showing.
-    Wilderness,             // Is this a wilderness room, where random beasts can spawn?
 
     // Tags regarding the presence of water in this room.
     WaterClean,             // There is a source of clean water nearby. [CURRENTLY UNUSED]

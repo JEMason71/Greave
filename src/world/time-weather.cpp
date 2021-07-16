@@ -36,7 +36,6 @@ const uint32_t TimeWeather::HEARTBEAT_TIMERS[TimeWeather::Heartbeat::_TOTAL] = {
     10 * Time::MINUTE,  // ROOM_SCARS, for decreasing the intensity of room scars.
     10 * Time::SECOND,  // SP_REGEN, regenerates stamina points over time.
     311 * Time::MINUTE, // THIRST. More rapid than hunger.
-    5 * Time::MINUTE,   // WILDERNESS_SPAWN, for spawning beasts in the wilderness.
 };
 
 
@@ -306,9 +305,6 @@ bool TimeWeather::pass_time(float seconds, bool interruptable)
                 room->respawn_mobs();
             }
         }
-
-        // Spawn mobiles in wilderness rooms.
-        if (heartbeat_ready(Heartbeat::WILDERNESS_SPAWN)) world->wilderness_spawns();
 
         // Reduce room scars on active rooms.
         if (heartbeat_ready(Heartbeat::ROOM_SCARS))

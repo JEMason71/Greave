@@ -28,8 +28,7 @@ GUKA_PASS_1:
   light: wilderness
   name: [ Guka Pass, trail ]
   security: anarchy
-  tags: [ DigOK, NorthDoubleLength, SouthDoubleLength, Wide, Wilderness ]
-  wilderness: hills
+  tags: [ DigOK, NorthDoubleLength, SouthDoubleLength, Wide ]
 
 GUKA_PASS_2:
   desc: The trail bends here, the northern path stretching outward towards a more spacious, open area of grassland with a huge mountain towering ahead. The path between rocky cliff walls leads southeast, while higher on the cliffs above to the southwest you can see some wooden buildings.
@@ -39,8 +38,7 @@ GUKA_PASS_2:
   light: wilderness
   name: [ Guka Pass, trail ]
   security: anarchy
-  tags: [ DigOK, NorthDoubleLength, SoutheastDoubleLength, Wide, Wilderness ]
-  wilderness: hills
+  tags: [ DigOK, NorthDoubleLength, SoutheastDoubleLength, Wide ]
 
 GUKA_PASS_3:
   desc: The pass continues south and northwest from here, hemmed in by the tall, rocky cliff walls that stand imposingly on either side of the trail. A few small buildings and a campsite are visible on a higher plateau of the cliff, but the rocky walls are too sheer to safely climb from here.
@@ -50,8 +48,7 @@ GUKA_PASS_3:
   light: wilderness
   name: [ Guka Pass, trail ]
   security: anarchy
-  tags: [ DigOK, NorthwestDoubleLength, SouthDoubleLength, Wide, Wilderness ]
-  wilderness: hills
+  tags: [ DigOK, NorthwestDoubleLength, SouthDoubleLength, Wide ]
 
 GUKA_PASS_4:
   desc: The grassy trail leads north and southeast here between tall, rocky cliffs, the path grassy and pleasant with a few colourful flowers here and there. While the cliff walls are mostly too sheer to climb, a gentler incline forms a rocky trail towards a plateau above.
@@ -62,8 +59,7 @@ GUKA_PASS_4:
   light: wilderness
   name: [ Guka Pass, trail ]
   security: anarchy
-  tags: [ DigOK, NorthDoubleLength, SoutheastDoubleLength, Wide, Wilderness ]
-  wilderness: hills
+  tags: [ DigOK, NorthDoubleLength, SoutheastDoubleLength, Wide ]
 
 GUKA_PASS_5:
   desc: Sandwiched between rocky cliff walls, the pale stone dotted with patches of moss and lichen, the grassy trail continues. Northwest, you can see what looks to be a campsite and some wooden buildings on a higher plateau, while to the south the path cleaves into two diagonal branches, both leading off out of sight.
@@ -73,8 +69,7 @@ GUKA_PASS_5:
   light: wilderness
   name: [ Guka Pass, trail ]
   security: anarchy
-  tags: [ DigOK, NorthwestDoubleLength, SouthDoubleLength, Wide, Wilderness ]
-  wilderness: hills
+  tags: [ DigOK, NorthwestDoubleLength, SouthDoubleLength, Wide ]
 
 GUKA_PASS_6:
   desc: The path splits at this point, branching off into three directions each flanked by rocky cliff walls - north, southeast and southwest. It's hard to see where any of the paths lead as they twist and wind around at the whims of nature. The path is a soft trail of grass, with a few brightly-coloured flowers scattered here and there.
@@ -85,8 +80,7 @@ GUKA_PASS_6:
   light: wilderness
   name: [ Guka Pass, trail ]
   security: anarchy
-  tags: [ DigOK, NorthDoubleLength, SoutheastDoubleLength, SouthwestDoubleLength, Wide, Wilderness ]
-  wilderness: hills
+  tags: [ DigOK, NorthDoubleLength, SoutheastDoubleLength, SouthwestDoubleLength, Wide ]
 
 GUKA_PASS_7:
   desc: The terrain transitions here - to the northwest, the cliff walls rise more sharply, pale moss-dappled stone creating a corridor of passage along a soft, grassy trail where it splits into a junction. Eastward, the cliff walls taper down and disappear into the undergrowth, the grass growing thicker as the trail becomes more heavily forested.
@@ -96,8 +90,7 @@ GUKA_PASS_7:
   light: wilderness
   name: [ Guka Pass, trail ]
   security: anarchy
-  tags: [ DigOK, EastDoubleLength, NorthwestDoubleLength, Wide, Wilderness ]
-  wilderness: hills
+  tags: [ DigOK, EastDoubleLength, NorthwestDoubleLength, Wide ]
 
 GUKA_PASS_8:
   desc: Delicate blue flowers flank the edges of this lush, grassy path between craggy cliff walls, the exposed stone pale and dappled with moss and lichen. The trail stretches out to the northeast and southwest from here before turning out of sight in both directions.
@@ -107,8 +100,7 @@ GUKA_PASS_8:
   light: wilderness
   name: [ Guka Pass, trail ]
   security: anarchy
-  tags: [ DigOK, NortheastDoubleLength, SouthwestDoubleLength, Wide, Wilderness ]
-  wilderness: hills
+  tags: [ DigOK, NortheastDoubleLength, SouthwestDoubleLength, Wide ]
 
 GUKA_PASS_9:
   desc: The cliff walls widen a little around this corner, enough to allow four to walk abreast between the pale, craggy rocks. The grass is wild yet soft, splashes of colour from wildflowers scattered around the greens. A fairly large cave entrance opens to the northwest, a dank and musty scent lingering in the gloom.
@@ -119,8 +111,7 @@ GUKA_PASS_9:
   light: wilderness
   name: [ Guka Pass, trail ]
   security: anarchy
-  tags: [ DigOK, NortheastDoubleLength, SouthDoubleLength, Wide, Wilderness ]
-  wilderness: hills
+  tags: [ DigOK, NortheastDoubleLength, SouthDoubleLength, Wide ]
 
 GUKA_PASS_10:
   desc: The trail between looming, rocky cliffs continues north and southwest from here, the grass underfoot wild and unruly. The cliff edges taper off in the southern direction, while your view north is blocked as the path curves around to the east. {lb} ```You can make out some sort of opening - perhaps a cave - to the north, but you'd need to get closer to see for sure.
@@ -130,8 +121,7 @@ GUKA_PASS_10:
   light: wilderness
   name: [ Guka Pass, trail ]
   security: anarchy
-  tags: [ DigOK, NorthDoubleLength, SouthwestDoubleLength, Wide, Wilderness ]
-  wilderness: hills
+  tags: [ DigOK, NorthDoubleLength, SouthwestDoubleLength, Wide ]
 
 GUKA_PASS_11:
   desc: Depending on your perspective, the pass either begins or ends here - to the northeast, the craggy rock walls rise up to flank an overgrown grass path, twisting and turning around out of sight, though wide enough to easily allow passage. Southward, the cliff edges taper down to ground level, disappearing into the undergrowth.
@@ -141,8 +131,7 @@ GUKA_PASS_11:
   light: wilderness
   name: [ Guka Pass, trail ]
   security: anarchy
-  tags: [ DigOK, NortheastDoubleLength, SouthDoubleLength, Wide, Wilderness ]
-  wilderness: hills
+  tags: [ DigOK, NortheastDoubleLength, SouthDoubleLength, Wide ]
 
 GUKA_PASS_CLIFF_EDGE:
   desc: Standing on the edge of the cliff plateau, you see the grassy trail winding a few yards beneath you, the rest of the cliffside reaching higher above to the east. Westward, nestled within this small plateau and surrounded by higher cliff walls is a flat encampment with a few wooden buildings surrounding a campfire. A rocky decline leads a winding trail downward to the south.

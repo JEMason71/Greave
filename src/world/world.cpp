@@ -51,13 +51,13 @@ const std::map<std::string, LinkTag> World::LINK_TAG_MAP = { { "autoclose", Link
 const std::map<std::string, MobileTag> World::MOBILE_TAG_MAP = { { "aggroonsight", MobileTag::AggroOnSight }, { "agile", MobileTag::Agile }, { "anemic", MobileTag::Anemic }, { "beast", MobileTag::Beast}, { "brawny", MobileTag::Brawny }, { "cannotblock", MobileTag::CannotBlock }, { "cannotdodge", MobileTag::CannotDodge }, { "cannotopendoors", MobileTag::CannotOpenDoors }, { "cannotparry", MobileTag::CannotParry }, { "clumsy", MobileTag::Clumsy }, { "coward", MobileTag::Coward }, { "feeble", MobileTag::Feeble }, { "immunitybleed", MobileTag::ImmunityBleed }, { "immunitypoison", MobileTag::ImmunityPoison }, { "mighty", MobileTag::Mighty }, { "pluralname", MobileTag::PluralName }, { "propernoun", MobileTag::ProperNoun }, { "puny", MobileTag::Puny }, { "randomgender", MobileTag::RandomGender }, { "strong", MobileTag::Strong }, { "unliving", MobileTag::Unliving }, { "vigorous", MobileTag::Vigorous } };
 
 // Lookup table for converting RoomTag text names into enums.
-const std::map<std::string, RoomTag> World::ROOM_TAG_MAP = { { "arena", RoomTag::Arena }, { "canseeoutside", RoomTag::CanSeeOutside }, { "churchaltar", RoomTag::ChurchAltar }, { "digok", RoomTag::DigOK }, { "gamepoker", RoomTag::GamePoker }, { "gameslots", RoomTag::GameSlots }, { "gross", RoomTag::Gross }, { "heatedinterior", RoomTag::HeatedInterior }, { "hidecampfirescar", RoomTag::HideCampfireScar }, { "indoors", RoomTag::Indoors }, { "maze", RoomTag::Maze }, { "nexus", RoomTag::Nexus }, { "noexplorecredit", RoomTag::NoExploreCredit }, { "permacampfire", RoomTag::PermaCampfire }, { "private", RoomTag::Private }, { "radiationlight", RoomTag::RadiationLight }, { "shopbuyscontraband", RoomTag::ShopBuysContraband }, { "shoprespawningowner", RoomTag::ShopRespawningOwner }, { "sleepok", RoomTag::SleepOK }, { "sludgepit", RoomTag::SludgePit }, { "smelly", RoomTag::Smelly }, { "trees", RoomTag::Trees }, { "underground", RoomTag::Underground }, { "verywide", RoomTag::VeryWide }, { "waterclean", RoomTag::WaterClean }, { "waterdeep", RoomTag::WaterDeep }, { "watersalt", RoomTag::WaterSalt }, { "watershallow", RoomTag::WaterShallow }, { "watertainted", RoomTag::WaterTainted }, { "wide", RoomTag::Wide }, { "wilderness", RoomTag::Wilderness } };
+const std::map<std::string, RoomTag> World::ROOM_TAG_MAP = { { "arena", RoomTag::Arena }, { "canseeoutside", RoomTag::CanSeeOutside }, { "churchaltar", RoomTag::ChurchAltar }, { "digok", RoomTag::DigOK }, { "gamepoker", RoomTag::GamePoker }, { "gameslots", RoomTag::GameSlots }, { "gross", RoomTag::Gross }, { "heatedinterior", RoomTag::HeatedInterior }, { "hidecampfirescar", RoomTag::HideCampfireScar }, { "indoors", RoomTag::Indoors }, { "maze", RoomTag::Maze }, { "nexus", RoomTag::Nexus }, { "noexplorecredit", RoomTag::NoExploreCredit }, { "permacampfire", RoomTag::PermaCampfire }, { "private", RoomTag::Private }, { "radiationlight", RoomTag::RadiationLight }, { "shopbuyscontraband", RoomTag::ShopBuysContraband }, { "shoprespawningowner", RoomTag::ShopRespawningOwner }, { "sleepok", RoomTag::SleepOK }, { "sludgepit", RoomTag::SludgePit }, { "smelly", RoomTag::Smelly }, { "trees", RoomTag::Trees }, { "underground", RoomTag::Underground }, { "verywide", RoomTag::VeryWide }, { "waterclean", RoomTag::WaterClean }, { "waterdeep", RoomTag::WaterDeep }, { "watersalt", RoomTag::WaterSalt }, { "watershallow", RoomTag::WaterShallow }, { "watertainted", RoomTag::WaterTainted }, { "wide", RoomTag::Wide } };
 
 // Lookup table for converting textual room security (e.g. "anarchy") to enum values.
 const std::map<std::string, Security> World::SECURITY_MAP = { { "anarchy", Security::ANARCHY }, { "low", Security::LOW }, { "high", Security::HIGH }, { "sanctuary", Security::SANCTUARY }, { "inaccessible", Security::INACCESSIBLE } };
 
 // A list of all valid keys in area YAML files.
-const std::set<std::string> World::VALID_YAML_KEYS_AREAS = { "desc", "exits", "light", "metadata", "name", "security", "spawn_mobs", "tags", "wilderness" };
+const std::set<std::string> World::VALID_YAML_KEYS_AREAS = { "desc", "exits", "light", "metadata", "name", "security", "spawn_mobs", "tags" };
 
 // A list of all valid keys in item YAML files.
 const std::set<std::string> World::VALID_YAML_KEYS_ITEMS = { "ammo_power", "bleed", "block_mod", "capacity", "charge", "crit", "damage_type", "desc", "dodge_mod", "liquid", "metadata", "name", "parry_mod", "poison", "power", "rare", "slot", "speed", "stack", "tags", "type", "value", "warmth", "weight" };
@@ -927,9 +927,6 @@ void World::load_room_pool()
                 // The Room's metadata, if any.
                 if (room_data["metadata"]) StrX::string_to_metadata(room_data["metadata"].as<std::string>(), *new_room->meta_raw());
 
-                // Wilderness type for this room, if any.
-                if (room_data["wilderness"]) new_room->set_meta("wilderness", room_data["wilderness"].as<std::string>());
-
                 // Clear the meta changed tag, since this is static data.
                 new_room->clear_tag(RoomTag::MetaChanged);
 
@@ -1080,42 +1077,3 @@ void World::starter_equipment(const std::string &list_name)
 
 // Gets a pointer to the TimeWeather object.
 const std::shared_ptr<TimeWeather> World::time_weather() const { return m_time_weather; }
-
-// Triggers wilderness respawns near the player.
-void World::wilderness_spawns()
-{
-    // Get a list of all rooms adjacent to the player, and count any mobiles in those rooms.
-    int rooms = 0, mobiles = 0;
-    std::vector<uint32_t> room_vec;
-    const std::shared_ptr<Room> player_room = get_room(m_player->location());
-    for (int i = 0; i < Room::ROOM_LINKS_MAX; i++)
-    {
-        if (player_room->fake_link(i)) continue;        // Skip any invalid links.
-        const uint32_t link = player_room->link(i);
-        const auto room = get_room(link);
-        if (!room->tag(RoomTag::Wilderness)) continue;  // Skip any non-wilderness rooms.
-        rooms++;
-        room_vec.push_back(link);
-        for (auto mob : m_mobiles)
-            if (mob->location() == link) mobiles++;
-    }
-
-    // If there are too many mobiles in nearby wilderness rooms, just do nothing.
-    if (!room_vec.size() || mobiles > std::min(1, rooms / 2)) return;
-
-    // Pick a room at random.
-    const auto room = get_room(room_vec.at(core()->rng()->rnd(room_vec.size()) - 1));
-
-    // Determine what kind of wildlife to spawn.
-    std::string wilderness_type = StrX::str_toupper(room->meta("wilderness"));
-    if (!wilderness_type.size())
-    {
-        core()->guru()->nonfatal("Unable to determine wilderness spawn type on room " + room->name() + "!", Guru::ERROR);
-        return;
-    }
-    StrX::find_and_replace(wilderness_type, " ", "_");
-    const std::string mob_id = get_list("SPAWN_WILDERNESS_" + wilderness_type)->rnd().str;
-    auto mob = get_mob(mob_id);
-    mob->set_location(room->id());
-    add_mobile(mob);
-}

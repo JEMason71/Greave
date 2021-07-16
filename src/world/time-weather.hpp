@@ -11,7 +11,7 @@ namespace SQLite { class Database; }    // defined in 3rdparty/SQLiteCpp/Databas
 class TimeWeather
 {
 public:
-    enum Heartbeat : uint32_t { BUFFS, CARRY, DISEASE, HP_REGEN, HUNGER, MOBILE_SPAWN, MP_REGEN, ROOM_SCARS, SP_REGEN, THIRST, WILDERNESS_SPAWN, _TOTAL };
+    enum Heartbeat : uint32_t { BUFFS, CARRY, DISEASE, HP_REGEN, HUNGER, MOBILE_SPAWN, MP_REGEN, ROOM_SCARS, SP_REGEN, THIRST, _TOTAL };
     enum class LightDark : uint8_t { LIGHT, DARK, NIGHT };
     enum class LunarPhase : uint8_t { NEW, WAXING_CRESCENT, FIRST_QUARTER, WAXING_GIBBOUS, FULL, WANING_GIBBOUS, THIRD_QUARTER, WANING_CRESCENT };
     enum class Season : uint8_t { AUTO, WINTER, SPRING, SUMMER, AUTUMN };
