@@ -172,7 +172,7 @@ public:
     std::string meta(const std::string &key, bool spaces = true) const; // Retrieves Room metadata.
     std::map<std::string, std::string>* meta_raw();                     // Accesses the metadata map directly. Use with caution!
     std::string name(bool short_name = false) const;                    // Returns the Room's full or short name.
-    void        respawn_mobs();                                         // Respawn Mobiles in this Room, if possible.
+    void        respawn_mobs(bool ignore_timer = false);                // Respawn Mobiles in this Room, if possible.
     void        save(std::shared_ptr<SQLite::Database> save_db);        // Saves the Room and anything it contains.
     std::string scar_desc() const;                                      // Returns the description of any room scars present.
     void        set_base_light(int new_light);                          // Sets this Room's base light level.

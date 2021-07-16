@@ -105,10 +105,7 @@ Room::Room(std::string new_id) : m_inventory(std::make_shared<Inventory>()), m_l
 }
 
 // This Room was previously inactive, and has now become active.
-void Room::activate()
-{
-    // nothing happens here yet
-}
+void Room::activate() { respawn_mobs(true); }
 
 // Adds a scar to this room.
 void Room::add_scar(ScarType type, int intensity)
@@ -418,12 +415,12 @@ std::map<std::string, std::string>* Room::meta_raw() { return &m_metadata; }
 std::string Room::name(bool short_name) const { return (short_name ? m_name_short : m_name); }
 
 // Respawn Mobiles in this Room, if possible.
-void Room::respawn_mobs()
+void Room::respawn_mobs(bool ignore_timer)
 {
     if (!m_spawn_mobs.size()) return;       // Do nothing if there's nothing to spawn.
     if (m_id == core()->world()->player()->location()) return;  // Do nothing if the player is standing here.
     if (tag(RoomTag::MobSpawned)) return;   // Do nothing if a Mobile has already spawned here.
-    if (m_last_spawned_mobs && core()->world()->time_weather()->time_passed_since(m_last_spawned_mobs) < RESPAWN_INTERVAL) return;    // Do nothing if the respawn timer isn't up.
+    if (!ignore_timer && m_last_spawned_mobs && core()->world()->time_weather()->time_passed_since(m_last_spawned_mobs) < RESPAWN_INTERVAL) return;    // Do nothing if the respawn timer isn't up.
 
     // Set the respawn timer!
     m_last_spawned_mobs = core()->world()->time_weather()->time_passed();
