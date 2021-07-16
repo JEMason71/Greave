@@ -981,7 +981,7 @@ const std::shared_ptr<Mobile> World::mob_vec(size_t vec_pos) const
 void World::new_game()
 {
     m_player->set_meta_uint("bones_id", Bones::unique_id());
-    m_player->set_location("OUTSIDE_QUEENS_GATE");
+    m_player->set_location("BRASS_DIRK");
     starter_equipment("STARTING_GEAR");
     ActionLook::look();
 }
