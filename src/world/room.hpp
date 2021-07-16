@@ -99,7 +99,7 @@ enum class RoomTag : uint16_t {
     HideCampfireScar,       // This is a bit specific. It's for rooms with PermaCampfire, where we don't want the campfire 'scar' text showing.
 
     // Tags regarding the presence of water in this room.
-    WaterClean,             // There is a source of clean water nearby. [CURRENTLY UNUSED]
+    WaterClean,             // There is a source of clean water nearby.
     WaterTainted,           // There is a water source nearby, but it is unclean. [CURRENTLY UNUSED]
     WaterSalt,              // There is a source of salt water nearby. [CURRENTLY UNUSED]
     WaterShallow,           // Is this shallow water, the kind that doesn't require swimming?

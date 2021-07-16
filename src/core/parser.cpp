@@ -44,6 +44,7 @@ Parser::Parser() : m_special_state(SpecialState::NONE)
     add_command("[examine|exam|ex|x] <item:i|item:e|item:r|item:s|mobile>", ParserCommand::EXAMINE);
     add_command("exits", ParserCommand::EXITS);
     add_command("[eyeforaneye|efae|ef]", ParserCommand::EYE_FOR_AN_EYE);
+    add_command("fill <item:i>", ParserCommand::FILL);
     add_command("[fuck|shit|piss|bastard] *", ParserCommand::SWEAR);
     add_command("[go|travel|walk|run|move] <dir>", ParserCommand::GO);
     add_command("[grit|gr]", ParserCommand::GRIT);
@@ -525,6 +526,11 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
         case ParserCommand::EXCLAIM: core()->message("{m}Please type your command {M}without any spaces {m}between the exclamation mark and the rest of the command (for example, {M}!" + StrX::collapse_vector(words) + "{m})."); break;
         case ParserCommand::EXITS: ActionLook::obvious_exits(false); break;
         case ParserCommand::EYE_FOR_AN_EYE: Abilities::eye_for_an_eye(confirm); break;
+        case ParserCommand::FILL:
+            if (!words.size()) specify("fill");
+            else if (parsed_target_type == ParserTarget::TARGET_NONE) not_carrying();
+            else if (parsed_target_type == ParserTarget::TARGET_INVENTORY) ActionEatDrink::fill(parsed_target, confirm);
+            break;
         case ParserCommand::GO:
             if (parsed_direction == Direction::NONE) specify_direction("travel");
             else ActionTravel::travel(player, parsed_direction, confirm);

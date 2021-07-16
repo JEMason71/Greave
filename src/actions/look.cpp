@@ -257,6 +257,7 @@ void ActionLook::look()
     if (scar_desc.size()) core()->message("{0}```" + scar_desc);
 
     // Special features on this room.
+    if (room->tag(RoomTag::WaterClean)) core()->message("{0}```{U}There is clean water nearby that you could gather with a water container.");
     if (room->tag(RoomTag::Arena)) core()->message("{0}```{c}If you wish, you can {C}PARTICIPATE {c}in a fight.");
     if (room->tag(RoomTag::Shop)) core()->message("{0}```{c}You can {C}BUY{c}, {C}SELL{c}, or {C}BROWSE {c}the shop's stock.");
 
