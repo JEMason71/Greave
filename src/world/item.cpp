@@ -156,8 +156,16 @@ bool Item::is_identical(std::shared_ptr<Item> item) const
     if (m_name != item->m_name) return false;
     if (m_description != item->m_description) return false;
 
-    // Way more complicated comparison stuff here.
-    if (StrX::metadata_to_string(m_metadata) != StrX::metadata_to_string(item->m_metadata)) return false;
+    // Way more complicated comparison stuff below here.
+    
+    // For metadata comparison, appraised values might differ. So we'll take that out of the equation.
+    auto copy_a = std::make_shared<Item>(*this);
+    auto copy_b = std::make_shared<Item>(*item);
+    copy_a->clear_meta("appraised_value");
+    copy_b->clear_meta("appraised_value");
+    if (StrX::metadata_to_string(copy_a->m_metadata) != StrX::metadata_to_string(copy_b->m_metadata)) return false;
+
+    // Tag matches are easier.
     if (StrX::tags_to_string(m_tags) != StrX::tags_to_string(item->m_tags)) return false;
 
     return true;

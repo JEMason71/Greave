@@ -26,6 +26,20 @@ void Inventory::add_item(std::shared_ptr<Item> item, bool force_stack)
             if (item->is_identical(m_items.at(i)))
             {
                 m_items.at(i)->set_stack(item->stack() + m_items.at(i)->stack());
+
+                // Compare appraised values, and pick the most accurate of the two.
+                const int appraised_value_a = m_items.at(i)->meta_int("appraised_value");
+                const int appraised_value_b = item->meta_int("appraised_value");
+                if (appraised_value_a != appraised_value_b)
+                {
+                    if (!appraised_value_a) m_items.at(i)->set_meta("appraised_value", appraised_value_b);
+                    else
+                    {
+                        const int diff_a = std::abs(appraised_value_a - static_cast<int>(m_items.at(i)->value(true)));
+                        const int diff_b = std::abs(appraised_value_b - static_cast<int>(m_items.at(i)->value(true)));
+                        if (diff_a > diff_b) m_items.at(i)->set_meta("appraised_value", appraised_value_b);
+                    }
+                }
                 return;
             }
         }
