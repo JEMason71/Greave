@@ -188,6 +188,16 @@ void Shop::sell(uint32_t id, int quantity, bool confirm)
     }
 
     player->add_money(value);
-    if (static_cast<uint32_t>(quantity) == stack_size) player->inv()->remove_item(id);
-    else item->set_stack(stack_size - quantity);
+    if (static_cast<uint32_t>(quantity) == stack_size)
+    {
+        add_item(item);
+        player->inv()->remove_item(id);
+    }
+    else
+    {
+        auto item_split = std::make_shared<Item>(*item);
+        item->set_stack(stack_size - quantity);
+        item_split->set_stack(quantity);
+        add_item(item_split);
+    }
 }
