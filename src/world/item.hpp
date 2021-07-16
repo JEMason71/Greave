@@ -42,6 +42,9 @@ enum class ItemTag : uint16_t { _None = 0,  // Do not use this tag, it's just a 
     OffHandOnly,        // This item can ONLY be equipped in the off-hand.
     PreferOffHand,      // When equipped, this Item prefers to be held in the off-hand.
     TwoHanded,          // This Item requires two hands to wield.
+
+    // Tags specific to consumable items.
+    DiscardWhenEmpty,   // Throw this item away automatically when it's empty.
 };
 
 class Item

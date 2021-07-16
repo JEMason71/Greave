@@ -2,6 +2,7 @@
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #include "actions/eat-drink.hpp"
+#include "actions/inventory.hpp"
 #include "core/core.hpp"
 #include "core/parser.hpp"
 #include "core/random.hpp"
@@ -66,7 +67,15 @@ void ActionEatDrink::drink(size_t inv_pos, bool confirm)
     player->add_water(liquid_consumed);
     if (item->subtype() == ItemSub::BOOZE) player->increase_tox(item->power());
     item->set_charge(liquid_available - liquid_consumed);
-    if (liquid_consumed == liquid_available) item->set_liquid("");
+    if (liquid_consumed == liquid_available)
+    {
+        item->set_liquid("");
+        if (item->tag(ItemTag::DiscardWhenEmpty))
+        {
+            core()->message("{u}You discard the empty " + item->name(Item::NAME_FLAG_NO_COLOUR | Item::NAME_FLAG_NO_COUNT) + ".");
+            player->inv()->erase(inv_pos);
+        }
+    }
 }
 
 // Eats a specified inventory item.
