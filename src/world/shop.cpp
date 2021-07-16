@@ -4,11 +4,13 @@
 #include "3rdparty/SQLiteCpp/SQLiteCpp.h"
 #include "core/core.hpp"
 #include "core/list.hpp"
+#include "core/mathx.hpp"
 #include "core/parser.hpp"
 #include "core/strx.hpp"
 #include "world/inventory.hpp"
 #include "world/item.hpp"
 #include "world/player.hpp"
+#include "world/room.hpp"
 #include "world/shop.hpp"
 #include "world/world.hpp"
 
@@ -18,7 +20,7 @@ const std::string Shop::SQL_SHOPS = "CREATE TABLE shops ( id INTEGER PRIMARY KEY
 
 
 // Constructor, sets up a blank shop by default.
-Shop::Shop() : m_inventory(std::make_shared<Inventory>(Inventory::TagPrefix::SHOP)) { }
+Shop::Shop(uint32_t room_id) : m_inventory(std::make_shared<Inventory>(Inventory::TagPrefix::SHOP)), m_room_id(room_id) { }
 
 // Adds an item to this shop's inventory.
 void Shop::add_item(std::shared_ptr<Item> item, bool sort)
@@ -115,23 +117,26 @@ void Shop::buy(uint32_t id, int quantity)
 const std::shared_ptr<Inventory> Shop::inv() const { return m_inventory; }
 
 // Loads a shop from the save file.
-void Shop::load(std::shared_ptr<SQLite::Database> save_db, uint32_t id)
+void Shop::load(std::shared_ptr<SQLite::Database> save_db)
 {
     SQLite::Statement query(*save_db, "SELECT * FROM shops WHERE id = :id");
-    query.bind(":id", id);
+    query.bind(":id", m_room_id);
     if (query.executeStep())
     {
         m_inventory->load(save_db, query.getColumn("inventory_id").getUInt());
     }
-    else throw std::runtime_error("Could not load shop data (ID: " + std::to_string(id) + ")");
+    else throw std::runtime_error("Could not load shop data (ID: " + std::to_string(m_room_id) + ")");
 }
 
 // Restocks the contents of this shop.
 void Shop::restock()
 {
     m_inventory->clear();
-    auto list = core()->world()->get_list("EVERY_ITEM");
-    for (int i = 0; i < 20; i++)
+    const std::string shop_list = "SHOP_" + StrX::str_toupper(core()->world()->get_room(m_room_id)->meta("shop_type"));
+    auto list = core()->world()->get_list(shop_list);
+    auto size_list = core()->world()->get_list(shop_list + "_SIZE");
+    const int shop_size = MathX::mixup(size_list->at(0).count, 2);
+    for (int i = 0; i < shop_size; i++)
     {
         const auto random_item = list->rnd();
         const auto new_item = core()->world()->get_item(random_item.str, random_item.count);
@@ -141,11 +146,11 @@ void Shop::restock()
 }
 
 // Saves this Shop to the save file.
-void Shop::save(std::shared_ptr<SQLite::Database> save_db, uint32_t id) const
+void Shop::save(std::shared_ptr<SQLite::Database> save_db) const
 {
     const uint32_t inv_id = m_inventory->save(save_db);
     SQLite::Statement query(*save_db, "INSERT INTO shops ( id, inventory_id ) VALUES ( :id, :inventory_id )");
-    query.bind(":id", id);
+    query.bind(":id", m_room_id);
     query.bind(":inventory_id", inv_id);
     query.exec();
 }

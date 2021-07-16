@@ -58,7 +58,7 @@ const std::map<std::string, RoomTag> World::ROOM_TAG_MAP = { { "arena", RoomTag:
 const std::map<std::string, Security> World::SECURITY_MAP = { { "anarchy", Security::ANARCHY }, { "low", Security::LOW }, { "high", Security::HIGH }, { "sanctuary", Security::SANCTUARY }, { "inaccessible", Security::INACCESSIBLE } };
 
 // A list of all valid keys in area YAML files.
-const std::set<std::string> World::VALID_YAML_KEYS_AREAS = { "desc", "exits", "light", "metadata", "name", "security", "spawn_mobs", "tags" };
+const std::set<std::string> World::VALID_YAML_KEYS_AREAS = { "desc", "exits", "light", "metadata", "name", "security", "shop_type", "spawn_mobs", "tags" };
 
 // A list of all valid keys in item YAML files.
 const std::set<std::string> World::VALID_YAML_KEYS_ITEMS = { "ammo_power", "bleed", "block_mod", "capacity", "charge", "crit", "damage_type", "desc", "dodge_mod", "liquid", "metadata", "name", "parry_mod", "poison", "power", "rare", "slot", "speed", "stack", "tags", "type", "value", "warmth", "weight" };
@@ -224,7 +224,7 @@ const std::shared_ptr<Shop> World::get_shop(uint32_t id)
     const auto it = m_shops.find(id);
     if (it == m_shops.end())
     {
-        auto new_shop = std::make_shared<Shop>();
+        auto new_shop = std::make_shared<Shop>(id);
         new_shop->restock();
         m_shops.insert(std::make_pair(id, new_shop));
         return new_shop;
@@ -294,8 +294,8 @@ void World::load(std::shared_ptr<SQLite::Database> save_db)
     while (shop_query.executeStep())
     {
         const uint32_t shop_id = shop_query.getColumn("id").getUInt();
-        auto new_shop = std::make_shared<Shop>();
-        new_shop->load(save_db, shop_id);
+        auto new_shop = std::make_shared<Shop>(shop_id);
+        new_shop->load(save_db);
         m_shops.insert(std::make_pair(shop_id, new_shop));
     }
 }
@@ -951,6 +951,9 @@ void World::load_room_pool()
                 // The Room's metadata, if any.
                 if (room_data["metadata"]) StrX::string_to_metadata(room_data["metadata"].as<std::string>(), *new_room->meta_raw());
 
+                // The room's  shop type, if any.
+                if (room_data["shop_type"]) new_room->set_meta("shop_type", room_data["shop_type"].as<std::string>());
+
                 // Clear the meta changed tag, since this is static data.
                 new_room->clear_tag(RoomTag::MetaChanged);
 
@@ -1085,7 +1088,7 @@ void World::save(std::shared_ptr<SQLite::Database> save_db)
         mob->save(save_db);
 
     for (auto shop : m_shops)
-        shop.second->save(save_db, shop.first);
+        shop.second->save(save_db);
 }
 
 // Assigns the player starter equipment from a list.

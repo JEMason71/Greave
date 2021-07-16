@@ -105,6 +105,7 @@ BRASS_DIRK:
   light: dim
   name: [ The Brass Dirk, tavern ]
   security: low
+  shop_type: tavern
   tags: [ EastLockable, Indoors, NorthIncline, Shop, Wide ]
 
 BRASS_DIRK_ARENA:
