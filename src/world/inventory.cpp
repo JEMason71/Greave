@@ -8,19 +8,21 @@
 #include "world/item.hpp"
 #include "world/world.hpp"
 
+#include <algorithm>
+
 
 // Creates a new, blank inventory.
 Inventory::Inventory(uint8_t tag_prefix) : m_tag_prefix(tag_prefix) { }
 
 // Adds an Item to this Inventory (this will later handle auto-stacking, etc.)
-void Inventory::add_item(std::shared_ptr<Item> item)
+void Inventory::add_item(std::shared_ptr<Item> item, bool force_stack)
 {
     // Checks if there's anything else here that can be stacked.
-    if (item->tag(ItemTag::Stackable))
+    if (force_stack || item->tag(ItemTag::Stackable))
     {
         for (size_t i = 0; i < m_items.size(); i++)
         {
-            if (!m_items.at(i)->tag(ItemTag::Stackable)) continue;
+            if (!force_stack && !m_items.at(i)->tag(ItemTag::Stackable)) continue;
             if (item->is_identical(m_items.at(i)))
             {
                 m_items.at(i)->set_stack(item->stack() + m_items.at(i)->stack());
@@ -29,8 +31,7 @@ void Inventory::add_item(std::shared_ptr<Item> item)
         }
     }
 
-    // Check the Item's hex ID. If it's unset, or if another Item in the Inventory shares its ID, we'll need a new one.
-    // Infinite loops relying on RNG to break out are VERY BAD so let's put a threshold on this bad boy.
+    // Check the Item's hex ID. If it's unset, or if another Item in the Inventory shares its ID, we'll need a new one. Infinite loops relying on RNG to break out are VERY BAD so let's put a threshold on this bad boy.
     int tries = 0;
     item->set_parser_id_prefix(m_tag_prefix);
     while (parser_id_exists(item->parser_id()) && ++tries < 10000)
@@ -39,7 +40,7 @@ void Inventory::add_item(std::shared_ptr<Item> item)
 }
 
 // As above, but generates a new Item from a template with a specified ID.
-void Inventory::add_item(const std::string &id) { add_item(core()->world()->get_item(id)); }
+void Inventory::add_item(const std::string &id, bool force_stack) { add_item(core()->world()->get_item(id), force_stack); }
 
 // Locates the position of an ammunition item used by the specified weapon.
 size_t Inventory::ammo_pos(std::shared_ptr<Item> item)
@@ -56,6 +57,9 @@ size_t Inventory::ammo_pos(std::shared_ptr<Item> item)
     }
     return SIZE_MAX;
 }
+
+// Erases everything from this inventory.
+void Inventory::clear() { m_items.clear(); }
 
 // Returns the number of Items in this Inventory.
 size_t Inventory::count() const { return m_items.size(); }
@@ -135,4 +139,24 @@ uint32_t Inventory::save(std::shared_ptr<SQLite::Database> save_db)
     for (size_t i = 0; i < m_items.size(); i++)
         m_items.at(i)->save(save_db, sql_id);
     return sql_id;
+}
+
+// Sorts the inventory into alphabetical order.
+void Inventory::sort()
+{
+    // Quick and dirty bubble sort. It does the job.
+    bool sorted = false;
+    do
+    {
+        sorted = false;
+        for (size_t i = 0; i < m_items.size() - 1; i++)
+        {
+            const size_t j = i + 1;
+            if (m_items.at(i)->name(Item::NAME_FLAG_NO_COLOUR | Item::NAME_FLAG_NO_COUNT) > m_items.at(j)->name(Item::NAME_FLAG_NO_COLOUR | Item::NAME_FLAG_NO_COUNT))
+            {
+                std::iter_swap(m_items.begin() + i, m_items.begin() + j);
+                sorted = true;
+            }
+        }
+    } while (sorted);
 }

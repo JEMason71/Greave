@@ -9,6 +9,7 @@ class List;                             // defined in core/list.hpp
 class Mobile;                           // defined in world/mobile.hpp
 class Player;                           // defined in world/player.hpp
 class Room;                             // defined in world/room.hpp
+class Shop;                             // defined in world/shop.hpp
 class TimeWeather;                      // defined in world/time-weather.hpp
 enum class DamageType : int8_t;         // defined in world/item.hpp
 enum class EquipSlot : uint8_t;         // defined in world/item.hpp
@@ -36,6 +37,7 @@ public:
     const std::shared_ptr<Mobile>   get_mob(const std::string &mob_id) const;   // Retrieves a specified Mobile by ID.
     const std::shared_ptr<Room>     get_room(uint32_t room_id) const;           // Retrieves a specified Room by ID.
     const std::shared_ptr<Room>     get_room(const std::string &room_id) const; // As above, but with a Room ID string.
+    const std::shared_ptr<Shop> get_shop(uint32_t id);                          // Returns a specified shop, or creates a new shop if this ID doesn't yet exist.
     float           get_skill_multiplier(const std::string &skill);             // Retrieves the XP gain multiplier for a specified skill.
     std::string     get_skill_name(const std::string &skill);                   // Retrieves the name of a specified skill.
     bool            item_exists(const std::string &str) const;                  // Checks if a specified item ID exists.
@@ -91,6 +93,7 @@ private:
     uint32_t                                        m_old_location;     // Also used for light level change checks.
     std::shared_ptr<Player>                         m_player;           // The player character.
     std::map<uint32_t, std::shared_ptr<Room>>       m_room_pool;        // All the Room templates in the game.
+    std::map<uint32_t, std::shared_ptr<Shop>>       m_shops;            // Any and all shops in the game.
     std::map<std::string, SkillData>                m_skills;           // The skills the player can use.
     std::shared_ptr<TimeWeather>                    m_time_weather;     // The World's TimeWeather object, for tracking... well, the time and weather.
 

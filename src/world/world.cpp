@@ -17,6 +17,7 @@
 #include "world/item.hpp"
 #include "world/player.hpp"
 #include "world/room.hpp"
+#include "world/shop.hpp"
 #include "world/time-weather.hpp"
 #include "world/world.hpp"
 
@@ -51,7 +52,7 @@ const std::map<std::string, LinkTag> World::LINK_TAG_MAP = { { "autoclose", Link
 const std::map<std::string, MobileTag> World::MOBILE_TAG_MAP = { { "aggroonsight", MobileTag::AggroOnSight }, { "agile", MobileTag::Agile }, { "anemic", MobileTag::Anemic }, { "beast", MobileTag::Beast}, { "brawny", MobileTag::Brawny }, { "cannotblock", MobileTag::CannotBlock }, { "cannotdodge", MobileTag::CannotDodge }, { "cannotopendoors", MobileTag::CannotOpenDoors }, { "cannotparry", MobileTag::CannotParry }, { "clumsy", MobileTag::Clumsy }, { "coward", MobileTag::Coward }, { "feeble", MobileTag::Feeble }, { "immunitybleed", MobileTag::ImmunityBleed }, { "immunitypoison", MobileTag::ImmunityPoison }, { "mighty", MobileTag::Mighty }, { "pluralname", MobileTag::PluralName }, { "propernoun", MobileTag::ProperNoun }, { "puny", MobileTag::Puny }, { "randomgender", MobileTag::RandomGender }, { "strong", MobileTag::Strong }, { "unliving", MobileTag::Unliving }, { "vigorous", MobileTag::Vigorous } };
 
 // Lookup table for converting RoomTag text names into enums.
-const std::map<std::string, RoomTag> World::ROOM_TAG_MAP = { { "arena", RoomTag::Arena }, { "canseeoutside", RoomTag::CanSeeOutside }, { "churchaltar", RoomTag::ChurchAltar }, { "digok", RoomTag::DigOK }, { "gamepoker", RoomTag::GamePoker }, { "gameslots", RoomTag::GameSlots }, { "gross", RoomTag::Gross }, { "heatedinterior", RoomTag::HeatedInterior }, { "hidecampfirescar", RoomTag::HideCampfireScar }, { "indoors", RoomTag::Indoors }, { "maze", RoomTag::Maze }, { "nexus", RoomTag::Nexus }, { "noexplorecredit", RoomTag::NoExploreCredit }, { "permacampfire", RoomTag::PermaCampfire }, { "private", RoomTag::Private }, { "radiationlight", RoomTag::RadiationLight }, { "shopbuyscontraband", RoomTag::ShopBuysContraband }, { "shoprespawningowner", RoomTag::ShopRespawningOwner }, { "sleepok", RoomTag::SleepOK }, { "sludgepit", RoomTag::SludgePit }, { "smelly", RoomTag::Smelly }, { "trees", RoomTag::Trees }, { "underground", RoomTag::Underground }, { "verywide", RoomTag::VeryWide }, { "waterclean", RoomTag::WaterClean }, { "waterdeep", RoomTag::WaterDeep }, { "watersalt", RoomTag::WaterSalt }, { "watershallow", RoomTag::WaterShallow }, { "watertainted", RoomTag::WaterTainted }, { "wide", RoomTag::Wide } };
+const std::map<std::string, RoomTag> World::ROOM_TAG_MAP = { { "arena", RoomTag::Arena }, { "canseeoutside", RoomTag::CanSeeOutside }, { "churchaltar", RoomTag::ChurchAltar }, { "digok", RoomTag::DigOK }, { "gamepoker", RoomTag::GamePoker }, { "gameslots", RoomTag::GameSlots }, { "gross", RoomTag::Gross }, { "heatedinterior", RoomTag::HeatedInterior }, { "hidecampfirescar", RoomTag::HideCampfireScar }, { "indoors", RoomTag::Indoors }, { "maze", RoomTag::Maze }, { "nexus", RoomTag::Nexus }, { "noexplorecredit", RoomTag::NoExploreCredit }, { "permacampfire", RoomTag::PermaCampfire }, { "private", RoomTag::Private }, { "radiationlight", RoomTag::RadiationLight }, { "shop", RoomTag::Shop }, { "shopbuyscontraband", RoomTag::ShopBuysContraband }, { "shoprespawningowner", RoomTag::ShopRespawningOwner }, { "sleepok", RoomTag::SleepOK }, { "sludgepit", RoomTag::SludgePit }, { "smelly", RoomTag::Smelly }, { "trees", RoomTag::Trees }, { "underground", RoomTag::Underground }, { "verywide", RoomTag::VeryWide }, { "waterclean", RoomTag::WaterClean }, { "waterdeep", RoomTag::WaterDeep }, { "watersalt", RoomTag::WaterSalt }, { "watershallow", RoomTag::WaterShallow }, { "watertainted", RoomTag::WaterTainted }, { "wide", RoomTag::Wide } };
 
 // Lookup table for converting textual room security (e.g. "anarchy") to enum values.
 const std::map<std::string, Security> World::SECURITY_MAP = { { "anarchy", Security::ANARCHY }, { "low", Security::LOW }, { "high", Security::HIGH }, { "sanctuary", Security::SANCTUARY }, { "inaccessible", Security::INACCESSIBLE } };
@@ -217,6 +218,20 @@ const std::shared_ptr<Room> World::get_room(const std::string &room_id) const
     else return get_room(StrX::hash(room_id));
 }
 
+// Returns a specified shop, or creates a new shop if this ID doesn't yet exist.
+const std::shared_ptr<Shop> World::get_shop(uint32_t id)
+{
+    const auto it = m_shops.find(id);
+    if (it == m_shops.end())
+    {
+        auto new_shop = std::make_shared<Shop>();
+        new_shop->restock();
+        m_shops.insert(std::make_pair(id, new_shop));
+        return new_shop;
+    }
+    else return it->second;
+}
+
 // Retrieves the XP gain multiplier for a specified skill.
 float World::get_skill_multiplier(const std::string &skill)
 {
@@ -266,13 +281,22 @@ void World::load(std::shared_ptr<SQLite::Database> save_db)
     const uint32_t player_sql_id = m_player->load(save_db, 0);
     m_time_weather->load(save_db);
 
-    SQLite::Statement query(*save_db, "SELECT sql_id FROM mobiles WHERE sql_id != :sql_id ORDER BY sql_id ASC");
-    query.bind(":sql_id", std::to_string(player_sql_id));
-    while (query.executeStep())
+    SQLite::Statement mob_query(*save_db, "SELECT sql_id FROM mobiles WHERE sql_id != :sql_id ORDER BY sql_id ASC");
+    mob_query.bind(":sql_id", std::to_string(player_sql_id));
+    while (mob_query.executeStep())
     {
         auto new_mob = std::make_shared<Mobile>();
-        new_mob->load(save_db, query.getColumn("sql_id").getUInt());
+        new_mob->load(save_db, mob_query.getColumn("sql_id").getUInt());
         add_mobile(new_mob);
+    }
+
+    SQLite::Statement shop_query(*save_db, "SELECT id FROM shops ORDER BY id ASC");
+    while (shop_query.executeStep())
+    {
+        const uint32_t shop_id = shop_query.getColumn("id").getUInt();
+        auto new_shop = std::make_shared<Shop>();
+        new_shop->load(save_db, shop_id);
+        m_shops.insert(std::make_pair(shop_id, new_shop));
     }
 }
 
@@ -1035,6 +1059,7 @@ void World::save(std::shared_ptr<SQLite::Database> save_db)
     save_db->exec(Player::SQL_PLAYER);
     save_db->exec(Player::SQL_SKILLS);
     save_db->exec(Room::SQL_ROOMS);
+    save_db->exec(Shop::SQL_SHOPS);
     save_db->exec(TimeWeather::SQL_HEARTBEATS);
     save_db->exec(TimeWeather::SQL_TIME_WEATHER);
     save_db->exec(SQL_WORLD);
@@ -1055,8 +1080,12 @@ void World::save(std::shared_ptr<SQLite::Database> save_db)
         room.second->save(save_db);
         if (is_active) room.second->clear_tag(RoomTag::SaveActive);
     }
+
     for (auto mob : m_mobiles)
         mob->save(save_db);
+
+    for (auto shop : m_shops)
+        shop.second->save(save_db, shop.first);
 }
 
 // Assigns the player starter equipment from a list.

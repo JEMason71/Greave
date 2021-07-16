@@ -109,6 +109,7 @@ enum class RoomTag : uint16_t {
     Private,                // Entering this room is considered trespassing. [CURRENTLY UNUSED]
 
     // Tags regarding shops.
+    Shop,                   // Khajiit has wares, if you have coin.
     ShopBuysContraband,     // This room's shop is willing to buy stolen/contraband items. [CURRENTLY UNUSED]
     ShopRespawningOwner,    // This shop's owner NPC respawns or is replaced. [CURRENTLY UNUSED]
 

@@ -88,6 +88,7 @@ public:
     void        set_liquid(const std::string &new_liquid);  // Sets the liquid contents of this Item.
     void        set_meta(const std::string &key, std::string value);    // Adds Item metadata.
     void        set_meta(const std::string &key, int value);            // As above, but with an integer value.
+    void        set_meta(const std::string &key, uint32_t value);       // As above, but with an unsigned integer value.
     void        set_meta(const std::string &key, float value);          // As above again, but this time for floats.
     void        set_name(const std::string &name);          // Sets the name of this Item.
     void        set_parser_id_prefix(uint8_t prefix);       // Sets this item's parser ID prefix.

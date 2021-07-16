@@ -99,6 +99,7 @@ set(GREAVE_CPPS
   world/room.cpp
   world/mobile.cpp
   world/player.cpp
+  world/shop.cpp
   world/time-weather.cpp
   world/world.cpp
 )

@@ -365,6 +365,13 @@ void Item::set_meta(const std::string &key, int value)
     else set_meta(key, std::to_string(value));
 }
 
+// As above, but with an unsigned integer value.
+void Item::set_meta(const std::string &key, uint32_t value)
+{
+    if (!value) clear_meta(key);
+    else set_meta(key, std::to_string(value));
+}
+
 // As above again, but this time for floats.
 void Item::set_meta(const std::string &key, float value)
 {
@@ -392,12 +399,7 @@ void Item::set_parser_id_prefix(uint8_t prefix)
 void Item::set_rare(int rarity) { m_rarity = rarity; }
 
 // Sets the stack size for this Item.
-void Item::set_stack(uint32_t size)
-{
-    if (!tag(ItemTag::Stackable)) core()->guru()->nonfatal("Attempt to set stack size on non-stackable item: " + m_name, Guru::WARN);
-    if (!size) core()->guru()->nonfatal("Attempt to set zero stack size: " + m_name, Guru::ERROR);
-    m_stack = size;
-}
+void Item::set_stack(uint32_t size) { m_stack = size; }
 
 // Sets a tag on this Item.
 void Item::set_tag(ItemTag the_tag)
@@ -437,11 +439,7 @@ std::shared_ptr<Item> Item::split(int split_count)
 }
 
 // Retrieves the stack size of this Item.
-uint32_t Item::stack() const
-{
-    if (!tag(ItemTag::Stackable)) core()->guru()->nonfatal("Attempt to check stack size of non-stackable item: " + m_name, Guru::WARN);
-    return m_stack;
-}
+uint32_t Item::stack() const { return m_stack; }
 
 // Like name(), but provides an appropriate name for a given stack size. Works on non-stackable items too.
 std::string Item::stack_name(int stack_size, int flags)

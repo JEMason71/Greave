@@ -11,6 +11,7 @@
 #include "world/item.hpp"
 #include "world/player.hpp"
 #include "world/room.hpp"
+#include "world/shop.hpp"
 #include "world/world.hpp"
 
 
@@ -25,6 +26,7 @@ void ActionLook::examine(ParserTarget target_type, size_t target)
         case ParserTarget::TARGET_INVENTORY: examine_item(player->inv()->get(target)); break;
         case ParserTarget::TARGET_MOBILE: examine_mobile(world->mob_vec(target)); break;
         case ParserTarget::TARGET_ROOM: examine_item(world->get_room(player->location())->inv()->get(target)); break;
+        case ParserTarget::TARGET_SHOP: examine_item(world->get_shop(player->location())->inv()->get(target)); break;
         default: core()->guru()->nonfatal("Invalid examine target.", Guru::ERROR);
     }
 }
@@ -33,7 +35,6 @@ void ActionLook::examine(ParserTarget target_type, size_t target)
 void ActionLook::examine_item(std::shared_ptr<Item> target)
 {
     const int appraised_value = target->appraised_value();
-    //const std::string it_has_string = (
     const bool plural_name = target->tag(ItemTag::PluralName) || (target->tag(ItemTag::Stackable) && target->stack() > 1);
     const std::string it_has_string_caps = (plural_name ? "They have" : "It has");
     const std::string it_is_string= (plural_name ? "they are" : "it is");
@@ -253,6 +254,7 @@ void ActionLook::look()
 
     // Special features on this room.
     if (room->tag(RoomTag::Arena)) core()->message("{0}```{c}If you wish, you can {C}PARTICIPATE {c}in a fight.");
+    if (room->tag(RoomTag::Shop)) core()->message("{0}```{c}You can {C}BUY{c}, {C}SELL{c}, or {C}BROWSE {c}the shop's stock.");
 
     // Show any scar effects on the room.
     const std::string scar_desc = room->scar_desc();

@@ -21,6 +21,7 @@
 #include "world/item.hpp"
 #include "world/player.hpp"
 #include "world/room.hpp"
+#include "world/shop.hpp"
 #include "world/world.hpp"
 
 
@@ -30,6 +31,8 @@ Parser::Parser() : m_special_state(SpecialState::NONE)
     add_command("! <txt>", ParserCommand::EXCLAIM);
     add_command("[abilities|ability]", ParserCommand::ABILITIES);
     add_command("[attack|kill|k] <mobile>", ParserCommand::ATTACK);
+    add_command("browse", ParserCommand::BROWSE);
+    add_command("[buy|purchase] <item:s>", ParserCommand::BUY);
     add_command("[carefulaim|ca]", ParserCommand::CAREFUL_AIM);
     add_command("close <dir>", ParserCommand::CLOSE);
     add_command("drink <item:i>", ParserCommand::DRINK);
@@ -37,7 +40,7 @@ Parser::Parser() : m_special_state(SpecialState::NONE)
     add_command("[eat|consume] <item:i>", ParserCommand::EAT);
     add_command("[equipment|equip|eq]", ParserCommand::EQUIPMENT);
     add_command("[equip|eq|wield|hold|wear] <item:i>", ParserCommand::EQUIP);
-    add_command("[examine|exam|ex|x] <item:i|item:e|item:r|mobile>", ParserCommand::EXAMINE);
+    add_command("[examine|exam|ex|x] <item:i|item:e|item:r|item:s|mobile>", ParserCommand::EXAMINE);
     add_command("exits", ParserCommand::EXITS);
     add_command("[eyeforaneye|efae|ef]", ParserCommand::EYE_FOR_AN_EYE);
     add_command("[fuck|shit|piss|bastard] *", ParserCommand::SWEAR);
@@ -49,7 +52,7 @@ Parser::Parser() : m_special_state(SpecialState::NONE)
     add_command("[ladyluck|lady|ll] <mobile>", ParserCommand::LADY_LUCK);
     add_command("lock <dir>", ParserCommand::LOCK);
     add_command("[look|l]", ParserCommand::LOOK);
-    add_command("[look|l] <item:i|item:e|item:r|mobile>", ParserCommand::EXAMINE);
+    add_command("[look|l] <item:i|item:e|item:r|item:s|mobile>", ParserCommand::EXAMINE);
     add_command("no", ParserCommand::NO);
     add_command("[north|n|east|e|south|s|west|w|northeast|ne|northwest|nw|southeast|se|southwest|sw|up|u|down|d]", ParserCommand::DIRECTION);
     add_command("open <dir>", ParserCommand::OPEN);
@@ -60,6 +63,7 @@ Parser::Parser() : m_special_state(SpecialState::NONE)
     add_command("save", ParserCommand::SAVE);
     add_command("[sa|sb|sd]", ParserCommand::STANCE);
     add_command("[score|sc]", ParserCommand::SCORE);
+    add_command("[sell|pawn|fence] <item:i>", ParserCommand::SELL);
     add_command("[shieldwall|sh]", ParserCommand::SHIELD_WALL);
     add_command("[skills|skill|sk]", ParserCommand::SKILLS);
     add_command("[snapshot|ss] <mobile>", ParserCommand::SNAP_SHOT);
@@ -214,9 +218,9 @@ Parser::ParserSearchResult Parser::parse_target(std::vector<std::string> input, 
     }
 
     // Items the player has equipped.
-    const std::shared_ptr<Inventory> equ = player->equ();
-    if ((target & ParserTarget::TARGET_EQUIPMENT) == ParserTarget::TARGET_EQUIPMENT)
+    if (target & ParserTarget::TARGET_EQUIPMENT)
     {
+        const std::shared_ptr<Inventory> equ = player->equ();
         for (size_t i = 0; i < equ->count(); i++)
         {
             const std::shared_ptr<Item> item = equ->get(i);
@@ -225,9 +229,9 @@ Parser::ParserSearchResult Parser::parse_target(std::vector<std::string> input, 
     }
 
     // Items the player is carrying.
-    const std::shared_ptr<Inventory> inv = player->inv();
-    if ((target & ParserTarget::TARGET_INVENTORY) == ParserTarget::TARGET_INVENTORY)
+    if (target & ParserTarget::TARGET_INVENTORY)
     {
+        const std::shared_ptr<Inventory> inv = player->inv();
         for (size_t i = 0; i < inv->count(); i++)
         {
             const std::shared_ptr<Item> item = inv->get(i);
@@ -236,13 +240,29 @@ Parser::ParserSearchResult Parser::parse_target(std::vector<std::string> input, 
     }
 
     // Items in the room the player is at.
-    const std::shared_ptr<Inventory> room_inv = world->get_room(player_location)->inv();
-    if ((target & ParserTarget::TARGET_ROOM) == ParserTarget::TARGET_ROOM)
+    if (target & ParserTarget::TARGET_ROOM)
     {
+        const std::shared_ptr<Inventory> room_inv = world->get_room(player_location)->inv();
         for (size_t i = 0; i < room_inv->count(); i++)
         {
             const std::shared_ptr<Item> item = room_inv->get(i);
             candidates.push_back({0, StrX::str_tolower(item->name(Item::NAME_FLAG_NO_COLOUR)), StrX::str_tolower(item->name(Item::NAME_FLAG_NO_COLOUR | Item::NAME_FLAG_NO_COUNT)), item->parser_id(), i, ParserTarget::TARGET_ROOM, count});
+        }
+    }
+
+    // Items in a shop at the player's room.
+    if (target & ParserTarget::TARGET_SHOP)
+    {
+        const auto room = world->get_room(player_location);
+        if (room->tag(RoomTag::Shop))
+        {
+            const auto shop = world->get_shop(player_location);
+            const auto shop_inv = shop->inv();
+            for (size_t i = 0; i < shop_inv->count(); i++)
+            {
+                const auto item = shop_inv->get(i);
+                candidates.push_back({0, StrX::str_tolower(item->name(Item::NAME_FLAG_NO_COLOUR)), StrX::str_tolower(item->name(Item::NAME_FLAG_NO_COLOUR | Item::NAME_FLAG_NO_COUNT)), item->parser_id(), i, ParserTarget::TARGET_SHOP, count});
+            }
         }
     }
 
@@ -349,7 +369,9 @@ Parser::ParserSearchResult Parser::parse_target(std::vector<std::string> input, 
 // Parses a known command.
 void Parser::parse_pcd(const std::string &first_word, const std::vector<std::string> &words, ParserCommandData pcd, bool confirm)
 {
-    const std::shared_ptr<Mobile> player = core()->world()->player();
+    const auto world = core()->world();
+    const auto player = world->player();
+    const auto room = world->get_room(player->location());
     Direction parsed_direction = Direction::NONE;
     size_t parsed_target = 0;
     ParserTarget parsed_target_type = ParserTarget::TARGET_NONE;
@@ -376,6 +398,7 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             if (pcd_word.find("item:i") != std::string::npos) target_flags ^= ParserTarget::TARGET_INVENTORY;
             if (pcd_word.find("item:e") != std::string::npos) target_flags ^= ParserTarget::TARGET_EQUIPMENT;
             if (pcd_word.find("item:r") != std::string::npos) target_flags ^= ParserTarget::TARGET_ROOM;
+            if (pcd_word.find("item:s") != std::string::npos) target_flags ^= ParserTarget::TARGET_SHOP;
             if (pcd_word.find("mobile") != std::string::npos) target_flags ^= ParserTarget::TARGET_MOBILE;
             if (!target_flags) continue;
 
@@ -385,12 +408,12 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
                 if (target_flags == ParserTarget::TARGET_MOBILE && pcd.command != ParserCommand::HEAL_CHEAT)
                 {
                     // Check if the player has a *valid* Mobile targetted already. mob_target() will return 0 if there is no target, no valid target, or the valid target is no longer in the same room, which saves us some effort here.
-                    uint32_t target_id = core()->world()->player()->mob_target();
+                    uint32_t target_id = player->mob_target();
                     if (!target_id) continue;
 
-                    for (size_t i = 0; i < core()->world()->mob_count(); i++)
+                    for (size_t i = 0; i < world->mob_count(); i++)
                     {
-                        const auto mob = core()->world()->mob_vec(i);
+                        const auto mob = world->mob_vec(i);
                         if (mob->id() == target_id)
                         {
                             parsed_target = i;
@@ -418,11 +441,11 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             {
                 // Clear any existing auto-target, if the player enters something uncertain.
                 if (psr.type == ParserTarget::TARGET_NONE || psr.type == ParserTarget::TARGET_UNCLEAR)
-                    core()->world()->player()->set_mob_target(0);
+                    player->set_mob_target(0);
 
                 // If a target was picked, update the player's auto-target.
                 else if (psr.type == ParserTarget::TARGET_MOBILE)
-                    core()->world()->player()->set_mob_target(core()->world()->mob_vec(psr.target)->id());
+                    player->set_mob_target(world->mob_vec(psr.target)->id());
             }
         }
     }
@@ -450,8 +473,18 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             else ActionCheat::add_money(parse_int(words.at(0)));
             break;
         case ParserCommand::ATTACK:
-            if (parsed_target_type == ParserTarget::TARGET_MOBILE) Combat::attack(player, core()->world()->mob_vec(parsed_target));
+            if (parsed_target_type == ParserTarget::TARGET_MOBILE) Combat::attack(player, world->mob_vec(parsed_target));
             else if (!words.size()) specify("attack");
+            else if (parsed_target_type == ParserTarget::TARGET_NONE) not_here();
+            break;
+        case ParserCommand::BROWSE:
+            if (!room->tag(RoomTag::Shop)) core()->message("{y}There is no {Y}shop {y}to browse here.");
+            else world->get_shop(player->location())->browse();
+            break;
+        case ParserCommand::BUY:
+            if (!room->tag(RoomTag::Shop)) core()->message("{y}There is no {Y}shop {y}to buy anything from here.");
+            else if (!words.size()) specify("buy");
+            else if (parsed_target_type == ParserTarget::TARGET_SHOP) world->get_shop(player->location())->buy(parsed_target, parsed_target_count);
             else if (parsed_target_type == ParserTarget::TARGET_NONE) not_here();
             break;
         case ParserCommand::CAREFUL_AIM: Abilities::careful_aim(confirm); break;
@@ -548,6 +581,12 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             break;
         case ParserCommand::SAVE: core()->save(); break;
         case ParserCommand::SCORE: ActionStatus::score(); break;
+        case ParserCommand::SELL:
+            if (!room->tag(RoomTag::Shop)) core()->message("{y}There is no {Y}shop {y}to buy anything from here.");
+            else if (!words.size()) specify("sell");
+            else if (parsed_target_type == ParserTarget::TARGET_NONE) not_carrying();
+            else if (parsed_target_type == ParserTarget::TARGET_INVENTORY) world->get_shop(player->location())->sell(parsed_target, parsed_target_count, confirm);
+            break;
         case ParserCommand::SHIELD_WALL: Abilities::shield_wall(confirm); break;
         case ParserCommand::SKILLS: ActionStatus::skills(); break;
         case ParserCommand::SNAP_SHOT:
