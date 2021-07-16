@@ -10,9 +10,11 @@ class ActionEatDrink
 public:
     static void drink(size_t inv_pos, bool confirm);    // Drinks a specified inventory item.
     static void eat(size_t inv_pos, bool confirm);      // Eats a specified inventory item.
+    static void empty(size_t inv_pos, bool confirm);    // Empties a liquid container.
     static void vomit(bool confirm);                    // Loses the contents of your stomach.
 
 private:
+    static const int    TIME_EMPTY_CONTAINER;           // The time taken to empty a water container.
     static const int    VOMIT_CHANCE_BLOAT_MAJOR;       // 1 in X chance of vomiting from severely over-eating.
     static const int    VOMIT_CHANCE_BLOAT_MINOR;       // 1 in X chance of vomiting from just over-eating a little.
     static const int    VOMIT_FOOD_LOSS_MAX;            // 1 to X food lost when vomiting.

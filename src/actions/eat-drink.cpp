@@ -20,6 +20,7 @@ const int ActionEatDrink::VOMIT_MINIMUM_FOOD_REMAINING =    3;  // How much food
 const int ActionEatDrink::VOMIT_MINIMUM_WATER_REMAINING =   3;  // How much water to allow to remain after vomiting?
 const int ActionEatDrink::VOMIT_SCAR_INTENSITY =            5;  // Vomit type scar intensity for vomiting once.
 const int ActionEatDrink::VOMIT_WATER_LOSS_MAX =            2;  // 1 to X water lost when vomiting.
+const int ActionEatDrink::TIME_EMPTY_CONTAINER =            5;  // The time taken to empty a water container.
 
 
 // Drinks a specified inventory item.
@@ -125,6 +126,41 @@ void ActionEatDrink::eat(size_t inv_pos, bool confirm)
     else item->set_stack(item->stack() - 1);
 
     if ((new_hunger >= 25 && core()->rng()->rnd(VOMIT_CHANCE_BLOAT_MAJOR) == 1) || (new_hunger > 20 && new_hunger < 25 && core()->rng()->rnd(VOMIT_CHANCE_BLOAT_MINOR) == 1)) vomit(true);
+}
+
+// Empties a liquid container.
+void ActionEatDrink::empty(size_t inv_pos, bool confirm)
+{
+    const auto player = core()->world()->player();
+    const auto item = player->inv()->get(inv_pos);
+
+    if (item->type() != ItemType::DRINK)
+    {
+        core()->message("{u}That isn't something you can empty.");
+        return;
+    }
+    if (!item->charge())
+    {
+        core()->message("{u}There's nothing left to empty.");
+        return;
+    }
+
+    if (!player->pass_time(TIME_EMPTY_CONTAINER, !confirm))
+    {
+        core()->parser()->interrupted("empty " + item->name(Item::NAME_FLAG_NO_COUNT | Item::NAME_FLAG_NO_COLOUR | Item::NAME_FLAG_THE));
+        return;
+    }
+    if (player->is_dead()) return;
+
+    core()->world()->get_room(player->location())->add_scar(ScarType::WATER, item->charge());
+    core()->message("{U}You empty out all the " + item->liquid_type() + " from " + item->name(Item::NAME_FLAG_NO_COUNT | Item::NAME_FLAG_NO_COLOUR | Item::NAME_FLAG_THE) + ".");
+
+    if (item->tag(ItemTag::DiscardWhenEmpty)) player->inv()->erase(inv_pos);
+    else
+    {
+        item->set_charge(0);
+        item->clear_meta("liquid");
+    }
 }
 
 // Loses the contents of your stomach.

@@ -21,7 +21,7 @@ CLOSE: "You can close doors (or windows, grates, or other door-like things) with
 COMMAND: "#COMMANDS"
 
 COMMANDS: [ "{W}Combat commands: {C}ABILITIES{w}, {C}ATTACK{w}, {C}STANCE",
-            "{W}Item interaction: {C}BROWSE{w}, {C}BUY{W}, {C}DRINK{w}, {C}DROP{w}, {C}EAT{w}, {C}EQUIP{w}, {C}EXAMINE{w}, {C}INVENTORY{w}, {C}SELL{w}, {C}TAKE{w}, {C}UNEQUIP",
+            "{W}Item interaction: {C}BROWSE{w}, {C}BUY{W}, {C}DRINK{w}, {C}DROP{w}, {C}EAT{w}, {C}EMPTY{w}, {C}EQUIP{w}, {C}EXAMINE{w}, {C}INVENTORY{w}, {C}SELL{w}, {C}TAKE{w}, {C}UNEQUIP",
             "{W}Room interaction: {C}CLOSE{w}, {C}EXITS{w}, {C}LOCK{w}, {C}LOOK{w}, {C}OPEN{w}, {C}TRAVEL{w}, {C}UNLOCK",
             "{W}Status commands: {C}SCORE{w}, {C}SKILLS{w}, {C}STATUS{w}, {C}TIME{w}, {C}WEATHER",
             "{W}Misc: {C}HELP{w}, {C}QUIT{w}, {C}SAVE{c}, {C}VOMIT, {C}WAIT" ]
@@ -47,6 +47,8 @@ EAT: "To eat some food, type {C}EAT {w}followed by the name of the item (e.g. {C
 EF: "#EYEFORANEYE"
 
 EFAE: "#EYEFORANEYE"
+
+EMPTY: "You can empty a liquid container by tying {C}EMPTY {w}followed by the name of the container (e.g. {C}EMPTY WATERSKIN{w})."
 
 EQ: "#EQUIP"
 

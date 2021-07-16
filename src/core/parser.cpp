@@ -38,6 +38,7 @@ Parser::Parser() : m_special_state(SpecialState::NONE)
     add_command("drink <item:i>", ParserCommand::DRINK);
     add_command("drop <item:i>", ParserCommand::DROP);
     add_command("[eat|consume] <item:i>", ParserCommand::EAT);
+    add_command("empty <item:i>", ParserCommand::EMPTY);
     add_command("[equipment|equip|eq]", ParserCommand::EQUIPMENT);
     add_command("[equip|eq|wield|hold|wear] <item:i>", ParserCommand::EQUIP);
     add_command("[examine|exam|ex|x] <item:i|item:e|item:r|item:s|mobile>", ParserCommand::EXAMINE);
@@ -504,6 +505,11 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             if (!words.size()) specify("eat");
             else if (parsed_target_type == ParserTarget::TARGET_NONE) not_carrying();
             else if (parsed_target_type == ParserTarget::TARGET_INVENTORY) ActionEatDrink::eat(parsed_target, confirm);
+            break;
+        case ParserCommand::EMPTY:
+            if (!words.size()) specify("empty");
+            else if (parsed_target_type == ParserTarget::TARGET_NONE) not_carrying();
+            else if (parsed_target_type == ParserTarget::TARGET_INVENTORY) ActionEatDrink::empty(parsed_target, confirm);
             break;
         case ParserCommand::EQUIP:
             if (!words.size()) specify("equip");
