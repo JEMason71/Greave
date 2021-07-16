@@ -234,8 +234,9 @@ void ActionLook::examine_mobile(std::shared_ptr<Mobile> target)
 // Take a look around at your surroundings.
 void ActionLook::look()
 {
-    const auto player = core()->world()->player();
-    const auto room = core()->world()->get_room(player->location());
+    const auto world = core()->world();
+    const auto player = world->player();
+    const auto room = world->get_room(player->location());
 
     if (room->light() < Room::LIGHT_VISIBLE)
     {
@@ -268,14 +269,41 @@ void ActionLook::look()
 
     // Mobiles nearby.
     std::vector<std::string> mobs_nearby;
-    for (size_t i = 0; i < core()->world()->mob_count(); i++)
+    for (size_t i = 0; i < world->mob_count(); i++)
     {
-        const auto world_mob = core()->world()->mob_vec(i);
+        const auto world_mob = world->mob_vec(i);
         if (!world_mob) continue; // Ignore any nullptr Mobiles.
         if (world_mob->location() != player->location()) continue;  // Ignore any Mobiles not in this Room.
         mobs_nearby.push_back((world_mob->is_hostile() ? "{R}" : "{Y}") + world_mob->name(Mobile::NAME_FLAG_NO_COLOUR | Mobile::NAME_FLAG_HEALTH) + "{w}");
     }
     if (mobs_nearby.size()) core()->message("{0}{g}```Nearby: {w}" + StrX::comma_list(mobs_nearby, StrX::CL_AND));
+
+    // Check surrounding rooms, to see if anyone is within sight.
+    std::vector<std::string> adjacent_mobs;
+    for (int i = 0; i < Room::ROOM_LINKS_MAX; i++)
+    {
+        if (room->fake_link(i)) continue;   // If it goes nowhere, ignore it.
+        if (room->link_tag(i, LinkTag::Openable) && !room->link_tag(i, LinkTag::Open)) continue;    //  Ignore closed doors.
+        if (room->link_tag(i, LinkTag::Hidden)) continue;    // Ignore hidden links.
+        std::vector<std::string> adjacent_this_direction;
+        const auto adjacent_room = world->get_room(room->link(i));
+        if (adjacent_room->light() < Room::LIGHT_VISIBLE) continue; // Can't see into dark rooms!
+        for (size_t m = 0; m < world->mob_count(); m++)
+        {
+            const auto mob = world->mob_vec(m);
+            const std::string colour = (mob->is_hostile() ? "{R}" : "{Y}");
+            if (mob->location() == adjacent_room->id()) adjacent_this_direction.push_back(colour + mob->name(Mobile::NAME_FLAG_NO_COLOUR) + "{w}");
+        }
+        if (!adjacent_this_direction.size()) continue;
+        StrX::collapse_list(adjacent_this_direction);
+        std::string mob_list = StrX::comma_list(adjacent_this_direction, StrX::CL_AND);
+        Direction dir = static_cast<Direction>(i);
+        if (dir == Direction::UP) mob_list += " above";
+        else if (dir == Direction::DOWN) mob_list += " below";
+        else mob_list += " to the " + StrX::dir_to_name(dir);
+        adjacent_mobs.push_back(mob_list);
+    }
+    if (adjacent_mobs.size()) core()->message("{0}{g}```Adjacent: {w}" + StrX::comma_list(adjacent_mobs, StrX::CL_AND));
 }
 
 // Lists the exits from this area.

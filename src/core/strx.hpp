@@ -16,6 +16,7 @@ public:
     enum class MGSC : uint8_t { SHORT, SHORT_ROUND, LONG, LONG_COINS }; // mgsc_string() modes.
 
     static std::string  capitalize_first_letter(std::string str);   // Capitalizes the first letter of a string.
+    static void         collapse_list(std::vector<std::string> &vec);   // Collapses a string vector list, combining duplicates.
     static std::string  collapse_vector(std::vector<std::string> vec);  // Simple function to collapse a string vector into words.
     static std::string  collapse_vector(std::vector<uint32_t> vec);     // As above, but for an integer vector>
     static std::string  comma_list(std::vector<std::string> vec, int flags = 0);    // Converts a vector to a comma-separated list.

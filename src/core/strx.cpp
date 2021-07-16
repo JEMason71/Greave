@@ -25,6 +25,27 @@ std::string StrX::capitalize_first_letter(std::string str)
     return str;
 }
 
+// // Collapses a string vector list, combining duplicates.
+void StrX::collapse_list(std::vector<std::string> &vec)
+{
+    if (vec.size() < 2) return;
+    for (size_t i = 0; i < vec.size(); i++)
+    {
+        const std::string entry = vec.at(i);
+        int total_count = 1;
+        for (size_t j = i + 1; j < vec.size(); j++)
+        {
+            if (vec.at(j) == entry)
+            {
+                total_count++;
+                vec.erase(vec.begin() + j);
+                j--;
+            }
+        }
+        if (total_count > 1) vec.at(i) = entry + " (" + std::to_string(total_count) + ")";
+    }
+}
+
 // Simple function to collapse a string vector into words.
 std::string StrX::collapse_vector(std::vector<std::string> vec)
 {
