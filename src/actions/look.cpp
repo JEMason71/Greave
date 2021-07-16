@@ -276,7 +276,11 @@ void ActionLook::look()
         if (world_mob->location() != player->location()) continue;  // Ignore any Mobiles not in this Room.
         mobs_nearby.push_back((world_mob->is_hostile() ? "{R}" : "{Y}") + world_mob->name(Mobile::NAME_FLAG_NO_COLOUR | Mobile::NAME_FLAG_HEALTH) + "{w}");
     }
-    if (mobs_nearby.size()) core()->message("{0}{g}```Nearby: {w}" + StrX::comma_list(mobs_nearby, StrX::CL_AND));
+    if (mobs_nearby.size())
+    {
+        StrX::collapse_list(mobs_nearby);
+        core()->message("{0}{g}```Nearby: {w}" + StrX::comma_list(mobs_nearby, StrX::CL_AND));
+    }
 
     // Check surrounding rooms, to see if anyone is within sight.
     std::vector<std::string> adjacent_mobs;
