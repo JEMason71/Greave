@@ -82,7 +82,7 @@ void ActionLook::examine_item(std::shared_ptr<Item> target)
             if (target->crit()) damage_str_vec.push_back("a critical hit bonus of {U}" + std::to_string(target->crit()) + "%{w}");
             if (target->bleed()) damage_str_vec.push_back("a bleeding bonus of {U}" + std::to_string(target->bleed()) + "%{w}");
             if (target->poison()) damage_str_vec.push_back("a poison bonus of {U}" + std::to_string(target->poison()) + "%{w}");
-            stat_string += rarity_msg() + StrX::comma_list(damage_str_vec, StrX::CL_FLAG_USE_AND | StrX::CL_FLAG_OXFORD_COMMA) + ". ";
+            stat_string += rarity_msg() + StrX::comma_list(damage_str_vec, StrX::CL_AND | StrX::CL_OXFORD_COMMA) + ". ";
 
             break;
         }
@@ -180,7 +180,7 @@ void ActionLook::examine_item(std::shared_ptr<Item> target)
             if (target->crit()) damage_str_vec.push_back("a critical hit chance of {U}" + std::to_string(target->crit()) + "%{w}");
             if (target->bleed()) damage_str_vec.push_back("a {U}" + std::to_string(target->bleed()) + "%{w} chance to cause bleeding wounds");
             if (target->poison()) damage_str_vec.push_back("a {U}" + std::to_string(target->poison()) + "%{w} chance to inflict poison");
-            stat_string += StrX::comma_list(damage_str_vec, StrX::CL_FLAG_USE_AND | StrX::CL_FLAG_OXFORD_COMMA) + ". ";
+            stat_string += StrX::comma_list(damage_str_vec, StrX::CL_AND | StrX::CL_OXFORD_COMMA) + ". ";
 
             if (target->tag(ItemTag::AmmoArrow)) stat_string += it_uses_string_caps + " {U}arrows {w}for ammunition. ";
             if (target->tag(ItemTag::AmmoBolt)) stat_string += it_uses_string_caps + " {U}bolts {w}for ammunition. ";
@@ -263,7 +263,7 @@ void ActionLook::look()
         std::vector<std::string> items_nearby;
         for (size_t i = 0; i < room->inv()->count(); i++)
             items_nearby.push_back(room->inv()->get(i)->name(Item::NAME_FLAG_CORE_STATS) + "{w}");
-        core()->message("{0}{g}```Items: {w}" + StrX::comma_list(items_nearby, StrX::CL_FLAG_USE_AND));
+        core()->message("{0}{g}```Items: {w}" + StrX::comma_list(items_nearby, StrX::CL_AND));
     }
 
     // Mobiles nearby.
@@ -275,7 +275,7 @@ void ActionLook::look()
         if (world_mob->location() != player->location()) continue;  // Ignore any Mobiles not in this Room.
         mobs_nearby.push_back((world_mob->is_hostile() ? "{R}" : "{Y}") + world_mob->name(Mobile::NAME_FLAG_NO_COLOUR | Mobile::NAME_FLAG_HEALTH) + "{w}");
     }
-    if (mobs_nearby.size()) core()->message("{0}{g}```Nearby: {w}" + StrX::comma_list(mobs_nearby, StrX::CL_FLAG_USE_AND));
+    if (mobs_nearby.size()) core()->message("{0}{g}```Nearby: {w}" + StrX::comma_list(mobs_nearby, StrX::CL_AND));
 }
 
 // Lists the exits from this area.
@@ -322,5 +322,5 @@ void ActionLook::obvious_exits(bool indent)
 
         exits_vec.push_back(exit_name);
     }
-    if (exits_vec.size()) core()->message(std::string(indent ? "{0}```" : "") + "{g}Obvious exits: " + StrX::comma_list(exits_vec, StrX::CL_FLAG_USE_AND));
+    if (exits_vec.size()) core()->message(std::string(indent ? "{0}```" : "") + "{g}Obvious exits: " + StrX::comma_list(exits_vec, StrX::CL_AND));
 }

@@ -395,7 +395,7 @@ std::string Mobile::name(int flags) const
         }
         if (has_buff(Buff::Type::BLEED)) health_vec.push_back("{R}bleeding{w}");
         if (has_buff(Buff::Type::POISON)) health_vec.push_back("{G}poisoned{w}");
-        if (health_vec.size()) ret += " (" + StrX::comma_list(health_vec, StrX::CL_FLAG_OXFORD_COMMA | StrX::CL_FLAG_NO_OR) + ")";
+        if (health_vec.size()) ret += " (" + StrX::comma_list(health_vec, StrX::CL_OXFORD_COMMA) + ")";
     }
 
     if (no_colour) ret = StrX::strip_ansi(ret);

@@ -339,7 +339,7 @@ Parser::ParserSearchResult Parser::parse_target(std::vector<std::string> input, 
     std::vector<std::string> candidate_names;
     for (auto c : candidates)
         candidate_names.push_back("{C}" + c.name + " {B}{" + StrX::itos(c.parser_id, 4) + "}{c}");
-    disambig += StrX::comma_list(candidate_names) + "?";
+    disambig += StrX::comma_list(candidate_names, StrX::CL_OR) + "?";
     core()->message(disambig);
     m_special_state = SpecialState::DISAMBIGUATION;
     return { 0, "", "", 0, 0, ParserTarget::TARGET_UNCLEAR, 0 };

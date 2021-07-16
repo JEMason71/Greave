@@ -13,7 +13,9 @@
 #include <sstream>
 
 
-const int StrX::CL_FLAG_USE_AND = 1, StrX::CL_FLAG_OXFORD_COMMA = 2, StrX::CL_FLAG_NO_OR = 4;   // comma_list() flags
+const int StrX::CL_AND =            1;  // comma_list() flag: Include "and" before the last entry in the list.
+const int StrX::CL_OR =             2;  // comma_list() flag: Include "or" before the last entry in the list.
+const int StrX::CL_OXFORD_COMMA =   4;  // comma_list() flag: Insert an Oxford comma before the last entry in the list.
 
 
 // Capitalizes the first letter of a string.
@@ -46,21 +48,18 @@ std::string StrX::collapse_vector(std::vector<uint32_t> vec)
 
 std::string StrX::comma_list(std::vector<std::string> vec, int flags)
 {
-    const bool use_and = ((flags & CL_FLAG_USE_AND) == CL_FLAG_USE_AND);
-    const bool oxford_comma = ((flags & CL_FLAG_OXFORD_COMMA) == CL_FLAG_OXFORD_COMMA);
-    const bool no_or = ((flags & CL_FLAG_NO_OR) == CL_FLAG_NO_OR);
+    const bool use_and = (flags & CL_AND);
+    const bool use_or = (flags & CL_OR);
+    const bool oxford_comma = (flags & CL_OXFORD_COMMA);
     if (!vec.size())
     {
         core()->guru()->nonfatal("Empty vector provided to comma_list!", Guru::WARN);
         return "";
     }
     if (vec.size() == 1) return vec.at(0);
-    std::string plus = " and ";
-    if (!use_and)
-    {
-        if (no_or) plus = " ";
-        else plus = " or ";
-    }
+    std::string plus = " ";
+    if (use_and) plus = " and ";
+    else if (use_or) plus = " or ";
     if (oxford_comma) plus = "," + plus;
     else if (vec.size() == 2) return vec.at(0) + plus + vec.at(1);
 
@@ -298,7 +297,7 @@ std::string StrX::mgsc_string(uint32_t coin, StrX::MGSC mode)
         if (gold) result_vec.push_back(std::to_string(gold) + " gold");
         if (silver) result_vec.push_back(std::to_string(silver) + " silver");
         if (copper) result_vec.push_back(std::to_string(copper) + " copper");
-        if (result_vec.size()) return comma_list(result_vec, CL_FLAG_USE_AND) + (mode == MGSC::LONG_COINS ? (total_coins  == 1 ? " {w}coin" : " {w}coins") : "");
+        if (result_vec.size()) return comma_list(result_vec, CL_AND) + (mode == MGSC::LONG_COINS ? (total_coins  == 1 ? " {w}coin" : " {w}coins") : "");
         else return "zero";
     }
 }
