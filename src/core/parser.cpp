@@ -44,7 +44,7 @@ Parser::Parser() : m_special_state(SpecialState::NONE)
     add_command("[examine|exam|ex|x] <item:i|item:e|item:r|item:s|mobile>", ParserCommand::EXAMINE);
     add_command("exits", ParserCommand::EXITS);
     add_command("[eyeforaneye|efae|ef]", ParserCommand::EYE_FOR_AN_EYE);
-    add_command("fill <item:i>", ParserCommand::FILL);
+    add_command("[fill|refill] <item:i>", ParserCommand::FILL);
     add_command("[fuck|shit|piss|bastard] *", ParserCommand::SWEAR);
     add_command("[go|travel|walk|run|move] <dir>", ParserCommand::GO);
     add_command("[grit|gr]", ParserCommand::GRIT);

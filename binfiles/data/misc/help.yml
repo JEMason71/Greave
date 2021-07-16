@@ -172,6 +172,8 @@ RAPID_STRIKE: "#RAPIDSTRIKE"
 
 RAPIDSTRIKE: "The {C}RAPIDSTRIKE {w}ability (can be shortened to {C}RS{w}) allows you to make a very quick melee attack against your opponent, at the cost of accuracy."
 
+REFILL: "#FILL"
+
 REMOVE: "#UNEQUIP"
 
 ROOM: "A {C}ROOM {w}is a singular area in the game world, with links leading to adjacent rooms in cardinal compass directions (as well as up and down). 'Rooms' do not necessarily mean literal rooms - a room could be a forest clearing, a mountain lake, or an empty stretch of road."
