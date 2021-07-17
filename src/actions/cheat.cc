@@ -8,9 +8,10 @@
 
 
 namespace greave {
+namespace cheat {
 
 // Adds money to the player's wallet.
-void ActionCheat::add_money(int32_t amount)
+void add_money(int32_t amount)
 {
     if (amount <= 0)
     {
@@ -22,7 +23,7 @@ void ActionCheat::add_money(int32_t amount)
 }
 
 // Displays all the colours!
-void ActionCheat::colours()
+void colours()
 {
     core()->message(StrX::rainbow_text("COLOUR TESTING", "RYGCUM"));
     core()->message("{b}BLACK```{B}BOLD BLACK");
@@ -36,7 +37,7 @@ void ActionCheat::colours()
 }
 
 // Heals the player or an NPC.
-void ActionCheat::heal(size_t target)
+void heal(size_t target)
 {
     const auto player = core()->world()->player();
     std::shared_ptr<Mobile> mob;
@@ -68,7 +69,7 @@ void ActionCheat::heal(size_t target)
 }
 
 // Attempts to spawn an item.
-void ActionCheat::spawn_item(std::string item)
+void spawn_item(std::string item)
 {
     int count = -1;
     if (item.find(" ") != std::string::npos)
@@ -92,7 +93,7 @@ void ActionCheat::spawn_item(std::string item)
 }
 
 // Attempts to spawn a mobile.
-void ActionCheat::spawn_mobile(std::string mob)
+void spawn_mobile(std::string mob)
 {
     mob = StrX::str_toupper(mob);
     if (core()->world()->mob_exists(mob))
@@ -106,7 +107,7 @@ void ActionCheat::spawn_mobile(std::string mob)
 }
 
 // Attemtps to teleport to another room.
-void ActionCheat::teleport(std::string dest)
+void teleport(std::string dest)
 {
     dest = StrX::str_toupper(dest);
     if (core()->world()->room_exists(dest))
@@ -118,4 +119,5 @@ void ActionCheat::teleport(std::string dest)
     else core()->message("{R}" + dest + " {y}is not a valid room ID.");
 }
 
+}   // namespace cheat
 }   // namespace greave

@@ -468,7 +468,7 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
         case ParserCommand::ABILITIES: abilities::abilities(); break;
         case ParserCommand::ADD_MONEY:
             if (!words.size() || !StrX::is_number(words.at(0))) core()->message("{y}Please specify {Y}how many coins to add{y}.");
-            else ActionCheat::add_money(parse_int(words.at(0)));
+            else cheat::add_money(parse_int(words.at(0)));
             break;
         case ParserCommand::ATTACK:
             if (parsed_target_type == ParserTarget::TARGET_MOBILE) Combat::attack(player, world->mob_vec(parsed_target));
@@ -486,7 +486,7 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             else if (parsed_target_type == ParserTarget::TARGET_NONE) not_here();
             break;
         case ParserCommand::CAREFUL_AIM: abilities::careful_aim(confirm); break;
-        case ParserCommand::COLOUR_TEST: ActionCheat::colours(); break;
+        case ParserCommand::COLOUR_TEST: cheat::colours(); break;
         case ParserCommand::DIRECTION: ActionTravel::travel(player, parse_direction(first_word), confirm); break;
         case ParserCommand::DRINK:
             if (!words.size()) specify("drink");
@@ -546,8 +546,8 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             else if (parsed_target_type == ParserTarget::TARGET_NONE) not_here();
             break;
         case ParserCommand::HEAL_CHEAT:
-            if (parsed_target_type == ParserTarget::TARGET_MOBILE) ActionCheat::heal(parsed_target);
-            else if (!words.size()) ActionCheat::heal(SIZE_MAX);
+            if (parsed_target_type == ParserTarget::TARGET_MOBILE) cheat::heal(parsed_target);
+            else if (!words.size()) cheat::heal(SIZE_MAX);
             else if (parsed_target_type == ParserTarget::TARGET_NONE) not_here();
             break;
         case ParserCommand::HELP: ActionHelp::help(StrX::collapse_vector(words)); break;
@@ -604,11 +604,11 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             break;
         case ParserCommand::SPAWN_ITEM:
             if (!words.size()) core()->message("{y}Please specify an {Y}item ID{y}.");
-            else ActionCheat::spawn_item(collapsed_words);
+            else cheat::spawn_item(collapsed_words);
             break;
         case ParserCommand::SPAWN_MOBILE:
             if (!words.size()) core()->message("{y}Please specify a {Y}mobile ID{Y}.");
-            else ActionCheat::spawn_mobile(collapsed_words);
+            else cheat::spawn_mobile(collapsed_words);
             break;
         case ParserCommand::STANCE:
         {
@@ -644,7 +644,7 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             break;
         case ParserCommand::TELEPORT:
             if (!words.size()) core()->message("{y}Please specify a {Y}teleport destination{y}.");
-            else ActionCheat::teleport(collapsed_words);
+            else cheat::teleport(collapsed_words);
             break;
         case ParserCommand::TIME: ActionStatus::time(); break;
         case ParserCommand::UNEQUIP:
