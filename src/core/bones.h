@@ -1,7 +1,8 @@
 // core/bones.h -- Systems related to the player character's death, the highscore table, and recording data about the dead character that may be used in future games.
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#pragma once
+#ifndef GREAVE_CORE_BONES_H_
+#define GREAVE_CORE_BONES_H_
 
 #include <cstddef>
 
@@ -24,3 +25,5 @@ private:
 
     static uint32_t bones_version();    // Checks the version of the bones file, 0 if the file doesn't exist or version cannot be determined.
 };
+
+#endif  // GREAVE_CORE_BONES_H_

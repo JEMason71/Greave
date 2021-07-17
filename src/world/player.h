@@ -1,7 +1,8 @@
 // world/player.h -- The Player class is derived from Mobile, and defines the player character in the game world.
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#pragma once
+#ifndef GREAVE_WORLD_PLAYER_H_
+#define GREAVE_WORLD_PLAYER_H_
 
 #include <cstddef>
 
@@ -93,3 +94,5 @@ private:
     int         m_sp[2];        // The current and maximum stamina points.
     uint8_t     m_thirst;       // The thirst counter. 20 = compmpletely hydrated, 0 = died of dehydration.
 };
+
+#endif  // GREAVE_WORLD_PLAYER_H_

@@ -1,7 +1,8 @@
 // world/inventory.h -- The Inventory class stores a collection of Items, and handles stacking, organizing, saving/loading, etc.
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#pragma once
+#ifndef GREAVE_WORLD_INVENTORY_H_
+#define GREAVE_WORLD_INVENTORY_H_
 
 #include <cstddef>
 
@@ -39,3 +40,5 @@ private:
     std::vector<std::shared_ptr<Item>>  m_items;        // The Items stored in this Inventory.
     uint8_t     m_tag_prefix;                           // The prefix for all tag numbers in this Inventory.
 };
+
+#endif  // GREAVE_WORLD_INVENTORY_H_

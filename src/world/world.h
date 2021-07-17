@@ -1,7 +1,8 @@
 // world/world.h -- The World class defines the game world as a whole and handles the passage of time, as well as keeping track of the player's current activities.
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#pragma once
+#ifndef GREAVE_WORLD_WORLD_H_
+#define GREAVE_WORLD_WORLD_H_
 
 #include <cstddef>
 
@@ -101,3 +102,5 @@ private:
     void    load_room_pool();       // Loads the Room YAML data into memory.
     void    load_skills();          // Laods the skills YAML data into memory.
 };
+
+#endif  // GREAVE_WORLD_WORLD_H_

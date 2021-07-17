@@ -1,7 +1,8 @@
 // actions/cheat.h -- Cheating, debugging and testing commands.
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#pragma once
+#ifndef GREAVE_ACTIONS_CHEAT_H_
+#define GREAVE_ACTIONS_CHEAT_H_
 
 #include <cstddef>
 
@@ -18,3 +19,5 @@ public:
     static void spawn_mobile(std::string mob);  // Attempts to spawn a mobile.
     static void teleport(std::string dest);     // Attemtps to teleport to another room.
 };
+
+#endif  // GREAVE_ACTIONS_CHEAT_H_

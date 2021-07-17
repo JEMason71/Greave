@@ -1,7 +1,8 @@
 // actions/travel.h -- Actions allowing the player and NPCs to move around the game world.
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#pragma once
+#ifndef GREAVE_ACTIONS_TRAVEL_H_
+#define GREAVE_ACTIONS_TRAVEL_H_
 
 #include <memory>
 
@@ -40,3 +41,5 @@ private:
     static const float  XP_PER_SAFE_FALL_FAIL;      // As below, but for failed attempts.
     static const float  XP_PER_SAFE_FALL_SUCCESS;   // How much base XP is gained from a successful safe-fall (multiplied by distance fallen).
 };
+
+#endif  // GREAVE_ACTIONS_TRAVEL_H_

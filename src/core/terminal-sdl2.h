@@ -1,7 +1,8 @@
 // core/terminal-sdl2.h -- Terminal interface for SDL2/SDL_ttf. See core/terminal.hpp for a full description of the Terminal class.
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#pragma once
+#ifndef GREAVE_CORE_TERMINAL_SDL2_H_
+#define GREAVE_CORE_TERMINAL_SDL2_H_
 #ifdef GREAVE_INCLUDE_SDL
 
 #include <cstddef>
@@ -60,4 +61,6 @@ private:
     int                     m_window_h;             // The height of the window, in pixels.
     int                     m_window_w;             // The width of the window, in pixels.
 };
+
 #endif  // GREAVE_INCLUDE_SDL
+#endif  // GREAVE_CORE_TERMINAL_SDL2_H_

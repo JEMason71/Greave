@@ -1,7 +1,8 @@
 // world/mobile.h -- The Mobile class defines entities that can move and interact with the game world.
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#pragma once
+#ifndef GREAVE_WORLD_MOBILE_H_
+#define GREAVE_WORLD_MOBILE_H_
 
 #include <cstddef>
 
@@ -191,3 +192,5 @@ protected:
     CombatStance                        m_stance;       // The Mobile's current combat stance.
     std::set<MobileTag>                 m_tags;         // Any and all tags on this Mobile.
 };
+
+#endif  // GREAVE_WORLD_MOBILE_H_

@@ -1,7 +1,8 @@
 // core/filex.h -- Various utility functions that deal with creating, deleting, and manipulating files.
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#pragma once
+#ifndef GREAVE_CORE_FILEX_H_
+#define GREAVE_CORE_FILEX_H_
 
 #include <string>
 #include <vector>
@@ -18,3 +19,5 @@ public:
     static void make_dir(const std::string &dir);           // Makes a new directory, if it doesn't already exist.
     static void rename_file(const std::string &old_name, const std::string &new_name);  // Renames a file.
 };
+
+#endif  // GREAVE_CORE_FILEX_H_

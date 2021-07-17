@@ -1,7 +1,8 @@
 // core/strx.h -- Various utility functions that deal with string manipulation/conversion.
 // Copyright (c) 2009-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#pragma once
+#ifndef GREAVE_CORE_STRX_H_
+#define GREAVE_CORE_STRX_H_
 
 #include <cstddef>
 
@@ -74,3 +75,5 @@ public:
         return tags_str;
     }
 };
+
+#endif  // GREAVE_CORE_STRX_H_

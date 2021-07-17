@@ -1,7 +1,8 @@
 // world/room.h -- The Room class, which defines a single area in the game world that the player can visit.
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#pragma once
+#ifndef GREAVE_WORLD_ROOM_H_
+#define GREAVE_WORLD_ROOM_H_
 
 #include <cstddef>
 
@@ -236,3 +237,5 @@ private:
     std::set<RoomTag>           m_tags;                         // Any and all RoomTags on this Room.
     std::set<LinkTag>           m_tags_link[ROOM_LINKS_MAX];    // Any and all LinkTags on this Room's links.
 };
+
+#endif  // GREAVE_WORLD_ROOM_H_

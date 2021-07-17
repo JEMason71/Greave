@@ -1,7 +1,8 @@
 // actions/eat-drink.h -- Eating food and drinking beverages.
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#pragma once
+#ifndef GREAVE_ACTIONS_EAT_DRINK_H_
+#define GREAVE_ACTIONS_EAT_DRINK_H_
 
 #include <cstddef>
 
@@ -26,3 +27,5 @@ private:
     static const int    VOMIT_SCAR_INTENSITY;           // Vomit type scar intensity for vomiting once.
     static const int    VOMIT_WATER_LOSS_MAX;           // 1 to X water lost when vomiting.
 };
+
+#endif  // GREAVE_ACTIONS_EAT_DRINK_H_

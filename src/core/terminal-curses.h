@@ -1,7 +1,8 @@
 // core/terminal-curses.h -- Terminal interface for PDCurses/NCurses. See core/terminal.hpp for a full description of the Terminal class.
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#pragma once
+#ifndef GREAVE_CORE_TERMINAL_CURSES_H_
+#define GREAVE_CORE_TERMINAL_CURSES_H_
 #ifdef GREAVE_INCLUDE_CURSES
 
 #include <cstddef>
@@ -39,4 +40,6 @@ private:
     enum CustomColour { CUSTOM_BLACK = 100, CUSTOM_GREY_DARK, CUSTOM_RED, CUSTOM_RED_DARK, CUSTOM_GREEN, CUSTOM_GREEN_DARK, CUSTOM_YELLOW, CUSTOM_YELLOW_DARK, CUSTOM_BLUE,
         CUSTOM_BLUE_DARK, CUSTOM_CYAN, CUSTOM_CYAN_DARK, CUSTOM_MAGENTA, CUSTOM_MAGENTA_DARK, CUSTOM_WHITE, CUSTOM_GREY, CUSTOM_WHITE_BG };
 };
-#endif
+
+#endif  // GREAVE_INCLUDE_CURSES
+#endif  // GREAVE_CORE_TERMINAL_CURSES_H_

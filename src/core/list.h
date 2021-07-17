@@ -1,7 +1,8 @@
 // core/list.h -- Generic list of strings, which may or may not contain links to other lists.
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. All rights reserved.
 
-#pragma once
+#ifndef GREAVE_CORE_LIST_H_
+#define GREAVE_CORE_LIST_H_
 
 #include <cstddef>
 
@@ -31,3 +32,5 @@ private:
 
     std::vector<ListEntry>  m_data;                             // The list's data, a vector.
 };
+
+#endif  // GREAVE_CORE_LIST_H_

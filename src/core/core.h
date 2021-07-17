@@ -1,7 +1,8 @@
 // core/core.h -- Main program entry, initialization and cleanup routines, and the core game loop.
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#pragma once
+#ifndef GREAVE_CORE_CORE_H_
+#define GREAVE_CORE_CORE_H_
 
 #include <cstddef>
 
@@ -59,3 +60,5 @@ private:
 
 
 const std::shared_ptr<Core> core(); // Allows external access to the main Core object.
+
+#endif  // GREAVE_CORE_CORE_H_

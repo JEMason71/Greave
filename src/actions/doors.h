@@ -1,7 +1,8 @@
 // actions/doors.h -- Actions involving doors, windows, and other such similar things.
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#pragma once
+#ifndef GREAVE_ACTIONS_DOORS_H_
+#define GREAVE_ACTIONS_DOORS_H_
 
 #include <memory>
 
@@ -21,3 +22,5 @@ private:
     static const float  TIME_OPEN_DOOR;     // The time taken (in seconds) to open a door.
     static const float  TIME_UNLOCK_DOOR;   // The time taken (in seconds) to unlock a door.
 };
+
+#endif  // GREAVE_ACTIONS_DOORS_H_

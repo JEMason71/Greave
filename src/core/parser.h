@@ -1,7 +1,8 @@
 // core/parser.h -- The command parser! Converts player input into commands that the game can understand.
 // Copyright (c) 2021 Raine "Gravecat" Simmons and the Greave contributors. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#pragma once
+#ifndef GREAVE_CORE_PARSER_H_
+#define GREAVE_CORE_PARSER_H_
 
 #include <cstddef>
 
@@ -55,3 +56,5 @@ private:
     std::string                     m_last_input;       // The last raw input from the player.
     SpecialState                    m_special_state;    // Special parser states, such as waiting for the player to confirm something.
 };
+
+#endif  // GREAVE_CORE_PARSER_H_

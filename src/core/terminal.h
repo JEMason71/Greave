@@ -3,7 +3,8 @@
 // The base Terminal class is mostly virtual; derived classes should handle code specific to their specific terminal emulator.
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#pragma once
+#ifndef GREAVE_CORE_TERMINAL_H_
+#define GREAVE_CORE_TERMINAL_H_
 
 #include <cstddef>
 
@@ -36,3 +37,5 @@ public:
 private:
     virtual void        print_internal(std::string str, int x, int y, Colour col) = 0;  // Internal rendering code, after print() has parsed the colour tags.
 };
+
+#endif  // GREAVE_CORE_TERMINAL_H_

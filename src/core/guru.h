@@ -1,7 +1,8 @@
 // core/guru.h -- Guru Meditation error-handling and reporting system.
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#pragma once
+#ifndef GREAVE_CORE_GURU_H_
+#define GREAVE_CORE_GURU_H_
 
 #include <exception>
 #include <fstream>
@@ -47,3 +48,5 @@ private:
     static const int    CASCADE_WEIGHT_WARNING;     // The amount a warning type log entry will add to the cascade timer.
     static const std::string    FILENAME_LOG;       // The default name of the log file. Another filename can be specified with open_syslog().
 };
+
+#endif  // GREAVE_CORE_GURU_H_

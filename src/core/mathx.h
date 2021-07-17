@@ -1,7 +1,8 @@
 // core/mathx.h -- Various utility functions that deal with math and number-related things.
 // Copyright (c) 2009-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#pragma once
+#ifndef GREAVE_CORE_MATHX_H_
+#define GREAVE_CORE_MATHX_H_
 
 #include <cstddef>
 
@@ -18,3 +19,5 @@ public:
     static double       round_to(double num, int digits);       // Rounds a float to a specified number of digits.
     static float        round_to_two(float num);                // Rounds a float to two decimal places.
 };
+
+#endif  // GREAVE_CORE_MATHX_H_

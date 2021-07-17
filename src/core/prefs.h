@@ -1,7 +1,8 @@
 // core/prefs.h -- The Prefs class loads data from prefs.yml, allowing the user to configure game settings.
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#pragma once
+#ifndef GREAVE_CORE_PREFS_H_
+#define GREAVE_CORE_PREFS_H_
 
 #include <string>
 
@@ -48,3 +49,5 @@ public:
     bool        sdl_vsync;              // Should the game use vsync?
     std::string terminal;               // Set this to sdl2 for SDL2, or curses for PDCurses/NCurses.
 };
+
+#endif  // GREAVE_CORE_PREFS_H_

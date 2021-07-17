@@ -2,7 +2,8 @@
 // Copyright (c) 2019-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 // Originally based on BearLibTerminal sample code, (c) 2014 Cfyz.
 
-#pragma once
+#ifndef GREAVE_CORE_MESSAGE_H_
+#define GREAVE_CORE_MESSAGE_H_
 
 #include <string>
 #include <vector>
@@ -48,3 +49,5 @@ private:
     std::vector<std::string>    m_latest_messages;  // The last messages received after player input; can be repeated if using a screen-reader.
 #endif
 };
+
+#endif  // GREAVE_CORE_MESSAGE_H_

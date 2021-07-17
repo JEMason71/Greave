@@ -1,7 +1,8 @@
 // world/shop.h -- The Shop class handles everything to do with shops that where the player can buy and sell items.
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#pragma once
+#ifndef GREAVE_WORLD_SHOP_H_
+#define GREAVE_WORLD_SHOP_H_
 
 #include <cstddef>
 
@@ -30,3 +31,5 @@ private:
     std::shared_ptr<Inventory>  m_inventory;    // The contents of this shop.
     uint32_t                    m_room_id;      // The room ID where this shop is located.
 };
+
+#endif  // GREAVE_WORLD_SHOP_H_

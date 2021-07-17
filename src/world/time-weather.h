@@ -2,7 +2,8 @@
 // Copyright (c) 2021 Raine "Gravecat" Simmons. All rights reserved.
 // Weather system originally based on Keran's MUSH/MUX Weather and Time Code Package Version 4.0 beta, copyright (c) 1996-1998 Keran.
 
-#pragma once
+#ifndef GREAVE_WORLD_TIME_WEATHER_H_
+#define GREAVE_WORLD_TIME_WEATHER_H_
 
 #include <cstddef>
 
@@ -75,3 +76,5 @@ private:
     std::map<std::string, std::string>  m_tw_string_map;        // The time and weather strings from data/misc/weather.yml
     std::vector<std::string>            m_weather_change_map;   // Weather change maps, to determine odds of changing to different weather types.
 };
+
+#endif  // GREAVE_WORLD_TIME_WEATHER_H_

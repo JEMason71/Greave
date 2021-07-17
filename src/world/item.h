@@ -1,7 +1,8 @@
 // world/item.h -- The Item class is for objects that can be picked up and used by the player or other NPCs.
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#pragma once
+#ifndef GREAVE_WORLD_ITEM_H_
+#define GREAVE_WORLD_ITEM_H_
 
 #include <cstddef>
 
@@ -137,3 +138,5 @@ private:
     uint32_t    m_value;            // The value of this Item, if any.
     uint32_t    m_weight;           // The weight of this Item.
 };
+
+#endif  // GREAVE_WORLD_ITEM_H_

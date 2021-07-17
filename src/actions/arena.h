@@ -1,7 +1,8 @@
 // actions/arena.h -- The arena, where you can participate in fights or bet on NPC fights.
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#pragma once
+#ifndef GREAVE_ACTIONS_ARENA_H_
+#define GREAVE_ACTIONS_ARENA_H_
 
 
 class Arena
@@ -14,3 +15,5 @@ public:
 private:
     static void fight_over();       // The battle has been won!
 };
+
+#endif  // GREAVE_ACTIONS_ARENA_H_

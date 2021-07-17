@@ -1,7 +1,8 @@
 // actions/ai.h -- NPC AI actions and behaviour.
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#pragma once
+#ifndef GREAVE_ACTIONS_AI_H_
+#define GREAVE_ACTIONS_AI_H_
 
 #include <memory>
 
@@ -30,3 +31,5 @@ private:
     static void tick_mob(std::shared_ptr<Mobile> mob, uint32_t vec_pos);    // Processes AI for a specific active Mobile.
     static bool travel_randomly(std::shared_ptr<Mobile> mob, bool allow_dangerous_exits);   // Sends the Mobile in a random direction.
 };
+
+#endif  // GREAVE_ACTIONS_AI_H_

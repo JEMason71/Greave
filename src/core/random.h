@@ -1,7 +1,8 @@
 // core/random.h -- The random number generator. Multiple instances of this class can be spawned if needed.
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#pragma once
+#ifndef GREAVE_CORE_RANDOM_H_
+#define GREAVE_CORE_RANDOM_H_
 
 #include <cstddef>
 
@@ -22,3 +23,5 @@ public:
 
     pcg32   m_pcg_rng;  // The PCG pseudo-random number generator.
 };
+
+#endif  // GREAVE_CORE_RANDOM_H_

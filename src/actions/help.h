@@ -1,7 +1,8 @@
 // actions/help.h -- The help command provides in-game documentation of commands and game mechanics.
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#pragma once
+#ifndef GREAVE_ACTIONS_HELP_H_
+#define GREAVE_ACTIONS_HELP_H_
 
 #include <map>
 #include <string>
@@ -16,3 +17,5 @@ public:
 private:
     static std::map<std::string, std::string>   m_help_pages;   // Help pages loaded from data/misc/help.yml
 };
+
+#endif  // GREAVE_ACTIONS_HELP_H_

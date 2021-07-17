@@ -1,7 +1,8 @@
 // actions/abilities.h -- Special abilities which can be used in combat.
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#pragma once
+#ifndef GREAVE_ACTIONS_ABILITIES_H_
+#define GREAVE_ACTIONS_ABILITIES_H_
 
 #include <cstddef>
 
@@ -62,3 +63,5 @@ private:
     static int      SNAP_SHOT_COOLDOWN;             // The cooldown for the Snap Shot ability.
     static int      SNAP_SHOT_SP_COST;              // The stamina points cost for the Snap Shot ability.
 };
+
+#endif  // GREAVE_ACTIONS_ABILITIES_H_

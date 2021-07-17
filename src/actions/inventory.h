@@ -1,7 +1,8 @@
 // actions/inventory.h -- Actions related to inventory management, picking up and dropping items, etc.
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#pragma once
+#ifndef GREAVE_ACTIONS_INVENTORY_H_
+#define GREAVE_ACTIONS_INVENTORY_H_
 
 #include <cstddef>
 
@@ -42,3 +43,5 @@ private:
     static bool count_check(std::shared_ptr<Item> item, int count); // Checks that a player-input count is a valid number.
     static void weight_and_money();                                 // Shows the total carry weight and currency the Mobile is carrying.
 };
+
+#endif  // GREAVE_ACTIONS_INVENTORY_H_

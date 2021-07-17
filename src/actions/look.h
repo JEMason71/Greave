@@ -1,7 +1,8 @@
 // actions/look.h -- Look around you. Just look around you.
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#pragma once
+#ifndef GREAVE_ACTIONS_LOOK_H_
+#define GREAVE_ACTIONS_LOOK_H_
 
 #include <cstddef>
 
@@ -22,3 +23,5 @@ private:
     static void examine_item(std::shared_ptr<Item> target);     // Examines an Item.
     static void examine_mobile(std::shared_ptr<Mobile> target); // Examines a Mobile.
 };
+
+#endif  // GREAVE_ACTIONS_LOOK_H_

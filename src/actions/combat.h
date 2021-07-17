@@ -1,7 +1,8 @@
 // actions/combat.h -- Generic combat routines that apply to multiple types of combat.
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#pragma once
+#ifndef GREAVE_ACTIONS_COMBAT_H_
+#define GREAVE_ACTIONS_COMBAT_H_
 
 #include <cstddef>
 
@@ -86,3 +87,5 @@ private:
     static void         weapon_bleed_effect(std::shared_ptr<Mobile> defender, uint32_t damage);     // Applies a weapon bleed debuff and applies room scars.
     static void         weapon_poison_effect(std::shared_ptr<Mobile> defender, uint32_t damage);    // Applies a weapon poison debuff.
 };
+
+#endif  // GREAVE_ACTIONS_COMBAT_H_

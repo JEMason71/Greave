@@ -1,7 +1,8 @@
 // actions/status.h -- Meta status actions, such as checking the player's score or condition.
 /// Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#pragma once
+#ifndef GREAVE_ACTIONS_STATUS_H_
+#define GREAVE_ACTIONS_STATUS_H_
 
 #include <string>
 
@@ -16,3 +17,5 @@ public:
     static std::string  time(bool print = true);        // Determines the current time of day.
     static void         weather();      // Checks the nearby weather.
 };
+
+#endif  // GREAVE_ACTIONS_STATUS_H_
