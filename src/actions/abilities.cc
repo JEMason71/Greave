@@ -7,50 +7,53 @@
 #include "core/strx.h"
 
 namespace greave {
+namespace abilities {
 
-float   Abilities::CAREFUL_AIM_BONUS_HIT =          25; // The bonus hit% chance from using the Careful Aim ability.
-int     Abilities::CAREFUL_AIM_COOLDOWN =           8;  // The length of the Careful Aim cooldown.
-int     Abilities::CAREFUL_AIM_LENGTH =             2;  // How many buff ticks the Careful Aim ability lasts for.
-int     Abilities::CAREFUL_AIM_MP_COST =            20; // The mana point cost for the Careful Aim ability.
-float   Abilities::CAREFUL_AIM_TIME =               2;  // The time taken by the Careful Aim ability.
-int     Abilities::EYE_FOR_AN_EYE_COOLDOWN =        30; // The cooldown for the Eye For An Eye ability.
-int     Abilities::EYE_FOR_AN_EYE_HP_COST =         30; // The hit points cost for using Eye for an Eye.
-int     Abilities::EYE_FOR_AN_EYE_LENGTH =          10; // The length of time the Eye For An Eye buff remains when activated but unused.
-float   Abilities::EYE_FOR_AN_EYE_MULTI =           5;  // The damage multiplier for the Eye For An Eye ability.
-int     Abilities::GRIT_COOLDOWN =                  5;  // The cooldown for the Grit ability.
-float   Abilities::GRIT_DAMAGE_REDUCTION =          30; // The % of damage reduced by using the Grit ability.
-int     Abilities::GRIT_LENGTH =                    30; // The Grit ability lasts this long, or until the player is hit by an attack.
-int     Abilities::GRIT_SP_COST =                   30; // The stamina point cost for the Grit ability.
-float   Abilities::GRIT_TIME =                      2;  // The time taken by using the Grit ability.
-int     Abilities::HEADLONG_STRIKE_ATTACK_SPEED =   20; // The % of an attack's normal speed that it takes to do a Headlong Strike attack.
-int     Abilities::HEADLONG_STRIKE_COOLDOWN =       6;  // The cooldown for the Headlong Strike ability.
-int     Abilities::HEADLONG_STRIKE_HP_COST =        10; // The hit points cost to use the Headlong Strike abiliy.
-int     Abilities::LADY_LUCK_COOLDOWN =             20; // The cooldown for the Lady Luck ability.
-int     Abilities::LADY_LUCK_LENGTH =               60; // The buff/debuff time for the Lady Luck ability.
-int     Abilities::LADY_LUCK_MP_COST =              50; // The mana cost for using the Lady Luck ability.
-float   Abilities::LADY_LUCK_TIME =                 2;  // The time taken by using the Lady Luck ability.
-int     Abilities::QUICK_ROLL_BONUS_DODGE =         40; // The bonus dodge% chance from using the Quick Roll ability.
-int     Abilities::QUICK_ROLL_COOLDOWN =            8;  // The cooldown for the Quick Roll ability.
-int     Abilities::QUICK_ROLL_LENGTH =              5;  // The length of time the Quick Roll buff remains when activated, but before an enemy attack is made.
-int     Abilities::QUICK_ROLL_SP_COST =             25; // The stamina point cost for the Quick Roll ability.
-int     Abilities::QUICK_ROLL_TIME =                4;  // The time it takes to do a Quick Roll.
-float   Abilities::RAPID_STRIKE_ACCURACY_PENALTY =  20; // The % accuracy penalty for a Rapid Strike.
-float   Abilities::RAPID_STRIKE_ATTACK_SPEED =      20; // The % of an attack's normal speed that it takes to do a Rapid Strike attack.
-int     Abilities::RAPID_STRIKE_COOLDOWN =          6;  // The cooldown for the Rapid Strike ability.
-int     Abilities::RAPID_STRIKE_SP_COST =           50; // The stamina points cost for the Rapid Strike ability.
-int     Abilities::SHIELD_WALL_BLOCK_BONUS  =       70; // The % bonus to blocking an attack with Shield Wall.
-int     Abilities::SHIELD_WALL_COOLDOWN =           6;  // The cooldwon for the Shield Wall ability.
-int     Abilities::SHIELD_WALL_LENGTH =             20; // The length of time the Shield Wall buff remains while activated, but before an enemy attack is made.
-int     Abilities::SHIELD_WALL_SP_COST =            20; // The stamina points cost for the Shield Wall ability.
-int     Abilities::SHIELD_WALL_TIME =               2;  // The time taken to use the Shield Wall ability.
-float   Abilities::SNAP_SHOT_ACCURACY_PENALTY =     20; // The % accuracy penalty for a Snap Shot.
-float   Abilities::SNAP_SHOT_ATTACK_SPEED =         20; // The % of an attack's normal speed that it takes to do a Snap Shot attack.
-int     Abilities::SNAP_SHOT_COOLDOWN =             6;  // The cooldown for the Snap Shot ability.
-int     Abilities::SNAP_SHOT_SP_COST =              50; // The stamina points cost for the Snap Shot ability.
+constexpr int   kCarefulAimBonusHit =           25; // The bonus hit% chance from using the Careful Aim ability.
+constexpr int   kCarefulAimCooldown =           8;  // The length of the Careful Aim cooldown.
+constexpr int   kCarefulAimLength =             2;  // How many buff ticks the Careful Aim ability lasts for.
+constexpr int   kCarefulAimMPCost =             20; // The mana point cost for the Careful Aim ability.
+constexpr float kCarefulAimTime =               2;  // The time taken by the Careful Aim ability.
 
+constexpr int   kEyeForAnEyeCooldown =          30; // The cooldown for the Eye For An Eye ability.
+constexpr int   kEyeForAnEyeHPCost =            30; // The hit points cost for using Eye for an Eye.
+constexpr int   kEyeForAnEyeLength =            10; // The length of time the Eye For An Eye buff remains when activated but unused.
+constexpr int   kEyeForAnEyeMulti =             5;  // The damage multiplier for the Eye For An Eye ability.
+
+constexpr int   kGritCooldown =                 5;  // The cooldown for the Grit ability.
+constexpr int   kGritDamageReduction =          30; // The % of damage reduced by using the Grit ability.
+constexpr int   kGritLength =                   30; // The Grit ability lasts this long, or until the player is hit by an attack.
+constexpr int   kGritSPCost =                   30; // The stamina point cost for the Grit ability.
+constexpr float kGritTime =                     2;  // The time taken by using the Grit ability.
+
+constexpr int   kHeadlongStrikeCooldown =       6;  // The cooldown for the Headlong Strike ability.
+constexpr int   kHeadlongStrikeHPCost =         10; // The hit points cost to use the Headlong Strike abiliy.
+
+constexpr int   kLadyLuckCooldown =             20; // The cooldown for the Lady Luck ability.
+constexpr int   kLadyLuckLength =               60; // The buff/debuff time for the Lady Luck ability.
+constexpr int   kLadyLuckMPCost =               50; // The mana cost for using the Lady Luck ability.
+constexpr float kLadyLuckTime =                 2;  // The time taken by using the Lady Luck ability.
+
+constexpr int   kQuickRollBonusDodge =          40; // The bonus dodge% chance from using the Quick Roll ability.
+constexpr int   kQuickRollCooldown =            8;  // The cooldown for the Quick Roll ability.
+constexpr int   kQuickRollLength =              5;  // The length of time the Quick Roll buff remains when activated, but before an enemy attack is made.
+constexpr int   kQuickRollSPCost =              25; // The stamina point cost for the Quick Roll ability.
+constexpr float kQuickRollTime =                4;  // The time it takes to do a Quick Roll.
+
+constexpr int   kRapidStrikeCooldown =          6;  // The cooldown for the Rapid Strike ability.
+constexpr int   kRapidStrikeSPCost =            50; // The stamina points cost for the Rapid Strike ability.
+
+constexpr int   kShieldWallBlockBonus =         70; // The % bonus to blocking an attack with Shield Wall.
+constexpr int   kShieldWallCooldown =           6;  // The cooldwon for the Shield Wall ability.
+constexpr int   kShieldWallLength =             20; // The length of time the Shield Wall buff remains while activated, but before an enemy attack is made.
+constexpr int   kShieldWallSPCost =             20; // The stamina points cost for the Shield Wall ability.
+constexpr float kShieldWallTime =               2;  // The time taken to use the Shield Wall ability.
+
+constexpr int   kSnapShotCooldown =             6;  // The cooldown for the Snap Shot ability.
+constexpr int   kSnapShotSPCost =               50; // The stamina points cost for the Snap Shot ability.
 
 // Check cooldowns and availability of abilities.
-void Abilities::abilities()
+void abilities()
 {
     const auto player = core()->world()->player();
 
@@ -227,20 +230,20 @@ void Abilities::abilities()
         bool valid = (i == 0);
         if (valid) core()->message("{M}Available combat abilities:");
         else core()->message("{M}Unavailable abilities:");
-        display_ability("CarefulAim", Buff::Type::CD_CAREFUL_AIM, 0, 0, CAREFUL_AIM_MP_COST, STANCE_B | STANCE_D, valid);
-        display_ability("EyeForAnEye", Buff::Type::CD_EYE_FOR_AN_EYE, EYE_FOR_AN_EYE_HP_COST, 0, 0, STANCE_A | MELEE, valid);
-        display_ability("Grit", Buff::Type::CD_GRIT, 0, GRIT_SP_COST, 0, STANCE_D | ARMOUR_HEAVY | ARMOUR_MEDIUM, valid);
-        display_ability("HeadlongStrike", Buff::Type::CD_HEADLONG_STRIKE, HEADLONG_STRIKE_HP_COST, 0, 0, STANCE_A | MELEE, valid);
-        display_ability("LadyLuck", Buff::Type::CD_LADY_LUCK, 0, 0, LADY_LUCK_MP_COST, LUCKY_DICE | STANCE_ANY, valid);
-        display_ability("QuickRoll", Buff::Type::CD_QUICK_ROLL, 0, QUICK_ROLL_SP_COST, 0, STANCE_B | STANCE_D | ARMOUR_LIGHT | ARMOUR_MEDIUM | ARMOUR_NO_HEAVY, valid);
-        display_ability("RapidStrike", Buff::Type::CD_RAPID_STRIKE, 0, RAPID_STRIKE_SP_COST, 0, STANCE_B | MELEE, valid);
-        display_ability("ShieldWall", Buff::Type::CD_SHIELD_WALL, 0, SHIELD_WALL_SP_COST, 0, STANCE_D | SHIELD, valid);
-        display_ability("SnapShot", Buff::Type::CD_SNAP_SHOT, 0, SNAP_SHOT_SP_COST, 0, STANCE_B | RANGED, valid);
+        display_ability("CarefulAim", Buff::Type::CD_CAREFUL_AIM, 0, 0, kCarefulAimMPCost, STANCE_B | STANCE_D, valid);
+        display_ability("EyeForAnEye", Buff::Type::CD_EYE_FOR_AN_EYE, kEyeForAnEyeHPCost, 0, 0, STANCE_A | MELEE, valid);
+        display_ability("Grit", Buff::Type::CD_GRIT, 0, kGritSPCost, 0, STANCE_D | ARMOUR_HEAVY | ARMOUR_MEDIUM, valid);
+        display_ability("HeadlongStrike", Buff::Type::CD_HEADLONG_STRIKE, kHeadlongStrikeHPCost, 0, 0, STANCE_A | MELEE, valid);
+        display_ability("LadyLuck", Buff::Type::CD_LADY_LUCK, 0, 0, kLadyLuckMPCost, LUCKY_DICE | STANCE_ANY, valid);
+        display_ability("QuickRoll", Buff::Type::CD_QUICK_ROLL, 0, kQuickRollSPCost, 0, STANCE_B | STANCE_D | ARMOUR_LIGHT | ARMOUR_MEDIUM | ARMOUR_NO_HEAVY, valid);
+        display_ability("RapidStrike", Buff::Type::CD_RAPID_STRIKE, 0, kRapidStrikeSPCost, 0, STANCE_B | MELEE, valid);
+        display_ability("ShieldWall", Buff::Type::CD_SHIELD_WALL, 0, kShieldWallSPCost, 0, STANCE_D | SHIELD, valid);
+        display_ability("SnapShot", Buff::Type::CD_SNAP_SHOT, 0, kSnapShotSPCost, 0, STANCE_B | RANGED, valid);
     }
 }
 
 // Attempt to use the Careful Aim ability.
-void Abilities::careful_aim(bool confirm)
+void careful_aim(bool confirm)
 {
     const auto player = core()->world()->player();
     if (player->has_buff(Buff::Type::CD_CAREFUL_AIM))
@@ -253,23 +256,23 @@ void Abilities::careful_aim(bool confirm)
         core()->message("{m}CarefulAim can only be used in {M}balanced {m}or {M}defensive {m}stances.");
         return;
     }
-    if (player->mp() < CAREFUL_AIM_MP_COST)
+    if (player->mp() < kCarefulAimMPCost)
     {
         core()->message("{m}You do not have enough mana to use {M}CarefulAim{m}.");
         return;
     }
 
-    if (!player->pass_time(CAREFUL_AIM_TIME, !confirm)) return;
+    if (!player->pass_time(kCarefulAimTime, !confirm)) return;
     if (player->is_dead()) return;
 
     core()->message("{M}You focus your mind, preparing for a precision strike.");
-    player->set_buff(Buff::Type::CD_CAREFUL_AIM, CAREFUL_AIM_COOLDOWN);
-    player->set_buff(Buff::Type::CAREFUL_AIM, CAREFUL_AIM_LENGTH, CAREFUL_AIM_BONUS_HIT, false, false);
-    player->reduce_mp(CAREFUL_AIM_MP_COST);
+    player->set_buff(Buff::Type::CD_CAREFUL_AIM, kCarefulAimCooldown);
+    player->set_buff(Buff::Type::CAREFUL_AIM, kCarefulAimLength, kCarefulAimBonusHit, false, false);
+    player->reduce_mp(kCarefulAimMPCost);
 }
 
 // Attempt to use the Eye for an Eye ability.
-void Abilities::eye_for_an_eye(bool confirm)
+void eye_for_an_eye(bool confirm)
 {
     const auto player = core()->world()->player();
     if (player->has_buff(Buff::Type::CD_EYE_FOR_AN_EYE))
@@ -287,21 +290,21 @@ void Abilities::eye_for_an_eye(bool confirm)
         core()->message("{m}EyeForAnEye can only be used with {M}melee weapons{m}!");
         return;
     }
-    if (player->hp() <= EYE_FOR_AN_EYE_HP_COST && !confirm)
+    if (player->hp() <= kEyeForAnEyeHPCost && !confirm)
     {
         core()->message("{m}You do not have enough hit points to use {M}EyeForAnEye{m}. You can force it, but that would result in your death!");
         core()->parser()->confirm_message();
         return;
     }
 
-    core()->message("{M}Your vision goes red and you prepare for a brutal retaliatory strike! " + Combat::damage_number_str(EYE_FOR_AN_EYE_HP_COST, 0, false, false, false));
-    player->set_buff(Buff::Type::CD_EYE_FOR_AN_EYE, EYE_FOR_AN_EYE_COOLDOWN);
-    player->set_buff(Buff::Type::EYE_FOR_AN_EYE, EYE_FOR_AN_EYE_LENGTH, EYE_FOR_AN_EYE_MULTI, false, false);
-    player->reduce_hp(EYE_FOR_AN_EYE_HP_COST);
+    core()->message("{M}Your vision goes red and you prepare for a brutal retaliatory strike! " + Combat::damage_number_str(kEyeForAnEyeHPCost, 0, false, false, false));
+    player->set_buff(Buff::Type::CD_EYE_FOR_AN_EYE, kEyeForAnEyeCooldown);
+    player->set_buff(Buff::Type::EYE_FOR_AN_EYE, kEyeForAnEyeLength, kEyeForAnEyeMulti, false, false);
+    player->reduce_hp(kEyeForAnEyeHPCost);
 }
 
 // Attempt to use the Grit ability.
-void Abilities::grit(bool confirm)
+void grit(bool confirm)
 {
     const auto player = core()->world()->player();
 
@@ -320,22 +323,22 @@ void Abilities::grit(bool confirm)
         core()->message("{m}Grit requires the use of {M}medium or heavy armour{m}.");
         return;
     }
-    if (player->sp() < GRIT_SP_COST)
+    if (player->sp() < kGritSPCost)
     {
         core()->message("{m}You do not have enough stamina points to use {M}Grit{m}.");
         return;
     }
 
-    if (!player->pass_time(GRIT_TIME, !confirm)) return;
+    if (!player->pass_time(kGritTime, !confirm)) return;
     if (player->is_dead()) return;
     core()->message("{M}You brace yourself for an incoming attack.");
-    player->set_buff(Buff::Type::CD_GRIT, GRIT_COOLDOWN);
-    player->set_buff(Buff::Type::GRIT, GRIT_TIME, GRIT_DAMAGE_REDUCTION, false, false);
-    player->reduce_sp(GRIT_SP_COST);
+    player->set_buff(Buff::Type::CD_GRIT, kGritCooldown);
+    player->set_buff(Buff::Type::GRIT, kGritLength, kGritDamageReduction, false, false);
+    player->reduce_sp(kGritSPCost);
 }
 
 // Attempt to use the HeadlongStrike ability.
-void Abilities::headlong_strike(size_t target, bool confirm)
+void headlong_strike(size_t target, bool confirm)
 {
     const auto player = core()->world()->player();
     const auto mob = core()->world()->mob_vec(target);
@@ -354,24 +357,24 @@ void Abilities::headlong_strike(size_t target, bool confirm)
         core()->message("{m}HeadlongStrike can only be used with {M}melee weapons{m}!");
         return;
     }
-    if (player->hp() <= HEADLONG_STRIKE_HP_COST && !confirm)
+    if (player->hp() <= kHeadlongStrikeHPCost && !confirm)
     {
         core()->message("{m}You do not have enough hit points to use {M}HeadlongStrike{m}. You can force it, but that would result in your death!");
         core()->parser()->confirm_message();
         return;
     }
 
-    core()->message("{M}Disregarding your own safety, you lunge into an aggressive attack! " + Combat::damage_number_str(HEADLONG_STRIKE_HP_COST, 0, false, false, false));
+    core()->message("{M}Disregarding your own safety, you lunge into an aggressive attack! " + Combat::damage_number_str(kHeadlongStrikeHPCost, 0, false, false, false));
     if (player->is_dead()) return;
-    player->set_buff(Buff::Type::CD_HEADLONG_STRIKE, HEADLONG_STRIKE_COOLDOWN);
+    player->set_buff(Buff::Type::CD_HEADLONG_STRIKE, kHeadlongStrikeCooldown);
     player->set_tag(MobileTag::HeadlongStrike);
     Combat::attack(player, mob);
     player->clear_tag(MobileTag::HeadlongStrike);
-    player->reduce_hp(HEADLONG_STRIKE_HP_COST);
+    player->reduce_hp(kHeadlongStrikeHPCost);
 }
 
 // Attempt to use the Lady Luck ability.
-void Abilities::lady_luck(size_t target, bool confirm)
+void lady_luck(size_t target, bool confirm)
 {
     const auto mob = core()->world()->mob_vec(target);
     const auto player = core()->world()->player();
@@ -387,17 +390,17 @@ void Abilities::lady_luck(size_t target, bool confirm)
         core()->message("{m}You don't have the correct {M}special dice {m}to use this ability.");
         return;
     }
-    if (player->mp() < LADY_LUCK_MP_COST)
+    if (player->mp() < kLadyLuckMPCost)
     {
         core()->message("{m}You do not have enough mana points to use {M}LadyLuck{m}.");
     }
 
-    if (!player->pass_time(LADY_LUCK_TIME, !confirm)) return;
+    if (!player->pass_time(kLadyLuckTime, !confirm)) return;
     if (player->is_dead()) return;
 
     core()->message("{M}You beseech Lady Luck for good fortune! {m}You roll the dice of fate...");
-    player->set_buff(Buff::Type::CD_LADY_LUCK, LADY_LUCK_COOLDOWN);
-    player->reduce_mp(LADY_LUCK_MP_COST);
+    player->set_buff(Buff::Type::CD_LADY_LUCK, kLadyLuckCooldown);
+    player->reduce_mp(kLadyLuckMPCost);
 
     uint32_t dice[2] = { core()->rng()->rnd(6), core()->rng()->rnd(6) };
     const uint32_t total = dice[0] + dice[1];
@@ -410,7 +413,7 @@ void Abilities::lady_luck(size_t target, bool confirm)
     {
         core()->message(dice_string('R', 'R') + " " + StrX::rainbow_text("SNAKE EYES!", "gG") + " {R}You stumble...");
         player->set_tag(MobileTag::SnakeEyes);
-        player->pass_time(LADY_LUCK_LENGTH, true);  // We'll allow this to be interrupted - the buff should last until the player takes damage. Yes, there'll be edge cases where this delay causes a poison or bleed tick, and thus they avoid taking critical damage from an enemy attack, but that's just... luck. :3c
+        player->pass_time(kLadyLuckLength, true);   // We'll allow this to be interrupted - the buff should last until the player takes damage. Yes, there'll be edge cases where this delay causes a poison or bleed tick, and thus they avoid taking critical damage from an enemy attack, but that's just... luck. :3c
         player->clear_tag(MobileTag::SnakeEyes);
         return;
     }
@@ -427,13 +430,13 @@ void Abilities::lady_luck(size_t target, bool confirm)
     if (total == 3 || total == 11)
     {
         core()->message(dice_string('U', 'U') + " {G}You feel a sudden moment of clarity...");
-        player->set_buff(Buff::Type::CAREFUL_AIM, CAREFUL_AIM_LENGTH, CAREFUL_AIM_BONUS_HIT);
+        player->set_buff(Buff::Type::CAREFUL_AIM, kCarefulAimLength, kCarefulAimBonusHit);
         return;
     }
     if (total == 4 || total == 10)
     {
         core()->message(dice_string('U', 'U') + " {G}You anticipate " + mob->name(Mobile::NAME_FLAG_POSSESSIVE | Mobile::NAME_FLAG_THE) + " {G}next move...");
-        player->set_buff(Buff::Type::QUICK_ROLL, QUICK_ROLL_TIME, QUICK_ROLL_BONUS_DODGE, false, false);
+        player->set_buff(Buff::Type::QUICK_ROLL, kQuickRollTime, kQuickRollBonusDodge, false, false);
         return;
     }
     if (dice[0] == dice[1])
@@ -460,7 +463,7 @@ void Abilities::lady_luck(size_t target, bool confirm)
 }
 
 // Attempt to use the Quick Roll ability.
-void Abilities::quick_roll(bool confirm)
+void quick_roll(bool confirm)
 {
     const auto player = core()->world()->player();
     if (player->has_buff(Buff::Type::CD_QUICK_ROLL))
@@ -473,7 +476,7 @@ void Abilities::quick_roll(bool confirm)
         core()->message("{m}You armour is too heavy to be able to {M}QuickRoll{m}.");
         return;
     }
-    if (player->sp() < QUICK_ROLL_SP_COST)
+    if (player->sp() < kQuickRollSPCost)
     {
         core()->message("{m}You do not have enough stamina points to use {M}QuickRoll{m}.");
         return;
@@ -484,17 +487,17 @@ void Abilities::quick_roll(bool confirm)
         return;
     }
 
-    if (!player->pass_time(QUICK_ROLL_TIME, !confirm)) return;
+    if (!player->pass_time(kQuickRollTime, !confirm)) return;
     if (player->is_dead()) return;
 
     core()->message("{U}You make a quick combat roll, attempting to dodge an incoming attack.");
-    player->set_buff(Buff::Type::CD_QUICK_ROLL, QUICK_ROLL_COOLDOWN);
-    player->set_buff(Buff::Type::QUICK_ROLL, QUICK_ROLL_LENGTH, QUICK_ROLL_BONUS_DODGE, false, false);
-    player->reduce_sp(QUICK_ROLL_SP_COST);
+    player->set_buff(Buff::Type::CD_QUICK_ROLL, kQuickRollCooldown);
+    player->set_buff(Buff::Type::QUICK_ROLL, kQuickRollLength, kQuickRollBonusDodge, false, false);
+    player->reduce_sp(kQuickRollSPCost);
 }
 
 // Attempt to use the Rapid Strike ability.
-void Abilities::rapid_strike(size_t target)
+void rapid_strike(size_t target)
 {
     const auto player = core()->world()->player();
     if (player->has_buff(Buff::Type::CD_RAPID_STRIKE))
@@ -507,7 +510,7 @@ void Abilities::rapid_strike(size_t target)
         core()->message("{m}RapidStrike can only be used in a {M}balanced {m}combat stance.");
         return;
     }
-    if (player->sp() < RAPID_STRIKE_SP_COST)
+    if (player->sp() < kRapidStrikeSPCost)
     {
         core()->message("{m}You do not have enough stamina points to use {M}RapidStrike{m}.");
         return;
@@ -520,14 +523,15 @@ void Abilities::rapid_strike(size_t target)
 
     const auto mob = core()->world()->mob_vec(target);
     core()->message("{M}You strike rapidly at " + mob->name(Mobile::NAME_FLAG_THE) + "{M}!");
-    player->set_buff(Buff::Type::CD_RAPID_STRIKE, RAPID_STRIKE_COOLDOWN);
+    player->reduce_sp(kRapidStrikeSPCost);
+    player->set_buff(Buff::Type::CD_RAPID_STRIKE, kRapidStrikeCooldown);
     player->set_tag(MobileTag::RapidStrike);
     Combat::attack(player, mob);
     player->clear_tag(MobileTag::RapidStrike);
 }
 
 // Attempt to use the Shield Wall ability.
-void Abilities::shield_wall(bool confirm)
+void shield_wall(bool confirm)
 {
     const auto player = core()->world()->player();
     if (player->has_buff(Buff::Type::CD_SHIELD_WALL))
@@ -540,7 +544,7 @@ void Abilities::shield_wall(bool confirm)
         core()->message("{m}ShieldWall can only be used in a {M}defensive {m}combat stance.");
         return;
     }
-    if (player->sp() < SHIELD_WALL_SP_COST)
+    if (player->sp() < kShieldWallSPCost)
     {
         core()->message("{m}You do not have enough stamina points to use {M}ShieldWall{m}.");
         return;
@@ -551,16 +555,16 @@ void Abilities::shield_wall(bool confirm)
         return;
     }
 
-    if (!player->pass_time(SHIELD_WALL_TIME, !confirm)) return;
+    if (!player->pass_time(kShieldWallTime, !confirm)) return;
     if (player->is_dead()) return;
     core()->message("{M}You brace yourself behind your shield for an incoming blow.");
-    player->set_buff(Buff::Type::CD_SHIELD_WALL, SHIELD_WALL_COOLDOWN);
-    player->set_buff(Buff::Type::SHIELD_WALL, SHIELD_WALL_TIME, SHIELD_WALL_BLOCK_BONUS, false, false);
-    player->reduce_sp(SHIELD_WALL_SP_COST);
+    player->set_buff(Buff::Type::CD_SHIELD_WALL, kShieldWallCooldown);
+    player->set_buff(Buff::Type::SHIELD_WALL, kShieldWallLength, kShieldWallBlockBonus, false, false);
+    player->reduce_sp(kShieldWallSPCost);
 }
 
 // Attempt to use the Snap Shot ability.
-void Abilities::snap_shot(size_t target)
+void snap_shot(size_t target)
 {
     const auto player = core()->world()->player();
     if (player->has_buff(Buff::Type::CD_SNAP_SHOT))
@@ -573,7 +577,7 @@ void Abilities::snap_shot(size_t target)
         core()->message("{m}SnapShot can only be used in a {M}balanced {m}combat stance.");
         return;
     }
-    if (player->sp() < SNAP_SHOT_SP_COST)
+    if (player->sp() < kSnapShotSPCost)
     {
         core()->message("{m}You do not have enough stamina points to use {M}SnapShot{m}.");
         return;
@@ -586,10 +590,12 @@ void Abilities::snap_shot(size_t target)
 
     const auto mob = core()->world()->mob_vec(target);
     core()->message("{M}You take a quick snap shot at " + mob->name(Mobile::NAME_FLAG_THE) + "{M}!");
-    player->set_buff(Buff::Type::CD_SNAP_SHOT, SNAP_SHOT_COOLDOWN);
+    player->reduce_sp(kSnapShotSPCost);
+    player->set_buff(Buff::Type::CD_SNAP_SHOT, kSnapShotCooldown);
     player->set_tag(MobileTag::SnapShot);
     Combat::attack(player, mob);
     player->clear_tag(MobileTag::SnapShot);
 }
 
+}   // namespace abilities
 }   // namespace greave

@@ -12,6 +12,12 @@
 
 namespace greave {
 
+constexpr float kHeadlongStrikeAttackSpeed =    20; // The % of an attack's normal speed that it takes to do a Headlong Strike attack.
+constexpr float kRapidStrikeAccuracyPenalty =   20; // The % accuracy penalty for a Rapid Strike.
+constexpr float kRapidStrikeAttackSpeed =       20; // The % of an attack's normal speed that it takes to do a Rapid Strike attack.
+constexpr float kSnapShotAccuracyPenalty =      20; // The % accuracy penalty for a Snap Shot.
+constexpr float kSnapShotAttackSpeed =          20; // The % of an attack's normal speed that it takes to do a Snap Shot attack.
+
 const float Combat::ATTACKER_DAMAGE_MODIFIER_ANEMIC =           0.5f;   // The damage multiplier when a Mobile with the Anemic tag attacks in melee combat.
 const float Combat::ATTACKER_DAMAGE_MODIFIER_BRAWNY =           1.25f;  // The damage multiplier when a Mobile with the Brawny tag attacks in melee combat.
 const float Combat::ATTACKER_DAMAGE_MODIFIER_FEEBLE =           0.75f;  // The damage multiplier when a Mobile with the Feeble tag attacks in melee combat.
@@ -125,9 +131,9 @@ bool Combat::attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mobile> de
 
     const bool unarmed_only = (wield_type[0] == WieldType::UNARMED || wield_type[0] == WieldType::UNARMED_PLUS_SHIELD);
     float attack_speed = attacker->attack_speed();
-    if (attacker->tag(MobileTag::RapidStrike)) attack_speed *= (Abilities::RAPID_STRIKE_ATTACK_SPEED / 100.0f);
-    if (attacker->tag(MobileTag::SnapShot)) attack_speed *= (Abilities::SNAP_SHOT_ATTACK_SPEED / 100.0f);
-    if (attacker->tag(MobileTag::HeadlongStrike)) attack_speed *= (Abilities::HEADLONG_STRIKE_ATTACK_SPEED / 100.0f);
+    if (attacker->tag(MobileTag::RapidStrike)) attack_speed *= (kRapidStrikeAttackSpeed / 100.0f);
+    if (attacker->tag(MobileTag::SnapShot)) attack_speed *= (kSnapShotAttackSpeed / 100.0f);
+    if (attacker->tag(MobileTag::HeadlongStrike)) attack_speed *= (kHeadlongStrikeAttackSpeed / 100.0f);
 
     bool attacked = false;
 
@@ -413,8 +419,8 @@ void Combat::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mo
     }
     float to_hit = BASE_HIT_CHANCE_MELEE;
     if (attacker->has_buff(Buff::Type::CAREFUL_AIM)) to_hit += attacker->buff_power(Buff::Type::CAREFUL_AIM);
-    if (attacker->tag(MobileTag::RapidStrike)) to_hit -= Abilities::RAPID_STRIKE_ACCURACY_PENALTY;
-    if (attacker->tag(MobileTag::SnapShot)) to_hit -= Abilities::SNAP_SHOT_ACCURACY_PENALTY;
+    if (attacker->tag(MobileTag::RapidStrike)) to_hit -= kRapidStrikeAccuracyPenalty;
+    if (attacker->tag(MobileTag::SnapShot)) to_hit -= kSnapShotAccuracyPenalty;
     if (defender->has_buff(Buff::Type::QUICK_ROLL))
     {
         to_hit -= defender->buff_power(Buff::Type::QUICK_ROLL);

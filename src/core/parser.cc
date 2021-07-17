@@ -465,7 +465,7 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
     switch (pcd.command)
     {
         case ParserCommand::NONE: break;
-        case ParserCommand::ABILITIES: Abilities::abilities(); break;
+        case ParserCommand::ABILITIES: abilities::abilities(); break;
         case ParserCommand::ADD_MONEY:
             if (!words.size() || !StrX::is_number(words.at(0))) core()->message("{y}Please specify {Y}how many coins to add{y}.");
             else ActionCheat::add_money(parse_int(words.at(0)));
@@ -485,7 +485,7 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             else if (parsed_target_type == ParserTarget::TARGET_SHOP) world->get_shop(player->location())->buy(parsed_target, parsed_target_count);
             else if (parsed_target_type == ParserTarget::TARGET_NONE) not_here();
             break;
-        case ParserCommand::CAREFUL_AIM: Abilities::careful_aim(confirm); break;
+        case ParserCommand::CAREFUL_AIM: abilities::careful_aim(confirm); break;
         case ParserCommand::COLOUR_TEST: ActionCheat::colours(); break;
         case ParserCommand::DIRECTION: ActionTravel::travel(player, parse_direction(first_word), confirm); break;
         case ParserCommand::DRINK:
@@ -521,7 +521,7 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             break;
         case ParserCommand::EXCLAIM: core()->message("{m}Please type your command {M}without any spaces {m}between the exclamation mark and the rest of the command (for example, {M}!" + StrX::collapse_vector(words) + "{m})."); break;
         case ParserCommand::EXITS: ActionLook::obvious_exits(false); break;
-        case ParserCommand::EYE_FOR_AN_EYE: Abilities::eye_for_an_eye(confirm); break;
+        case ParserCommand::EYE_FOR_AN_EYE: abilities::eye_for_an_eye(confirm); break;
         case ParserCommand::FILL:
             if (!words.size()) specify("fill");
             else if (parsed_target_type == ParserTarget::TARGET_NONE) not_carrying();
@@ -531,7 +531,7 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             if (parsed_direction == Direction::NONE) specify_direction("travel");
             else ActionTravel::travel(player, parsed_direction, confirm);
             break;
-        case ParserCommand::GRIT: Abilities::grit(confirm); break;
+        case ParserCommand::GRIT: abilities::grit(confirm); break;
         case ParserCommand::HASH:
             if (!words.size()) core()->message("{y}Please specify a {Y}string to hash{y}.");
             else
@@ -541,7 +541,7 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             }
             break;
         case ParserCommand::HEADLONG_STRIKE:
-            if (parsed_target_type == ParserTarget::TARGET_MOBILE) Abilities::headlong_strike(parsed_target, confirm);
+            if (parsed_target_type == ParserTarget::TARGET_MOBILE) abilities::headlong_strike(parsed_target, confirm);
             else if (!words.size()) specify("headlongstrike");
             else if (parsed_target_type == ParserTarget::TARGET_NONE) not_here();
             break;
@@ -553,7 +553,7 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
         case ParserCommand::HELP: ActionHelp::help(StrX::collapse_vector(words)); break;
         case ParserCommand::INVENTORY: ActionInventory::check_inventory(); break;
         case ParserCommand::LADY_LUCK:
-            if (parsed_target_type == ParserTarget::TARGET_MOBILE) Abilities::lady_luck(parsed_target, confirm);
+            if (parsed_target_type == ParserTarget::TARGET_MOBILE) abilities::lady_luck(parsed_target, confirm);
             else if (!words.size()) specify("use lady luck against");
             else if (parsed_target_type == ParserTarget::TARGET_NONE) not_here();
             break;
@@ -577,13 +577,13 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             else ActionDoors::open_or_close(player, parsed_direction, pcd.command == ParserCommand::OPEN, confirm);
             break;
         case ParserCommand::PARTICIPATE: Arena::participate(); break;
-        case ParserCommand::QUICK_ROLL: Abilities::quick_roll(confirm); break;
+        case ParserCommand::QUICK_ROLL: abilities::quick_roll(confirm); break;
         case ParserCommand::QUIT:
             core()->message("{R}Are you sure you want to quit? {M}Your game will not be saved. {R}Type {C}yes {R}to confirm.");
             m_special_state = SpecialState::QUIT_CONFIRM;
             return; // not break
         case ParserCommand::RAPID_STRIKE:
-            if (parsed_target_type == ParserTarget::TARGET_MOBILE) Abilities::rapid_strike(parsed_target);
+            if (parsed_target_type == ParserTarget::TARGET_MOBILE) abilities::rapid_strike(parsed_target);
             else if (!words.size()) specify("rapidstrike");
             else if (parsed_target_type == ParserTarget::TARGET_NONE) not_here();
             break;
@@ -595,10 +595,10 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             else if (parsed_target_type == ParserTarget::TARGET_NONE) not_carrying();
             else if (parsed_target_type == ParserTarget::TARGET_INVENTORY) world->get_shop(player->location())->sell(parsed_target, parsed_target_count, confirm);
             break;
-        case ParserCommand::SHIELD_WALL: Abilities::shield_wall(confirm); break;
+        case ParserCommand::SHIELD_WALL: abilities::shield_wall(confirm); break;
         case ParserCommand::SKILLS: ActionStatus::skills(); break;
         case ParserCommand::SNAP_SHOT:
-            if (parsed_target_type == ParserTarget::TARGET_MOBILE) Abilities::snap_shot(parsed_target);
+            if (parsed_target_type == ParserTarget::TARGET_MOBILE) abilities::snap_shot(parsed_target);
             else if (!words.size()) specify("snapshot");
             else if (parsed_target_type == ParserTarget::TARGET_NONE) not_here();
             break;
