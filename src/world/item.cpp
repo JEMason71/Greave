@@ -157,7 +157,7 @@ bool Item::is_identical(std::shared_ptr<Item> item) const
     if (m_description != item->m_description) return false;
 
     // Way more complicated comparison stuff below here.
-    
+
     // For metadata comparison, appraised values might differ. So we'll take that out of the equation.
     auto copy_a = std::make_shared<Item>(*this);
     auto copy_b = std::make_shared<Item>(*item);

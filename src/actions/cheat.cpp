@@ -45,7 +45,7 @@ void ActionCheat::heal(size_t target)
     std::shared_ptr<Mobile> mob;
     if (target == SIZE_MAX) mob = player;
     else mob = core()->world()->mob_vec(target);
-    
+
     if (mob->is_dead())
     {
         core()->message("{r}It's a little bit too late for that...");

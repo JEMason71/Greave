@@ -138,7 +138,7 @@ void Abilities::abilities()
 
         std::string ability_str = (can_use ? "{C}" : "{c}") + name + " ";
         bool angle_str = false;
-        
+
         if ((stance_a || stance_b || stance_d) && !(stance_a && stance_b && stance_d))
         {
             ability_str += "{W}<" + std::string(bad_stance ? "{c}" : "{C}") + "stance:";
@@ -158,7 +158,7 @@ void Abilities::abilities()
             ability_str += (needs_melee ? "melee{W}> " : "ranged{W}> ");
             angle_str = true;
         }
-        
+
         if (needs_medium || needs_heavy)
         {
             if (angle_str) ability_str = ability_str.substr(0, ability_str.size() - 5) + "{W}, ";
@@ -309,7 +309,7 @@ void Abilities::eye_for_an_eye(bool confirm)
 void Abilities::grit(bool confirm)
 {
     const auto player = core()->world()->player();
-    
+
     if (player->has_buff(Buff::Type::CD_GRIT))
     {
         core()->message("{m}You must wait a while before using the {M}Grit {m}ability again.");

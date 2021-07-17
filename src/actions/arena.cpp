@@ -54,7 +54,7 @@ void Arena::participate()
     const std::string arena_spawn_pick = arena_spawn_list->rnd().str;
     const auto mob = world->get_mob(arena_spawn_pick);
     const auto arena_room = world->get_room(room->meta("arena_room", false));
-    
+
     core()->message("{R}The crowd roars with {r}bloodthirsty {R}delight as you step into the " + room->meta("arena_area") + ", a " + room->meta("arena_door") + " slamming shut behind you. Your opponent approaches from the far side, murder in " + mob->his_her() + " eyes.");
     player->set_location(arena_room->id());
     world->add_mobile(mob);
