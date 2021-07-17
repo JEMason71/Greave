@@ -8,17 +8,11 @@
 #include "core/core.hpp"
 #include "core/filex.hpp"
 #include "core/guru.hpp"
-#include "core/list.hpp"
 #include "core/mathx.hpp"
 #include "core/message.hpp"
 #include "core/random.hpp"
 #include "core/strx.hpp"
 #include "world/inventory.hpp"
-#include "world/item.hpp"
-#include "world/player.hpp"
-#include "world/room.hpp"
-#include "world/shop.hpp"
-#include "world/time-weather.hpp"
 #include "world/world.hpp"
 
 

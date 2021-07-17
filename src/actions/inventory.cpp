@@ -7,7 +7,6 @@
 #include "core/parser.hpp"
 #include "core/strx.hpp"
 #include "world/inventory.hpp"
-#include "world/item.hpp"
 #include "world/player.hpp"
 #include "world/room.hpp"
 #include "world/world.hpp"

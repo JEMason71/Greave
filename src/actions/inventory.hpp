@@ -3,11 +3,8 @@
 
 #pragma once
 #include "core/greave.hpp"
-
-
-class Item;                     // defined in world/item.hpp
-class Mobile;                   // defined in world/mobile.hpp
-enum class EquipSlot : uint8_t; // defined in world/item.hpp
+#include "world/item.hpp"
+#include "world/mobile.hpp"
 
 
 class ActionInventory

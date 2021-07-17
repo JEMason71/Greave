@@ -2,9 +2,8 @@
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #pragma once
+#include "3rdparty/SQLiteCpp/Database.h"
 #include "core/greave.hpp"
-
-namespace SQLite { class Database; }    // defined in 3rdparty/SQLiteCpp/Database.h
 
 
 // Weapon damage types.

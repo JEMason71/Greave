@@ -5,7 +5,6 @@
 #include "core/guru.hpp"
 #include "core/mathx.hpp"
 #include "core/strx.hpp"
-#include "world/room.hpp"
 
 #include <algorithm>
 #include <iterator>

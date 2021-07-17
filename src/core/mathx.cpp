@@ -4,7 +4,6 @@
 #include "core/core.hpp"
 #include "core/mathx.hpp"
 #include "core/random.hpp"
-#include "world/room.hpp"
 
 
 // Inverts a Direction enum (north becomes south, etc.)

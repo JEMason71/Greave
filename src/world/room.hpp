@@ -2,11 +2,10 @@
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #pragma once
+#include "3rdparty/SQLiteCpp/Database.h"
 #include "core/greave.hpp"
-
-class Inventory;                        // defined in world/inventory.hpp
-class Item;                             // defined in world/item.hpp
-namespace SQLite { class Database; }    // defined in 3rdparty/SQLiteCpp/Database.h
+#include "world/inventory.hpp"
+#include "world/item.hpp"
 
 
 enum class Direction : uint8_t { NORTH, SOUTH, EAST, WEST, NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHWEST, UP, DOWN, NONE };

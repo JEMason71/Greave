@@ -2,9 +2,9 @@
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #pragma once
+#include "core/greave.hpp"
+#include "world/item.hpp"
 #include "world/mobile.hpp"
-
-enum class ItemSub : uint16_t;  // defined in world/item.hpp
 
 
 class Player : public Mobile

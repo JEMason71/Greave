@@ -3,10 +3,9 @@
 
 #pragma once
 #include "core/greave.hpp"
-
-class Item;                     // defined in world/item.hpp
-class Mobile;                   // defined in world/mobile.hpp
-enum ParserTarget : uint8_t;    // defined in core/parser.hpp
+#include "core/parser.hpp"
+#include "world/item.hpp"
+#include "world/mobile.hpp"
 
 
 class ActionLook

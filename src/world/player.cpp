@@ -7,7 +7,6 @@
 #include "core/guru.hpp"
 #include "core/random.hpp"
 #include "world/inventory.hpp"
-#include "world/item.hpp"
 #include "world/world.hpp"
 #include "world/player.hpp"
 #include "world/time-weather.hpp"

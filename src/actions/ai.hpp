@@ -3,8 +3,7 @@
 
 #pragma once
 #include "core/greave.hpp"
-
-class Mobile;   // defined in world/mobile.hpp
+#include "world/mobile.hpp"
 
 
 class AI

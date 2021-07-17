@@ -5,7 +5,6 @@
 #include "core/core.hpp"
 #include "core/guru.hpp"
 #include "world/inventory.hpp"
-#include "world/item.hpp"
 #include "world/world.hpp"
 
 #include <algorithm>

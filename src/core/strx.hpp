@@ -3,8 +3,7 @@
 
 #pragma once
 #include "core/core.hpp"
-
-enum class Direction : uint8_t; // defined in world/room.hpp
+#include "world/room.hpp"
 
 
 class StrX

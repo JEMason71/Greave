@@ -6,8 +6,6 @@
 #include "core/list.hpp"
 #include "core/random.hpp"
 #include "core/strx.hpp"
-#include "world/inventory.hpp"
-#include "world/item.hpp"
 #include "world/player.hpp"
 #include "world/room.hpp"
 #include "world/time-weather.hpp"

@@ -3,14 +3,13 @@
 
 #pragma once
 #include "core/greave.hpp"
-
-class Guru;         // defined in core/guru.hpp
-class MessageLog;   // defined in core/message.hpp
-class Parser;       // defined in core/parser.hpp
-class Prefs;        // defined in core/prefs.hpp
-class Random;       // defined in core/random.hpp
-class Terminal;     // defined in terminal/terminal.hpp
-class World;        // defined in core/world.hpp
+#include "core/guru.hpp"
+#include "core/message.hpp"
+#include "core/parser.hpp"
+#include "core/prefs.hpp"
+#include "core/random.hpp"
+#include "core/terminal.hpp"
+#include "world/world.hpp"
 
 
 class Core

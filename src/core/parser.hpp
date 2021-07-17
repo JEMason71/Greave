@@ -3,8 +3,7 @@
 
 #pragma once
 #include "core/greave.hpp"
-
-enum class Direction : uint8_t; // defined in world/room.hpp
+#include "world/room.hpp"
 
 
 enum ParserTarget : uint8_t { TARGET_NONE = 0, TARGET_EQUIPMENT = 1, TARGET_INVENTORY = 2, TARGET_MOBILE = 4, TARGET_ROOM = 8, TARGET_SHOP = 16, TARGET_UNCLEAR = 32 };

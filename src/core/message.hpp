@@ -3,9 +3,8 @@
 // Originally based on BearLibTerminal sample code, (c) 2014 Cfyz.
 
 #pragma once
+#include "3rdparty/SQLiteCpp/Database.h"
 #include "core/greave.hpp"
-
-namespace SQLite { class Database; }    // defined in 3rdparty/SQLiteCpp/Database.h
 
 
 class MessageLog

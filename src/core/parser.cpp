@@ -20,7 +20,6 @@
 #include "world/inventory.hpp"
 #include "world/item.hpp"
 #include "world/player.hpp"
-#include "world/room.hpp"
 #include "world/shop.hpp"
 #include "world/world.hpp"
 

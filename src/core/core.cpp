@@ -6,16 +6,10 @@
 #include "core/bones.hpp"
 #include "core/core.hpp"
 #include "core/filex.hpp"
-#include "core/guru.hpp"
-#include "core/message.hpp"
-#include "core/parser.hpp"
-#include "core/prefs.hpp"
-#include "core/random.hpp"
 #include "core/strx.hpp"
 #include "core/terminal-curses.hpp"
 #include "core/terminal-sdl2.hpp"
 #include "world/player.hpp"
-#include "world/world.hpp"
 
 #include <thread>
 

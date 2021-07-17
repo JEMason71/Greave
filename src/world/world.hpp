@@ -2,26 +2,14 @@
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #pragma once
+#include "3rdparty/SQLiteCpp/Database.h"
 #include "core/greave.hpp"
-
-class Item;                             // defined in world/item.hpp
-class List;                             // defined in core/list.hpp
-class Mobile;                           // defined in world/mobile.hpp
-class Player;                           // defined in world/player.hpp
-class Room;                             // defined in world/room.hpp
-class Shop;                             // defined in world/shop.hpp
-class TimeWeather;                      // defined in world/time-weather.hpp
-enum class DamageType : int8_t;         // defined in world/item.hpp
-enum class EquipSlot : uint8_t;         // defined in world/item.hpp
-enum class ItemSub : uint16_t;          // defined in world/item.hpp
-enum class ItemTag : uint16_t;          // defined in world/item.hpp
-enum class ItemType : uint16_t;         // defined in world/item.hpp
-enum class LinkTag : uint16_t;          // defined in world/room.hpp
-enum class MobileTag : uint16_t;        // defined in world/mobile.hpp
-enum class RoomTag : uint16_t;          // defined in world/room.hpp
-enum class Security : uint8_t;          // defined in world/room.hpp
-namespace SQLite { class Database; }    // defined in 3rdparty/SQLiteCpp/Database.h
-struct BodyPart;                        // defined in world/mobile.hpp
+#include "core/list.hpp"
+#include "world/item.hpp"
+#include "world/player.hpp"
+#include "world/room.hpp"
+#include "world/shop.hpp"
+#include "world/time-weather.hpp"
 
 
 class World

@@ -2,11 +2,10 @@
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #pragma once
+#include "3rdparty/SQLiteCpp/Database.h"
 #include "core/greave.hpp"
-
-class Inventory;                // defined in world/inventory.hpp
-enum class EquipSlot : uint8_t; // defined in world/item.hpp
-namespace SQLite { class Database; class Statement; }   // defined in 3rdparty/SQLiteCpp/Database.h
+#include "world/inventory.hpp"
+#include "world/item.hpp"
 
 
 enum class Gender : uint8_t { FEMALE, MALE, IT, THEY };
