@@ -287,7 +287,7 @@ bool TimeWeather::pass_time(float seconds, bool interruptable)
         if (change_happened && !player_is_resting) core()->message(weather_message_colour() + weather_msg.substr(1));
 
         // Runs the AI on all active mobiles.
-        AI::tick_mobs();
+        mobile_ai::tick_mobs();
         if (player->is_dead()) return true;
 
         std::set<uint32_t> active_rooms;    // This starts empty, but can be re-used if multiple heartbeats need to check active rooms.

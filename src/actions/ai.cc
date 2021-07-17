@@ -8,23 +8,24 @@
 #include "core/core.h"
 
 namespace greave {
+namespace mobile_ai {
 
-const int   AI::AGGRO_CHANCE =                  60;     // 1 in X chance of starting a fight.
-const int   AI::FLEE_DEBUFF_TIME =              48;     // The length of time the fleeing debuff lasts.
-const float AI::FLEE_TIME =                     60.0f;  // The action time it takes to flee in terror.
-const int   AI::STANCE_AGGRESSIVE_HP_PERCENT =  20;     // When a Mobile's target drops below this many hit points, they'll got to an aggressive stance.
-                // When a mobile's ratio of hit points lost compared to their target's hit points lost goes above this level, they'll go to an aggressive stance.
-const float AI::STANCE_AGGRESSIVE_HP_RATIO =    1.3f;
-const int   AI::STANCE_COUNTER_CHANCE =         200;    // 1 in X chance to attempt to counter the target's choice of combat stance.
-const int   AI::STANCE_DEFENSIVE_HP_PERCENT =   20;     // Mobiles will switch to defensive stance when their hit points drop below this percentage of maximum.
-                // When a mobile's ratio of hit points lost compared to their target's hit points lost drops below this level, they'll go to a defensive stance.
-const float AI::STANCE_DEFENSIVE_HP_RATIO =     0.7f;
-const int   AI::STANCE_RANDOM_CHANCE =          500;    // 1 in X chance to pick a random stance, rather than making a strategic decision.
-const int   AI::TRAVEL_CHANCE =                 300;    // 1 in X chance of traveling to another room.
+constexpr int   kAggroChance =                  60;     // 1 in X chance of starting a fight.
+constexpr int   kTravelChance =                 300;    // 1 in X chance of traveling to another room.
+
+constexpr int   kFleeDebuffTime =               48;     // The length of time the fleeing debuff lasts.
+constexpr float kFleeTime =                     60;     // The action time it takes to flee in terror.
+
+constexpr int   kStanceAggressiveHPPercent =    20;     // When a Mobile's target drops below this many hit points, they'll got to an aggressive stance.
+constexpr float kStanceAggressiveHPRatio =      1.3f;   // When a mobile's ratio of hit points lost compared to their target's hit points lost goes above this level, they'll go to an aggressive stance.
+constexpr int   kStanceCounterChance =          300;    // 1 in X chance to attempt to counter the target's choice of combat stance.
+constexpr int   kStanceDefensiveHPPercent =     20;     // Mobiles will switch to defensive stance when their hit points drop below this percentage of maximum.
+constexpr float kStanceDefensiveHPRatio =       0.7;    // When a mobile's ratio of hit points lost compared to their target's hit points lost drops below this level, they'll go to a defensive stance.
+constexpr int   kStanceRandomChance =           500;    // 1 in X chance to pick a random stance, rather than making a strategic decision.
 
 
 // Processes AI for a specific active Mobile.
-void AI::tick_mob(std::shared_ptr<Mobile> mob, uint32_t)
+void tick_mob(std::shared_ptr<Mobile> mob, uint32_t)
 {
     mob->add_second();  // This is called every second, per active Mobile.
     const auto rng = core()->rng();
@@ -53,22 +54,20 @@ void AI::tick_mob(std::shared_ptr<Mobile> mob, uint32_t)
     }
     if (attack_target)
     {
-        // Fleeing happens regardless of the action timer. This is a concession to allow mobiles to even have a chance of realistically running away.
-        // Penalizing their action timer after fleeing leaves all sorts of problems, such as the mobile left standing there defenseless while the player
-        // character beats on them. It's not an ideal solution, but this is really the best I can do for now. This will need to be balanced better later.
+        // Fleeing happens regardless of the action timer. This is a concession to allow mobiles to even have a chance of realistically running away. Penalizing their action timer after fleeing leaves all sorts of problems, such as the mobile left standing there defenseless while the player character beats on them. It's not an ideal solution, but this is really the best I can do for now. This will need to be balanced better later.
         if (mob->tag(MobileTag::Coward))
         {
             // Check if we've fled recently.
             if (mob->has_buff(Buff::Type::RECENTLY_FLED))
             {
-                if (mob->can_perform_action(FLEE_TIME))
+                if (mob->can_perform_action(kFleeTime))
                 {
                     if (location == player_location) core()->message("{u}" + mob->name(Mobile::NAME_FLAG_THE) + " {u}cowers in fear!");
                     mob->pass_time();
                 }
                 return;
             }
-            else if (mob->can_perform_action(FLEE_TIME))
+            else if (mob->can_perform_action(kFleeTime))
             {
                 // Attempt a safe travel; if it fails, panic and attempt a more dangerous exit.
                 if (location == player_location) core()->message("{U}" + mob->name(Mobile::NAME_FLAG_THE) + " {U}flees in a blind panic!");
@@ -77,7 +76,7 @@ void AI::tick_mob(std::shared_ptr<Mobile> mob, uint32_t)
                     mob->pass_time();
                     if (location == player_location) core()->message("{0}{u}... But " + mob->he_she() + " can't get away!");
                 }
-                mob->set_buff(Buff::Type::RECENTLY_FLED, FLEE_DEBUFF_TIME);
+                mob->set_buff(Buff::Type::RECENTLY_FLED, kFleeDebuffTime);
                 return;
             }
             else return;    // If they don't have enough action time available to flee, just wait and charge it up, it won't take long.
@@ -93,13 +92,13 @@ void AI::tick_mob(std::shared_ptr<Mobile> mob, uint32_t)
             const float hp_percent = (mob->hp(false) / mob->hp(true)) * 100.0f;
             const float target_hp_percent = (attack_target->hp(false) / attack_target->hp(true)) * 100.0f;
             const float hp_ratio = hp_percent / target_hp_percent;
-            if (hp_percent <= STANCE_DEFENSIVE_HP_PERCENT) desired_stance = CombatStance::DEFENSIVE;
-            else if (target_hp_percent <= STANCE_AGGRESSIVE_HP_PERCENT) desired_stance = CombatStance::AGGRESSIVE;
-            else if (hp_ratio <= STANCE_DEFENSIVE_HP_RATIO) desired_stance = CombatStance::DEFENSIVE;
-            else if (hp_ratio >= STANCE_AGGRESSIVE_HP_RATIO) desired_stance = CombatStance::AGGRESSIVE;
+            if (hp_percent <= kStanceDefensiveHPPercent) desired_stance = CombatStance::DEFENSIVE;
+            else if (target_hp_percent <= kStanceAggressiveHPPercent) desired_stance = CombatStance::AGGRESSIVE;
+            else if (hp_ratio <= kStanceDefensiveHPRatio) desired_stance = CombatStance::DEFENSIVE;
+            else if (hp_ratio >= kStanceAggressiveHPRatio) desired_stance = CombatStance::AGGRESSIVE;
 
             // Chance to attempt to counter the target's stance.
-            else if (core()->rng()->rnd(STANCE_COUNTER_CHANCE) == 1)
+            else if (core()->rng()->rnd(kStanceCounterChance) == 1)
             {
                 switch (attack_target->stance())
                 {
@@ -110,7 +109,7 @@ void AI::tick_mob(std::shared_ptr<Mobile> mob, uint32_t)
             }
 
             // Chance to just pick a stance randomly. Sometimes, the unexpected can be useful!
-            else if (core()->rng()->rnd(STANCE_RANDOM_CHANCE) == 1) desired_stance = static_cast<CombatStance>(core()->rng()->rnd(0, 2));
+            else if (core()->rng()->rnd(kStanceRandomChance) == 1) desired_stance = static_cast<CombatStance>(core()->rng()->rnd(0, 2));
 
             if (desired_stance != mob->stance())
             {
@@ -119,17 +118,14 @@ void AI::tick_mob(std::shared_ptr<Mobile> mob, uint32_t)
             }
         }
 
-        // For non-cowardly NPCs, we'll wait until there's sufficient action time available to perform an attack. If not, just wait until there is.
-        // This will prevent angry NPCs from just doing something else entirely, instead of winding up to attack.
+        // For non-cowardly NPCs, we'll wait until there's sufficient action time available to perform an attack. If not, just wait until there is. This will prevent angry NPCs from just doing something else entirely, instead of winding up to attack.
         if (mob->can_perform_action(mob->attack_speed())) Combat::attack(mob, attack_target);
         return;
     }
 
-    if (mob->tag(MobileTag::AggroOnSight) && rng->rnd(AGGRO_CHANCE) == 1 && location == player_location)
+    if (mob->tag(MobileTag::AggroOnSight) && rng->rnd(kAggroChance) == 1 && location == player_location)
     {
-        // Unlike the code above -- which handles NPCs that have a specific hatred for a specific mobile (or the player), this is more of a general
-        // 'picking a fight' situation. If action time isn't available, we'll allow the option to do something else in the meantime, because this
-        // particular mobile isn't hellbent on unleashing limitless unlimited unprecedented eternal terrible violence on anyone *in particular*.
+        // Unlike the code above -- which handles NPCs that have a specific hatred for a specific mobile (or the player), this is more of a general 'picking a fight' situation. If action time isn't available, we'll allow the option to do something else in the meantime, because this particular mobile isn't hellbent on unleashing limitless unlimited unprecedented eternal terrible violence on anyone *in particular*.
         if (mob->can_perform_action(mob->attack_speed()))
         {
             Combat::attack(mob, core()->world()->player());
@@ -137,11 +133,9 @@ void AI::tick_mob(std::shared_ptr<Mobile> mob, uint32_t)
         }
     }
 
-    if (rng->rnd(TRAVEL_CHANCE) == 1 && !mob->has_buff(Buff::Type::RECENTLY_FLED))
+    if (rng->rnd(kTravelChance) == 1 && !mob->has_buff(Buff::Type::RECENTLY_FLED))
     {
-        // This is another concession I'm making for mobiles -- all exits will 'cost' the same, while for the player, 'longer' exits cost more.
-        // Why? Because this AI code is ticking once an in-game second, it'll end up heavily favouring the shorter exit routs as soon as the
-        // action time is available, which will result in much less interesting AI behaviour.
+        // This is another concession I'm making for mobiles -- all exits will 'cost' the same, while for the player, 'longer' exits cost more. Why? Because this AI code is ticking once an in-game second, it'll end up heavily favouring the shorter exit routs as soon as the action time is available, which will result in much less interesting AI behaviour.
         if (mob->can_perform_action(ActionTravel::TRAVEL_TIME_NORMAL))
         {
             // If the attempt fails (no valid exits, etc.) we'll just continue looking for more actions to perform.
@@ -152,14 +146,14 @@ void AI::tick_mob(std::shared_ptr<Mobile> mob, uint32_t)
 }
 
 // Ticks all the mobiles in active rooms.
-void AI::tick_mobs()
+void tick_mobs()
 {
     for (size_t m = 0; m < core()->world()->mob_count(); m++)
         tick_mob(core()->world()->mob_vec(m), m);
 }
 
 // Sends the Mobile in a random direction.
-bool AI::travel_randomly(std::shared_ptr<Mobile> mob, bool allow_dangerous_exits)
+bool travel_randomly(std::shared_ptr<Mobile> mob, bool allow_dangerous_exits)
 {
     const uint32_t location = mob->location();
     const auto room = core()->world()->get_room(location);
@@ -177,4 +171,5 @@ bool AI::travel_randomly(std::shared_ptr<Mobile> mob, bool allow_dangerous_exits
     else return false;
 }
 
+}   // namespace mobile_ai
 }   // namespace greave
