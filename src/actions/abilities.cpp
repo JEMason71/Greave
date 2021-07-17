@@ -525,6 +525,7 @@ void Abilities::rapid_strike(size_t target)
 
     const auto mob = core()->world()->mob_vec(target);
     core()->message("{M}You strike rapidly at " + mob->name(Mobile::NAME_FLAG_THE) + "{M}!");
+    player->reduce_sp(RAPID_STRIKE_SP_COST);
     player->set_buff(Buff::Type::CD_RAPID_STRIKE, RAPID_STRIKE_COOLDOWN);
     player->set_tag(MobileTag::RapidStrike);
     Combat::attack(player, mob);
