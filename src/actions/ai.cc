@@ -2,13 +2,10 @@
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #include "actions/ai.h"
+
 #include "actions/combat.h"
 #include "actions/travel.h"
 #include "core/core.h"
-#include "core/random.h"
-#include "world/player.h"
-#include "world/room.h"
-#include "world/world.h"
 
 
 const int   AI::AGGRO_CHANCE =                  60;     // 1 in X chance of starting a fight.

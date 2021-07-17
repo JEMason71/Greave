@@ -2,19 +2,18 @@
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #ifdef GREAVE_INCLUDE_SDL
-#include "3rdparty/LodePNG/bmp2png.h"
-#include "core/core.h"
-#include "core/filex.h"
-#include "core/prefs.h"
-#include "core/strx.h"
 #include "core/terminal-sdl2.h"
 
+#include <ctime>
+
+#include <thread>
+
+#include "3rdparty/LodePNG/bmp2png.h"
 #ifdef GREAVE_TOLK
 #include "3rdparty/Tolk/Tolk.h"
 #endif
-
-#include <ctime>
-#include <thread>
+#include "core/filex.h"
+#include "core/strx.h"
 
 
 // Constructor, sets up SDL2.
@@ -168,7 +167,7 @@ int TerminalSDL2::get_key()
             case SDL_MOUSEMOTION:
                 m_mouse_x = event.motion.x;
                 m_mouse_y = event.motion.y;
-                return Key::MOUSE_MOVED;
+                return Key::MOUSE_HAS_MOVED;
         }
     }
 }

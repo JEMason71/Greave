@@ -1,10 +1,9 @@
 // core/list.cc -- Generic list of strings, which may or may not contain links to other lists.
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. All rights reserved.
 
-#include "core/core.h"
 #include "core/list.h"
-#include "core/random.h"
-#include "world/world.h"
+
+#include "core/core.h"
 
 
 // Rarities for randomized lists.

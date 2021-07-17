@@ -2,21 +2,19 @@
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #ifdef GREAVE_INCLUDE_CURSES
-#include "core/core.h"
-#include "core/guru.h"
-#include "core/prefs.h"
-#include "core/strx.h"
 #include "core/terminal-curses.h"
 
-#ifdef GREAVE_TARGET_WINDOWS
-#include "3rdparty/PDCurses/curses.h"
-#else
+#ifdef GREAVE_TARGET_LINUX
 #include <curses.h>
 #endif
 
+#ifdef GREAVE_TARGET_WINDOWS
+#include "3rdparty/PDCurses/curses.h"
+#endif
 #ifdef GREAVE_TOLK
 #include "3rdparty/Tolk/Tolk.h"
 #endif
+#include "core/strx.h"
 
 
 // Constructor, sets up Curses.

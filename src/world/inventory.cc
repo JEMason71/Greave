@@ -1,13 +1,11 @@
 // world/inventory.cc -- The Inventory class stores a collection of Items, and handles stacking, organizing, saving/loading, etc.
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#include "3rdparty/SQLiteCpp/SQLiteCpp.h"
-#include "core/core.h"
-#include "core/guru.h"
 #include "world/inventory.h"
-#include "world/world.h"
 
 #include <algorithm>
+
+#include "core/core.h"
 
 
 // Creates a new, blank inventory.
@@ -141,7 +139,7 @@ void Inventory::remove_item(EquipSlot es)
             return;
         }
     }
-    core()->guru()->nonfatal("Attempt to remove empty equipment slot item.", Guru::ERROR);
+    core()->guru()->nonfatal("Attempt to remove empty equipment slot item.", Guru::GURU_ERROR);
 }
 
 // Saves this Inventory, returns its SQL ID.

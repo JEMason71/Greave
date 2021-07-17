@@ -3,8 +3,15 @@
 // Weather system originally based on Keran's MUSH/MUX Weather and Time Code Package Version 4.0 beta, copyright (c) 1996-1998 Keran.
 
 #pragma once
+
+#include <cstddef>
+
+#include <map>
+#include <memory>
+#include <string>
+#include <vector>
+
 #include "3rdparty/SQLiteCpp/Database.h"
-#include "core/greave.hpp"
 
 
 class TimeWeather

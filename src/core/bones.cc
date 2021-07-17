@@ -1,16 +1,11 @@
 // core/bones.cc -- Systems related to the player character's death, the highscore table, and recording data about the dead character that may be used in future games.
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#include "3rdparty/SQLiteCpp/SQLiteCpp.h"
 #include "core/bones.h"
-#include "core/core.h"
+
+#include "3rdparty/SQLiteCpp/SQLiteCpp.h"
 #include "core/filex.h"
-#include "core/guru.h"
-#include "core/message.h"
-#include "core/random.h"
 #include "core/strx.h"
-#include "world/player.h"
-#include "world/world.h"
 
 
 const std::string   Bones::BONES_FILENAME = "userdata/bones.sqlite";    // The filename for the bones file.
@@ -149,7 +144,7 @@ bool Bones::record_death()
         }
         catch (std::exception &e)
         {
-            core()->guru()->nonfatal("Could not record player death in bones file! " + std::string(e.what()), Guru::ERROR);
+            core()->guru()->nonfatal("Could not record player death in bones file! " + std::string(e.what()), Guru::GURU_ERROR);
             return false;
         }
     }

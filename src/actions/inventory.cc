@@ -2,14 +2,8 @@
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #include "actions/inventory.h"
-#include "core/core.h"
-#include "core/guru.h"
-#include "core/parser.h"
+
 #include "core/strx.h"
-#include "world/inventory.h"
-#include "world/player.h"
-#include "world/room.h"
-#include "world/world.h"
 
 
 const float ActionInventory::TIME_DROP_ITEM =       1.0f;   // The time taken (in seconds) to drop an item on the ground.
@@ -216,7 +210,7 @@ bool ActionInventory::equip(std::shared_ptr<Mobile> mob, size_t item_pos, bool c
             time_taken = TIME_EQUIP_HEAD;
             break;
     }
-    if (!time_taken) core()->guru()->nonfatal("Could not determine equip time for " + item->name(), Guru::ERROR);
+    if (!time_taken) core()->guru()->nonfatal("Could not determine equip time for " + item->name(), Guru::GURU_ERROR);
     // todo: messages for NPCs equipping gear
     StrX::find_and_replace(slot_name, "%your%", "your");
 
@@ -354,7 +348,7 @@ bool ActionInventory::unequip(std::shared_ptr<Mobile> mob, size_t item_pos, bool
         case EquipSlot::HANDS: time_taken = TIME_UNEQUIP_HANDS; break;
         case EquipSlot::HEAD: time_taken = TIME_UNEQUIP_HEAD; break;
     }
-    if (!time_taken) core()->guru()->nonfatal("Could not determine unequip time for " + item->name(), Guru::ERROR);
+    if (!time_taken) core()->guru()->nonfatal("Could not determine unequip time for " + item->name(), Guru::GURU_ERROR);
     if (!mob->pass_time(time_taken, !confirm))
     {
         core()->parser()->interrupted(action + " " + item->name(Item::NAME_FLAG_THE));

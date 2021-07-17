@@ -2,15 +2,8 @@
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #include "actions/eat-drink.h"
-#include "actions/inventory.h"
+
 #include "core/core.h"
-#include "core/parser.h"
-#include "core/random.h"
-#include "world/inventory.h"
-#include "world/item.h"
-#include "world/player.h"
-#include "world/room.h"
-#include "world/world.h"
 
 
 const int ActionEatDrink::TIME_EMPTY_CONTAINER =            5;  // The time taken to empty a water container.

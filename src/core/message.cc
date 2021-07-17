@@ -2,21 +2,16 @@
 // Copyright (c) 2019-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 // Originally based on BearLibTerminal sample code, (c) 2014 Cfyz.
 
-#include "3rdparty/SQLiteCpp/SQLiteCpp.h"
-#include "core/core.h"
-#include "core/guru.h"
 #include "core/message.h"
-#include "core/prefs.h"
-#include "core/strx.h"
-#include "core/terminal.h"
-#include "world/player.h"
-#include "world/world.h"
+
+#include <cmath>
+
+#include <regex>
 
 #ifdef GREAVE_TARGET_WINDOWS
 #include "3rdparty/Tolk/Tolk.h"
 #endif
-
-#include <regex>
+#include "core/strx.h"
 
 
 // SQL table construction strings.
@@ -231,7 +226,7 @@ std::string MessageLog::render_message_log(bool accept_blank_input)
             else scroll_to_pixel(core()->terminal()->get_mouse_y_pixel() - scrollbar_height * core()->terminal()->cell_height() / 2);
         }
         else if (key == Terminal::Key::MOUSE_LEFT_RELEASED) m_dragging_scrollbar = false;
-        else if (key == Terminal::Key::MOUSE_MOVED && m_dragging_scrollbar) scroll_to_pixel(core()->terminal()->get_mouse_y_pixel() - m_dragging_scrollbar_offset);
+        else if (key == Terminal::Key::MOUSE_HAS_MOVED && m_dragging_scrollbar) scroll_to_pixel(core()->terminal()->get_mouse_y_pixel() - m_dragging_scrollbar_offset);
 #ifdef GREAVE_TOLK
         else if (key == Terminal::Key::TAB && m_latest_messages.size() && (prefs->screen_reader_external || prefs->screen_reader_sapi))
         {

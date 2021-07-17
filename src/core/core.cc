@@ -1,26 +1,26 @@
 // core/core.cc -- Main program entry, initialization and cleanup routines, and the core game loop.
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#include "3rdparty/SQLiteCpp/SQLiteCpp.h"
-#include "actions/help.h"
-#include "core/bones.h"
 #include "core/core.h"
-#include "core/filex.h"
-#include "core/strx.h"
-#include "core/terminal-curses.h"
-#include "core/terminal-sdl2.h"
-#include "world/player.h"
 
+#ifdef GREAVE_TOLK
+#include <regex>
+#endif
 #include <thread>
-
 #ifdef GREAVE_TARGET_WINDOWS
 #include <windows.h>
 #endif
 
+#include "3rdparty/SQLiteCpp/SQLiteCpp.h"
 #ifdef GREAVE_TOLK
 #include "3rdparty/Tolk/Tolk.h"
-#include <regex>
 #endif
+#include "actions/help.h"
+#include "core/bones.h"
+#include "core/filex.h"
+#include "core/strx.h"
+#include "core/terminal-curses.h"
+#include "core/terminal-sdl2.h"
 
 
 std::shared_ptr<Core> greave = nullptr;   // The main Core object.
@@ -139,7 +139,7 @@ void Core::init(bool dry_run)
             catch (std::exception &e)
             {
 #ifdef GREAVE_INCLUDE_CURSES
-                core()->guru()->log("Could not initialize SDL terminal! Falling back to Curses...", Guru::WARN);
+                core()->guru()->log("Could not initialize SDL terminal! Falling back to Curses...", Guru::GURU_WARN);
                 terminal_choice = "curses";
 #else
                 throw e;
@@ -282,10 +282,10 @@ void Core::save()
         message("{M}Game saved in slot {Y}" + std::to_string(m_save_slot) + "{M}.");
     } catch (std::exception &e)
     {
-        m_guru_meditation->nonfatal("SQL error while attempting to save the game: " + std::string(e.what()), Guru::CRITICAL);
+        m_guru_meditation->nonfatal("SQL error while attempting to save the game: " + std::string(e.what()), Guru::GURU_CRITICAL);
         if (FileX::file_exists(save_fn_old))
         {
-            m_guru_meditation->nonfatal("Attempting to restore backup saved game file.", Guru::WARN);
+            m_guru_meditation->nonfatal("Attempting to restore backup saved game file.", Guru::GURU_WARN);
             FileX::delete_file(save_fn);
             if (FileX::file_exists(save_fn)) m_guru_meditation->nonfatal("Could not delete current saved game file! Is it read-only?", Guru::GURU_ERROR);
             else FileX::rename_file(save_fn_old, save_fn);

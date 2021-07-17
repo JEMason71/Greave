@@ -1,20 +1,16 @@
 // actions/travel.cc -- Actions allowing the player and NPCs to move around the game world.
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
+#include "actions/travel.h"
+
+#include <cmath>
+
 #include "actions/arena.h"
 #include "actions/combat.h"
 #include "actions/doors.h"
 #include "actions/look.h"
-#include "actions/travel.h"
-#include "core/core.h"
 #include "core/mathx.h"
-#include "core/parser.h"
-#include "core/random.h"
 #include "core/strx.h"
-#include "world/inventory.h"
-#include "world/item.h"
-#include "world/player.h"
-#include "world/world.h"
 
 
 const int   ActionTravel::FALL_1_STOREY_BLEED =         5;      // Intensity for the bleed room scar from a one-storey fall.

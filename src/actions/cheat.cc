@@ -2,14 +2,9 @@
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #include "actions/cheat.h"
+
 #include "actions/look.h"
-#include "core/core.h"
-#include "core/parser.h"
 #include "core/strx.h"
-#include "world/inventory.h"
-#include "world/item.h"
-#include "world/player.h"
-#include "world/world.h"
 
 
 // Adds money to the player's wallet.

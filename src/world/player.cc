@@ -1,15 +1,12 @@
 // world/player.cc -- The Player class is derived from Mobile, and defines the player character in the game world.
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#include "3rdparty/SQLiteCpp/SQLiteCpp.h"
+#include "world/player.h"
+
+#include <cmath>
+
 #include "actions/eat-drink.h"
 #include "core/core.h"
-#include "core/guru.h"
-#include "core/random.h"
-#include "world/inventory.h"
-#include "world/world.h"
-#include "world/player.h"
-#include "world/time-weather.h"
 
 
 const int   Player::BASE_SKILL_COST_LEVEL_OFFSET =  0;      // The skill XP cost formula is offset by this many levels.
@@ -60,7 +57,7 @@ void Player::add_money(uint32_t amount)
     // Avoid integer overflow.
     if (m_money + amount < m_money)
     {
-        core()->guru()->nonfatal("Intercepted money integer overflow!", Guru::WARN);
+        core()->guru()->nonfatal("Intercepted money integer overflow!", Guru::GURU_WARN);
         m_money = UINT32_MAX;
     }
     else m_money += amount;
@@ -95,7 +92,7 @@ void Player::gain_skill_xp(const std::string& skill_id, float xp)
     xp *= core()->world()->get_skill_multiplier(skill_id);
     if (xp <= 0)
     {
-        if (xp < 0) core()->guru()->nonfatal("Attempt to give negative XP in " + skill_id, Guru::WARN);
+        if (xp < 0) core()->guru()->nonfatal("Attempt to give negative XP in " + skill_id, Guru::GURU_WARN);
         return;
     }
     auto it = m_skill_xp.find(skill_id);
@@ -293,7 +290,7 @@ void Player::remove_money(uint32_t amount)
     if (amount > m_money)
     {
         m_money = 0;
-        core()->guru()->nonfatal("Attempt to remove more money than the player owns!", Guru::ERROR);
+        core()->guru()->nonfatal("Attempt to remove more money than the player owns!", Guru::GURU_ERROR);
     }
     else m_money -= amount;
 }

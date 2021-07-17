@@ -1,16 +1,10 @@
 // world/shop.cc -- The Shop class handles everything to do with shops that where the player can buy and sell items.
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#include "3rdparty/SQLiteCpp/SQLiteCpp.h"
-#include "core/core.h"
-#include "core/list.h"
-#include "core/mathx.h"
-#include "core/parser.h"
-#include "core/strx.h"
-#include "world/player.h"
-#include "world/room.h"
 #include "world/shop.h"
-#include "world/world.h"
+
+#include "core/mathx.h"
+#include "core/strx.h"
 
 
 // SQL table construction string.

@@ -1,11 +1,11 @@
 // core/prefs.cc -- The Prefs class loads data from prefs.yml, allowing the user to configure game settings.
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
+#include "core/prefs.h"
+
 #include "3rdparty/yaml-cpp/yaml.h"
 #include "core/core.h"
 #include "core/filex.h"
-#include "core/guru.h"
-#include "core/prefs.h"
 
 
 // Constructor, loads data from prefs.yml

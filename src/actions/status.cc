@@ -2,12 +2,8 @@
 /// Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #include "actions/status.h"
-#include "core/core.h"
+
 #include "core/strx.h"
-#include "world/player.h"
-#include "world/room.h"
-#include "world/time-weather.h"
-#include "world/world.h"
 
 
 // Check the player's current total score.

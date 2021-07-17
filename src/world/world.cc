@@ -1,19 +1,14 @@
 // world/world.cc -- The World class defines the game world as a whole and handles the passage of time, as well as keeping track of the player's current activities.
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#include "3rdparty/SQLiteCpp/SQLiteCpp.h"
+#include "world/world.h"
+
 #include "3rdparty/yaml-cpp/yaml.h"
 #include "actions/look.h"
 #include "core/bones.h"
-#include "core/core.h"
 #include "core/filex.h"
-#include "core/guru.h"
 #include "core/mathx.h"
-#include "core/message.h"
-#include "core/random.h"
 #include "core/strx.h"
-#include "world/inventory.h"
-#include "world/world.h"
 
 
 const int World::ROOM_SCAN_DISTANCE = 10; // The distance to scan for active rooms.
@@ -118,7 +113,7 @@ std::string World::generic_desc(const std::string &id) const
     auto it = m_generic_descs.find(id);
     if (it == m_generic_descs.end())
     {
-        core()->guru()->nonfatal("Invalid generic description requested: " + id, Guru::ERROR);
+        core()->guru()->nonfatal("Invalid generic description requested: " + id, Guru::GURU_ERROR);
         return "-";
     }
     return it->second;
@@ -232,7 +227,7 @@ float World::get_skill_multiplier(const std::string &skill)
     const auto it = m_skills.find(skill);
     if (it == m_skills.end())
     {
-        core()->guru()->nonfatal("Invalid skill requested: " + skill, Guru::ERROR);
+        core()->guru()->nonfatal("Invalid skill requested: " + skill, Guru::GURU_ERROR);
         return 0;
     }
     return it->second.xp_multi;
@@ -244,7 +239,7 @@ std::string World::get_skill_name(const std::string &skill)
     const auto it = m_skills.find(skill);
     if (it == m_skills.end())
     {
-        core()->guru()->nonfatal("Invalid skill requested: " + skill, Guru::ERROR);
+        core()->guru()->nonfatal("Invalid skill requested: " + skill, Guru::GURU_ERROR);
         return "[error]";
     }
     return it->second.name;
@@ -360,7 +355,7 @@ void World::load_anatomy_pool()
                 auto new_bp = std::make_shared<BodyPart>();
                 if (!bp.second.IsSequence() || bp.second.size() != 2)
                 {
-                    core()->guru()->nonfatal("Anatomy data incorrect for " + species_id, Guru::CRITICAL);
+                    core()->guru()->nonfatal("Anatomy data incorrect for " + species_id, Guru::GURU_CRITICAL);
                     continue;
                 }
                 new_bp->name = bp.first.as<std::string>();
@@ -372,7 +367,7 @@ void World::load_anatomy_pool()
                 else if (target == "hands") new_bp->slot = EquipSlot::HANDS;
                 else
                 {
-                    core()->guru()->nonfatal("Could not determine body part armour target for " + species_id + ": " + target, Guru::CRITICAL);
+                    core()->guru()->nonfatal("Could not determine body part armour target for " + species_id + ": " + target, Guru::GURU_CRITICAL);
                     continue;
                 }
                 anatomy_vec.push_back(new_bp);
@@ -426,7 +421,7 @@ void World::load_item_pool()
                 {
                     const std::string key = key_value.first.as<std::string>();
                     if (VALID_YAML_KEYS_ITEMS.find(key) == VALID_YAML_KEYS_ITEMS.end())
-                        core()->guru()->nonfatal("Invalid key in item YAML data (" + key + "): " + item_id_str, Guru::WARN);
+                        core()->guru()->nonfatal("Invalid key in item YAML data (" + key + "): " + item_id_str, Guru::GURU_WARN);
                 }
 
                 // Check to make sure there are no hash collisions.
@@ -448,13 +443,13 @@ void World::load_item_pool()
                 if (item_type_str.size())
                 {
                     const auto it = ITEM_TYPE_MAP.find(item_type_str);
-                    if (it == ITEM_TYPE_MAP.end()) core()->guru()->nonfatal("Invalid item type on " + item_id_str + ": " + item_type_str, Guru::ERROR);
+                    if (it == ITEM_TYPE_MAP.end()) core()->guru()->nonfatal("Invalid item type on " + item_id_str + ": " + item_type_str, Guru::GURU_ERROR);
                     else type = it->second;
                 }
                 if (item_subtype_str.size())
                 {
                     const auto it = ITEM_SUBTYPE_MAP.find(item_subtype_str);
-                    if (it == ITEM_SUBTYPE_MAP.end()) core()->guru()->nonfatal("Invalid item subtype on " + item_id_str + ": " + item_subtype_str, Guru::ERROR);
+                    if (it == ITEM_SUBTYPE_MAP.end()) core()->guru()->nonfatal("Invalid item subtype on " + item_id_str + ": " + item_subtype_str, Guru::GURU_ERROR);
                     else subtype = it->second;
                 }
                 new_item->set_type(type, subtype);
@@ -462,12 +457,12 @@ void World::load_item_pool()
                 // The Item's tags, if any.
                 if (item_data["tags"])
                 {
-                    if (!item_data["tags"].IsSequence()) core()->guru()->nonfatal("{r}Malformed item tags: " + item_id_str, Guru::ERROR);
+                    if (!item_data["tags"].IsSequence()) core()->guru()->nonfatal("{r}Malformed item tags: " + item_id_str, Guru::GURU_ERROR);
                     else for (auto tag : item_data["tags"])
                     {
                         const std::string tag_str = StrX::str_tolower(tag.as<std::string>());
                         const auto tag_it = ITEM_TAG_MAP.find(tag_str);
-                        if (tag_it == ITEM_TAG_MAP.end()) core()->guru()->nonfatal("Unrecognized item tag (" + tag_str + "): " + item_id_str, Guru::ERROR);
+                        if (tag_it == ITEM_TAG_MAP.end()) core()->guru()->nonfatal("Unrecognized item tag (" + tag_str + "): " + item_id_str, Guru::GURU_ERROR);
                         else new_item->set_tag(tag_it->second);
                     }
                 }
@@ -491,7 +486,7 @@ void World::load_item_pool()
                 {
                     const std::string damage_type = item_data["damage_type"].as<std::string>();
                     const auto type_it = DAMAGE_TYPE_MAP.find(damage_type);
-                    if (type_it == DAMAGE_TYPE_MAP.end()) core()->guru()->nonfatal("Unrecognized damage type (" + damage_type + "): " + item_id_str, Guru::ERROR);
+                    if (type_it == DAMAGE_TYPE_MAP.end()) core()->guru()->nonfatal("Unrecognized damage type (" + damage_type + "): " + item_id_str, Guru::GURU_ERROR);
                     else new_item->set_meta("damage_type", static_cast<int>(type_it->second));
                 }
 
@@ -521,7 +516,7 @@ void World::load_item_pool()
                 {
                     const std::string slot_str = item_data["slot"].as<std::string>();
                     const auto slot_it = EQUIP_SLOT_MAP.find(slot_str);
-                    if (slot_it == EQUIP_SLOT_MAP.end()) core()->guru()->nonfatal("Unrecognized equipment slot (" + slot_str + "): " + item_id_str, Guru::ERROR);
+                    if (slot_it == EQUIP_SLOT_MAP.end()) core()->guru()->nonfatal("Unrecognized equipment slot (" + slot_str + "): " + item_id_str, Guru::GURU_ERROR);
                     else
                     {
                         EquipSlot chosen_slot = slot_it->second;
@@ -549,7 +544,7 @@ void World::load_item_pool()
                 if (item_data["liquid"]) new_item->set_meta("liquid", item_data["liquid"].as<std::string>());
 
                 // The Item's description, if any.
-                if (!item_data["desc"]) core()->guru()->nonfatal("Missing description for item " + item_id_str, Guru::WARN);
+                if (!item_data["desc"]) core()->guru()->nonfatal("Missing description for item " + item_id_str, Guru::GURU_WARN);
                 else
                 {
                     const std::string desc = item_data["desc"].as<std::string>();
@@ -558,7 +553,7 @@ void World::load_item_pool()
 
                 // The Item's value.
                 unsigned int item_value = 0;
-                if (!item_data["value"]) core()->guru()->nonfatal("Missing value for item " + item_id_str, Guru::WARN);
+                if (!item_data["value"]) core()->guru()->nonfatal("Missing value for item " + item_id_str, Guru::GURU_WARN);
                 else
                 {
                     const std::string value_str = item_data["value"].as<std::string>();
@@ -584,17 +579,17 @@ void World::load_item_pool()
                 new_item->set_value(item_value);
 
                 // The Item's rarity.
-                if (!item_data["rare"]) core()->guru()->nonfatal("Missing rarity for item " + item_id_str, Guru::WARN);
+                if (!item_data["rare"]) core()->guru()->nonfatal("Missing rarity for item " + item_id_str, Guru::GURU_WARN);
                 else new_item->set_rare(item_data["rare"].as<int>());
 
                 // The Item's weight.
-                if (!item_data["weight"]) core()->guru()->nonfatal("Missing weight for item " + item_id_str, Guru::ERROR);
+                if (!item_data["weight"]) core()->guru()->nonfatal("Missing weight for item " + item_id_str, Guru::GURU_ERROR);
                 else new_item->set_weight(item_data["weight"].as<uint32_t>());
 
                 // The Item's stack size, if any.
                 if (item_data["stack"])
                 {
-                    if (!new_item->tag(ItemTag::Stackable)) core()->guru()->nonfatal("Stack size specified for nonstackable item: " + item_id_str, Guru::ERROR);
+                    if (!new_item->tag(ItemTag::Stackable)) core()->guru()->nonfatal("Stack size specified for nonstackable item: " + item_id_str, Guru::GURU_ERROR);
                     new_item->set_stack(item_data["stack"].as<uint32_t>());
                 }
 
@@ -689,36 +684,36 @@ void World::load_mob_pool()
                 {
                     const std::string key = key_value.first.as<std::string>();
                     if (VALID_YAML_KEYS_MOBS.find(key) == VALID_YAML_KEYS_MOBS.end())
-                        core()->guru()->nonfatal("Invalid key in mobile YAML data (" + key + "): " + mobile_id_str, Guru::WARN);
+                        core()->guru()->nonfatal("Invalid key in mobile YAML data (" + key + "): " + mobile_id_str, Guru::GURU_WARN);
                 }
 
                 // Check to make sure there are no hash collisions.
                 if (m_mob_pool.find(mobile_id) != m_mob_pool.end()) throw std::runtime_error("Mobile ID hash conflict: " + mobile_id_str);
 
                 // The Mobile's name.
-                if (!mobile_data["name"]) core()->guru()->nonfatal("Missing mobile name: " + mobile_id_str, Guru::ERROR);
+                if (!mobile_data["name"]) core()->guru()->nonfatal("Missing mobile name: " + mobile_id_str, Guru::GURU_ERROR);
                 else new_mob->set_name(mobile_data["name"].as<std::string>());
 
                 // The Mobile's hit points.
-                if (!mobile_data["hp"]) core()->guru()->nonfatal("Missing mobile hit points: "+ mobile_id_str, Guru::ERROR);
+                if (!mobile_data["hp"]) core()->guru()->nonfatal("Missing mobile hit points: "+ mobile_id_str, Guru::GURU_ERROR);
                 else new_mob->set_hp(mobile_data["hp"].as<int>(), mobile_data["hp"].as<int>());
 
                 // The Mobile's score, if any.
                 if (mobile_data["score"]) new_mob->add_score(mobile_data["score"].as<int>());
 
                 // The Mobile's species.
-                if (!mobile_data["species"]) core()->guru()->nonfatal("Missing species: " + mobile_id_str, Guru::CRITICAL);
+                if (!mobile_data["species"]) core()->guru()->nonfatal("Missing species: " + mobile_id_str, Guru::GURU_CRITICAL);
                 else new_mob->set_species(mobile_data["species"].as<std::string>());
 
                 // The Mobile's tags, if any.
                 if (mobile_data["tags"])
                 {
-                    if (!mobile_data["tags"].IsSequence()) core()->guru()->nonfatal("{r}Malformed mobile tags: " + mobile_id_str, Guru::ERROR);
+                    if (!mobile_data["tags"].IsSequence()) core()->guru()->nonfatal("{r}Malformed mobile tags: " + mobile_id_str, Guru::GURU_ERROR);
                     else for (auto tag : mobile_data["tags"])
                     {
                         const std::string tag_str = StrX::str_tolower(tag.as<std::string>());
                         const auto tag_it = MOBILE_TAG_MAP.find(tag_str);
-                        if (tag_it == MOBILE_TAG_MAP.end()) core()->guru()->nonfatal("Unrecognized mobile tag (" + tag_str + "): " + mobile_id_str, Guru::ERROR);
+                        if (tag_it == MOBILE_TAG_MAP.end()) core()->guru()->nonfatal("Unrecognized mobile tag (" + tag_str + "): " + mobile_id_str, Guru::GURU_ERROR);
                         else new_mob->set_tag(tag_it->second);
                     }
                 }
@@ -764,18 +759,18 @@ void World::load_room_pool()
                 {
                     const std::string key = key_value.first.as<std::string>();
                     if (VALID_YAML_KEYS_AREAS.find(key) == VALID_YAML_KEYS_AREAS.end())
-                        core()->guru()->nonfatal("Invalid key in room YAML data (" + key + "): " + room_id, Guru::WARN);
+                        core()->guru()->nonfatal("Invalid key in room YAML data (" + key + "): " + room_id, Guru::GURU_WARN);
                 }
 
                 // Check to make sure there are no hash collisions.
                 if (m_room_pool.find(new_room->id()) != m_room_pool.end()) throw std::runtime_error("Room ID hash conflict: " + room_id);
 
                 // The Room's long and short names.
-                if (!room_data["name"] || room_data["name"].size() < 2) core()->guru()->nonfatal("Missing or invalid room name(s): " + room_id, Guru::ERROR);
+                if (!room_data["name"] || room_data["name"].size() < 2) core()->guru()->nonfatal("Missing or invalid room name(s): " + room_id, Guru::GURU_ERROR);
                 else new_room->set_name(room_data["name"][0].as<std::string>(), room_data["name"][1].as<std::string>());
 
                 // The Room's description.
-                if (!room_data["desc"]) core()->guru()->nonfatal("Missing room description: " + room_id, Guru::WARN);
+                if (!room_data["desc"]) core()->guru()->nonfatal("Missing room description: " + room_id, Guru::GURU_WARN);
                 else
                 {
                     const std::string desc = room_data["desc"].as<std::string>();
@@ -794,29 +789,29 @@ void World::load_room_pool()
                 }
 
                 // The light level of the Room.
-                if (!room_data["light"]) core()->guru()->nonfatal("Missing room light level: " + room_id, Guru::ERROR);
+                if (!room_data["light"]) core()->guru()->nonfatal("Missing room light level: " + room_id, Guru::GURU_ERROR);
                 else
                 {
                     const std::string light_str = room_data["light"].as<std::string>();
                     auto level_it = LIGHT_LEVEL_MAP.find(light_str);
-                    if (level_it == LIGHT_LEVEL_MAP.end()) core()->guru()->nonfatal("Invalid light level value: " + room_id, Guru::ERROR);
+                    if (level_it == LIGHT_LEVEL_MAP.end()) core()->guru()->nonfatal("Invalid light level value: " + room_id, Guru::GURU_ERROR);
                     else new_room->set_base_light(level_it->second);
                 }
 
                 // The security level of this Room.
-                if (!room_data["security"]) core()->guru()->nonfatal("Missing room security level: " + room_id, Guru::ERROR);
+                if (!room_data["security"]) core()->guru()->nonfatal("Missing room security level: " + room_id, Guru::GURU_ERROR);
                 else
                 {
                     const std::string sec_str = room_data["security"].as<std::string>();
                     auto sec_it = SECURITY_MAP.find(sec_str);
-                    if (sec_it == SECURITY_MAP.end()) core()->guru()->nonfatal("Invalid security level value: " + room_id, Guru::ERROR);
+                    if (sec_it == SECURITY_MAP.end()) core()->guru()->nonfatal("Invalid security level value: " + room_id, Guru::GURU_ERROR);
                     else new_room->set_security(sec_it->second);
                 }
 
                 // Room tags, if any.
                 if (room_data["tags"])
                 {
-                    if (!room_data["tags"].IsSequence()) core()->guru()->nonfatal("{r}Malformed room tags: " + room_id, Guru::ERROR);
+                    if (!room_data["tags"].IsSequence()) core()->guru()->nonfatal("{r}Malformed room tags: " + room_id, Guru::GURU_ERROR);
                     else for (auto tag : room_data["tags"])
                     {
                         const std::string tag_str = StrX::str_tolower(tag.as<std::string>());
@@ -899,14 +894,14 @@ void World::load_room_pool()
                         if (!directional_tag)
                         {
                             const auto tag_it = ROOM_TAG_MAP.find(tag_str);
-                            if (tag_it == ROOM_TAG_MAP.end()) core()->guru()->nonfatal("Unrecognized room tag (" + tag_str + "): " + room_id, Guru::WARN);
+                            if (tag_it == ROOM_TAG_MAP.end()) core()->guru()->nonfatal("Unrecognized room tag (" + tag_str + "): " + room_id, Guru::GURU_WARN);
                             else new_room->set_tag(tag_it->second);
                         }
                         else
                         {
                             const std::string dtag_str = tag_str.substr(dt_offset);
                             const auto dtag_it = LINK_TAG_MAP.find(dtag_str);
-                            if (dtag_it == LINK_TAG_MAP.end()) core()->guru()->nonfatal("Unrecognized link tag (" + dtag_str + "): " + room_id, Guru::WARN);
+                            if (dtag_it == LINK_TAG_MAP.end()) core()->guru()->nonfatal("Unrecognized link tag (" + dtag_str + "): " + room_id, Guru::GURU_WARN);
                             else
                             {
                                 const LinkTag lt = dtag_it->second;
@@ -1037,7 +1032,7 @@ void World::remove_mobile(size_t id)
             return;
         }
     }
-    core()->guru()->nonfatal("Attempt to remove mobile that does not exist in the world.", Guru::ERROR);
+    core()->guru()->nonfatal("Attempt to remove mobile that does not exist in the world.", Guru::GURU_ERROR);
 }
 
 // Checks if a room is currently active.

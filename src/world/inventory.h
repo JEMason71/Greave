@@ -2,8 +2,14 @@
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #pragma once
+
+#include <cstddef>
+
+#include <memory>
+#include <string>
+#include <vector>
+
 #include "3rdparty/SQLiteCpp/Database.h"
-#include "core/greave.hpp"
 #include "world/item.h"
 
 

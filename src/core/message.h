@@ -3,8 +3,11 @@
 // Originally based on BearLibTerminal sample code, (c) 2014 Cfyz.
 
 #pragma once
+
+#include <string>
+#include <vector>
+
 #include "3rdparty/SQLiteCpp/Database.h"
-#include "core/greave.hpp"
 
 
 class MessageLog

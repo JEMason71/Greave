@@ -2,10 +2,13 @@
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #pragma once
-#include "3rdparty/SQLiteCpp/Database.h"
-#include "core/greave.hpp"
+
+#include <cstddef>
+
+#include <memory>
+#include <string>
+
 #include "world/inventory.h"
-#include "world/item.h"
 
 
 class Shop

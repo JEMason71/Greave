@@ -2,15 +2,9 @@
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #include "actions/look.h"
-#include "core/core.h"
-#include "core/guru.h"
+
 #include "core/mathx.h"
 #include "core/strx.h"
-#include "world/inventory.h"
-#include "world/player.h"
-#include "world/room.h"
-#include "world/shop.h"
-#include "world/world.h"
 
 
 // Examines an Item or Mobile.
@@ -25,7 +19,7 @@ void ActionLook::examine(ParserTarget target_type, size_t target)
         case ParserTarget::TARGET_MOBILE: examine_mobile(world->mob_vec(target)); break;
         case ParserTarget::TARGET_ROOM: examine_item(world->get_room(player->location())->inv()->get(target)); break;
         case ParserTarget::TARGET_SHOP: examine_item(world->get_shop(player->location())->inv()->get(target)); break;
-        default: core()->guru()->nonfatal("Invalid examine target.", Guru::ERROR);
+        default: core()->guru()->nonfatal("Invalid examine target.", Guru::GURU_ERROR);
     }
 }
 
@@ -59,7 +53,7 @@ void ActionLook::examine_item(std::shared_ptr<Item> target)
             case 10: return "{G}This is a fabled artifact!{w} ";
             case 11: return "{G}You can scarecely believe " + it_is_string + " real!{w} ";
             case 12: return "{G}This is truly an artifact of the gods!{w} ";
-            default: core()->guru()->nonfatal("Invalid rarity value!", Guru::WARN);
+            default: core()->guru()->nonfatal("Invalid rarity value!", Guru::GURU_WARN);
         }
         return "";
     };
@@ -171,7 +165,7 @@ void ActionLook::examine_item(std::shared_ptr<Item> target)
                 case DamageType::PLASMA: damage_type_str = "plasma"; break;
                 case DamageType::POISON: damage_type_str = "poison"; break;
                 case DamageType::RENDING: damage_type_str = "randing"; break;
-                default: core()->guru()->nonfatal("Unable to determine item damage type: " + target->name(), Guru::ERROR);
+                default: core()->guru()->nonfatal("Unable to determine item damage type: " + target->name(), Guru::GURU_ERROR);
             }
             std::vector<std::string> damage_str_vec;
             damage_str_vec.push_back(it_has_string_caps + " a damage value of {U}" + std::to_string(target->power()) + " " + damage_type_str + "{w}");

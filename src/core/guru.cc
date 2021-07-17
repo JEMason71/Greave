@@ -1,21 +1,21 @@
 // core/guru.cc -- Guru Meditation error-handling and reporting system.
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#include "core/core.h"
-#include "core/filex.h"
 #include "core/guru.h"
-#include "core/message.h"
 
 #include <csignal>
 #include <ctime>
+
 #include <sstream>
 
+#include "core/core.h"
+#include "core/filex.h"
 
-const int   Guru::INFO =        0;  // General logging information.
-const int   Guru::WARN =        1;  // Warnings, non-fatal stuff.
-const int   Guru::ERROR =       2;  // Serious errors. Shit is going down.
-const int   Guru::GURU_ERROR =  2;  // Same thing as ERROR, used when something else (*coughwindows.hcough*) #defines ERROR as a constant.
-const int   Guru::CRITICAL =    3;  // Critical system failure.
+
+const int   Guru::GURU_INFO =       0;  // General logging information.
+const int   Guru::GURU_WARN =       1;  // Warnings, non-fatal stuff.
+const int   Guru::GURU_ERROR =      2;  // Serious errors. Shit is going down.
+const int   Guru::GURU_CRITICAL =   3;  // Critical system failure.
 
 const int   Guru::CASCADE_THRESHOLD =       20; // The amount m_cascade_count can reach within CASCADE_TIMEOUT seconds before it triggers an abort screen.
 const int   Guru::CASCADE_TIMEOUT =         30; // The number of seconds without an error to reset the cascade timer.
@@ -64,7 +64,7 @@ void Guru::dump_nonfatal()
 {
     if (!m_console_ready)
     {
-        nonfatal("Attempt to dump nonfatal errors before console is initialized!", Guru::WARN);
+        nonfatal("Attempt to dump nonfatal errors before console is initialized!", Guru::GURU_WARN);
         return;
     }
     for (auto message : m_nonfatal_cache)
@@ -77,13 +77,13 @@ bool Guru::is_dead() const { return m_dead_already; } // Checks if the system ha
 // Guru meditation error.
 void Guru::halt(const std::string &error)
 {
-    this->log("Software Failure, Halting Execution", Guru::CRITICAL);
-    this->log(error, Guru::CRITICAL);
+    this->log("Software Failure, Halting Execution", Guru::GURU_CRITICAL);
+    this->log(error, Guru::GURU_CRITICAL);
     if (!m_console_ready) exit(EXIT_FAILURE);
 
     if (m_dead_already)
     {
-        log("Detected cleanup in process, attempting to die peacefully.", Guru::WARN);
+        log("Detected cleanup in process, attempting to die peacefully.", Guru::GURU_WARN);
         exit(EXIT_FAILURE);
     }
     else m_dead_already = true;
@@ -128,10 +128,10 @@ void Guru::log(std::string msg, int type)
     std::string txt_tag;
     switch(type)
     {
-        case Guru::INFO: break;
-        case Guru::WARN: txt_tag = "[WARN] "; break;
-        case Guru::ERROR: txt_tag = "[ERROR] "; break;
-        case Guru::CRITICAL: txt_tag = "[CRITICAL] "; break;
+        case Guru::GURU_INFO: break;
+        case Guru::GURU_WARN: txt_tag = "[WARN] "; break;
+        case Guru::GURU_ERROR: txt_tag = "[ERROR] "; break;
+        case Guru::GURU_CRITICAL: txt_tag = "[CRITICAL] "; break;
     }
 
     char* buffer = new char[32];
@@ -151,10 +151,10 @@ void Guru::nonfatal(std::string error, int type)
     int cascade_weight = 0;
     switch(type)
     {
-        case Guru::WARN: cascade_weight = Guru::CASCADE_WEIGHT_WARNING; break;
-        case Guru::ERROR: cascade_weight = Guru::CASCADE_WEIGHT_ERROR; break;
-        case Guru::CRITICAL: cascade_weight = Guru::CASCADE_WEIGHT_CRITICAL; break;
-        default: nonfatal("Nonfatal error reported with incorrect severity specified.", Guru::WARN); break;
+        case Guru::GURU_WARN: cascade_weight = Guru::CASCADE_WEIGHT_WARNING; break;
+        case Guru::GURU_ERROR: cascade_weight = Guru::CASCADE_WEIGHT_ERROR; break;
+        case Guru::GURU_CRITICAL: cascade_weight = Guru::CASCADE_WEIGHT_CRITICAL; break;
+        default: nonfatal("Nonfatal error reported with incorrect severity specified.", Guru::GURU_WARN); break;
     }
 
     this->log(error, type);
@@ -180,10 +180,10 @@ void Guru::nonfatal(std::string error, int type)
 
     switch(type)
     {
-        case Guru::INFO: error = "{U}Info: " + error; break;
-        case Guru::WARN: error = "{Y}Warning: " + error; break;
-        case Guru::ERROR: error = "{R}Error: " + error; break;
-        case Guru::CRITICAL: error = "{M}Critical Error: " + error; break;
+        case Guru::GURU_INFO: error = "{U}Info: " + error; break;
+        case Guru::GURU_WARN: error = "{Y}Warning: " + error; break;
+        case Guru::GURU_ERROR: error = "{R}Error: " + error; break;
+        case Guru::GURU_CRITICAL: error = "{M}Critical Error: " + error; break;
     }
     if (core()->messagelog() != nullptr) core()->message(error);
     else throw std::runtime_error(error);

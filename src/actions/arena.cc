@@ -2,15 +2,10 @@
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #include "actions/arena.h"
+
 #include "actions/look.h"
-#include "core/core.h"
-#include "core/list.h"
 #include "core/mathx.h"
-#include "core/parser.h"
 #include "core/strx.h"
-#include "world/player.h"
-#include "world/room.h"
-#include "world/world.h"
 
 
 // One of the arena combatant mobiles died.

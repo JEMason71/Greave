@@ -3,6 +3,11 @@
 
 #pragma once
 #ifdef GREAVE_INCLUDE_CURSES
+
+#include <cstddef>
+
+#include <string>
+
 #include "core/terminal.h"
 
 

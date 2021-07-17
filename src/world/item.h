@@ -2,8 +2,15 @@
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #pragma once
+
+#include <cstddef>
+
+#include <map>
+#include <memory>
+#include <set>
+#include <string>
+
 #include "3rdparty/SQLiteCpp/Database.h"
-#include "core/greave.hpp"
 
 
 // Weapon damage types.

@@ -1,17 +1,11 @@
 // world/mobile.cc -- The Mobile class defines entities that can move and interact with the game world.
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#include "3rdparty/SQLiteCpp/SQLiteCpp.h"
+#include "world/mobile.h"
+
 #include "actions/arena.h"
 #include "actions/combat.h"
-#include "core/core.h"
-#include "core/guru.h"
-#include "core/random.h"
 #include "core/strx.h"
-#include "world/player.h"
-#include "world/room.h"
-#include "world/time-weather.h"
-#include "world/world.h"
 
 
 const float Mobile::ACTION_TIMER_CAP_MAX =                  3600.0f;    // The maximum value the action timer can ever reach.
@@ -421,7 +415,7 @@ bool Mobile::pass_time(float seconds, bool interruptable)
     // For the player, time passes in the world itself.
     if (is_player())
     {
-        if (!seconds) core()->guru()->nonfatal("Attempt to pass 0 seconds on player character.", Guru::WARN);
+        if (!seconds) core()->guru()->nonfatal("Attempt to pass 0 seconds on player character.", Guru::GURU_WARN);
         return core()->world()->time_weather()->pass_time(seconds, interruptable);
     }
 

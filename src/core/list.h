@@ -2,7 +2,12 @@
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. All rights reserved.
 
 #pragma once
-#include "core/greave.hpp"
+
+#include <cstddef>
+
+#include <memory>
+#include <string>
+#include <vector>
 
 
 struct ListEntry

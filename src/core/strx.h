@@ -2,8 +2,15 @@
 // Copyright (c) 2009-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #pragma once
+
+#include <cstddef>
+
+#include <map>
+#include <set>
+#include <string>
+#include <vector>
+
 #include "core/core.h"
-#include "world/room.h"
 
 
 class StrX

@@ -1,15 +1,14 @@
 // core/strx.cc -- Various utility functions that deal with string manipulation/conversion.
 // Copyright (c) 2009-2021 Raine "Gravecat" Simmons and the Greave contributors. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#include "core/core.h"
-#include "core/guru.h"
-#include "core/mathx.h"
 #include "core/strx.h"
 
 #include <algorithm>
 #include <iterator>
 #include <regex>
 #include <sstream>
+
+#include "core/mathx.h"
 
 
 const int StrX::CL_AND =            1;  // comma_list() flag: Include "and" before the last entry in the list.
@@ -73,7 +72,7 @@ std::string StrX::comma_list(std::vector<std::string> vec, int flags)
     const bool oxford_comma = (flags & CL_OXFORD_COMMA);
     if (!vec.size())
     {
-        core()->guru()->nonfatal("Empty vector provided to comma_list!", Guru::WARN);
+        core()->guru()->nonfatal("Empty vector provided to comma_list!", Guru::GURU_WARN);
         return "";
     }
     if (vec.size() == 1) return vec.at(0);

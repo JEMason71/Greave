@@ -1,9 +1,11 @@
 // core/mathx.cc -- Various utility functions that deal with math and number-related things.
 // Copyright (c) 2009-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#include "core/core.h"
 #include "core/mathx.h"
-#include "core/random.h"
+
+#include <cmath>
+
+#include "core/core.h"
 
 
 // Inverts a Direction enum (north becomes south, etc.)

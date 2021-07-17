@@ -2,16 +2,11 @@
 // Copyright (c) 2021 Raine "Gravecat" Simmons. All rights reserved.
 // Weather system originally based on Keran's MUSH/MUX Weather and Time Code Package Version 4.0 beta, copyright (c) 1996-1998 Keran.
 
-#include "3rdparty/SQLiteCpp/SQLiteCpp.h"
+#include "world/time-weather.h"
+
 #include "3rdparty/yaml-cpp/yaml.h"
 #include "actions/ai.h"
-#include "core/core.h"
-#include "core/random.h"
 #include "core/strx.h"
-#include "world/player.h"
-#include "world/room.h"
-#include "world/time-weather.h"
-#include "world/world.h"
 
 
 // SQL table construction string for the heartbeat timers.

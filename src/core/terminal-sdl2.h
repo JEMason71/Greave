@@ -3,9 +3,15 @@
 
 #pragma once
 #ifdef GREAVE_INCLUDE_SDL
-#include "core/terminal.h"
+
+#include <cstddef>
+
+#include <map>
+#include <string>
+
 #include "3rdparty/SDL2/SDL.h"
 #include "3rdparty/SDL2/SDL_ttf.h"
+#include "core/terminal.h"
 
 
 class TerminalSDL2 : public Terminal

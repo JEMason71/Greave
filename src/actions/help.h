@@ -2,7 +2,9 @@
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #pragma once
-#include "core/greave.hpp"
+
+#include <map>
+#include <string>
 
 
 class ActionHelp

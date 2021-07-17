@@ -2,15 +2,9 @@
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #include "actions/doors.h"
-#include "core/core.h"
-#include "core/guru.h"
+
 #include "core/mathx.h"
-#include "core/parser.h"
 #include "core/strx.h"
-#include "world/inventory.h"
-#include "world/item.h"
-#include "world/player.h"
-#include "world/world.h"
 
 
 const float ActionDoors::TIME_CLOSE_DOOR =  2.0f;   // The time taken (in seconds) to close a door.
@@ -24,7 +18,7 @@ bool ActionDoors::lock_or_unlock(std::shared_ptr<Mobile> mob, Direction dir, boo
 {
     if (mob->tag(MobileTag::CannotOpenDoors))
     {
-        core()->guru()->nonfatal("Mobile with CannotOpenDoors tag attempting to " + std::string(unlock ? "unlock" : "lock") + " a door!", Guru::WARN);
+        core()->guru()->nonfatal("Mobile with CannotOpenDoors tag attempting to " + std::string(unlock ? "unlock" : "lock") + " a door!", Guru::GURU_WARN);
         return false;
     }
 
@@ -145,7 +139,7 @@ bool ActionDoors::open_or_close(std::shared_ptr<Mobile> mob, Direction dir, bool
 {
     if (mob->tag(MobileTag::CannotOpenDoors))
     {
-        core()->guru()->nonfatal("Mobile with CannotOpenDoors tag attempting to " + std::string(open ? "open" : "close") + " a door!", Guru::WARN);
+        core()->guru()->nonfatal("Mobile with CannotOpenDoors tag attempting to " + std::string(open ? "open" : "close") + " a door!", Guru::GURU_WARN);
         return false;
     }
 

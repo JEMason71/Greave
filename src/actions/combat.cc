@@ -1,16 +1,13 @@
 // actions/combat.cc -- Generic combat routines that apply to multiple types of combat.
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#include "actions/abilities.h"
 #include "actions/combat.h"
-#include "core/core.h"
+
+#include <cmath>
+
+#include "actions/abilities.h"
 #include "core/mathx.h"
-#include "core/random.h"
 #include "core/strx.h"
-#include "world/inventory.h"
-#include "world/player.h"
-#include "world/room.h"
-#include "world/world.h"
 
 
 const float Combat::ATTACKER_DAMAGE_MODIFIER_ANEMIC =           0.5f;   // The damage multiplier when a Mobile with the Anemic tag attacks in melee combat.

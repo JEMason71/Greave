@@ -2,9 +2,12 @@
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #pragma once
-#include "core/greave.hpp"
+
+#include <cstddef>
+
+#include <memory>
+
 #include "core/parser.h"
-#include "world/item.h"
 #include "world/mobile.h"
 
 

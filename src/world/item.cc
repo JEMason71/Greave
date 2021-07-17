@@ -1,15 +1,12 @@
 // world/item.cc -- The Item class is for objects that can be picked up and used by the player or other NPCs.
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#include "3rdparty/SQLiteCpp/SQLiteCpp.h"
-#include "core/core.h"
-#include "core/guru.h"
-#include "core/mathx.h"
-#include "core/random.h"
-#include "core/strx.h"
 #include "world/item.h"
-#include "world/player.h"
-#include "world/world.h"
+
+#include <cmath>
+
+#include "core/mathx.h"
+#include "core/strx.h"
 
 
 const int Item::NAME_FLAG_A =                   1;      // Much like NAME_FLAG_THE, but using 'a' or 'an' instead of 'the'.
@@ -126,7 +123,7 @@ std::string Item::damage_type_string() const
         case DamageType::POISON: return "Ps";
         case DamageType::RENDING: return "R";
         default:
-            core()->guru()->nonfatal("Unable to determine item damage type: " + name(), Guru::ERROR);
+            core()->guru()->nonfatal("Unable to determine item damage type: " + name(), Guru::GURU_ERROR);
             return "";
     }
 }

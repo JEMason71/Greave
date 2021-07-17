@@ -1,9 +1,9 @@
 // actions/help.cc -- The help command provides in-game documentation of commands and game mechanics.
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#include "3rdparty/yaml-cpp/yaml.h"
 #include "actions/help.h"
-#include "core/core.h"
+
+#include "3rdparty/yaml-cpp/yaml.h"
 #include "core/strx.h"
 
 

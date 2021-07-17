@@ -2,9 +2,11 @@
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #pragma once
-#include "core/greave.hpp"
+
 #include <exception>
 #include <fstream>
+#include <string>
+#include <vector>
 
 
 class Guru
@@ -19,13 +21,13 @@ public:
     void    halt(const std::string &error);                 // Stops the game and displays an error messge.
     void    halt(std::exception &e);                        // As above, but with an exception instead of a string.
     void    intercept_signal(int sig);                      // Catches a segfault or other fatal signal.
-    void    log(std::string msg, int type = Guru::INFO);    // Logs a message in the system log file.
+    void    log(std::string msg, int type = Guru::GURU_INFO);    // Logs a message in the system log file.
     void    nonfatal(std::string error, int type);          // Reports a non-fatal error, which will be logged but will not halt execution unless it cascades.
 
-    static const int    INFO;               // General logging information.
-    static const int    WARN;               // Warnings, non-fatal stuff.
-    static const int    ERROR, GURU_ERROR;  // Serious errors. Shit is going down.
-    static const int    CRITICAL;           // Critical system failure.
+    static const int    GURU_INFO;      // General logging information.
+    static const int    GURU_WARN;      // Warnings, non-fatal stuff.
+    static const int    GURU_ERROR;     // Serious errors. Shit is going down.
+    static const int    GURU_CRITICAL;  // Critical system failure.
 
 private:
     bool            m_cache_nonfatal;   // Temporarily caches nonfatal error messages.

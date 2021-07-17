@@ -7,10 +7,11 @@
 #include <dirent.h>
 #include <sys/stat.h>
 #include <unistd.h>
-
 #ifdef GREAVE_TARGET_WINDOWS
 #include <windows.h>
 #endif
+
+#include <stdexcept>
 
 
 // Deletes a specified file. Simple enough, but we'll keep this function around in case there's any platform-specific weirdness that needs to be worked in.

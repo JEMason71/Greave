@@ -2,7 +2,12 @@
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #pragma once
-#include "core/greave.hpp"
+
+#include <cstddef>
+
+#include <memory>
+#include <string>
+
 #include "core/guru.h"
 #include "core/message.h"
 #include "core/parser.h"

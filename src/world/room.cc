@@ -1,15 +1,11 @@
 // world/room.cc -- The Room class, which defines a single area in the game world that the player can visit.
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#include "3rdparty/SQLiteCpp/SQLiteCpp.h"
-#include "core/core.h"
-#include "core/list.h"
-#include "core/random.h"
-#include "core/strx.h"
-#include "world/player.h"
 #include "world/room.h"
-#include "world/time-weather.h"
-#include "world/world.h"
+
+#include <cmath>
+
+#include "core/strx.h"
 
 
 const uint32_t  Room::BLOCKED =                             538012167;  // Hashed value for BLOCKED, which is used to mark exits as impassible.
