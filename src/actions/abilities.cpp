@@ -561,7 +561,7 @@ void Abilities::shield_wall(bool confirm)
     if (player->is_dead()) return;
     core()->message("{M}You brace yourself behind your shield for an incoming blow.");
     player->set_buff(Buff::Type::CD_SHIELD_WALL, SHIELD_WALL_COOLDOWN);
-    player->set_buff(Buff::Type::SHIELD_WALL, SHIELD_WALL_TIME, SHIELD_WALL_BLOCK_BONUS, false, false);
+    player->set_buff(Buff::Type::SHIELD_WALL, SHIELD_WALL_LENGTH, SHIELD_WALL_BLOCK_BONUS, false, false);
     player->reduce_sp(SHIELD_WALL_SP_COST);
 }
 
