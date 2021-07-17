@@ -10,6 +10,8 @@
 #include "core/strx.h"
 
 
+namespace greave {
+
 const float Combat::ATTACKER_DAMAGE_MODIFIER_ANEMIC =           0.5f;   // The damage multiplier when a Mobile with the Anemic tag attacks in melee combat.
 const float Combat::ATTACKER_DAMAGE_MODIFIER_BRAWNY =           1.25f;  // The damage multiplier when a Mobile with the Brawny tag attacks in melee combat.
 const float Combat::ATTACKER_DAMAGE_MODIFIER_FEEBLE =           0.75f;  // The damage multiplier when a Mobile with the Feeble tag attacks in melee combat.
@@ -754,3 +756,5 @@ void Combat::weapon_poison_effect(std::shared_ptr<Mobile> defender, uint32_t dam
     if (!poison_severity) poison_severity = 1;
     defender->set_buff(Buff::Type::POISON, poison_time, poison_severity, true);
 }
+
+}   // namespace greave

@@ -7,6 +7,8 @@
 #include "core/strx.h"
 
 
+namespace greave {
+
 std::map<std::string, std::string> ActionHelp::m_help_pages;    // Help pages loaded from data/misc/help.yml
 
 
@@ -53,3 +55,5 @@ void ActionHelp::load_pages()
         throw std::runtime_error("Error while loading help data/misc/help.yml: " + std::string(e.what()));
     }
 }
+
+}   // namespace greave

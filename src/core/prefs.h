@@ -7,6 +7,8 @@
 #include <string>
 
 
+namespace greave {
+
 class Prefs
 {
 public:
@@ -50,4 +52,5 @@ public:
     std::string terminal;               // Set this to sdl2 for SDL2, or curses for PDCurses/NCurses.
 };
 
+}       // namespace greave
 #endif  // GREAVE_CORE_PREFS_H_

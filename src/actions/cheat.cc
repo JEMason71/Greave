@@ -7,6 +7,8 @@
 #include "core/strx.h"
 
 
+namespace greave {
+
 // Adds money to the player's wallet.
 void ActionCheat::add_money(int32_t amount)
 {
@@ -115,3 +117,5 @@ void ActionCheat::teleport(std::string dest)
     }
     else core()->message("{R}" + dest + " {y}is not a valid room ID.");
 }
+
+}   // namespace greave

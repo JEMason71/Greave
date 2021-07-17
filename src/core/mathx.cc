@@ -8,6 +8,8 @@
 #include "core/core.h"
 
 
+namespace greave {
+
 // Inverts a Direction enum (north becomes south, etc.)
 Direction MathX::dir_invert(Direction dir)
 {
@@ -67,3 +69,5 @@ uint32_t MathX::mixup(uint32_t num, int variance)
 
 // Rounds a float to two decimal places.
 float MathX::round_to_two(float num) { return ::floorf(num * 100 + 0.5) / 100; }
+
+}   // namespace greave

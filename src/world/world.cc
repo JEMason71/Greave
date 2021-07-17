@@ -11,6 +11,8 @@
 #include "core/strx.h"
 
 
+namespace greave {
+
 const int World::ROOM_SCAN_DISTANCE = 10; // The distance to scan for active rooms.
 
 // The SQL construction table for the World data.
@@ -1098,3 +1100,5 @@ void World::starter_equipment(const std::string &list_name)
 
 // Gets a pointer to the TimeWeather object.
 const std::shared_ptr<TimeWeather> World::time_weather() const { return m_time_weather; }
+
+}   // namespace greave

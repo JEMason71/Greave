@@ -8,6 +8,8 @@
 #include <vector>
 
 
+namespace greave {
+
 class FileX
 {
 public:
@@ -20,4 +22,5 @@ public:
     static void rename_file(const std::string &old_name, const std::string &new_name);  // Renames a file.
 };
 
+}       // namespace greave
 #endif  // GREAVE_CORE_FILEX_H_

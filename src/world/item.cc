@@ -9,6 +9,8 @@
 #include "core/strx.h"
 
 
+namespace greave {
+
 const int Item::NAME_FLAG_A =                   1;      // Much like NAME_FLAG_THE, but using 'a' or 'an' instead of 'the'.
 const int Item::NAME_FLAG_CAPITALIZE_FIRST =    2;      // Capitalize the first letter of the Item's name (including the "The") if set.
 const int Item::NAME_FLAG_CORE_STATS =          4;      // Displays core stats on Item names, such as if an Item is glowing.
@@ -497,3 +499,5 @@ uint32_t Item::weight(bool individual) const
     if (individual || !tag(ItemTag::Stackable)) return m_weight + water_weight;
     else return (m_weight + water_weight) * m_stack;
 }
+
+}   // namespace greave

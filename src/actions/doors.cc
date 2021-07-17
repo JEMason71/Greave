@@ -7,6 +7,9 @@
 #include "core/strx.h"
 
 
+namespace greave
+{
+
 const float ActionDoors::TIME_CLOSE_DOOR =  2.0f;   // The time taken (in seconds) to close a door.
 const float ActionDoors::TIME_LOCK_DOOR =   10.0f;  // The time taken (in seconds) to lock a door.
 const float ActionDoors::TIME_OPEN_DOOR =   3.0f;   // The time taken (in seconds) to open a door.
@@ -225,3 +228,5 @@ bool ActionDoors::open_or_close(std::shared_ptr<Mobile> mob, Direction dir, bool
 
     return true;
 }
+
+}   // namespace greave

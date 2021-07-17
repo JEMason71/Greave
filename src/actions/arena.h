@@ -5,6 +5,8 @@
 #define GREAVE_ACTIONS_ARENA_H_
 
 
+namespace greave {
+
 class Arena
 {
 public:
@@ -16,4 +18,5 @@ private:
     static void fight_over();       // The battle has been won!
 };
 
+}       // namespace greave
 #endif  // GREAVE_ACTIONS_ARENA_H_

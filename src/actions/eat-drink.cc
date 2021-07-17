@@ -6,6 +6,8 @@
 #include "core/core.h"
 
 
+namespace greave {
+
 const int ActionEatDrink::TIME_EMPTY_CONTAINER =            5;  // The time taken to empty a water container.
 const int ActionEatDrink::TIME_FILL_CONTAINER =             20; // The time taken to fill a water container.
 const int ActionEatDrink::VOMIT_CHANCE_BLOAT_MAJOR =        2;  // 1 in X chance of vomiting from severely over-eating.
@@ -208,3 +210,5 @@ void ActionEatDrink::vomit(bool confirm)
     if (water_loss > 0) player->add_water(-water_loss);
     core()->world()->get_room(player->location())->add_scar(ScarType::VOMIT, VOMIT_SCAR_INTENSITY);
 }
+
+}   // namespace greave

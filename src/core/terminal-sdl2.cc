@@ -16,6 +16,8 @@
 #include "core/strx.h"
 
 
+namespace greave {
+
 // Constructor, sets up SDL2.
 TerminalSDL2::TerminalSDL2() : m_cursor_visible(false), m_cursor_x(0), m_cursor_y(0), m_font(nullptr), m_init_sdl(false), m_init_sdl_ttf(false), m_mouse_x(0), m_mouse_y(0), m_renderer(nullptr), m_screenshot_msg_time(0), m_screenshot_taken(0), m_window(nullptr)
 {
@@ -310,4 +312,6 @@ void TerminalSDL2::screenshot()
 
 // Returns true if the player has tried to close the SDL window.
 bool TerminalSDL2::wants_to_close() const { return false; }
+
+}       // namespace greave
 #endif  // GREAVE_INCLUDE_SDL

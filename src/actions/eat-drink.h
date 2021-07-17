@@ -7,6 +7,8 @@
 #include <cstddef>
 
 
+namespace greave {
+
 class ActionEatDrink
 {
 public:
@@ -28,4 +30,5 @@ private:
     static const int    VOMIT_WATER_LOSS_MAX;           // 1 to X water lost when vomiting.
 };
 
+}       // namespace greave
 #endif  // GREAVE_ACTIONS_EAT_DRINK_H_

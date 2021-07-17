@@ -7,6 +7,8 @@
 #include <cstddef>
 
 
+namespace greave {
+
 class Abilities
 {
 public:
@@ -64,4 +66,5 @@ private:
     static int      SNAP_SHOT_SP_COST;              // The stamina points cost for the Snap Shot ability.
 };
 
+}       // namespace greave
 #endif  // GREAVE_ACTIONS_ABILITIES_H_

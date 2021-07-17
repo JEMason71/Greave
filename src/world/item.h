@@ -14,6 +14,8 @@
 #include "3rdparty/SQLiteCpp/Database.h"
 
 
+namespace greave {
+
 // Weapon damage types.
 enum class DamageType : int8_t { ACID, BALLISTIC, CRUSHING, EDGED, ENERGY, EXPLOSIVE, KINETIC, PIERCING, PLASMA, POISON, RENDING, NONE = -1 };
 
@@ -139,4 +141,5 @@ private:
     uint32_t    m_weight;           // The weight of this Item.
 };
 
+}       // namespace greave
 #endif  // GREAVE_WORLD_ITEM_H_

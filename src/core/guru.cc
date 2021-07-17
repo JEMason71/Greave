@@ -12,6 +12,8 @@
 #include "core/filex.h"
 
 
+namespace greave {
+
 const int   Guru::GURU_INFO =       0;  // General logging information.
 const int   Guru::GURU_WARN =       1;  // Warnings, non-fatal stuff.
 const int   Guru::GURU_ERROR =      2;  // Serious errors. Shit is going down.
@@ -189,3 +191,5 @@ void Guru::nonfatal(std::string error, int type)
     else throw std::runtime_error(error);
     if (m_cache_nonfatal) m_nonfatal_cache.push_back(error);
 }
+
+}   // namespace greave

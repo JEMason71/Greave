@@ -13,6 +13,8 @@
 #include "world/mobile.h"
 
 
+namespace greave {
+
 class Player : public Mobile
 {
 public:
@@ -95,4 +97,5 @@ private:
     uint8_t     m_thirst;       // The thirst counter. 20 = compmpletely hydrated, 0 = died of dehydration.
 };
 
+}       // namespace greave
 #endif  // GREAVE_WORLD_PLAYER_H_

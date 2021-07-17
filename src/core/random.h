@@ -9,6 +9,8 @@
 #include "3rdparty/pcg/pcg_random.hpp"
 
 
+namespace greave {
+
 class Random
 {
 public:
@@ -24,4 +26,5 @@ public:
     pcg32   m_pcg_rng;  // The PCG pseudo-random number generator.
 };
 
+}       // namespace greave
 #endif  // GREAVE_CORE_RANDOM_H_

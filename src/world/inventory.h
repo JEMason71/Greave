@@ -14,6 +14,8 @@
 #include "world/item.h"
 
 
+namespace greave {
+
 class Inventory
 {
 public:
@@ -41,4 +43,5 @@ private:
     uint8_t     m_tag_prefix;                           // The prefix for all tag numbers in this Inventory.
 };
 
+}       // namespace greave
 #endif  // GREAVE_WORLD_INVENTORY_H_

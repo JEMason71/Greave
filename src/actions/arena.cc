@@ -8,6 +8,8 @@
 #include "core/strx.h"
 
 
+namespace greave {
+
 // One of the arena combatant mobiles died.
 void Arena::combatant_died()
 {
@@ -73,3 +75,5 @@ void Arena::reward()
     core()->world()->player()->add_money(coin_gained);
     core()->world()->player()->clear_tag(MobileTag::ArenaFighter);
 }
+
+}   // namespace greave

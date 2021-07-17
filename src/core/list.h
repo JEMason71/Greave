@@ -11,6 +11,8 @@
 #include <vector>
 
 
+namespace greave {
+
 struct ListEntry
 {
     uint32_t    count;
@@ -33,4 +35,5 @@ private:
     std::vector<ListEntry>  m_data;                             // The list's data, a vector.
 };
 
+}       // namespace greave
 #endif  // GREAVE_CORE_LIST_H_

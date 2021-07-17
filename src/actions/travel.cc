@@ -12,6 +12,7 @@
 #include "core/mathx.h"
 #include "core/strx.h"
 
+namespace greave {
 
 const int   ActionTravel::FALL_1_STOREY_BLEED =         5;      // Intensity for the bleed room scar from a one-storey fall.
 const int   ActionTravel::FALL_1_STOREY_MIN_PERC =      20;     // Minimum % damage taken from falling one storey.
@@ -216,3 +217,5 @@ bool ActionTravel::travel(std::shared_ptr<Mobile> mob, Direction dir, bool confi
 
     return true;
 }
+
+}   // namespace greave

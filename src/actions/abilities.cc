@@ -6,6 +6,7 @@
 #include "actions/combat.h"
 #include "core/strx.h"
 
+namespace greave {
 
 float   Abilities::CAREFUL_AIM_BONUS_HIT =          25; // The bonus hit% chance from using the Careful Aim ability.
 int     Abilities::CAREFUL_AIM_COOLDOWN =           8;  // The length of the Careful Aim cooldown.
@@ -590,3 +591,5 @@ void Abilities::snap_shot(size_t target)
     Combat::attack(player, mob);
     player->clear_tag(MobileTag::SnapShot);
 }
+
+}   // namespace greave

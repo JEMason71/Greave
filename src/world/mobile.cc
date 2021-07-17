@@ -8,6 +8,8 @@
 #include "core/strx.h"
 
 
+namespace greave {
+
 const float Mobile::ACTION_TIMER_CAP_MAX =                  3600.0f;    // The maximum value the action timer can ever reach.
 const int   Mobile::BASE_CARRY_WEIGHT =                     30000;      // The maximum amount of weight a Mobile can carry, before modifiers.
 const int   Mobile::DAMAGE_DEBUFF_TIME =                    60;         // How long the damage debuff that prevents HP regeneration lasts.
@@ -721,3 +723,5 @@ bool Mobile::using_shield() const
     if (off_hand && off_hand->type() == ItemType::SHIELD) return true;
     return false;
 }
+
+}   // namespace greave

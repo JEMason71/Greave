@@ -12,6 +12,8 @@
 #include "world/mobile.h"
 
 
+namespace greave {
+
 class ActionLook
 {
 public:
@@ -24,4 +26,5 @@ private:
     static void examine_mobile(std::shared_ptr<Mobile> target); // Examines a Mobile.
 };
 
+}       // namespace greave
 #endif  // GREAVE_ACTIONS_LOOK_H_

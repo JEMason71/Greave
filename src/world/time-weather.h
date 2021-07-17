@@ -15,6 +15,8 @@
 #include "3rdparty/SQLiteCpp/Database.h"
 
 
+namespace greave {
+
 class TimeWeather
 {
 public:
@@ -77,4 +79,5 @@ private:
     std::vector<std::string>            m_weather_change_map;   // Weather change maps, to determine odds of changing to different weather types.
 };
 
+}       // namespace greave
 #endif  // GREAVE_WORLD_TIME_WEATHER_H_

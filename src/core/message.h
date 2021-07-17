@@ -11,6 +11,8 @@
 #include "3rdparty/SQLiteCpp/Database.h"
 
 
+namespace greave {
+
 class MessageLog
 {
 public:
@@ -50,4 +52,5 @@ private:
 #endif
 };
 
+}       // namespace greave
 #endif  // GREAVE_CORE_MESSAGE_H_

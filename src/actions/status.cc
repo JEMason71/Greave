@@ -6,6 +6,8 @@
 #include "core/strx.h"
 
 
+namespace greave {
+
 // Check the player's current total score.
 void ActionStatus::score()
 {
@@ -196,3 +198,5 @@ void ActionStatus::weather()
     else core()->message(core()->world()->time_weather()->weather_message_colour() + core()->world()->time_weather()->weather_desc());
     temperature();
 }
+
+}   // namespace greave

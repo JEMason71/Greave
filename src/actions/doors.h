@@ -10,6 +10,8 @@
 #include "world/room.h"
 
 
+namespace greave {
+
 class ActionDoors
 {
 public:
@@ -23,4 +25,5 @@ private:
     static const float  TIME_UNLOCK_DOOR;   // The time taken (in seconds) to unlock a door.
 };
 
+}       // namespace greave
 #endif  // GREAVE_ACTIONS_DOORS_H_

@@ -6,6 +6,8 @@
 #include "core/terminal.h"
 
 
+namespace greave {
+
 // Prints a string at a given coordinate on the screen. This particular function actually parses the colour strings, then calls print_internal().
 void Terminal::print(std::string str, int x, int y, Colour col)
 {
@@ -69,3 +71,5 @@ void Terminal::print(std::string str, int x, int y, Colour col)
         x += first_word_size;
     }
 }
+
+}   // namespace greave

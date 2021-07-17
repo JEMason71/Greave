@@ -9,6 +9,8 @@
 #include "core/strx.h"
 
 
+namespace greave {
+
 // SQL table construction string for the heartbeat timers.
 const std::string TimeWeather::SQL_HEARTBEATS = "CREATE TABLE heartbeats ( id INTEGER PRIMARY KEY UNIQUE NOT NULL, count INTEGER NOT NULL )";
 
@@ -538,3 +540,5 @@ std::string TimeWeather::weather_str(TimeWeather::Weather weather) const
         default: throw std::runtime_error("Invalid weather specified: " + std::to_string(static_cast<int>(weather)));
     }
 }
+
+}   // namespace greave

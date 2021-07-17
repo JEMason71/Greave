@@ -8,10 +8,13 @@
 #include <vector>
 
 
+namespace greave {
+
 class ActionRest
 {
 public:
     static void rest(const std::string &word, const std::vector<std::string> &words, bool confirm); // Rests for a specified amount of time.
 };
 
+}       // namespace greave
 #endif  // GREAVE_ACTIONS_REST_H_

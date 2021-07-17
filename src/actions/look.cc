@@ -7,6 +7,8 @@
 #include "core/strx.h"
 
 
+namespace greave {
+
 // Examines an Item or Mobile.
 void ActionLook::examine(ParserTarget target_type, size_t target)
 {
@@ -354,3 +356,5 @@ void ActionLook::obvious_exits(bool indent)
     }
     if (exits_vec.size()) core()->message(std::string(indent ? "{0}```" : "") + "{g}Obvious exits: " + StrX::comma_list(exits_vec, StrX::CL_AND));
 }
+
+}   // namespace greave

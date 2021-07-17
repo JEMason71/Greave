@@ -14,6 +14,8 @@
 #include "core/core.h"
 
 
+namespace greave {
+
 class StrX
 {
 public:
@@ -76,4 +78,5 @@ public:
     }
 };
 
+}       // namespace greave
 #endif  // GREAVE_CORE_STRX_H_

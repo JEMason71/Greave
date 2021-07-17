@@ -14,6 +14,8 @@
 #include "core/strx.h"
 
 
+namespace greave {
+
 // SQL table construction strings.
 const std::string MessageLog::SQL_MSGLOG =  "CREATE TABLE 'msglog' ( line INTEGER PRIMARY KEY, text TEXT NOT NULL )";
 
@@ -283,3 +285,5 @@ void MessageLog::scroll_to_pixel(int pixel_y)
     const float factor = pixel_y / (static_cast<float>(m_output_window_height) * core()->terminal()->cell_height());
     m_offset = std::max<int>(1, std::min<int>(m_output_processed.size() - m_output_window_height, m_output_processed.size() * factor));
 }
+
+}   // namespace greave

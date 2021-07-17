@@ -7,6 +7,8 @@
 #include "core/strx.h"
 
 
+namespace greave {
+
 // SQL table construction string.
 const std::string Shop::SQL_SHOPS = "CREATE TABLE shops ( id INTEGER PRIMARY KEY UNIQUE NOT NULL, inventory_id INTEGER UNIQUE NOT NULL )";
 
@@ -206,3 +208,5 @@ void Shop::sell(uint32_t id, int quantity, bool confirm)
         add_item(item_split);
     }
 }
+
+}   // namespace greave

@@ -9,6 +9,8 @@
 #include <string>
 
 
+namespace greave {
+
 class Bones
 {
 public:
@@ -26,4 +28,5 @@ private:
     static uint32_t bones_version();    // Checks the version of the bones file, 0 if the file doesn't exist or version cannot be determined.
 };
 
+}       // namespace greave
 #endif  // GREAVE_CORE_BONES_H_

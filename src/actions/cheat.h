@@ -9,6 +9,8 @@
 #include <string>
 
 
+namespace greave {
+
 class ActionCheat
 {
 public:
@@ -20,4 +22,5 @@ public:
     static void teleport(std::string dest);     // Attemtps to teleport to another room.
 };
 
+}       // namespace greave
 #endif  // GREAVE_ACTIONS_CHEAT_H_

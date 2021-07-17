@@ -19,6 +19,8 @@
 #include "core/strx.h"
 
 
+namespace greave {
+
 // Constructor, sets up the parser.
 Parser::Parser() : m_special_state(SpecialState::NONE)
 {
@@ -670,3 +672,5 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
 
     if (parsed_target_type != ParserTarget::TARGET_UNCLEAR) m_special_state = SpecialState::NONE;
 }
+
+}   // namespace greave

@@ -20,6 +20,8 @@
 #include "world/time-weather.h"
 
 
+namespace greave {
+
 class World
 {
 public:
@@ -103,4 +105,5 @@ private:
     void    load_skills();          // Laods the skills YAML data into memory.
 };
 
+}       // namespace greave
 #endif  // GREAVE_WORLD_WORLD_H_

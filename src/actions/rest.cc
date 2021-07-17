@@ -6,6 +6,8 @@
 #include "core/strx.h"
 
 
+namespace greave {
+
 // Rests for a specified amount of time.
 void ActionRest::rest(const std::string&, const std::vector<std::string> &words, bool confirm)
 {
@@ -36,3 +38,5 @@ void ActionRest::rest(const std::string&, const std::vector<std::string> &words,
     core()->world()->player()->clear_tag(MobileTag::Resting);
     if (!uninterrupted) core()->message("{c}You awaken with a start!");
 }
+
+}   // namespace greave

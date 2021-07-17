@@ -10,6 +10,8 @@
 #pragma GCC diagnostic pop
 
 
+namespace greave {
+
 // Constructor, sets up the PRNG.
 Random::Random() { set_prand_seed(); }
 
@@ -52,3 +54,5 @@ void Random::set_prand_seed(uint32_t new_seed)
     if (new_seed) m_pcg_rng.seed(new_seed);
     else m_pcg_rng.seed(randutils::auto_seed_256{});
 }
+
+}   // namespace greave

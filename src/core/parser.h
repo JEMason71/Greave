@@ -12,6 +12,8 @@
 #include "world/room.h"
 
 
+namespace greave {
+
 enum ParserTarget : uint8_t { TARGET_NONE = 0, TARGET_EQUIPMENT = 1, TARGET_INVENTORY = 2, TARGET_MOBILE = 4, TARGET_ROOM = 8, TARGET_SHOP = 16, TARGET_UNCLEAR = 32 };
 
 class Parser
@@ -57,4 +59,5 @@ private:
     SpecialState                    m_special_state;    // Special parser states, such as waiting for the player to confirm something.
 };
 
+}       // namespace greave
 #endif  // GREAVE_CORE_PARSER_H_

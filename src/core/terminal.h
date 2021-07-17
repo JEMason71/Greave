@@ -11,6 +11,8 @@
 #include <string>
 
 
+namespace greave {
+
 class Terminal
 {
 public:
@@ -38,4 +40,5 @@ private:
     virtual void        print_internal(std::string str, int x, int y, Colour col) = 0;  // Internal rendering code, after print() has parsed the colour tags.
 };
 
+}       // namespace greave
 #endif  // GREAVE_CORE_TERMINAL_H_

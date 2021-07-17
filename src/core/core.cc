@@ -23,11 +23,15 @@
 #include "core/terminal-sdl2.h"
 
 
+namespace greave {
+
 std::shared_ptr<Core> greave = nullptr;   // The main Core object.
 
 const std::string   Core::GAME_VERSION =    "pre-alpha";    // The game's version number.
 const uint32_t      Core::SAVE_VERSION =    81;             // The version number for saved game files. This should increment when old saves can no longer be loaded.
 const uint16_t      Core::TAGS_PERMANENT =  10000;          // The tag number at which tags are considered permanent.
+
+}   // namespace greave
 
 
 // Main program entry point.
@@ -40,28 +44,30 @@ int main(int argc, char* argv[])
         for (auto param : parameters)
             if (!param.compare("-dry-run")) dry_run = true;
 
-    greave = std::make_shared<Core>();
+    greave::greave = std::make_shared<greave::Core>();
     try
     {
-        greave->init(dry_run);
+        greave::greave->init(dry_run);
         if (dry_run)
         {
-            auto new_world =std::make_shared<World>();
+            auto new_world =std::make_shared<greave::World>();
         }
         else
         {
-            greave->title();
-            greave->main_loop();
+            greave::greave->title();
+            greave::greave->main_loop();
         }
-        greave->cleanup();
+        greave::greave->cleanup();
     }
     catch (std::exception& e)
     {
-        greave->guru()->halt(e.what());
+        greave::greave->guru()->halt(e.what());
         return EXIT_FAILURE;
     }
     return EXIT_SUCCESS;
 }
+
+namespace greave {
 
 // Constructor, doesn't do too much aside from setting default values for member variables. Use init() to set things up.
 Core::Core() : m_message_log(nullptr), m_parser(nullptr), m_rng(nullptr), m_save_slot(0), m_sql_unique_id(0), m_terminal(nullptr), m_prefs(nullptr), m_world(nullptr) { }
@@ -477,3 +483,5 @@ const std::shared_ptr<Core> core()
     if (!greave) exit(EXIT_FAILURE);
     else return greave;
 }
+
+}   // namespace greave

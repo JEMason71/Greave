@@ -8,6 +8,8 @@
 #include "core/core.h"
 
 
+namespace greave {
+
 // Creates a new, blank inventory.
 Inventory::Inventory(uint8_t tag_prefix) : m_tag_prefix(tag_prefix) { }
 
@@ -171,3 +173,5 @@ void Inventory::sort()
         }
     } while (sorted);
 }
+
+}   // namespace greave

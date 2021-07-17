@@ -8,6 +8,8 @@
 #include <string>
 
 
+namespace greave {
+
 class ActionHelp
 {
 public:
@@ -18,4 +20,5 @@ private:
     static std::map<std::string, std::string>   m_help_pages;   // Help pages loaded from data/misc/help.yml
 };
 
+}       // namespace greave
 #endif  // GREAVE_ACTIONS_HELP_H_

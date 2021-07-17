@@ -12,6 +12,8 @@
 #include "world/inventory.h"
 
 
+namespace greave {
+
 class Shop
 {
 public:
@@ -32,4 +34,5 @@ private:
     uint32_t                    m_room_id;      // The room ID where this shop is located.
 };
 
+}       // namespace greave
 #endif  // GREAVE_WORLD_SHOP_H_

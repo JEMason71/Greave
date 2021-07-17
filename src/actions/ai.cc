@@ -7,6 +7,7 @@
 #include "actions/travel.h"
 #include "core/core.h"
 
+namespace greave {
 
 const int   AI::AGGRO_CHANCE =                  60;     // 1 in X chance of starting a fight.
 const int   AI::FLEE_DEBUFF_TIME =              48;     // The length of time the fleeing debuff lasts.
@@ -175,3 +176,5 @@ bool AI::travel_randomly(std::shared_ptr<Mobile> mob, bool allow_dangerous_exits
     if (viable_exits.size()) return ActionTravel::travel(mob, static_cast<Direction>(viable_exits.at(core()->rng()->rnd(0, viable_exits.size() - 1))), true);
     else return false;
 }
+
+}   // namespace greave

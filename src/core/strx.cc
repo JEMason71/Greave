@@ -11,6 +11,8 @@
 #include "core/mathx.h"
 
 
+namespace greave {
+
 const int StrX::CL_AND =            1;  // comma_list() flag: Include "and" before the last entry in the list.
 const int StrX::CL_OR =             2;  // comma_list() flag: Include "or" before the last entry in the list.
 const int StrX::CL_OXFORD_COMMA =   4;  // comma_list() flag: Insert an Oxford comma before the last entry in the list.
@@ -592,3 +594,5 @@ size_t StrX::word_count(const std::string &str, const std::string &word)
     }
     return count;
 }
+
+}   // namespace greave

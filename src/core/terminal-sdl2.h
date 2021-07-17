@@ -15,6 +15,8 @@
 #include "core/terminal.h"
 
 
+namespace greave {
+
 class TerminalSDL2 : public Terminal
 {
 public:
@@ -62,5 +64,6 @@ private:
     int                     m_window_w;             // The width of the window, in pixels.
 };
 
+}       // namespace greave
 #endif  // GREAVE_INCLUDE_SDL
 #endif  // GREAVE_CORE_TERMINAL_SDL2_H_

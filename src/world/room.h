@@ -15,6 +15,8 @@
 #include "world/inventory.h"
 
 
+namespace greave {
+
 enum class Direction : uint8_t { NORTH, SOUTH, EAST, WEST, NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHWEST, UP, DOWN, NONE };
 
 enum class ScarType : uint8_t { BLOOD, BURN, DEBRIS, DIRT, VOMIT, CAMPFIRE, WATER };
@@ -238,4 +240,5 @@ private:
     std::set<LinkTag>           m_tags_link[ROOM_LINKS_MAX];    // Any and all LinkTags on this Room's links.
 };
 
+}       // namespace greave
 #endif  // GREAVE_WORLD_ROOM_H_

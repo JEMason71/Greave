@@ -7,6 +7,8 @@
 #include <string>
 
 
+namespace greave {
+
 class ActionStatus
 {
 public:
@@ -18,4 +20,5 @@ public:
     static void         weather();      // Checks the nearby weather.
 };
 
+}       // namespace greave
 #endif  // GREAVE_ACTIONS_STATUS_H_

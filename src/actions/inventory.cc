@@ -6,6 +6,8 @@
 #include "core/strx.h"
 
 
+namespace greave {
+
 const float ActionInventory::TIME_DROP_ITEM =       1.0f;   // The time taken (in seconds) to drop an item on the ground.
 const float ActionInventory::TIME_EQUIP_ABOUT =     20.0f;  // The time taken (in seconds) to equip something about the body, like a cloak.
 const float ActionInventory::TIME_EQUIP_ARMOUR =    180.0f; // The time taken (in seconds) to equip armour worn over the body, like a breastplate.
@@ -381,3 +383,5 @@ void ActionInventory::weight_and_money()
     if (!player->money()) return;
     core()->message("{0}{c}Money carried: " + StrX::mgsc_string(player->money(), StrX::MGSC::SHORT) + "{c}.");
 }
+
+}   // namespace greave

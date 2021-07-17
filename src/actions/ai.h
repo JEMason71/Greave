@@ -9,6 +9,8 @@
 #include "world/mobile.h"
 
 
+namespace greave {
+
 class AI
 {
 public:
@@ -32,4 +34,5 @@ private:
     static bool travel_randomly(std::shared_ptr<Mobile> mob, bool allow_dangerous_exits);   // Sends the Mobile in a random direction.
 };
 
+}       // namespace greave
 #endif  // GREAVE_ACTIONS_AI_H_

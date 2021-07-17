@@ -15,6 +15,9 @@
 #include "world/inventory.h"
 
 
+namespace greave
+{
+
 enum class Gender : uint8_t { FEMALE, MALE, IT, THEY };
 
 enum class CombatStance : uint8_t { BALANCED, AGGRESSIVE, DEFENSIVE };
@@ -193,4 +196,5 @@ protected:
     std::set<MobileTag>                 m_tags;         // Any and all tags on this Mobile.
 };
 
+}       // namespace greave
 #endif  // GREAVE_WORLD_MOBILE_H_

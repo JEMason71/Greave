@@ -17,6 +17,8 @@
 #include "core/strx.h"
 
 
+namespace greave {
+
 // Constructor, sets up Curses.
 TerminalCurses::TerminalCurses()
 {
@@ -237,4 +239,6 @@ bool TerminalCurses::wants_to_close() const
     const char ch = getch();
     return (ch == 3 || ch == 4 || ch == 27);
 }
-#endif
+
+}       // namespace greave
+#endif  // GREAVE_INCLUDE_CURSES

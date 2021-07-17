@@ -12,6 +12,9 @@
 #include "world/mobile.h"
 
 
+namespace greave
+{
+
 class Combat
 {
 public:
@@ -88,4 +91,5 @@ private:
     static void         weapon_poison_effect(std::shared_ptr<Mobile> defender, uint32_t damage);    // Applies a weapon poison debuff.
 };
 
+}       // namespace greave
 #endif  // GREAVE_ACTIONS_COMBAT_H_

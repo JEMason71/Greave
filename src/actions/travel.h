@@ -10,6 +10,8 @@
 #include "world/room.h"
 
 
+namespace greave {
+
 class ActionTravel
 {
 public:
@@ -42,4 +44,5 @@ private:
     static const float  XP_PER_SAFE_FALL_SUCCESS;   // How much base XP is gained from a successful safe-fall (multiplied by distance fallen).
 };
 
+}       // namespace greave
 #endif  // GREAVE_ACTIONS_TRAVEL_H_

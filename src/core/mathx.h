@@ -9,6 +9,8 @@
 #include "world/room.h"
 
 
+namespace greave {
+
 class MathX
 {
 public:
@@ -20,4 +22,5 @@ public:
     static float        round_to_two(float num);                // Rounds a float to two decimal places.
 };
 
+}       // namespace greave
 #endif  // GREAVE_CORE_MATHX_H_

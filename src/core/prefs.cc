@@ -8,6 +8,8 @@
 #include "core/filex.h"
 
 
+namespace greave {
+
 // Constructor, loads data from prefs.yml
 Prefs::Prefs()
 {
@@ -88,3 +90,5 @@ Prefs::Prefs()
         throw std::runtime_error("Error while loading prefs.yml: " + std::string(e.what()));
     }
 }
+
+}   // namespace greave

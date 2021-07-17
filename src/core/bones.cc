@@ -8,6 +8,8 @@
 #include "core/strx.h"
 
 
+namespace greave {
+
 const std::string   Bones::BONES_FILENAME = "userdata/bones.sqlite";    // The filename for the bones file.
 const uint32_t      Bones::BONES_VERSION =  1;  // The expected version format for the bones file.
 const int           Bones::MAX_HIGHSCORES = 10; // The maximum amount of highscores to store.
@@ -176,3 +178,5 @@ uint32_t Bones::unique_id()
     catch (std::exception&) { }
     return core()->rng()->rnd(UINT32_MAX);
 }
+
+}   // namespace greave

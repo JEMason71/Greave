@@ -6,6 +6,8 @@
 #include "core/core.h"
 
 
+namespace greave {
+
 // Rarities for randomized lists.
 const int List::LIST_RARITY_UNCOMMON =  5;
 const int List::LIST_RARITY_RARE =      12;
@@ -94,3 +96,5 @@ ListEntry List::rnd() const
 
 // Returns the size of the List.
 size_t List::size() const { return m_data.size(); }
+
+}   // namespace greave

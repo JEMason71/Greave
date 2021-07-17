@@ -9,6 +9,8 @@
 #include "core/core.h"
 
 
+namespace greave {
+
 const int   Player::BASE_SKILL_COST_LEVEL_OFFSET =  0;      // The skill XP cost formula is offset by this many levels.
 const float Player::BASE_SKILL_COST_MULTIPLIER =    2.0f;   // The higher this number, the slower player skill levels increase.
 const int   Player::BLOOD_TOX_POISON_CHANCE =       3;      // 1 in X chance of being poisoned by the below level of toxicity.
@@ -415,3 +417,5 @@ bool Player::wearing_armour(ItemSub type)
     if (shield && shield->type() == ItemType::SHIELD && shield->subtype() == type) return true;
     return false;
 }
+
+}   // namespace greave

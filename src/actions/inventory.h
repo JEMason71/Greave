@@ -11,6 +11,8 @@
 #include "world/mobile.h"
 
 
+namespace greave {
+
 class ActionInventory
 {
 public:
@@ -44,4 +46,5 @@ private:
     static void weight_and_money();                                 // Shows the total carry weight and currency the Mobile is carrying.
 };
 
+}       // namespace greave
 #endif  // GREAVE_ACTIONS_INVENTORY_H_

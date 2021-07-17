@@ -8,6 +8,8 @@
 #include "core/strx.h"
 
 
+namespace greave {
+
 const uint32_t  Room::BLOCKED =                             538012167;  // Hashed value for BLOCKED, which is used to mark exits as impassible.
 const uint32_t  Room::FALSE_ROOM =                          3399618268; // Hashed value for FALSE_ROOM, which is used to make 'fake' impassible room exits.
 const uint8_t   Room::LIGHT_VISIBLE =                       3;          // Any light level below this is considered too dark to see.
@@ -628,3 +630,5 @@ int Room::temperature(uint32_t flags) const
     else if (temp > 9) temp = 9;
     return temp;
 }
+
+}   // namespace greave

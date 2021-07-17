@@ -12,6 +12,8 @@
 #include "core/terminal.h"
 
 
+namespace greave {
+
 class TerminalCurses : public Terminal
 {
 public:
@@ -41,5 +43,6 @@ private:
         CUSTOM_BLUE_DARK, CUSTOM_CYAN, CUSTOM_CYAN_DARK, CUSTOM_MAGENTA, CUSTOM_MAGENTA_DARK, CUSTOM_WHITE, CUSTOM_GREY, CUSTOM_WHITE_BG };
 };
 
+}       // namespace greave
 #endif  // GREAVE_INCLUDE_CURSES
 #endif  // GREAVE_CORE_TERMINAL_CURSES_H_

@@ -18,6 +18,8 @@
 #include "world/world.h"
 
 
+namespace greave {
+
 class Core
 {
 public:
@@ -61,4 +63,5 @@ private:
 
 const std::shared_ptr<Core> core(); // Allows external access to the main Core object.
 
+}       // namespace greave
 #endif  // GREAVE_CORE_CORE_H_

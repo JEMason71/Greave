@@ -10,6 +10,8 @@
 #include <vector>
 
 
+namespace greave {
+
 class Guru
 {
 public:
@@ -49,4 +51,5 @@ private:
     static const std::string    FILENAME_LOG;       // The default name of the log file. Another filename can be specified with open_syslog().
 };
 
+}       // namespace greave
 #endif  // GREAVE_CORE_GURU_H_
