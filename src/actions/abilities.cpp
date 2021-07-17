@@ -592,6 +592,7 @@ void Abilities::snap_shot(size_t target)
 
     const auto mob = core()->world()->mob_vec(target);
     core()->message("{M}You take a quick snap shot at " + mob->name(Mobile::NAME_FLAG_THE) + "{M}!");
+    player->reduce_sp(SNAP_SHOT_SP_COST);
     player->set_buff(Buff::Type::CD_SNAP_SHOT, SNAP_SHOT_COOLDOWN);
     player->set_tag(MobileTag::SnapShot);
     Combat::attack(player, mob);
