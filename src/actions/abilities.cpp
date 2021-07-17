@@ -335,7 +335,7 @@ void Abilities::grit(bool confirm)
     if (player->is_dead()) return;
     core()->message("{M}You brace yourself for an incoming attack.");
     player->set_buff(Buff::Type::CD_GRIT, GRIT_COOLDOWN);
-    player->set_buff(Buff::Type::GRIT, GRIT_TIME, GRIT_DAMAGE_REDUCTION, false, false);
+    player->set_buff(Buff::Type::GRIT, GRIT_LENGTH, GRIT_DAMAGE_REDUCTION, false, false);
     player->reduce_sp(GRIT_SP_COST);
 }
 
