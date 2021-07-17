@@ -444,7 +444,7 @@ void Mobile::reduce_hp(int amount, bool death_message)
     }
     core()->world()->player()->add_score(m_score);
     if (m_spawn_room) core()->world()->get_room(m_spawn_room)->clear_tag(RoomTag::MobSpawned);
-    if (tag(MobileTag::ArenaFighter)) Arena::combatant_died();
+    if (tag(MobileTag::ArenaFighter)) arena::combatant_died();
     core()->world()->remove_mobile(m_id);
 }
 

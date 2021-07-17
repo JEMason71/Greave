@@ -576,7 +576,7 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             if (parsed_direction == Direction::NONE) specify_direction(first_word);
             else ActionDoors::open_or_close(player, parsed_direction, pcd.command == ParserCommand::OPEN, confirm);
             break;
-        case ParserCommand::PARTICIPATE: Arena::participate(); break;
+        case ParserCommand::PARTICIPATE: arena::participate(); break;
         case ParserCommand::QUICK_ROLL: abilities::quick_roll(confirm); break;
         case ParserCommand::QUIT:
             core()->message("{R}Are you sure you want to quit? {M}Your game will not be saved. {R}Type {C}yes {R}to confirm.");

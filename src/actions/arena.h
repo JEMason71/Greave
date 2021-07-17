@@ -6,17 +6,13 @@
 
 
 namespace greave {
+namespace arena {
 
-class Arena
-{
-public:
-    static void combatant_died();   // One of the arena combatant mobiles died.
-    static void participate();      // Participates in an arena fight!
-    static void reward();           // Time to collect your fight money.
+void    combatant_died();   // One of the arena combatant mobiles died.
+void    fight_over();       // The battle has been won!
+void    participate();      // Participates in an arena fight!
+void    reward();           // Time to collect your fight money.
 
-private:
-    static void fight_over();       // The battle has been won!
-};
-
+}       // namespace arena
 }       // namespace greave
 #endif  // GREAVE_ACTIONS_ARENA_H_

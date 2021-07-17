@@ -9,16 +9,17 @@
 
 
 namespace greave {
+namespace arena {
 
 // One of the arena combatant mobiles died.
-void Arena::combatant_died()
+void combatant_died()
 {
     // At some point in the future I'd like to support multiple combatants in arenas. For now, we'll just trigger the win condition.
     fight_over();
 }
 
 // The battle has been won!
-void Arena::fight_over()
+void fight_over()
 {
     const auto world = core()->world();
     const auto player = world->player();
@@ -36,7 +37,7 @@ void Arena::fight_over()
 }
 
 // Participates in an arena fight!
-void Arena::participate()
+void participate()
 {
     const auto world = core()->world();
     const auto player = world->player();
@@ -66,7 +67,7 @@ void Arena::participate()
 }
 
 // Time to collect your fight money.
-void Arena::reward()
+void reward()
 {
     const int coin_gained = MathX::mixup(500);
     std::string reward_str = "{G}You are the victor! {g}The pit master hands you a small bag of coins, inside which you find {G}" + StrX::mgsc_string(coin_gained, StrX::MGSC::LONG_COINS) + "{g}.";
@@ -76,4 +77,5 @@ void Arena::reward()
     core()->world()->player()->clear_tag(MobileTag::ArenaFighter);
 }
 
+}   // namespace arena
 }   // namespace greave

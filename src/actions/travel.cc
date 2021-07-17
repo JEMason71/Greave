@@ -213,7 +213,7 @@ bool ActionTravel::travel(std::shared_ptr<Mobile> mob, Direction dir, bool confi
         }
     }
 
-    if (is_player && mob->tag(MobileTag::ArenaFighter) && world->get_room(mob->location())->tag(RoomTag::Arena)) Arena::reward();
+    if (is_player && mob->tag(MobileTag::ArenaFighter) && world->get_room(mob->location())->tag(RoomTag::Arena)) arena::reward();
 
     return true;
 }
