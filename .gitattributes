@@ -1,9 +1,10 @@
 *.a binary linguist-vendored
 *.c text linguist-language=C
+*.cc text linguist-language=C++
 *.cmake text linguist-language=CMake
 *.cpp text linguist-language=C++
 *.dll binary linguist-vendored
-*.h text
+*.h text linguist-language=C++
 *.hpp text linguist-language=C++
 *.ico binary linguist-vendored
 *.lib binary linguist-vendored

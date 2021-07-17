@@ -70,41 +70,41 @@ endif(TARGET_WINDOWS)
 
 # Source files.
 set(GREAVE_CPPS
-  actions/abilities.cpp
-  actions/ai.cpp
-  actions/arena.cpp
-  actions/cheat.cpp
-  actions/combat.cpp
-  actions/doors.cpp
-  actions/eat-drink.cpp
-  actions/help.cpp
-  actions/inventory.cpp
-  actions/look.cpp
-  actions/rest.cpp
-  actions/status.cpp
-  actions/travel.cpp
-  core/bones.cpp
-  core/core.cpp
-  core/filex.cpp
-  core/guru.cpp
-  core/list.cpp
-  core/mathx.cpp
-  core/message.cpp
-  core/parser.cpp
-  core/prefs.cpp
-  core/random.cpp
-  core/strx.cpp
-  core/terminal.cpp
-  core/terminal-curses.cpp
-  core/terminal-sdl2.cpp
-  world/inventory.cpp
-  world/item.cpp
-  world/room.cpp
-  world/mobile.cpp
-  world/player.cpp
-  world/shop.cpp
-  world/time-weather.cpp
-  world/world.cpp
+  actions/abilities.cc
+  actions/ai.cc
+  actions/arena.cc
+  actions/cheat.cc
+  actions/combat.cc
+  actions/doors.cc
+  actions/eat-drink.cc
+  actions/help.cc
+  actions/inventory.cc
+  actions/look.cc
+  actions/rest.cc
+  actions/status.cc
+  actions/travel.cc
+  core/bones.cc
+  core/core.cc
+  core/filex.cc
+  core/guru.cc
+  core/list.cc
+  core/mathx.cc
+  core/message.cc
+  core/parser.cc
+  core/prefs.cc
+  core/random.cc
+  core/strx.cc
+  core/terminal.cc
+  core/terminal-curses.cc
+  core/terminal-sdl2.cc
+  world/inventory.cc
+  world/item.cc
+  world/mobile.cc
+  world/player.cc
+  world/room.cc
+  world/shop.cc
+  world/time-weather.cc
+  world/world.cc
 )
 
 
