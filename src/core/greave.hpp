@@ -3,16 +3,6 @@
 
 #pragma once
 
-// C library definitions.
-#define __STDC_LIMIT_MACROS
-#define _USE_MATH_DEFINES
-#ifdef GREAVE_TARGET_WINDOWS
-#define WIN32_LEAN_AND_MEAN
-#if not(defined _WIN32_WINNT)
-#define _WIN32_WINNT 0x0500
-#endif  // GREAVE_TARGET_WINDOWS
-#endif  // _WIN32_WINNT
-
 // Very commonly-used system libraries.
 #include <climits>  // for handy definitions like UINT_MAX
 #include <cmath>    // basic math functions

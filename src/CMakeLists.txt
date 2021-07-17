@@ -13,6 +13,8 @@ set(CMAKE_CXX_FLAGS "-Wall -Wextra -pedantic -pedantic-errors")
 set(CMAKE_CXX_FLAGS_DEBUG "-g -Og")
 set(CMAKE_CXX_FLAGS_RELEASE  "-O2")
 set(CMAKE_EXE_LINKER_FLAGS_RELEASE "-s")
+add_definitions(-D__STDC_LIMIT_MACROS)
+add_definitions(-D_USE_MATH_DEFINES)
 set(SQLITECPP_LIBRARIES sqlite_cpp)
 set(LODEPNG_LIBRARIES lodepng)
 
@@ -21,6 +23,7 @@ set(LODEPNG_LIBRARIES lodepng)
 if(TARGET_WINDOWS)
 
   # Platform-specific libraries.
+  add_definitions(-DWIN32_LEAN_AND_MEAN)
   set(OS_LIBRARIES mingw32)
   set(TOLK_LIBRARIES Tolk)
   add_definitions(-DGREAVE_TOLK)
