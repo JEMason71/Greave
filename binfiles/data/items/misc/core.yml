@@ -1,6 +1,14 @@
 # data/items/misc/core.yml -- Items used by the game engine itself. Not necessarily actual items.
 # Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
+CORPSE:
+  desc: "-"
+  name: corpse
+  rare: 1
+  type: [ container, corpse ]
+  value: 0
+  weight: 13669
+
 UNARMED_ATTACK:
   desc: Punch everything, regret nothing.
   name: meaty fist

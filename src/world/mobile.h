@@ -113,6 +113,7 @@ public:
     void                clear_buff(Buff::Type type);                // Clears a specified buff/debuff from the Actor, if it exists.
     void                clear_meta(const std::string &key);         // Clears a metatag from a Mobile. Use with caution!
     void                clear_tag(MobileTag the_tag);               // Clears an MobileTag from this Mobile.
+    void                die(bool death_message = true);             // Causes this mobile to die and leave a corpse behind.
     float               dodge_mod() const;                          // Returns the modified chance to dodge for this Mobile, based on equipped gear.
     const std::shared_ptr<Inventory>    equ() const;                // Returns a pointer to the Movile's equipment.
     const std::vector<std::shared_ptr<BodyPart>>& get_anatomy() const;  // Retrieves the anatomy vector for this Mobile.

@@ -12,6 +12,8 @@
 #include <set>
 #include <string>
 
+class Inventory;    // Forward declarations are bad, I know, but this is the only way to avoid item.h and inventory.h trying to include each other.
+
 
 // Weapon damage types.
 enum class DamageType : int8_t { ACID, BALLISTIC, CRUSHING, EDGED, ENERGY, EXPLOSIVE, KINETIC, PIERCING, PLASMA, POISON, RENDING, NONE = -1 };
@@ -20,12 +22,13 @@ enum class DamageType : int8_t { ACID, BALLISTIC, CRUSHING, EDGED, ENERGY, EXPLO
 enum class EquipSlot : uint8_t { NONE, HAND_MAIN, HAND_OFF, BODY, ARMOUR, ABOUT_BODY, HEAD, HANDS, FEET, _END };
 
 // ItemType is the primary type of Item (e.g. weapon, food, etc.)
-enum class ItemType : uint16_t { NONE, AMMO, ARMOUR, DRINK, FOOD, KEY, LIGHT, SHIELD, WEAPON };
+enum class ItemType : uint16_t { NONE, AMMO, ARMOUR, CONTAINER, DRINK, FOOD, KEY, LIGHT, SHIELD, WEAPON };
 
 // ItemSub is for sub-types of items, e.g. a tool could sub-classify itself here.
 enum class ItemSub : uint16_t { NONE,
     ARROW, BOLT,                    // AMMO subtypes.
     CLOTHING, HEAVY, LIGHT, MEDIUM, // ARMOUR subtypes.
+    CORPSE,                         // CONTAINER subtypes.
     BOOZE, WATER_CONTAINER,         // DRINK subtypes.
     MELEE, RANGED, UNARMED,         // WEAPON subtypes.
     };
@@ -76,6 +79,7 @@ public:
     float       ammo_power() const;                         // The damage multiplier for ammunition.
     int         appraised_value();                          // Attempts to guess the value of an item.
     float       armour(int bonus_power = 0) const;          // Returns the armour damage reduction value of this Item, if any.
+    void        assign_inventory(std::shared_ptr<Inventory> inventory); // Assigns another inventory to this item. Use with caution.
     int         bleed() const;                              // Returns thie bleed chance of this Item, if any.
     int         block_mod() const;                          // Returns the block modifier% for this Item, if any.
     int         capacity() const;                           // Returns this Item's capacity, if any.
@@ -88,6 +92,7 @@ public:
     std::string desc() const;                               // Retrieves this Item's description.
     int         dodge_mod() const;                          // Returns the dodge modifier% for this Item, if any.
     EquipSlot   equip_slot() const;                         // Checks what slot this Item equips in, if any.
+    const std::shared_ptr<Inventory> inv();                 // The inventory of this item, or nullptr if none exists.
     bool        is_identical(std::shared_ptr<Item> item) const; // Checks if this Item is identical to another (except stack size).
     std::string liquid_type() const;                        // Returns the liquid type contained in this Item, if any.
     static std::shared_ptr<Item> load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id);  // Loads a new Item from the save file.
@@ -96,6 +101,7 @@ public:
     int         meta_int(const std::string &key) const;     // Retrieves metadata, in int format.
     std::map<std::string, std::string>* meta_raw();         // Accesses the metadata map directly. Use with caution!
     std::string name(int flags = 0) const;                  // Retrieves the name of thie Item.
+    void        new_inventory();                            // Creates an inventory for this item.
     void        new_parser_id(uint8_t prefix);              // Generates a new parser ID for this Item.
     int         parry_mod() const;                          // Returns the parry% modifier of this Item, if any.
     uint16_t    parser_id() const;                          // Retrieves the current ID of this Item, for parser differentiation.
@@ -137,6 +143,7 @@ private:
     static constexpr int    APPRAISAL_XP_HARD =             5;      // The amount of appraisal XP gained for a difficult item appraisal.
 
     std::string                         description_;   // The description of this Item.
+    std::shared_ptr<Inventory>          inventory_;     // The contents of this item, if any.
     std::map<std::string, std::string>  metadata_;      // The Item's metadata, if any.
     std::string                         name_;          // The name of this Item!
     uint16_t                            parser_id_;     // The semi-unique ID of this Item, for parser differentiation.

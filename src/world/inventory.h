@@ -21,6 +21,7 @@ public:
     static constexpr int    PID_PREFIX_EQUIPMENT =  2;  // All items in an equipment inventory have a parser ID prefixed with 2 (e.g. 2345).
     static constexpr int    PID_PREFIX_ROOM =       3;  // All items on the ground in a room have a parser ID prefixed with 3 (e.g. 3456).
     static constexpr int    PID_PREFIX_SHOP =       4;  // All items for sale in a shop have a parser ID prefixed with 4 (e.g. 4567).
+    static constexpr int    PID_PREFIX_ITEM_INV =   5;  // All items that are within another item's inventory are prefixed with 5 (e.g. 5678).
     static constexpr int    PID_PREFIX_MOBILE =     9;  // All mobiles have a parser ID prefixed with 9 (e.g. 9876).
 
                 Inventory(uint8_t pid_prefix);          // Creates a new, blank inventory.
@@ -36,10 +37,13 @@ public:
     void        remove_item(size_t pos);                // Removes an Item from this Inventory.
     void        remove_item(EquipSlot es);              // As above, but with a specified equipment slot.
     uint32_t    save(std::shared_ptr<SQLite::Database> save_db);    // Saves this Inventory, returns its SQL ID.
+    void        set_prefix(uint8_t prefix);             // Sets the parser ID prefix.
     void        sort();                                 // Sorts the inventory into alphabetical order.
+    void        update_prefix(std::shared_ptr<Item> item) const;    // Updates the prefix of an item to match this inventory.
+    uint32_t    weight() const;                         // Returns the weight of all items in this inventory.
 
 private:
-    bool        parser_id_exists(uint16_t id);          // Checks if a given parser ID already exists on an Item in this Inventory.
+    bool        parser_id_exists(uint16_t id) const;    // Checks if a given parser ID already exists on an Item in this Inventory.
 
     std::vector<std::shared_ptr<Item>>  items_;         // The Items stored in this Inventory.
     uint8_t                             pid_prefix_;    // The prefix for all parser ID numbers in this Inventory.

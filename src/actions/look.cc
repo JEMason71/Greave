@@ -106,6 +106,7 @@ void ActionLook::examine_item(std::shared_ptr<Item> target)
             stat_string += "{w}. ";
             break;
         }
+        case ItemType::CONTAINER: break;
         case ItemType::DRINK:
         {
             switch (target->subtype())
@@ -211,10 +212,25 @@ void ActionLook::examine_item(std::shared_ptr<Item> target)
     if (!appraised_value) stat_string += (stackable ? "{w}, and {y}aren't worth anything{w}." : "{w}, and {y}isn't worth anything{w}. ");
     else stat_string += (stackable || plural_name ? "{w}, and " + appraise_str + "they're worth around {U}" : "{w}, and " + appraise_str + "it's worth around {U}") + StrX::mgsc_string(appraised_value, StrX::MGSC::LONG) + "{w}. ";
 
+    bool inv_list = false;
+
+    if (target->type() == ItemType::CONTAINER && target->subtype() == ItemSub::CORPSE)
+    {
+        if (target->inv()) inv_list = true;
+        else stat_string += "{y}It doesn't contain anything. ";
+    }
+
     if (stat_string.size())
     {
         stat_string.pop_back();
         core()->message("{0}" + stat_string);
+    }
+
+    if (inv_list)
+    {
+        core()->message("{C}" + target->name(Item::NAME_FLAG_THE | Item::NAME_FLAG_CAPITALIZE_FIRST) + " {C}contains: ");
+        for (size_t i = 0; i < target->inv()->count(); i++)
+            core()->message("{0}" + target->inv()->get(i)->name(Item::NAME_FLAG_CORE_STATS | Item::NAME_FLAG_ID));
     }
 }
 

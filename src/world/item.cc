@@ -10,11 +10,11 @@
 
 
 // The SQL table construction string for saving items.
-constexpr char Item::SQL_ITEMS[] = "CREATE TABLE items ( description TEXT, metadata TEXT, name TEXT NOT NULL, owner_id INTEGER NOT NULL, parser_id INTEGER NOT NULL, rare INTEGER NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, stack INTEGER, subtype INTEGER, tags TEXT, type INTEGER, value INTEGER, weight INTEGER NOT NULL )";
+constexpr char Item::SQL_ITEMS[] = "CREATE TABLE items ( description TEXT, inventory INTEGER, metadata TEXT, name TEXT NOT NULL, owner_id INTEGER NOT NULL, parser_id INTEGER NOT NULL, rare INTEGER NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, stack INTEGER, subtype INTEGER, tags TEXT, type INTEGER, value INTEGER, weight INTEGER NOT NULL )";
 
 
 // Constructor, sets default values.
-Item::Item() : parser_id_(0), rarity_(1), stack_(1), type_(ItemType::NONE), type_sub_(ItemSub::NONE), value_(0) { }
+Item::Item() : inventory_(nullptr), parser_id_(0), rarity_(1), stack_(1), type_(ItemType::NONE), type_sub_(ItemSub::NONE), value_(0) { }
 
 // The damage multiplier for ammunition.
 float Item::ammo_power() const { return meta_float("ammo_power"); }
@@ -59,6 +59,13 @@ float Item::armour(int bonus_power) const
 {
     if ((type_ != ItemType::ARMOUR && type_ != ItemType::SHIELD) || !power()) return 0;
     return std::pow(power() + bonus_power + 4, 1.2) / 100.0f;
+}
+
+// Assigns another inventory to this item. Use with caution.
+void Item::assign_inventory(std::shared_ptr<Inventory> inventory)
+{
+    inventory_ = inventory;
+    inventory_->set_prefix(Inventory::PID_PREFIX_ITEM_INV);
 }
 
 // Returns thie bleed chance of this Item, if any.
@@ -120,10 +127,16 @@ int Item::dodge_mod() const { return meta_int("dodge_mod"); }
 // Checks what slot this Item equips in, if any.
 EquipSlot Item::equip_slot() const { return static_cast<EquipSlot>(meta_int("slot")); }
 
+// The inventory of this item, or nullptr if none exists.
+const std::shared_ptr<Inventory> Item::inv() { return inventory_; }
+
 // Checks if this Item is identical to another (except stack size).
 bool Item::is_identical(std::shared_ptr<Item> item) const
 {
     // We'll go through the checks in order of computationally cheapest first, and leave the more expensive checks to the end.
+
+    // If an item has an inventory, it should be unstackable.
+    if (inventory_ || item->inventory_) return false;
 
     // Integer comparison.
     if (rarity_ != item->rarity_) return false;
@@ -158,6 +171,7 @@ std::string Item::liquid_type() const { return meta("liquid"); }
 std::shared_ptr<Item> Item::load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id)
 {
     auto new_item = std::make_shared<Item>();
+    uint32_t inventory_id = 0;
 
     SQLite::Statement query(*save_db, "SELECT * FROM items WHERE sql_id = :id");
     query.bind(":id", sql_id);
@@ -167,6 +181,7 @@ std::shared_ptr<Item> Item::load(std::shared_ptr<SQLite::Database> save_db, uint
         ItemSub new_subtype = ItemSub::NONE;
 
         if (!query.getColumn("description").isNull()) new_item->set_description(query.getColumn("description").getString());
+        if (!query.getColumn("inventory").isNull()) inventory_id = query.getColumn("inventory").getUInt();
         if (!query.getColumn("metadata").isNull()) StrX::string_to_metadata(query.getColumn("metadata").getString(), new_item->metadata_);
         new_item->set_name(query.getColumn("name").getString());
         new_item->parser_id_ = query.getColumn("parser_id").getUInt();
@@ -177,10 +192,15 @@ std::shared_ptr<Item> Item::load(std::shared_ptr<SQLite::Database> save_db, uint
         if (!query.isColumnNull("type")) new_type = static_cast<ItemType>(query.getColumn("type").getInt());
         if (!query.isColumnNull("value")) new_item->value_ = query.getColumn("value").getUInt();
         new_item->weight_ = query.getColumn("weight").getUInt();
-
         new_item->set_type(new_type, new_subtype);
     }
     else throw std::runtime_error("Could not retrieve data for item ID " + std::to_string(sql_id));
+
+    if (inventory_id)
+    {
+        new_item->new_inventory();
+        new_item->inv()->load(save_db, inventory_id);
+    }
 
     return new_item;
 }
@@ -283,6 +303,9 @@ std::string Item::name(int flags) const
     return ret;
 }
 
+// Creates an inventory for this item.
+void Item::new_inventory() { inventory_ = std::make_shared<Inventory>(Inventory::PID_PREFIX_ITEM_INV); }
+
 // Generates a new parser ID for this Item.
 void Item::new_parser_id(uint8_t prefix) { parser_id_ = core()->rng()->rnd(0, 999) + (prefix * 1000); }
 
@@ -304,8 +327,12 @@ int Item::rare() const { return rarity_; }
 // Saves the Item.
 void Item::save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id)
 {
-    SQLite::Statement query(*save_db, "INSERT INTO items ( description, metadata, name, owner_id, parser_id, rare, sql_id, stack, subtype, tags, type, value, weight ) VALUES ( :desc, :meta, :name, :owner_id, :parser_id, :rare, :sql_id, :stack, :subtype, :tags, :type, :value, :weight )");
+    uint32_t inventory_id = 0;
+    if (inventory_) inventory_id = inventory_->save(save_db);
+
+    SQLite::Statement query(*save_db, "INSERT INTO items ( description, inventory, metadata, name, owner_id, parser_id, rare, sql_id, stack, subtype, tags, type, value, weight ) VALUES ( :desc, :inventory, :meta, :name, :owner_id, :parser_id, :rare, :sql_id, :stack, :subtype, :tags, :type, :value, :weight )");
     if (description_.size()) query.bind(":desc", description_);
+    if (inventory_id) query.bind(":inventory", inventory_id);
     if (metadata_.size()) query.bind(":meta", StrX::metadata_to_string(metadata_));
     query.bind(":name", name_);
     query.bind(":owner_id", owner_id);
@@ -475,8 +502,9 @@ int Item::warmth() const { return meta_int("warmth"); }
 // The Item's weight, in pacs.
 uint32_t Item::weight(bool individual) const
 {
-    uint32_t water_weight = 0;
+    uint32_t water_weight = 0, container_weight = 0;
     if (type_ == ItemType::DRINK) water_weight = std::round(charge() * WATER_WEIGHT);
-    if (individual || !tag(ItemTag::Stackable)) return weight_ + water_weight;
-    else return (weight_ + water_weight) * stack_;
+    if (inventory_) container_weight = inventory_->weight();
+    if (individual || !tag(ItemTag::Stackable)) return weight_ + water_weight + container_weight;
+    else return (weight_ + water_weight + container_weight) * stack_;
 }

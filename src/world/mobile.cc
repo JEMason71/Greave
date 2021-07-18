@@ -121,15 +121,7 @@ uint16_t Mobile::buff_time(Buff::Type type) const
 bool Mobile::can_perform_action(float time) const { return action_timer_ >= time; }
 
 // Checks how much weight this Mobile is carrying.
-uint32_t Mobile::carry_weight() const
-{
-    uint32_t total_weight = 0;
-    for (size_t i = 0; i < inventory_->count(); i++)
-        total_weight += inventory_->get(i)->weight();
-    for (size_t i = 0; i < equipment_->count(); i++)
-        total_weight += equipment_->get(i)->weight();
-    return total_weight;
-}
+uint32_t Mobile::carry_weight() const { return inventory_->weight() + equipment_->weight(); }
 
 // Clears a specified buff/debuff from the Actor, if it exists.
 void Mobile::clear_buff(Buff::Type type)
@@ -152,6 +144,41 @@ void Mobile::clear_tag(MobileTag the_tag)
 {
     if (!(tags_.count(the_tag) > 0)) return;
     tags_.erase(the_tag);
+}
+
+// Causes this mobile to die and leave a corpse behind.
+void Mobile::die(bool death_message)
+{
+    const auto world = core()->world();
+    if (is_player()) return;    // The player's death is handled elsewhere.
+    const bool unliving = tag(MobileTag::Unliving);
+    if (death_message && location_ == world->player()->location())
+    {
+        std::string death_message = "{U}" + name(NAME_FLAG_CAPITALIZE_FIRST | NAME_FLAG_THE);
+        if (unliving) death_message += " is destroyed!";
+        else death_message += " is slain!";
+        core()->message(death_message);
+    }
+    world->player()->add_score(score_);
+    if (spawn_room_) world->get_room(spawn_room_)->clear_tag(RoomTag::MobSpawned);
+    if (tag(MobileTag::ArenaFighter)) Arena::combatant_died();
+
+    // Add all equipped items to inventory.
+    while (equipment_->count())
+    {
+        auto item = equipment_->get(0);
+        inventory_->add_item(item);
+        equipment_->remove_item(0);
+    }
+
+    // Create a corpse, dump all inventory/equipment items in there by reassigning the old inventory pointer.
+    auto new_corpse = world->get_item("CORPSE");
+    new_corpse->set_name("{r}" + name(NAME_FLAG_POSSESSIVE | NAME_FLAG_NO_COLOUR) + (unliving ? " {R}remains" : " {R}corpse"));
+    new_corpse->assign_inventory(inventory_);
+    world->get_room(location_)->inv()->add_item(new_corpse);
+
+    // Now we can dispose of the old mobile.
+    world->remove_mobile(id_);
 }
 
 // Returns the modified chance to dodge for this Mobile, based on equipped gear.
@@ -417,18 +444,7 @@ void Mobile::reduce_hp(int amount, bool death_message)
     if (is_player()) return;                // The player character's death is handled elsewhere.
     clear_buff(Buff::Type::RECENTLY_FLED);  // Cowardly NPCs fleeing in fear should be able to flee again when taking damage.
     if (hp_[0] > 0) return;                // Everything below this point deals with the Mobile dying.
-
-    if (death_message && location_ == core()->world()->player()->location())
-    {
-        std::string death_message = "{U}" + name(NAME_FLAG_CAPITALIZE_FIRST | NAME_FLAG_THE);
-        if (tag(MobileTag::Unliving)) death_message += " is destroyed!";
-        else death_message += " is slain!";
-        core()->message(death_message);
-    }
-    core()->world()->player()->add_score(score_);
-    if (spawn_room_) core()->world()->get_room(spawn_room_)->clear_tag(RoomTag::MobSpawned);
-    if (tag(MobileTag::ArenaFighter)) Arena::combatant_died();
-    core()->world()->remove_mobile(id_);
+    die(death_message);
 }
 
 // Restores a specified amount of hit points.

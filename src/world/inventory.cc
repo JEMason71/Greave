@@ -41,12 +41,18 @@ void Inventory::add_item(std::shared_ptr<Item> item, bool force_stack)
         }
     }
 
-    // Check the Item's hex ID. If it's unset, or if another Item in the Inventory shares its ID, we'll need a new one. Infinite loops relying on RNG to break out are VERY BAD so let's put a threshold on this bad boy.
+    update_prefix(item);
+    items_.push_back(item);
+}
+
+// Updates the prefix of an item to match this inventory.
+void Inventory::update_prefix(std::shared_ptr<Item> item) const
+{
+    // Check the item's parser ID. If it's unset, or if another item in the inventory shares its ID, we'll need a new one. Infinite loops relying on RNG to break out are VERY BAD so let's put a threshold on this bad boy.
     int tries = 0;
     item->set_parser_id_prefix(pid_prefix_);
     while (parser_id_exists(item->parser_id()) && ++tries < 10000)
         item->new_parser_id(pid_prefix_);
-    items_.push_back(item);
 }
 
 // As above, but generates a new Item from a template with a specified ID.
@@ -113,7 +119,7 @@ void Inventory::load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id)
 }
 
 // Checks if a given parser ID already exists on an Item in this Inventory.
-bool Inventory::parser_id_exists(uint16_t id)
+bool Inventory::parser_id_exists(uint16_t id) const
 {
     for (auto item : items_)
         if (item->parser_id() == id) return true;
@@ -151,6 +157,14 @@ uint32_t Inventory::save(std::shared_ptr<SQLite::Database> save_db)
     return sql_id;
 }
 
+// Sets the parser ID prefix.
+void Inventory::set_prefix(uint8_t prefix)
+{
+    pid_prefix_ = prefix;
+    for (auto item : items_)
+        update_prefix(item);
+}
+
 // Sorts the inventory into alphabetical order.
 void Inventory::sort()
 {
@@ -169,4 +183,13 @@ void Inventory::sort()
             }
         }
     } while (sorted);
+}
+
+// Returns the weight of all items in this inventory.
+uint32_t Inventory::weight() const
+{
+    uint32_t total_weight = 0;
+    for (auto item : items_)
+        total_weight += item->weight();
+    return total_weight;
 }
