@@ -3,6 +3,7 @@
 
 #include "3rdparty/SQLiteCpp/SQLiteCpp.h"
 #include "core/bones.h"
+#include "core/core.h"
 #include "core/filex.h"
 #include "core/strx.h"
 

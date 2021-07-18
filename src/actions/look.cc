@@ -2,7 +2,7 @@
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #include "actions/look.h"
-
+#include "core/core.h"
 #include "core/mathx.h"
 #include "core/strx.h"
 

@@ -1,12 +1,12 @@
 // world/item.cc -- The Item class is for objects that can be picked up and used by the player or other NPCs.
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
+#include "core/core.h"
+#include "core/mathx.h"
+#include "core/strx.h"
 #include "world/item.h"
 
 #include <cmath>
-
-#include "core/mathx.h"
-#include "core/strx.h"
 
 
 // The SQL table construction string for saving items.

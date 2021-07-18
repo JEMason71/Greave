@@ -1,8 +1,6 @@
 // core/core.cc -- Main program entry, initialization and cleanup routines, and the core game loop.
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#include "core/core.h"
-
 #ifdef GREAVE_TOLK
 #include <regex>
 #endif
@@ -16,14 +14,14 @@
 #include "3rdparty/Tolk/Tolk.h"
 #endif
 #include "actions/help.h"
+#include "core/core.h"
+#include "core/core-constants.h"
 #include "core/bones.h"
 #include "core/filex.h"
 #include "core/strx.h"
 #include "core/terminal-curses.h"
 #include "core/terminal-sdl2.h"
 
-
-constexpr char Core::GAME_VERSION[] = "pre-alpha";  // The game's version number.
 
 std::shared_ptr<Core> greave = nullptr;   // The main Core object.
 
@@ -270,7 +268,7 @@ void Core::save()
     try
     {
         std::shared_ptr<SQLite::Database> save_db = std::make_shared<SQLite::Database>(save_fn, SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
-        save_db->exec("PRAGMA user_version = " + std::to_string(SAVE_VERSION));
+        save_db->exec("PRAGMA user_version = " + std::to_string(CoreConstants::SAVE_VERSION));
         m_sql_unique_id = 0;    // We're making a new save file each time, so we can reset the unique ID counter.
 
         SQLite::Transaction transaction(*save_db);
@@ -313,7 +311,7 @@ const std::shared_ptr<Terminal> Core::terminal() const { return m_terminal; }
 // The 'title screen' and saved game selection.
 void Core::title()
 {
-    message("{U}Welcome to {G}Greave {U}" + std::string(GAME_VERSION) + ", copyright (c) 2021 Raine \"Gravecat\" Simmons and the Greave contributors. This game is free and open-source, released under the Gnu AGPL 3.0 license.");
+    message("{U}Welcome to {G}Greave {U}" + std::string(CoreConstants::GAME_VERSION) + ", copyright (c) 2021 Raine \"Gravecat\" Simmons and the Greave contributors. This game is free and open-source, released under the Gnu AGPL 3.0 license.");
 #ifdef GREAVE_TOLK
     if (Tolk_DetectScreenReader()) message("{U}If you are using a screen reader, pressing the {C}tab key {U}will repeat the text after your last input, and pressing {C}escape {U}at any time will stop reading.");
 #endif
@@ -341,7 +339,7 @@ void Core::title()
             {
                 std::string save_str = "Saved game #" + std::to_string(i);
                 const uint32_t save_ver = save_version(i);
-                if (save_ver == SAVE_VERSION) save_str = "{W}" + save_str;
+                if (save_ver == CoreConstants::SAVE_VERSION) save_str = "{W}" + save_str;
                 else save_str = "{R}" + save_str + " {M}<incompatible>";
                 message("{0}{U}[{C}" + std::to_string(i) + "{U}] " + save_str);
                 save_exists.at(i - 1) = true;
@@ -440,12 +438,12 @@ void Core::title()
                         uint32_t save_file_ver = 0;
                         const bool file_exists = FileX::file_exists(save_filename(input_num));
                         if (file_exists) save_file_ver = save_version(input_num);
-                        if (!file_exists || save_file_ver == SAVE_VERSION)
+                        if (!file_exists || save_file_ver == CoreConstants::SAVE_VERSION)
                         {
                             m_save_slot = input_num;
                             inner_loop = false;
                         }
-                        else message("{R}This saved game is {M}incompatible {R}with this version of the game. Greave " + std::string(GAME_VERSION) + " uses save file {M}version " + std::to_string(SAVE_VERSION) + "{R}, this save file is using {M}" + (save_file_ver ? "version " + std::to_string(save_file_ver) : "an unknown version") + "{R}.");
+                        else message("{R}This saved game is {M}incompatible {R}with this version of the game. Greave " + std::string(CoreConstants::GAME_VERSION) + " uses save file {M}version " + std::to_string(CoreConstants::SAVE_VERSION) + "{R}, this save file is using {M}" + (save_file_ver ? "version " + std::to_string(save_file_ver) : "an unknown version") + "{R}.");
                     }
                 }
             }

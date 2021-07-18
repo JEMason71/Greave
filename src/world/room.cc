@@ -1,11 +1,11 @@
 // world/room.cc -- The Room class, which defines a single area in the game world that the player can visit.
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
+#include "core/core.h"
+#include "core/strx.h"
 #include "world/room.h"
 
 #include <cmath>
-
-#include "core/strx.h"
 
 
 // The descriptions for different types of room scars.

@@ -85,6 +85,7 @@ set(GREAVE_CPPS
   actions/travel.cc
   core/bones.cc
   core/core.cc
+  core/core-constants.cc
   core/filex.cc
   core/guru.cc
   core/list.cc

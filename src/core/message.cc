@@ -2,16 +2,15 @@
 // Copyright (c) 2019-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 // Originally based on BearLibTerminal sample code, (c) 2014 Cfyz.
 
-#include "core/message.h"
-
-#include <cmath>
-
-#include <regex>
-
 #ifdef GREAVE_TARGET_WINDOWS
 #include "3rdparty/Tolk/Tolk.h"
 #endif
+#include "core/core.h"
+#include "core/message.h"
 #include "core/strx.h"
+
+#include <cmath>
+#include <regex>
 
 
 // SQL string to construct database table.

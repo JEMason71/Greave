@@ -1,14 +1,14 @@
 // world/world.cc -- The World class defines the game world as a whole and handles the passage of time, as well as keeping track of the player's current activities.
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#include "world/world.h"
-
 #include "3rdparty/yaml-cpp/yaml.h"
 #include "actions/look.h"
 #include "core/bones.h"
+#include "core/core.h"
 #include "core/filex.h"
 #include "core/mathx.h"
 #include "core/strx.h"
+#include "world/world.h"
 
 
 // The SQL construction table for the world data.

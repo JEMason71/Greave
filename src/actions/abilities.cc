@@ -2,8 +2,8 @@
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #include "actions/abilities.h"
-
 #include "actions/combat.h"
+#include "core/core.h"
 #include "core/strx.h"
 
 

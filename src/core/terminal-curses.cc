@@ -2,11 +2,6 @@
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #ifdef GREAVE_INCLUDE_CURSES
-#include "core/terminal-curses.h"
-
-#ifdef GREAVE_TARGET_LINUX
-#include <curses.h>
-#endif
 
 #ifdef GREAVE_TARGET_WINDOWS
 #include "3rdparty/PDCurses/curses.h"
@@ -14,7 +9,14 @@
 #ifdef GREAVE_TOLK
 #include "3rdparty/Tolk/Tolk.h"
 #endif
+#include "core/core.h"
+#include "core/core-constants.h"
 #include "core/strx.h"
+#include "core/terminal-curses.h"
+
+#ifdef GREAVE_TARGET_LINUX
+#include <curses.h>
+#endif
 
 
 // Constructor, sets up Curses.
@@ -89,7 +91,7 @@ TerminalCurses::TerminalCurses()
     }
 
 #ifdef GREAVE_TARGET_WINDOWS
-    std::string ver_str = Core::GAME_VERSION;
+    std::string ver_str = CoreConstants::GAME_VERSION;
     PDC_set_title(("Greave " + ver_str).c_str());
 #endif
 }

@@ -1,16 +1,16 @@
 // actions/travel.cc -- Actions allowing the player and NPCs to move around the game world.
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#include "actions/travel.h"
-
-#include <cmath>
-
 #include "actions/arena.h"
 #include "actions/combat.h"
 #include "actions/doors.h"
 #include "actions/look.h"
+#include "actions/travel.h"
+#include "core/core.h"
 #include "core/mathx.h"
 #include "core/strx.h"
+
+#include <cmath>
 
 
 // Attempts to move from one Room to another.

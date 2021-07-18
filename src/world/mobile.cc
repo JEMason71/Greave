@@ -1,11 +1,11 @@
 // world/mobile.cc -- The Mobile class defines entities that can move and interact with the game world.
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#include "world/mobile.h"
-
 #include "actions/arena.h"
 #include "actions/combat.h"
+#include "core/core.h"
 #include "core/strx.h"
+#include "world/mobile.h"
 
 
 // The SQL table construction string for the buffs table.

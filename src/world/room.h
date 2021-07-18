@@ -12,6 +12,7 @@
 #include <string>
 #include <vector>
 
+#include "core/core-constants.h"
 #include "world/inventory.h"
 
 
@@ -37,7 +38,7 @@ enum class LinkTag : uint16_t {
     // ****************************************************************************************************
     // Tags at 10,000 or above are considered *permanent tags*. These tags WILL NOT be saved to save files.
     // ****************************************************************************************************
-    _Permanent = 9999,  // Do not use this tag, it's just a marker to start the tags below counting from 10,000.
+    _Permanent = CoreConstants::TAGS_PERMANENT - 1, // Do not use this tag, it's just a marker to start the tags below counting from 10,000.
 
     // Basic properties of links, such as their length.
     Hidden,             // This link is not normally visible.
@@ -88,7 +89,7 @@ enum class RoomTag : uint16_t {
     // ****************************************************************************************************
     // Tags at 10,000 or above are considered *permanent tags*. These tags WILL NOT be saved to save files.
     // ****************************************************************************************************
-    _Permanent = 9999,      // Do not use this tag, it's just a marker to start the tags below counting from 10,000.
+    _Permanent = CoreConstants::TAGS_PERMANENT - 1, // Do not use this tag, it's just a marker to start the tags below counting from 10,000.
 
     // Basic, core properties of rooms, such as if they're indoors.
     Indoors,                // Is this room indoors?

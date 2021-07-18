@@ -1,14 +1,14 @@
 // core/strx.cc -- Various utility functions that deal with string manipulation/conversion.
 // Copyright (c) 2009-2021 Raine "Gravecat" Simmons and the Greave contributors. Licensed under the GNU Affero General Public License v3 or any later version.
 
+#include "core/core.h"
+#include "core/mathx.h"
 #include "core/strx.h"
 
 #include <algorithm>
 #include <iterator>
 #include <regex>
 #include <sstream>
-
-#include "core/mathx.h"
 
 
 // Capitalizes the first letter of a string.

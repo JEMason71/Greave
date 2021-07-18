@@ -2,18 +2,18 @@
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #ifdef GREAVE_INCLUDE_SDL
-#include "core/terminal-sdl2.h"
-
-#include <ctime>
-
-#include <thread>
 
 #include "3rdparty/LodePNG/bmp2png.h"
 #ifdef GREAVE_TOLK
 #include "3rdparty/Tolk/Tolk.h"
 #endif
+#include "core/core.h"
 #include "core/filex.h"
 #include "core/strx.h"
+#include "core/terminal-sdl2.h"
+
+#include <ctime>
+#include <thread>
 
 
 // Constructor, sets up SDL2.
@@ -43,7 +43,7 @@ TerminalSDL2::TerminalSDL2() : m_cursor_visible(false), m_cursor_x(0), m_cursor_
     m_window_h = std::stol(size_exp.at(1)) * m_font_height;
 
     // Create the main window!
-    m_window = SDL_CreateWindow(("Greave " + std::string(Core::GAME_VERSION)).c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, m_window_w, m_window_h,
+    m_window = SDL_CreateWindow(("Greave " + std::string(CoreConstants::GAME_VERSION)).c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, m_window_w, m_window_h,
         SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
     if (!m_window) throw std::runtime_error("Could not create SDL window: " + std::string(SDL_GetError()));
 

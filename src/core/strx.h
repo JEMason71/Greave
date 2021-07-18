@@ -4,14 +4,13 @@
 #ifndef GREAVE_CORE_STRX_H_
 #define GREAVE_CORE_STRX_H_
 
-#include <cstddef>
+#include "core/core-constants.h"
 
+#include <cstddef>
 #include <map>
 #include <set>
 #include <string>
 #include <vector>
-
-#include "core/core.h"
 
 
 class StrX
@@ -73,7 +72,7 @@ public:
         if (!tags.size()) return "";
         std::string tags_str;
         for (auto tag : tags)
-            if (static_cast<uint32_t>(tag) < Core::TAGS_PERMANENT) tags_str += itoh(static_cast<long long>(tag), 1) + " ";
+            if (static_cast<uint32_t>(tag) < CoreConstants::TAGS_PERMANENT) tags_str += itoh(static_cast<long long>(tag), 1) + " ";
         if (tags_str.size()) tags_str.pop_back();   // Strip off the excess space at the end.
         return tags_str;
     }

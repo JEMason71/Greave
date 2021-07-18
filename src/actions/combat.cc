@@ -2,12 +2,12 @@
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #include "actions/combat.h"
-
-#include <cmath>
-
 #include "actions/abilities.h"
+#include "core/core.h"
 #include "core/mathx.h"
 #include "core/strx.h"
+
+#include <cmath>
 
 
 // Weapon type damage modifiers to unarmoured, light, medium and heavy armour targets.
