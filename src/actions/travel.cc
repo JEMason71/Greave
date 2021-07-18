@@ -180,7 +180,7 @@ bool ActionTravel::travel(std::shared_ptr<Mobile> mob, Direction dir, bool confi
             mob->reduce_hp(hp_damage);
             if (is_player)
             {
-                core()->message("{R}You land badly, and the impact " + Combat::damage_str(hp_damage, mob, false) + " {R}you! {W}<{R}-" + StrX::intostr_pretty(hp_damage) + "{W}>");
+                core()->message("{R}You land badly, and the impact " + combat::damage_str(hp_damage, mob, false) + " {R}you! {W}<{R}-" + StrX::intostr_pretty(hp_damage) + "{W}>");
                 if (mob->hp() > 0) player->gain_skill_xp("SAFE_FALL", XP_PER_SAFE_FALL_FAIL * fallen_dist);
             }
             else

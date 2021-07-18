@@ -471,7 +471,7 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             else cheat::add_money(parse_int(words.at(0)));
             break;
         case ParserCommand::ATTACK:
-            if (parsed_target_type == ParserTarget::TARGET_MOBILE) Combat::attack(player, world->mob_vec(parsed_target));
+            if (parsed_target_type == ParserTarget::TARGET_MOBILE) combat::attack(player, world->mob_vec(parsed_target));
             else if (!words.size()) specify("attack");
             else if (parsed_target_type == ParserTarget::TARGET_NONE) not_here();
             break;
@@ -632,7 +632,7 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
                 case 'd': chosen_stance = CombatStance::DEFENSIVE; break;
             }
             if (chosen_stance == static_cast<CombatStance>(0xFF)) core()->message("{y}Please choose a stance ({Y}aggressive{y}, {Y}defensive{y} or {Y}balanced{y}).");
-            else Combat::change_stance(player, chosen_stance);
+            else combat::change_stance(player, chosen_stance);
             break;
         }
         case ParserCommand::STATUS: ActionStatus::status(); break;

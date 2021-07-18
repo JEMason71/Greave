@@ -11,86 +11,92 @@
 
 
 namespace greave {
+namespace combat
+{
 
-constexpr float kHeadlongStrikeAttackSpeed =    20; // The % of an attack's normal speed that it takes to do a Headlong Strike attack.
-constexpr float kRapidStrikeAccuracyPenalty =   20; // The % accuracy penalty for a Rapid Strike.
-constexpr float kRapidStrikeAttackSpeed =       20; // The % of an attack's normal speed that it takes to do a Rapid Strike attack.
-constexpr float kSnapShotAccuracyPenalty =      20; // The % accuracy penalty for a Snap Shot.
-constexpr float kSnapShotAttackSpeed =          20; // The % of an attack's normal speed that it takes to do a Snap Shot attack.
+constexpr float kAttackerDamageMultiplierAnemic =           0.5f;   // The damage multiplier when a Mobile with the Anemic tag attacks in melee combat.
+constexpr float kAttackerDamageMultiplierFeeble =           0.75f;  // The damage multiplier when a Mobile with the Feeble tag attacks in melee combat.
+constexpr float kAttackerDamageMultiplierPuny =             0.9f;   // The damage multiplier when a Mobile with the Puny tag attacks in melee combat.
+constexpr float kAttackerDamageMultiplierStrong =           1.1f;   // The damage multiplier when a Mobile with the Strong tag attacks in melee combat.
+constexpr float kAttackerDamageMultiplierBrawny =           1.25f;  // The damage multiplier when a Mobile with the Brawny tag attacks in melee combat.
+constexpr float kAttackerDamageMultiplierVigorous =         1.5f;   // The damage multiplier when a Mobile with the Vigorous tag attacks in melee combat.
+constexpr float kAttackerDamageMultiplierMighty =           2.0f;   // The damage multiplier when a Mobile with the Mighty tag attacks in melee combat.
+constexpr float kDefenderParryMultiplierAgile =             1.5f;   // The multiplier to the parry chance of a Mobile with the Agile tag.
+constexpr float kDefenderParryMultiplierClumsy =            0.5f;   // The multiplier to the parry chance of a Mobile with the Clumsy tag.
+constexpr float kDefenderToHitMultiplierAgile =             0.8f;   // The to-hit multiplier when attempting to hit a Mobile with the Agile tag.
+constexpr float kDefenderToHitMultiplierClumsy =            1.25f;  // The to-hit multiplier when attempting to hit a Mobile with the Clumsy tag.
 
-const float Combat::ATTACKER_DAMAGE_MODIFIER_ANEMIC =           0.5f;   // The damage multiplier when a Mobile with the Anemic tag attacks in melee combat.
-const float Combat::ATTACKER_DAMAGE_MODIFIER_BRAWNY =           1.25f;  // The damage multiplier when a Mobile with the Brawny tag attacks in melee combat.
-const float Combat::ATTACKER_DAMAGE_MODIFIER_FEEBLE =           0.75f;  // The damage multiplier when a Mobile with the Feeble tag attacks in melee combat.
-const float Combat::ATTACKER_DAMAGE_MODIFIER_MIGHTY =           2.0f;   // The damage multiplier when a Mobile with the Mighty tag attacks in melee combat.
-const float Combat::ATTACKER_DAMAGE_MODIFIER_PUNY =             0.9f;   // The damage multiplier when a Mobile with the Puny tag attacks in melee combat.
-const float Combat::ATTACKER_DAMAGE_MODIFIER_STRONG =           1.1f;   // The damage multiplier when a Mobile with the Strong tag attacks in melee combat.
-const float Combat::ATTACKER_DAMAGE_MODIFIER_VIGOROUS =         1.5f;   // The damage multiplier when a Mobile with the Vigorous tag attacks in melee combat.
-const float Combat::BASE_ABSORPTION_VARIANCE =                  4;      // The variance in weapon damage soaked by armour (lower number = more variance).
-const float Combat::BASE_ATTACK_SPEED_MULTIPLIER =              10.0f;  // The base speed multiplier for all attacks.
-const float Combat::BASE_BLOCK_CHANCE_MELEE =                   40.0f;  // The base block chance in melee combat.
-const float Combat::BASE_DAMAGE_VARIANCE =                      3;      // The variance in weapon damage (lower number = more variance).
-const float Combat::BASE_HIT_CHANCE_MELEE =                     75.0f;  // The base hit chance in melee combat.
-const float Combat::BASE_MELEE_DAMAGE_MULTIPLIER =              1.2f;   // The base damage multiplier for melee weapons.
-const float Combat::BASE_PARRY_CHANCE =                         10.0f;  // The base parry chance in melee combat.
-const int   Combat::BLEED_SEVERITY_BASE =                       6;      // The base value of bleed severity, used in the bleed calculations.
-const int   Combat::BLEED_SEVERITY_RANGE=                       4;      // The range of variation on the bleed severity.
-const int   Combat::BLEED_TIME_RANGE =                          10;     // The range of time (1 - X) that a weapon bleed effect can cause.
-const float Combat::BLOCK_SKILL_BONUS_PER_LEVEL =               0.3f;   // The bonus % chance to block per level of block skill.
-const float Combat::CRIT_CHANCE_MULTIPLIER_SINGLE_WIELD =       1.1f;   // The multiplier to crit% for single-wielding.
-const float Combat::DEFENDER_PARRY_MODIFIER_AGILE =             1.5f;   // The multiplier to the parry chance of a Mobile with the Agile tag.
-const float Combat::DEFENDER_PARRY_MODIFIER_CLUMSY =            0.5f;   // The multiplier to the parry chance of a Mobile with the Clumsy tag.
-const float Combat::DEFENDER_TO_HIT_MODIFIER_AGILE =            0.8f;   // The to-hit multiplier when attempting to hit a Mobile with the Agile tag.
-const float Combat::DEFENDER_TO_HIT_MODIFIER_CLUMSY =           1.25f;  // The to-hit multiplier when attempting to hit a Mobile with the Clumsy tag.
-const float Combat::EVASION_SKILL_BONUS_PER_LEVEL =             0.5f;   // The bonus % chance to dodge attacks per level of evasion skill.
-const float Combat::HIT_CHANCE_MULTIPLIER_DUAL_WIELD =          0.9f;   // The multiplier to accuracy% for dual-wielding.
-const float Combat::HIT_CHANCE_MULTIPLIER_SINGLE_WIELD =        1.8f;   // The multiplier to accuracy% for single-wielding.
-const float Combat::HIT_CHANCE_MULTIPLIER_SWORD_AND_BOARD =     1.5f;   // The multiplier to accuracy% for wielding 1h+shield or 1h+extra.
-const float Combat::PARRY_PENALTY_TWO_HANDED =                  0.6f;   // The penalty % chance to parry when using a two-handed weapon.
-const float Combat::PARRY_SKILL_BONUS_PER_LEVEL =               0.5f;   // The bonus % chance to parry per level of parry skill.
-const int   Combat::POISON_SEVERITY_BASE =                      4;      // The base value of poison severity, used in the poison calculations.
-const int   Combat::POISON_SEVERITY_RANGE =                     6;      // The range of variation on the poison severity.
-const int   Combat::POISON_TIME_RANGE =                         5;      // The range of time (1 - X) that a weapon poison effect can cause.
-const int   Combat::SCAR_BLEED_INTENSITY_FROM_BLEED_ATTACK =    2;      // Blood type scar intensity for attacks that cause bleeding.
-const int   Combat::SCAR_BLEED_INTENSITY_FROM_DEATH =           5;      // As above, but for NPCs (which bleed) dying here.
-const float Combat::STANCE_CHANGE_TIME =                        1.0f;   // The time it takes to change combat stances.
-const float Combat::STANCE_DAMAGE_MULTIPLIER_AGGRESSIVE =       1.2f;   // The multiplier to melee damage when in an aggressive stance.
-const float Combat::STANCE_DAMAGE_MULTIPLIER_DEFENSIVE =        0.8f;   // The multiplier to melee damage when in a defensive stance.
-const float Combat::STANCE_DAMAGE_TAKEN_MULTIPLIER_AGGRESSIVE = 1.2f;   // The multiplier to melee damage *taken* when in an aggressive stance.
-const float Combat::STANCE_DAMAGE_TAKEN_MULTIPLIER_DEFENSIVE =  0.8f;   // The multiplier to melee damage *taken* when in an defensive stance.
-const float Combat::STANCE_TO_HIT_MODIFIER_FAVOURABLE =         20;     // The to-hit % bonus when the attacker's stance is favourable vs the defender's.
-const float Combat::STANCE_TO_HIT_MODIFIER_UNFAVOURABLE =       -10;    // The to-hit % penalty when the attacker's stance is unfavourable vs the defender's.
-const float Combat::WEAPON_DAMAGE_MODIFIER_HAAH_2H =            1.4f;   // The damage modifier for wielding a hand-and-a-half weapon in two hands.
-const float Combat::WEAPON_SKILL_DAMAGE_MODIFIER =              0.05f;  // The damage modifier, based on weapon skill level.
-const float Combat::WEAPON_SKILL_TO_HIT_PER_LEVEL =             1.0f;   // The bonus % chance to hit per point of weapon skill.
-const float Combat::XP_PER_BLOCK =                              1.0f;   // Experience gained for a successful shield block in combat.
-const float Combat::XP_PER_CRITICAL_HIT =                       3.0f;   // Weapon experience gainer per critical hit in combat.
-const float Combat::XP_PER_EVADE =                              1.0f;   // Experience gained for evading an attack in combat.
-const float Combat::XP_PER_PARRY =                              1.0f;   // Experience gained for a successful parry in combat.
-const float Combat::XP_PER_SUCCESSFUL_HIT =                     0.7f;   // Weapon experience gained per successful weapon attack in combat.
+constexpr int   kBaseAbsorptonVariance =                    4;      // The variance in weapon damage soaked by armour (lower number = more variance).
+constexpr float kBaseBlockChance =                          40;     // The base chance to block with a shield.
+constexpr float kBaseHitChance =                            75;     // The base chance to hit with an attack.
+constexpr float kBaseMeleeDamageMultiplier =                1.2f;   // The base damage multiplier for melee weapons.
+constexpr int   kBaseDamageVariance =                       3;      // The variance in weapon damage (lower number = more variance).
+constexpr float kBaseParryChance =                          10;     // The base chance to parry a melee attack.
+constexpr float kCritChanceMultiplierSingleWield =          1.1f;   // The multiplier to crit% for single-wielding.
+constexpr float kHitChanceMultiplierDualWield =             0.9f;   // The multiplier to accuracy% for dual-wielding.
+constexpr float kHitChanceMultiplierSingleWield =           1.8f;   // The multiplier to accuracy% for single-wielding.
+constexpr float kHitChanceMultiplierSwordAndBoard =         1.5f;   // The multiplier to accuracy% for wielding 1h+shield or 1h+extra.
+constexpr float kParryMultiplierTwoHanded =                 0.6f;   // The penalty % chance to parry when using a two-handed weapon.
+constexpr float kWeaponDamageMultiplierHaaH2H =             1.4;    // The damage modifier for wielding a hand-and-a-half weapon in two hands.
+constexpr float kWeaponSkillDamageModifier =                0.05f;  // The damage modifier, based on weapon skill level.
+
+constexpr float kBlockSkillBonusPerLevel =                  0.3f;   // The bonus % chance to block per level of block skill.
+constexpr float kEvasionSkillBonusPerLevel =                0.5f;   // The bonus % chance to dodge attacks per level of evasion skill.
+constexpr float kParrySkillBonusPerLevel =                  0.5f;   // The bonus % chance to parry per level of parry skill.
+constexpr float kWeaponSkillToHitPerLevel =                 1.0f;   // The bonus % chance to hit per point of weapon skill.
+
+constexpr int   kBleedSeverityBase =                        6;      // The base value of bleed severity, used in the bleed calculations.
+constexpr int   kBleedSeverityRange =                       4;      // The range of variation on the bleed severity.
+constexpr int   kBleedTimeRange =                           10;     // The range of time (1 - X) that a weapon bleed effect can cause.
+
+constexpr int   kPoisonSeverityBase =                       4;      // The base value of poison severity, used in the poison calculations.
+constexpr int   kPoisonSeverityRange =                      6;      // The range of variation on the poison severity.
+constexpr int   kPoisonTimeRange =                          5;      // The range of time (1 - X) that a weapon poison effect can cause.
+
+constexpr float kHeadlongStrikeAttackSpeed =                20;     // The % of an attack's normal speed that it takes to do a Headlong Strike attack.
+constexpr float kRapidStrikeAccuracyPenalty =               20;     // The % accuracy penalty for a Rapid Strike.
+constexpr float kRapidStrikeAttackSpeed =                   20;     // The % of an attack's normal speed that it takes to do a Rapid Strike attack.
+constexpr float kSnapShotAccuracyPenalty =                  20;     // The % accuracy penalty for a Snap Shot.
+constexpr float kSnapShotAttackSpeed =                      20;     // The % of an attack's normal speed that it takes to do a Snap Shot attack.
+
+constexpr int   kScarBleedIntensityFromBleedAttack =        2;      // Blood type scar intensity for attacks that cause bleeding.
+constexpr int   kScarBleedIntensityFromDeath =              5;      // As above, but for mobiles (which bleed) dying here.
+
+constexpr float kStanceDamageMultiplierAggressive =         1.2f;   // The multiplier to melee damage when in an aggressive stance.
+constexpr float kStanceDamageMultiplierDefensive =          0.8f;   // The multiplier to melee damage when in a defensive stance.
+constexpr float kStanceDamageTakenMultiplierAggressive =    1.2f;   // The multiplier to melee damage *taken* when in an aggressive stance.
+constexpr float kStanceDamageTakenMultiplierDefensive =     0.8f;   // The multiplier to melee damage *taken* when in an defensive stance.
+constexpr int   kStanceToHitModifierFavourable =            20;     // The to-hit % bonus when the attacker's stance is favourable vs the defender's.
+constexpr int   kStanceToHitModifierUnfavourable =          -10;    // The to-hit % penalty when the attacker's stance is unfavourable vs the defender's.
+
+constexpr float kXPPerBlock =                               1.0f;   // Experience gained for a successful shield block in combat.
+constexpr float kXPPerCriticalHit =                         3.0f;   // Weapon experience gainer per critical hit in combat.
+constexpr float kXPPerEvade =                               1.0f;   // Experience gained for evading an attack in combat.
+constexpr float kXPPerParry =                               1.0f;   // Experience gained for a successful parry in combat.
+constexpr float kXPPerSuccessfulHit =                       0.7f;   // Weapon experience gained per successful weapon attack in combat.
 
 // Weapon type damage modifiers to unarmoured, light, medium and heavy armour targets.
-const float Combat::DAMAGE_MODIFIER_ACID[4] =       { 1.8f, 1.3f, 1.2f, 1.0f };
-const float Combat::DAMAGE_MODIFIER_BALLISTIC[4] =  { 1.3f, 1.3f, 1.2f, 1.0f };
-const float Combat::DAMAGE_MODIFIER_CRUSHING[4] =   { 1.0f, 1.0f, 1.0f, 1.2f };
-const float Combat::DAMAGE_MODIFIER_EDGED[4] =      { 1.5f, 1.3f, 1.2f, 1.0f };
-const float Combat::DAMAGE_MODIFIER_EXPLOSIVE[4] =  { 1.1f, 1.1f, 1.1f, 1.5f };
-const float Combat::DAMAGE_MODIFIER_ENERGY[4] =     { 1.1f, 1.0f, 1.0f, 1.2f };
-const float Combat::DAMAGE_MODIFIER_KINETIC[4] =    { 1.0f, 1.0f, 1.0f, 1.2f };
-const float Combat::DAMAGE_MODIFIER_PIERCING[4] =   { 1.2f, 1.2f, 1.2f, 1.0f };
-const float Combat::DAMAGE_MODIFIER_PLASMA[4] =     { 1.5f, 1.2f, 1.0f, 1.2f };
-const float Combat::DAMAGE_MODIFIER_POISON[4] =     { 1.8f, 1.2f, 1.0f, 0.8f };
-const float Combat::DAMAGE_MODIFIER_RENDING[4] =    { 1.5f, 1.3f, 1.1f, 1.1f };
-
-const std::map<DamageType, const float*>    Combat::DAMAGE_TYPE_MAP = { { DamageType::ACID, DAMAGE_MODIFIER_ACID }, { DamageType::BALLISTIC, DAMAGE_MODIFIER_BALLISTIC }, { DamageType::CRUSHING, DAMAGE_MODIFIER_CRUSHING }, { DamageType::EDGED, DAMAGE_MODIFIER_EDGED }, { DamageType::ENERGY, DAMAGE_MODIFIER_ENERGY }, { DamageType::KINETIC, DAMAGE_MODIFIER_KINETIC }, { DamageType::PIERCING, DAMAGE_MODIFIER_PIERCING }, { DamageType::PLASMA, DAMAGE_MODIFIER_PLASMA }, { DamageType::POISON, DAMAGE_MODIFIER_POISON },  { DamageType::RENDING, DAMAGE_MODIFIER_RENDING }, { DamageType::EXPLOSIVE, DAMAGE_MODIFIER_EXPLOSIVE } };
+constexpr float kDamageModifierAcid[4] =                    { 1.8f, 1.3f, 1.2f, 1.0f };
+constexpr float kDamageModifierBallistic[4] =               { 1.3f, 1.3f, 1.2f, 1.0f };
+constexpr float kDamageModifierCrushing[4] =                { 1.0f, 1.0f, 1.0f, 1.2f };
+constexpr float kDamageModifierEdged[4] =                   { 1.54, 1.3f, 1.2f, 1.0f };
+constexpr float kDamageModifierExplosive[4] =               { 1.1f, 1.1f, 1.1f, 1.5f };
+constexpr float kDamageModifierEnergy[4] =                  { 1.1f, 1.0f, 1.0f, 1.2f };
+constexpr float kDamageModifierKinetic[4] =                 { 1.0f, 1.0f, 1.0f, 1.2f };
+constexpr float kDamageModifierPiercing[4] =                { 1.2f, 1.2f, 1.2f, 1.0f };
+constexpr float kDamageModifierPlasma[4] =                  { 1.5f, 1.2f, 1.0f, 1.2f };
+constexpr float kDamageModifierPoison[4] =                  { 1.8f, 1.2f, 1.0f, 0.8f };
+constexpr float kDamageModifierRending[4] =                 { 1.5f, 1.3f, 1.1f, 1.1f };
+const std::map<DamageType, const float*> kDamageTypeMap = { { DamageType::ACID, kDamageModifierAcid }, { DamageType::BALLISTIC, kDamageModifierBallistic }, { DamageType::CRUSHING, kDamageModifierCrushing }, { DamageType::EDGED, kDamageModifierEdged }, { DamageType::EXPLOSIVE, kDamageModifierExplosive }, { DamageType::ENERGY, kDamageModifierEnergy }, { DamageType::KINETIC, kDamageModifierKinetic }, { DamageType::PIERCING, kDamageModifierPiercing }, { DamageType::PLASMA, kDamageModifierPlasma }, { DamageType::POISON, kDamageModifierPoison }, { DamageType::RENDING, kDamageModifierRending } };
 
 
 // Applies damage modifiers based on weapon type.
-float Combat::apply_damage_modifiers(float damage, std::shared_ptr<Item> weapon, std::shared_ptr<Mobile> defender, EquipSlot slot)
+float apply_damage_modifiers(float damage, std::shared_ptr<Item> weapon, std::shared_ptr<Mobile> defender, EquipSlot slot)
 {
     if (!damage || !weapon || !defender) return damage;
     const DamageType dt = weapon->damage_type();
-    const auto it = DAMAGE_TYPE_MAP.find(dt);
-    if (it == DAMAGE_TYPE_MAP.end()) throw std::runtime_error("Unknown damage type: " + std::to_string(static_cast<int>(dt)));
+    const auto it = kDamageTypeMap.find(dt);
+    if (it == kDamageTypeMap.end()) throw std::runtime_error("Unknown damage type: " + std::to_string(static_cast<int>(dt)));
     const float *damage_modifier = it->second;
 
     int armour_type = 0;    // 0 = unarmoured, 1 = light armour, 2 = medium armour, 3 = heavy armour.
@@ -110,7 +116,7 @@ float Combat::apply_damage_modifiers(float damage, std::shared_ptr<Item> weapon,
 }
 
 // A basic attack, no special moves being used.
-bool Combat::attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mobile> defender)
+bool attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mobile> defender)
 {
     if (attacker->is_dead() || defender->is_dead()) return false;
 
@@ -176,7 +182,7 @@ bool Combat::attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mobile> de
 }
 
 // Changes to a specified combat stance.
-void Combat::change_stance(std::shared_ptr<Mobile> mob, CombatStance stance)
+void change_stance(std::shared_ptr<Mobile> mob, CombatStance stance)
 {
     if (stance == mob->stance() && !mob->is_player()) return;   // Do nothing if the stance doesn't change, for NPCs.
     mob->set_stance(stance);
@@ -193,11 +199,11 @@ void Combat::change_stance(std::shared_ptr<Mobile> mob, CombatStance stance)
     if (mob->has_buff(Buff::Type::CAREFUL_AIM) && stance == CombatStance::AGGRESSIVE) mob->clear_buff(Buff::Type::CAREFUL_AIM);
     if (mob->has_buff(Buff::Type::EYE_FOR_AN_EYE) && stance != CombatStance::AGGRESSIVE) mob->clear_buff(Buff::Type::EYE_FOR_AN_EYE);
     if (mob->has_buff(Buff::Type::GRIT) && stance != CombatStance::DEFENSIVE) mob->clear_buff(Buff::Type::GRIT);
-    mob->pass_time(STANCE_CHANGE_TIME, false);
+    mob->pass_time(kStanceChangeTime, false);
 }
 
 // Generates a standard-format damage number string.
-std::string Combat::damage_number_str(uint32_t damage, uint32_t blocked, bool crit, bool bleed, bool poison)
+std::string damage_number_str(uint32_t damage, uint32_t blocked, bool crit, bool bleed, bool poison)
 {
     std::string dmg_str;
     if (crit) dmg_str = "{w}[{m}*{M}"; else dmg_str = "{w}[{R}";
@@ -212,7 +218,7 @@ std::string Combat::damage_number_str(uint32_t damage, uint32_t blocked, bool cr
 }
 
 // Returns an appropriate damage string.
-std::string Combat::damage_str(uint32_t damage, std::shared_ptr<Mobile> def, bool heat)
+std::string damage_str(uint32_t damage, std::shared_ptr<Mobile> def, bool heat)
 {
     const float percentage = (static_cast<float>(damage) / static_cast<float>(def->hp(true))) * 100;
     if (percentage >= 200000) return StrX::rainbow_text("SUPERNOVAS", "RYW");
@@ -280,7 +286,7 @@ std::string Combat::damage_str(uint32_t damage, std::shared_ptr<Mobile> def, boo
 }
 
 // Determines type of weapons wielded by a Mobile.
-void Combat::determine_wield_type(std::shared_ptr<Mobile> mob, WieldType* wield_type, bool* can_main_attack, bool* can_off_attack)
+void determine_wield_type(std::shared_ptr<Mobile> mob, WieldType* wield_type, bool* can_main_attack, bool* can_off_attack)
 {
     std::shared_ptr<Item> main_hand = mob->equ()->get(EquipSlot::HAND_MAIN);
     std::shared_ptr<Item> off_hand = mob->equ()->get(EquipSlot::HAND_OFF);
@@ -313,12 +319,10 @@ void Combat::determine_wield_type(std::shared_ptr<Mobile> mob, WieldType* wield_
         else *wield_type = WieldType::SINGLE_WIELD;
     }
 
-    // We've already checked for sword-and-board above, so the only option left if one hand is holding a weapon is that the other hand is holding something
-    // non-combat related. Yay for the process of elimination!
+    // We've already checked for sword-and-board above, so the only option left if one hand is holding a weapon is that the other hand is holding something non-combat related. Yay for the process of elimination!
     else if (*can_main_attack || *can_off_attack) *wield_type = WieldType::ONE_HAND_PLUS_EXTRA;
 
-    // Now we're getting into the silly options, but gotta cover every base. Is the Mobile wielding a shield in one hand, and nothing in the other?
-    // As ridiculous as that is for a loadout, punching while holding a shield should be allowed.
+    // Now we're getting into the silly options, but gotta cover every base. Is the Mobile wielding a shield in one hand, and nothing in the other? As ridiculous as that is for a loadout, punching while holding a shield should be allowed.
     else if (off_shield && !main_hand) *wield_type = WieldType::UNARMED_PLUS_SHIELD;
 
     // If either hand is now free, by process of elimination, it must be an unarmed attack with a non-combat item in the other hand.
@@ -337,7 +341,7 @@ void Combat::determine_wield_type(std::shared_ptr<Mobile> mob, WieldType* wield_
 }
 
 // Performs an attack with a single weapon.
-void Combat::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mobile> defender, EquipSlot weapon, WieldType wield_type_attacker, WieldType wield_type_defender)
+void perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mobile> defender, EquipSlot weapon, WieldType wield_type_attacker, WieldType wield_type_defender)
 {
     const auto world = core()->world();
     const auto player = world->player();
@@ -412,12 +416,12 @@ void Combat::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mo
     float hit_multiplier = 1.0f;
     switch (wield_type_attacker)
     {
-        case WieldType::DUAL_WIELD: hit_multiplier = HIT_CHANCE_MULTIPLIER_DUAL_WIELD; break;
-        case WieldType::SINGLE_WIELD: hit_multiplier = HIT_CHANCE_MULTIPLIER_SINGLE_WIELD; break;
-        case WieldType::ONE_HAND_PLUS_SHIELD: case WieldType::UNARMED_PLUS_SHIELD: case WieldType::ONE_HAND_PLUS_EXTRA: hit_multiplier = HIT_CHANCE_MULTIPLIER_SWORD_AND_BOARD; break;
+        case WieldType::DUAL_WIELD: hit_multiplier = kHitChanceMultiplierDualWield; break;
+        case WieldType::SINGLE_WIELD: hit_multiplier = kHitChanceMultiplierSingleWield; break;
+        case WieldType::ONE_HAND_PLUS_SHIELD: case WieldType::UNARMED_PLUS_SHIELD: case WieldType::ONE_HAND_PLUS_EXTRA: hit_multiplier = kHitChanceMultiplierSwordAndBoard; break;
         default: break;
     }
-    float to_hit = BASE_HIT_CHANCE_MELEE;
+    float to_hit = kBaseHitChance;
     if (attacker->has_buff(Buff::Type::CAREFUL_AIM)) to_hit += attacker->buff_power(Buff::Type::CAREFUL_AIM);
     if (attacker->tag(MobileTag::RapidStrike)) to_hit -= kRapidStrikeAccuracyPenalty;
     if (attacker->tag(MobileTag::SnapShot)) to_hit -= kSnapShotAccuracyPenalty;
@@ -426,8 +430,8 @@ void Combat::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mo
         to_hit -= defender->buff_power(Buff::Type::QUICK_ROLL);
         defender->set_tag(MobileTag::Success_QuickRoll);
     }
-    if (attacker_is_player) to_hit += (WEAPON_SKILL_TO_HIT_PER_LEVEL * player->skill_level(weapon_skill));
-    else if (defender_is_player) to_hit -= (EVASION_SKILL_BONUS_PER_LEVEL * player->skill_level("EVASION"));
+    if (attacker_is_player) to_hit += (kWeaponSkillToHitPerLevel * player->skill_level(weapon_skill));
+    else if (defender_is_player) to_hit -= (kEvasionSkillBonusPerLevel * player->skill_level("EVASION"));
     to_hit *= hit_multiplier;
 
     // Check if the defender can attempt to block or parry.
@@ -436,13 +440,13 @@ void Combat::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mo
     if ((def_weapon_main && def_weapon_main->subtype() == ItemSub::RANGED) || (def_weapon_off && def_weapon_off->subtype() == ItemSub::RANGED) || (weapon_ptr->subtype() == ItemSub::RANGED)) can_parry = false;
 
     // Check for Agile or Clumsy defender.
-    if (defender->tag(MobileTag::Agile)) to_hit *= DEFENDER_TO_HIT_MODIFIER_AGILE;
-    else if (defender->tag(MobileTag::Clumsy)) to_hit *= DEFENDER_TO_HIT_MODIFIER_CLUMSY;
+    if (defender->tag(MobileTag::Agile)) to_hit *= kDefenderToHitMultiplierAgile;
+    else if (defender->tag(MobileTag::Clumsy)) to_hit *= kDefenderToHitMultiplierClumsy;
 
     // Adjust to-hit chance based on stance matchup.
     const int stance_favour = stance_compare(attacker_stance, defender_stance);
-    if (stance_favour > 0) to_hit += STANCE_TO_HIT_MODIFIER_FAVOURABLE;
-    else if (stance_favour < 0) to_hit += STANCE_TO_HIT_MODIFIER_UNFAVOURABLE;
+    if (stance_favour > 0) to_hit += kStanceToHitModifierFavourable;
+    else if (stance_favour < 0) to_hit += kStanceToHitModifierUnfavourable;
 
     // Defenders that cannot dodge always get hit.
     if (defender->tag(MobileTag::CannotDodge)) to_hit = 100;
@@ -462,20 +466,20 @@ void Combat::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mo
         // Now to check if the defender can successfully parry this attack.
         if (can_parry)
         {
-            float parry_chance = BASE_PARRY_CHANCE;
-            if (wield_type_attacker == WieldType::TWO_HAND || wield_type_attacker == WieldType::HAND_AND_A_HALF_2H) parry_chance *= PARRY_PENALTY_TWO_HANDED;
-            if (defender_is_player) parry_chance += (PARRY_SKILL_BONUS_PER_LEVEL * player->skill_level("PARRY"));
+            float parry_chance = kBaseParryChance;
+            if (wield_type_attacker == WieldType::TWO_HAND || wield_type_attacker == WieldType::HAND_AND_A_HALF_2H) parry_chance *= kParryMultiplierTwoHanded;
+            if (defender_is_player) parry_chance += (kParrySkillBonusPerLevel * player->skill_level("PARRY"));
             parry_chance *= defender->parry_mod();
-            if (defender->tag(MobileTag::Agile) || attacker->tag(MobileTag::Clumsy)) parry_chance *= DEFENDER_PARRY_MODIFIER_AGILE;
-            else if (defender->tag(MobileTag::Clumsy) || attacker->tag(MobileTag::Agile)) parry_chance *= DEFENDER_PARRY_MODIFIER_CLUMSY;
+            if (defender->tag(MobileTag::Agile) || attacker->tag(MobileTag::Clumsy)) parry_chance *= kDefenderParryMultiplierAgile;
+            else if (defender->tag(MobileTag::Clumsy) || attacker->tag(MobileTag::Agile)) parry_chance *= kDefenderParryMultiplierClumsy;
             if (rng->frnd(100) <= parry_chance) parried = true;
         }
 
         // If evasion and parry both fail, we can try to block. Parrying is better than blocking (parrying negates damage entirely) so there's no reason to run a block check after a successful parry.
         if (!parried && can_block)
         {
-            float block_chance = BASE_BLOCK_CHANCE_MELEE;
-            if (defender_is_player) block_chance += (BLOCK_SKILL_BONUS_PER_LEVEL * player->skill_level("BLOCK"));
+            float block_chance = kBaseBlockChance;
+            if (defender_is_player) block_chance += (kBlockSkillBonusPerLevel * player->skill_level("BLOCK"));
             if (defender->has_buff(Buff::Type::SHIELD_WALL))
             {
                 block_chance += defender->buff_power(Buff::Type::SHIELD_WALL);
@@ -501,37 +505,37 @@ void Combat::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mo
                 if (defender_is_player) core()->message("{G}You parry the " + attacker_your_string + " " + weapon_name + "!");
                 else core()->message((attacker_is_player ? "{Y}" : "{U}") + attacker_your_string_c + " " + weapon_name + " is parried by " + defender_name + ".");
             }
-            if (defender_is_player) player->gain_skill_xp("PARRY", XP_PER_PARRY);
+            if (defender_is_player) player->gain_skill_xp("PARRY", kXPPerParry);
         }
         else
         {
             if (player_can_see_attacker || player_can_see_defender)
                 core()->message((attacker_is_player ? "{Y}" : (defender_is_player ? "{U}" : "{U}")) + attacker_your_string_c + " " + weapon_name + " misses " + defender_name + ".");
-            if (defender_is_player) player->gain_skill_xp("EVASION", XP_PER_EVADE);
+            if (defender_is_player) player->gain_skill_xp("EVASION", kXPPerEvade);
         }
     }
     else
     {
-        float damage = weapon_ptr->power() * BASE_MELEE_DAMAGE_MULTIPLIER;
+        float damage = weapon_ptr->power() * kBaseMeleeDamageMultiplier;
         if (ammo_ptr) damage *= ammo_ptr->ammo_power();
-        if (attacker_is_player) damage += (damage * (WEAPON_SKILL_DAMAGE_MODIFIER * player->skill_level(weapon_skill)));
+        if (attacker_is_player) damage += (damage * (kWeaponSkillDamageModifier * player->skill_level(weapon_skill)));
         switch (attacker_stance)
         {
-            case CombatStance::AGGRESSIVE: damage *= STANCE_DAMAGE_MULTIPLIER_AGGRESSIVE; break;
-            case CombatStance::DEFENSIVE: damage *= STANCE_DAMAGE_MULTIPLIER_DEFENSIVE; break;
+            case CombatStance::AGGRESSIVE: damage *= kStanceDamageMultiplierAggressive; break;
+            case CombatStance::DEFENSIVE: damage *= kStanceDamageMultiplierDefensive; break;
             case CombatStance::BALANCED: break;
         }
         switch (defender_stance)
         {
-            case CombatStance::AGGRESSIVE: damage *= STANCE_DAMAGE_TAKEN_MULTIPLIER_AGGRESSIVE; break;
-            case CombatStance::DEFENSIVE: damage *= STANCE_DAMAGE_TAKEN_MULTIPLIER_DEFENSIVE; break;
+            case CombatStance::AGGRESSIVE: damage *= kStanceDamageTakenMultiplierAggressive; break;
+            case CombatStance::DEFENSIVE: damage *= kStanceDamageTakenMultiplierDefensive; break;
             case CombatStance::BALANCED: break;
         }
-        if (wield_type_attacker == WieldType::HAND_AND_A_HALF_2H) damage *= WEAPON_DAMAGE_MODIFIER_HAAH_2H;
+        if (wield_type_attacker == WieldType::HAND_AND_A_HALF_2H) damage *= kWeaponDamageMultiplierHaaH2H;
 
         bool critical_hit = false, bleed = false, poison = false;
         float crit_chance = weapon_ptr->crit();
-        if (wield_type_attacker == WieldType::SINGLE_WIELD) crit_chance *= CRIT_CHANCE_MULTIPLIER_SINGLE_WIELD;
+        if (wield_type_attacker == WieldType::SINGLE_WIELD) crit_chance *= kCritChanceMultiplierSingleWield;
         if (snake_eyes || boxcars) crit_chance = 100;
         if (crit_chance >= 100.0f || rng->frnd(100) <= crit_chance)
         {
@@ -544,13 +548,13 @@ void Combat::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mo
         if (poison_chance >= 100.0f || rng->frnd(100) <= poison_chance) poison = true;
         if (bleed_chance >= 100.0f || rng->frnd(100) <= bleed_chance) bleed = true;
 
-        if (attacker->tag(MobileTag::Anemic)) damage *= ATTACKER_DAMAGE_MODIFIER_ANEMIC;
-        else if (attacker->tag(MobileTag::Feeble)) damage *= ATTACKER_DAMAGE_MODIFIER_FEEBLE;
-        else if (attacker->tag(MobileTag::Puny)) damage *= ATTACKER_DAMAGE_MODIFIER_PUNY;
-        else if (attacker->tag(MobileTag::Strong)) damage *= ATTACKER_DAMAGE_MODIFIER_STRONG;
-        else if (attacker->tag(MobileTag::Brawny)) damage *= ATTACKER_DAMAGE_MODIFIER_BRAWNY;
-        else if (attacker->tag(MobileTag::Vigorous)) damage *= ATTACKER_DAMAGE_MODIFIER_VIGOROUS;
-        else if (attacker->tag(MobileTag::Mighty)) damage *= ATTACKER_DAMAGE_MODIFIER_MIGHTY;
+        if (attacker->tag(MobileTag::Anemic)) damage *= kAttackerDamageMultiplierAnemic;
+        else if (attacker->tag(MobileTag::Feeble)) damage *= kAttackerDamageMultiplierFeeble;
+        else if (attacker->tag(MobileTag::Puny)) damage *= kAttackerDamageMultiplierPuny;
+        else if (attacker->tag(MobileTag::Strong)) damage *= kAttackerDamageMultiplierStrong;
+        else if (attacker->tag(MobileTag::Brawny)) damage *= kAttackerDamageMultiplierBrawny;
+        else if (attacker->tag(MobileTag::Vigorous)) damage *= kAttackerDamageMultiplierVigorous;
+        else if (attacker->tag(MobileTag::Mighty)) damage *= kAttackerDamageMultiplierMighty;
 
         // Bonus damage for Eye for an Eye.
         if (eye_for_an_eye)
@@ -601,9 +605,9 @@ void Combat::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mo
             if (shield_item) damage_blocked += damage * shield_item->armour();
         }
 
-        if (damage > 1) damage = MathX::mixup(std::round(damage), BASE_DAMAGE_VARIANCE);
+        if (damage > 1) damage = MathX::mixup(std::round(damage), kBaseDamageVariance);
         else if (damage > 0) damage = 1;
-        if (damage_blocked > 1) damage_blocked = MathX::mixup(std::round(damage_blocked), BASE_ABSORPTION_VARIANCE);
+        if (damage_blocked > 1) damage_blocked = MathX::mixup(std::round(damage_blocked), kBaseAbsorptonVariance);
         else if (damage_blocked > 0) damage_blocked = 1;
         if (damage_blocked >= damage) damage_blocked = damage;
         damage -= damage_blocked;
@@ -657,15 +661,15 @@ void Combat::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mo
                     player->set_death_reason("slain by " + attacker->name(Mobile::NAME_FLAG_A | Mobile::NAME_FLAG_NO_COLOUR));
                 }
                 else death_str = " {U}" + defender_name_c + (defender->tag(MobileTag::Unliving) ? " is destroyed!" : " is slain!");
-                if (!defender->tag(MobileTag::ImmunityBleed)) core()->world()->get_room(defender->location())->add_scar(ScarType::BLOOD, SCAR_BLEED_INTENSITY_FROM_DEATH);
+                if (!defender->tag(MobileTag::ImmunityBleed)) core()->world()->get_room(defender->location())->add_scar(ScarType::BLOOD, kScarBleedIntensityFromDeath);
             }
             core()->message(block_str + damage_colour + attacker_your_string_c + " " + weapon_name + " " + damage_word + " " + damage_colour + (blocked ? defender_name : defender_name_s + " " + def_location_hit_str) + "!" + threshold_string + absorb_str + " " + damage_number_str(damage, damage_blocked, critical_hit, bleed, poison) + death_str);
         }
         if (bleed) weapon_bleed_effect(defender, damage);
         if (poison) weapon_poison_effect(defender, damage);
         defender->reduce_hp(damage, false);
-        if (attacker_is_player) player->gain_skill_xp(weapon_skill, (critical_hit ? XP_PER_CRITICAL_HIT : XP_PER_SUCCESSFUL_HIT));
-        else if (defender_is_player && blocked) player->gain_skill_xp("BLOCK", XP_PER_BLOCK);
+        if (attacker_is_player) player->gain_skill_xp(weapon_skill, (critical_hit ? kXPPerCriticalHit : kXPPerSuccessfulHit));
+        else if (defender_is_player && blocked) player->gain_skill_xp("BLOCK", kXPPerBlock);
     }
 
     // Remove ammo if we're using a ranged weapon.
@@ -681,7 +685,7 @@ void Combat::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mo
 }
 
 // Picks a random hit location, returns an EquipSlot and the name of the anatomy part that was hit.
-void Combat::pick_hit_location(std::shared_ptr<Mobile> mob, EquipSlot* slot, std::string* slot_name)
+void pick_hit_location(std::shared_ptr<Mobile> mob, EquipSlot* slot, std::string* slot_name)
 {
     const auto body_parts = mob->get_anatomy();
     const int bp_roll = core()->rng()->rnd(100);
@@ -697,7 +701,7 @@ void Combat::pick_hit_location(std::shared_ptr<Mobile> mob, EquipSlot* slot, std
 }
 
 // Compares two combat stances; returns -1 for an unfavourable match-up, 0 for neutral, 1 for favourable.
-int Combat::stance_compare(CombatStance atk, CombatStance def)
+int stance_compare(CombatStance atk, CombatStance def)
 {
     switch (atk)
     {
@@ -718,7 +722,7 @@ int Combat::stance_compare(CombatStance atk, CombatStance def)
 }
 
 // Returns a threshold string, if a damage threshold has been passed.
-std::string Combat::threshold_str(std::shared_ptr<Mobile> defender, uint32_t damage, const std::string& good_colour, const std::string& bad_colour)
+std::string threshold_str(std::shared_ptr<Mobile> defender, uint32_t damage, const std::string& good_colour, const std::string& bad_colour)
 {
     const bool is_player = defender->is_player();
     const bool alive = !defender->tag(MobileTag::Unliving);
@@ -743,24 +747,25 @@ std::string Combat::threshold_str(std::shared_ptr<Mobile> defender, uint32_t dam
 }
 
 // Applies a weapon bleed debuff and applies room scars.
-void Combat::weapon_bleed_effect(std::shared_ptr<Mobile> defender, uint32_t damage)
+void weapon_bleed_effect(std::shared_ptr<Mobile> defender, uint32_t damage)
 {
     if (defender->tag(MobileTag::ImmunityBleed)) return;
-    const int bleed_time = core()->rng()->rnd(BLEED_TIME_RANGE);
-    int bleed_severity = damage / (BLEED_SEVERITY_BASE + core()->rng()->rnd(BLEED_SEVERITY_RANGE));
+    const int bleed_time = core()->rng()->rnd(kBleedTimeRange);
+    int bleed_severity = damage / (kBleedSeverityBase + core()->rng()->rnd(kBleedSeverityRange));
     if (!bleed_severity) bleed_severity = 1;
     defender->set_buff(Buff::Type::BLEED, bleed_time, bleed_severity, false);
-    core()->world()->get_room(defender->location())->add_scar(ScarType::BLOOD, SCAR_BLEED_INTENSITY_FROM_BLEED_ATTACK);
+    core()->world()->get_room(defender->location())->add_scar(ScarType::BLOOD, kScarBleedIntensityFromBleedAttack);
 }
 
 // Applies a weapon poison debuff.
-void Combat::weapon_poison_effect(std::shared_ptr<Mobile> defender, uint32_t damage)
+void weapon_poison_effect(std::shared_ptr<Mobile> defender, uint32_t damage)
 {
     if (defender->tag(MobileTag::ImmunityPoison)) return;
-    const int poison_time = core()->rng()->rnd(POISON_TIME_RANGE);
-    int poison_severity = damage / (POISON_SEVERITY_BASE + core()->rng()->rnd(POISON_SEVERITY_RANGE));
+    const int poison_time = core()->rng()->rnd(kPoisonTimeRange);
+    int poison_severity = damage / (kPoisonSeverityBase + core()->rng()->rnd(kPoisonSeverityRange));
     if (!poison_severity) poison_severity = 1;
     defender->set_buff(Buff::Type::POISON, poison_time, poison_severity, true);
 }
 
+}   // namespace combat
 }   // namespace greave

@@ -297,7 +297,7 @@ void eye_for_an_eye(bool confirm)
         return;
     }
 
-    core()->message("{M}Your vision goes red and you prepare for a brutal retaliatory strike! " + Combat::damage_number_str(kEyeForAnEyeHPCost, 0, false, false, false));
+    core()->message("{M}Your vision goes red and you prepare for a brutal retaliatory strike! " + combat::damage_number_str(kEyeForAnEyeHPCost, 0, false, false, false));
     player->set_buff(Buff::Type::CD_EYE_FOR_AN_EYE, kEyeForAnEyeCooldown);
     player->set_buff(Buff::Type::EYE_FOR_AN_EYE, kEyeForAnEyeLength, kEyeForAnEyeMulti, false, false);
     player->reduce_hp(kEyeForAnEyeHPCost);
@@ -364,11 +364,11 @@ void headlong_strike(size_t target, bool confirm)
         return;
     }
 
-    core()->message("{M}Disregarding your own safety, you lunge into an aggressive attack! " + Combat::damage_number_str(kHeadlongStrikeHPCost, 0, false, false, false));
+    core()->message("{M}Disregarding your own safety, you lunge into an aggressive attack! " + combat::damage_number_str(kHeadlongStrikeHPCost, 0, false, false, false));
     if (player->is_dead()) return;
     player->set_buff(Buff::Type::CD_HEADLONG_STRIKE, kHeadlongStrikeCooldown);
     player->set_tag(MobileTag::HeadlongStrike);
-    Combat::attack(player, mob);
+    combat::attack(player, mob);
     player->clear_tag(MobileTag::HeadlongStrike);
     player->reduce_hp(kHeadlongStrikeHPCost);
 }
@@ -422,7 +422,7 @@ void lady_luck(size_t target, bool confirm)
         core()->message(dice_string('G', 'G') + " " + StrX::rainbow_text("BOXCARS!", "RYGCUMRYG") + " {U}An opening presents itself...");
         player->set_tag(MobileTag::Boxcars);
         player->set_tag(MobileTag::FreeAttack);
-        Combat::attack(player, mob);
+        combat::attack(player, mob);
         player->clear_tag(MobileTag::Boxcars);
         player->clear_tag(MobileTag::FreeAttack);   // This should be auto-cleared in Combat::attack(), but just in case...
         return;
@@ -453,7 +453,7 @@ void lady_luck(size_t target, bool confirm)
             player->set_tag(MobileTag::RapidStrike);
         }
         player->set_tag(MobileTag::FreeAttack);
-        Combat::attack(player, mob);
+        combat::attack(player, mob);
         player->clear_tag(MobileTag::SnapShot);
         player->clear_tag(MobileTag::RapidStrike);
         player->clear_tag(MobileTag::FreeAttack);   // This should be auto-cleared in Combat::attack(), but just in case...
@@ -526,7 +526,7 @@ void rapid_strike(size_t target)
     player->reduce_sp(kRapidStrikeSPCost);
     player->set_buff(Buff::Type::CD_RAPID_STRIKE, kRapidStrikeCooldown);
     player->set_tag(MobileTag::RapidStrike);
-    Combat::attack(player, mob);
+    combat::attack(player, mob);
     player->clear_tag(MobileTag::RapidStrike);
 }
 
@@ -593,7 +593,7 @@ void snap_shot(size_t target)
     player->reduce_sp(kSnapShotSPCost);
     player->set_buff(Buff::Type::CD_SNAP_SHOT, kSnapShotCooldown);
     player->set_tag(MobileTag::SnapShot);
-    Combat::attack(player, mob);
+    combat::attack(player, mob);
     player->clear_tag(MobileTag::SnapShot);
 }
 

@@ -85,7 +85,7 @@ void tick_mob(std::shared_ptr<Mobile> mob, uint32_t)
         // The rest of the rules here apply to non-cowardly Mobiles.
 
         // Check if this Mobile wants to change its combat stance.
-        if (mob->can_perform_action(Combat::STANCE_CHANGE_TIME))
+        if (mob->can_perform_action(combat::kStanceChangeTime))
         {
             CombatStance desired_stance = mob->stance();
 
@@ -113,13 +113,13 @@ void tick_mob(std::shared_ptr<Mobile> mob, uint32_t)
 
             if (desired_stance != mob->stance())
             {
-                Combat::change_stance(mob, desired_stance);
+                combat::change_stance(mob, desired_stance);
                 return;
             }
         }
 
         // For non-cowardly NPCs, we'll wait until there's sufficient action time available to perform an attack. If not, just wait until there is. This will prevent angry NPCs from just doing something else entirely, instead of winding up to attack.
-        if (mob->can_perform_action(mob->attack_speed())) Combat::attack(mob, attack_target);
+        if (mob->can_perform_action(mob->attack_speed())) combat::attack(mob, attack_target);
         return;
     }
 
@@ -128,7 +128,7 @@ void tick_mob(std::shared_ptr<Mobile> mob, uint32_t)
         // Unlike the code above -- which handles NPCs that have a specific hatred for a specific mobile (or the player), this is more of a general 'picking a fight' situation. If action time isn't available, we'll allow the option to do something else in the meantime, because this particular mobile isn't hellbent on unleashing limitless unlimited unprecedented eternal terrible violence on anyone *in particular*.
         if (mob->can_perform_action(mob->attack_speed()))
         {
-            Combat::attack(mob, core()->world()->player());
+            combat::attack(mob, core()->world()->player());
             return;
         }
     }
