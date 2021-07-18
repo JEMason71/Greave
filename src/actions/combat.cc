@@ -599,7 +599,7 @@ void Combat::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mo
                     player->set_death_reason("slain by " + attacker->name(Mobile::NAME_FLAG_A | Mobile::NAME_FLAG_NO_COLOUR));
                 }
                 else death_str = " {U}" + defender_name_c + (defender->tag(MobileTag::Unliving) ? " is destroyed!" : " is slain!");
-                if (!defender->tag(MobileTag::ImmunityBleed)) core()->world()->get_room(defender->location())->add_scar(ScarType::BLOOD, SCAR_BLEED_INTENSITY_FROM_DEATH);
+                if (!defender->tag(MobileTag::ImmunityBleed)) core()->world()->get_room(defender->location())->add_scar(Room::ScarType::BLOOD, SCAR_BLEED_INTENSITY_FROM_DEATH);
             }
             core()->message(block_str + damage_colour + attacker_your_string_c + " " + weapon_name + " " + damage_word + " " + damage_colour + (blocked ? defender_name : defender_name_s + " " + def_location_hit_str) + "!" + threshold_string + absorb_str + " " + damage_number_str(damage, damage_blocked, critical_hit, bleed, poison) + death_str);
         }
@@ -692,7 +692,7 @@ void Combat::weapon_bleed_effect(std::shared_ptr<Mobile> defender, uint32_t dama
     int bleed_severity = damage / (BLEED_SEVERITY_BASE + core()->rng()->rnd(BLEED_SEVERITY_RANGE));
     if (!bleed_severity) bleed_severity = 1;
     defender->set_buff(Buff::Type::BLEED, bleed_time, bleed_severity, false);
-    core()->world()->get_room(defender->location())->add_scar(ScarType::BLOOD, SCAR_BLEED_INTENSITY_FROM_BLEED_ATTACK);
+    core()->world()->get_room(defender->location())->add_scar(Room::ScarType::BLOOD, SCAR_BLEED_INTENSITY_FROM_BLEED_ATTACK);
 }
 
 // Applies a weapon poison debuff.

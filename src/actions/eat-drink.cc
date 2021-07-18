@@ -134,7 +134,7 @@ void ActionEatDrink::empty(size_t inv_pos, bool confirm)
     }
     if (player->is_dead()) return;
 
-    core()->world()->get_room(player->location())->add_scar(ScarType::WATER, item->charge());
+    core()->world()->get_room(player->location())->add_scar(Room::ScarType::WATER, item->charge());
     core()->message("{U}You empty out all the " + item->liquid_type() + " from " + item->name(Item::NAME_FLAG_NO_COUNT | Item::NAME_FLAG_NO_COLOUR | Item::NAME_FLAG_THE) + ".");
 
     if (item->tag(ItemTag::DiscardWhenEmpty)) player->inv()->erase(inv_pos);
@@ -194,5 +194,5 @@ void ActionEatDrink::vomit(bool confirm)
     if (player->thirst() - water_loss < VOMIT_MINIMUM_WATER_REMAINING) water_loss = player->thirst() - VOMIT_MINIMUM_WATER_REMAINING;
     if (food_loss > 0) player->add_food(-food_loss);
     if (water_loss > 0) player->add_water(-water_loss);
-    core()->world()->get_room(player->location())->add_scar(ScarType::VOMIT, VOMIT_SCAR_INTENSITY);
+    core()->world()->get_room(player->location())->add_scar(Room::ScarType::VOMIT, VOMIT_SCAR_INTENSITY);
 }

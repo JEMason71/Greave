@@ -167,7 +167,7 @@ bool ActionTravel::travel(std::shared_ptr<Mobile> mob, Direction dir, bool confi
             }
             if (!mob->tag(MobileTag::ImmunityBleed))
             {
-                world->get_room(mob->location())->add_scar(ScarType::BLOOD, MathX::mixup(blood_intensity, FALL_BLEED_INTENSITY_RANGE));
+                world->get_room(mob->location())->add_scar(Room::ScarType::BLOOD, MathX::mixup(blood_intensity, FALL_BLEED_INTENSITY_RANGE));
                 mob->set_buff(Buff::Type::BLEED, blood_intensity, hp_damage / core()->rng()->rnd(FALL_BLEED_DIVISOR_MIN, FALL_BLEED_DIVISOR_MAX));
             }
             if (mob->hp() <= 0)

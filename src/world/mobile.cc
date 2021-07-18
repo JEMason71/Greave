@@ -582,7 +582,7 @@ bool Mobile::tick_bleed(uint32_t power, uint16_t time)
     const auto room = core()->world()->get_room(location_);
     const bool fatal = (static_cast<int>(power) >= hp_[0]);
 
-    room->add_scar(ScarType::BLOOD, SCAR_BLEED_INTENSITY_FROM_BLEED_TICK);
+    room->add_scar(Room::ScarType::BLOOD, SCAR_BLEED_INTENSITY_FROM_BLEED_TICK);
     if (is_player())
     {
         core()->message("{r}You are {R}bleeding {r}rather badly. {w}[{R}-" + std::to_string(power) + "{w}]");

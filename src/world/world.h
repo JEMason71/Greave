@@ -60,21 +60,21 @@ private:
         float       xp_multi;   // The multiplier applied to the XP gained when using this skill.
     };
 
-    static constexpr int                            ROOM_SCAN_DISTANCE =    10; // The distance to scan for active rooms.
-    static const std::map<std::string, DamageType>  DAMAGE_TYPE_MAP;        // Lookup table for converting DamageType text names into enums.
-    static const std::map<std::string, EquipSlot>   EQUIP_SLOT_MAP;         // Lookup table for converting EquipSlot text names into enums.
-    static const std::map<std::string, ItemSub>     ITEM_SUBTYPE_MAP;       // Lookup table for converting ItemSub text names into enums.
-    static const std::map<std::string, ItemTag>     ITEM_TAG_MAP;           // Lookup table for converting ItemTag text names into enums.
-    static const std::map<std::string, ItemType>    ITEM_TYPE_MAP;          // Lookup table for converting ItemType text names into enums.
-    static const std::map<std::string, uint8_t>     LIGHT_LEVEL_MAP;        // Lookup table for converting textual light levels (e.g. "bright") to integer values.
-    static const std::map<std::string, LinkTag>     LINK_TAG_MAP;           // Lookup table for converting LinkTag text names into enums.
-    static const std::map<std::string, MobileTag>   MOBILE_TAG_MAP;         // Lookup table for converting MobileTag text names into enums.
-    static const std::map<std::string, RoomTag>     ROOM_TAG_MAP;           // Lookup table for converting RoomTag text names into enums.
-    static const std::map<std::string, Security>    SECURITY_MAP;           // Lookup table for converting textual room security (e.g. "anarchy") to enum values.
-    static const char                               SQL_WORLD[];            // The SQL construction table for the world data.
-    static const std::set<std::string>              VALID_YAML_KEYS_AREAS;  // A list of all valid keys in area YAML files.
-    static const std::set<std::string>              VALID_YAML_KEYS_ITEMS;  // A list of all valid keys in item YAML files.
-    static const std::set<std::string>              VALID_YAML_KEYS_MOBS;   // A list of all valid keys in mobile YAML files.
+    static constexpr int                                ROOM_SCAN_DISTANCE =    10; // The distance to scan for active rooms.
+    static const std::map<std::string, DamageType>      DAMAGE_TYPE_MAP;        // Lookup table for converting DamageType text names into enums.
+    static const std::map<std::string, EquipSlot>       EQUIP_SLOT_MAP;         // Lookup table for converting EquipSlot text names into enums.
+    static const std::map<std::string, ItemSub>         ITEM_SUBTYPE_MAP;       // Lookup table for converting ItemSub text names into enums.
+    static const std::map<std::string, ItemTag>         ITEM_TAG_MAP;           // Lookup table for converting ItemTag text names into enums.
+    static const std::map<std::string, ItemType>        ITEM_TYPE_MAP;          // Lookup table for converting ItemType text names into enums.
+    static const std::map<std::string, uint8_t>         LIGHT_LEVEL_MAP;        // Lookup table for converting textual light levels (e.g. "bright") to integer values.
+    static const std::map<std::string, LinkTag>         LINK_TAG_MAP;           // Lookup table for converting LinkTag text names into enums.
+    static const std::map<std::string, MobileTag>       MOBILE_TAG_MAP;         // Lookup table for converting MobileTag text names into enums.
+    static const std::map<std::string, RoomTag>         ROOM_TAG_MAP;           // Lookup table for converting RoomTag text names into enums.
+    static const std::map<std::string, Room::Security>  SECURITY_MAP;           // Lookup table for converting textual room security (e.g. "anarchy") to enum values.
+    static const char                                   SQL_WORLD[];            // The SQL construction table for the world data.
+    static const std::set<std::string>                  VALID_YAML_KEYS_AREAS;  // A list of all valid keys in area YAML files.
+    static const std::set<std::string>                  VALID_YAML_KEYS_ITEMS;  // A list of all valid keys in item YAML files.
+    static const std::set<std::string>                  VALID_YAML_KEYS_MOBS;   // A list of all valid keys in mobile YAML files.
 
     std::set<uint32_t>                              active_rooms_;      // Rooms relatively close to the player, where AI/respawning/etc. will be active.
     std::map<std::string, std::vector<std::shared_ptr<BodyPart>>>   anatomy_pool_;  // The anatomy pool, containing body part data for Mobiles.

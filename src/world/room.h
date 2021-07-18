@@ -18,10 +18,6 @@
 
 enum class Direction : uint8_t { NORTH, SOUTH, EAST, WEST, NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHWEST, UP, DOWN, NONE };
 
-enum class ScarType : uint8_t { BLOOD, BURN, DEBRIS, DIRT, VOMIT, CAMPFIRE, WATER };
-
-enum class Security : uint8_t { ANARCHY, LOW, HIGH, SANCTUARY, INACCESSIBLE };
-
 enum class LinkTag : uint16_t {
     // ****************************************************************************************
     // Tags below 10,000 are considered *dynamic tags*. These tags WILL be saved to save files.
@@ -139,6 +135,10 @@ enum class RoomTag : uint16_t {
 class Room
 {
 public:
+    enum class ScarType : uint8_t { BLOOD, BURN, DEBRIS, DIRT, VOMIT, CAMPFIRE, WATER };
+
+    enum class Security : uint8_t { ANARCHY, LOW, HIGH, SANCTUARY, INACCESSIBLE };
+
     static constexpr uint32_t   BLOCKED =           538012167;  // Hashed value for BLOCKED, which is used to mark exits as impassible.
     static constexpr uint32_t   FALSE_ROOM =        3399618268; // Hashed value for FALSE_ROOM, which is used to make 'fake' impassible room exits.
     static constexpr uint8_t    LIGHT_VISIBLE =     3;          // Any light level below this is considered too dark to see.
