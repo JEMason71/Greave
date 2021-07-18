@@ -82,7 +82,7 @@ struct Buff
     void    save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id); // Saves this Buff to a save file.
 
     uint32_t    power = 0;              // The power level of this buff/debuff.
-    uint16_t    time = USHRT_MAX;       // The time remaining on this buff/debuff, or USHRT_MAX for effects that expire on special circumstances.
+    uint16_t    time = UINT16_MAX;      // The time remaining on this buff/debuff, or UINT16_MAX for effects that expire on special circumstances.
     Type        type = Type::NONE;      // The type of buff/debuff.
 };
 
@@ -144,7 +144,7 @@ public:
     virtual uint32_t    save(std::shared_ptr<SQLite::Database> save_db);    // Saves this Mobile.
                         // Sets a specified buff/debuff on the Actor, or extends an existing buff/debuff.
     uint32_t            score() const;                              // Checks this Mobile's score.
-    void                set_buff(Buff::Type type, uint16_t time = USHRT_MAX, uint32_t power = 0, bool additive_power = false, bool additive_time = true);
+    void                set_buff(Buff::Type type, uint16_t time = UINT16_MAX, uint32_t power = 0, bool additive_power = false, bool additive_time = true);  // Sets a specified buff/debuff on the Actor, or extends an existing buff/debuff.
     void                set_gender(Gender gender);                  // Sets the gender of this Mobile.
     void                set_hp(int hp, int hp_max = 0);             // Sets the current (and, optionally, maximum) HP of this Mobile.
     void                set_id(uint32_t new_id);                    // Sets this Mobile's unique ID.

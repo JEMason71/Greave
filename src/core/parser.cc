@@ -191,7 +191,7 @@ int32_t Parser::parse_int(const std::string &s)
     }
     catch(const std::exception& e)
     {
-        return INT_MAX;
+        return INT32_MAX;
     }
 }
 

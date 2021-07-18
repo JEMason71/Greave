@@ -32,7 +32,7 @@ void Buff::save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id)
     query.bind(":owner", owner_id);
     if (power) query.bind(":power", power);
     query.bind(":sql_id", core()->sql_unique_id());
-    if (time != USHRT_MAX) query.bind(":time", time);
+    if (time != UINT16_MAX) query.bind(":time", time);
     query.bind(":type", static_cast<int>(type));
     query.exec();
 }
@@ -486,7 +486,7 @@ void Mobile::set_buff(Buff::Type type, uint16_t time, uint32_t power, bool addit
     {
         if (b->type == type)
         {
-            if (time != USHRT_MAX)
+            if (time != UINT16_MAX)
             {
                 if (additive_time) b->time += time;
                 else if (b->time < time) b->time = time;
@@ -607,7 +607,7 @@ void Mobile::tick_buffs()
 {
     for (size_t i = 0; i < buffs_.size(); i++)
     {
-        if (buffs_.at(i)->time == USHRT_MAX) continue;
+        if (buffs_.at(i)->time == UINT16_MAX) continue;
         const auto type = buffs_.at(i)->type;
 
         switch (type)
