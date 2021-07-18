@@ -39,7 +39,7 @@ void Buff::save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id)
 
 
 // Constructor, sets default values.
-Mobile::Mobile() : action_timer_(0), equipment_(std::make_shared<Inventory>(Inventory::TagPrefix::EQUIPMENT)), gender_(Gender::IT), id_(0), inventory_(std::make_shared<Inventory>(Inventory::TagPrefix::INVENTORY)), location_(0), parser_id_(0), score_(0), spawn_room_(0), stance_(CombatStance::BALANCED)
+Mobile::Mobile() : action_timer_(0), equipment_(std::make_shared<Inventory>(Inventory::PID_PREFIX_EQUIPMENT)), gender_(Gender::IT), id_(0), inventory_(std::make_shared<Inventory>(Inventory::PID_PREFIX_INVENTORY)), location_(0), parser_id_(0), score_(0), spawn_room_(0), stance_(CombatStance::BALANCED)
 {
     hp_[0] = hp_[1] = HP_DEFAULT;
 }
@@ -380,7 +380,7 @@ std::string Mobile::name(int flags) const
 }
 
 // Generates a new parser ID for this Item.
-void Mobile::new_parser_id() { parser_id_ = core()->rng()->rnd(0, 999) + (1000 * Inventory::TagPrefix::MOBILE); }
+void Mobile::new_parser_id() { parser_id_ = core()->rng()->rnd(0, 999) + (1000 * Inventory::PID_PREFIX_MOBILE); }
 
 // Returns the modified chance to parry for this Mobile, based on equipped gear.
 float Mobile::parry_mod() const

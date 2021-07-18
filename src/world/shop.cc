@@ -12,7 +12,7 @@ constexpr char Shop::SQL_SHOPS[] = "CREATE TABLE shops ( id INTEGER PRIMARY KEY 
 
 
 // Constructor, sets up a blank shop by default.
-Shop::Shop(uint32_t room_id) : inventory_(std::make_shared<Inventory>(Inventory::TagPrefix::SHOP)), room_id_(room_id) { }
+Shop::Shop(uint32_t room_id) : inventory_(std::make_shared<Inventory>(Inventory::PID_PREFIX_SHOP)), room_id_(room_id) { }
 
 // Adds an item to this shop's inventory.
 void Shop::add_item(std::shared_ptr<Item> item, bool sort)

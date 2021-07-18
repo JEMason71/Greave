@@ -57,7 +57,7 @@ const char* Room::ROOM_SCAR_DESCS[][4] = {
 const char Room::SQL_ROOMS[] = "CREATE TABLE rooms ( sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, id INTEGER UNIQUE NOT NULL, last_spawned_mobs INTEGER, metadata TEXT, scars TEXT, spawn_mobs TEXT, tags TEXT, link_tags TEXT, inventory INTEGER UNIQUE )";
 
 
-Room::Room(std::string new_id) : inventory_(std::make_shared<Inventory>(Inventory::TagPrefix::ROOM)), last_spawned_mobs_(0), light_(0), security_(Security::ANARCHY)
+Room::Room(std::string new_id) : inventory_(std::make_shared<Inventory>(Inventory::PID_PREFIX_ROOM)), last_spawned_mobs_(0), light_(0), security_(Security::ANARCHY)
 {
     if (new_id.size()) id_ = StrX::hash(new_id);
     else id_ = 0;

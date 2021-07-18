@@ -8,7 +8,7 @@
 
 
 // Creates a new, blank inventory.
-Inventory::Inventory(uint8_t tag_prefix) : tag_prefix_(tag_prefix) { }
+Inventory::Inventory(uint8_t pid_prefix) : pid_prefix_(pid_prefix) { }
 
 // Adds an Item to this Inventory (this will later handle auto-stacking, etc.)
 void Inventory::add_item(std::shared_ptr<Item> item, bool force_stack)
@@ -43,9 +43,9 @@ void Inventory::add_item(std::shared_ptr<Item> item, bool force_stack)
 
     // Check the Item's hex ID. If it's unset, or if another Item in the Inventory shares its ID, we'll need a new one. Infinite loops relying on RNG to break out are VERY BAD so let's put a threshold on this bad boy.
     int tries = 0;
-    item->set_parser_id_prefix(tag_prefix_);
+    item->set_parser_id_prefix(pid_prefix_);
     while (parser_id_exists(item->parser_id()) && ++tries < 10000)
-        item->new_parser_id(tag_prefix_);
+        item->new_parser_id(pid_prefix_);
     items_.push_back(item);
 }
 
