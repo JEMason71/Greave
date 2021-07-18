@@ -57,13 +57,13 @@ const char* Room::ROOM_SCAR_DESCS[][4] = {
 const char Room::SQL_ROOMS[] = "CREATE TABLE rooms ( sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, id INTEGER UNIQUE NOT NULL, last_spawned_mobs INTEGER, metadata TEXT, scars TEXT, spawn_mobs TEXT, tags TEXT, link_tags TEXT, inventory INTEGER UNIQUE )";
 
 
-Room::Room(std::string new_id) : m_inventory(std::make_shared<Inventory>(Inventory::TagPrefix::ROOM)), m_last_spawned_mobs(0), m_light(0), m_security(Security::ANARCHY)
+Room::Room(std::string new_id) : inventory_(std::make_shared<Inventory>(Inventory::TagPrefix::ROOM)), last_spawned_mobs_(0), light_(0), security_(Security::ANARCHY)
 {
-    if (new_id.size()) m_id = StrX::hash(new_id);
-    else m_id = 0;
+    if (new_id.size()) id_ = StrX::hash(new_id);
+    else id_ = 0;
 
     for (int e = 0; e < ROOM_LINKS_MAX; e++)
-        m_links[e] = 0;
+        links_[e] = 0;
 }
 
 // This Room was previously inactive, and has now become active.
@@ -74,9 +74,9 @@ void Room::add_scar(ScarType type, int intensity)
 {
     if (tag(RoomTag::WaterShallow) || tag(RoomTag::WaterDeep)) return;
     int pos = -1;
-    for (size_t i = 0; i < m_scar_type.size(); i++)
+    for (size_t i = 0; i < scar_type_.size(); i++)
     {
-        if (m_scar_type.at(i) == type)
+        if (scar_type_.at(i) == type)
         {
             pos = i;
             break;
@@ -84,26 +84,26 @@ void Room::add_scar(ScarType type, int intensity)
     }
 
     int total_intensity = intensity;
-    if (pos > -1) total_intensity += m_scar_intensity.at(pos);
+    if (pos > -1) total_intensity += scar_intensity_.at(pos);
     if (total_intensity > 250) total_intensity = 250;
 
-    if (pos > -1) m_scar_intensity.at(pos) = total_intensity;
+    if (pos > -1) scar_intensity_.at(pos) = total_intensity;
     else
     {
-        m_scar_type.push_back(type);
-        m_scar_intensity.push_back(total_intensity);
+        scar_type_.push_back(type);
+        scar_intensity_.push_back(total_intensity);
     }
 }
 
 // Adds a Mobile or List to the mobile spawn list.
-void Room::add_mob_spawn(const std::string &id) { m_spawn_mobs.push_back(id); }
+void Room::add_mob_spawn(const std::string &id) { spawn_mobs_.push_back(id); }
 
 // Clears a tag on this Room.
 void Room::clear_link_tag(uint8_t id, LinkTag the_tag)
 {
     if (id >= ROOM_LINKS_MAX) throw std::runtime_error("Invalid direction specified when clearing room link tag.");
-    if (!(m_tags_link[id].count(the_tag) > 0)) return;
-    m_tags_link[id].erase(the_tag);
+    if (!(tags_link_[id].count(the_tag) > 0)) return;
+    tags_link_[id].erase(the_tag);
 }
 
 // As above, but with a Direction enum.
@@ -112,15 +112,15 @@ void Room::clear_link_tag(Direction dir, LinkTag the_tag) { clear_link_tag(stati
 // Clears a metatag from an Room. Use with caution!
 void Room::clear_meta(const std::string &key)
 {
-    m_metadata.erase(key);
+    metadata_.erase(key);
     set_tag(RoomTag::MetaChanged);
 }
 
 // Clears a tag on this Room.
 void Room::clear_tag(RoomTag the_tag)
 {
-    if (!(m_tags.count(the_tag) > 0)) return;
-    m_tags.erase(the_tag);
+    if (!(tags_.count(the_tag) > 0)) return;
+    tags_.erase(the_tag);
 }
 
 // Checks if a room link is dangerous (e.g. a sky link).
@@ -139,19 +139,19 @@ bool Room::dangerous_link(uint8_t dir) { return dangerous_link(static_cast<Direc
 void Room::deactivate()
 {
     // Remove any and all scars on this room.
-    m_scar_intensity.clear();
-    m_scar_type.clear();
+    scar_intensity_.clear();
+    scar_type_.clear();
 }
 
 // Reduces the intensity of any room scars present.
 void Room::decay_scars()
 {
-    for (size_t i = 0; i < m_scar_type.size(); i++)
+    for (size_t i = 0; i < scar_type_.size(); i++)
     {
-        if (--m_scar_intensity.at(i) == 0)
+        if (--scar_intensity_.at(i) == 0)
         {
-            m_scar_intensity.erase(m_scar_intensity.begin() + i);
-            m_scar_type.erase(m_scar_type.begin() + i);
+            scar_intensity_.erase(scar_intensity_.begin() + i);
+            scar_type_.erase(scar_type_.begin() + i);
             i--;
         }
     }
@@ -174,8 +174,8 @@ std::string Room::desc() const
         else desc = desc.substr(0, start) + desc.substr(end + 1);
     };
 
-    std::string desc = m_desc;
-    if (m_desc.size() > 2 && m_desc[0] == '$') desc = core()->world()->generic_desc(m_desc.substr(1));
+    std::string desc = desc_;
+    if (desc_.size() > 2 && desc_[0] == '$') desc = core()->world()->generic_desc(desc_.substr(1));
     const TimeWeather::Season current_season = time_weather->current_season();
     const TimeWeather::TimeOfDay current_tod = time_weather->time_of_day(false);
     while (desc.find("[springsummer:") != std::string::npos)
@@ -217,16 +217,16 @@ bool Room::fake_link(uint8_t dir) const { return fake_link(static_cast<Direction
 // Checks if this room has a campfire, and if so, returns the vector position.
 size_t Room::has_campfire() const
 {
-    for (size_t i = 0; i < m_scar_type.size(); i++)
-        if (m_scar_type.at(i) == ScarType::CAMPFIRE) return i;
+    for (size_t i = 0; i < scar_type_.size(); i++)
+        if (scar_type_.at(i) == ScarType::CAMPFIRE) return i;
     return NO_CAMPFIRE;
 }
 
 // Retrieves the unique hashed ID of this Room.
-uint32_t Room::id() const { return m_id; }
+uint32_t Room::id() const { return id_; }
 
 // Returns a pointer to the Room's Inventory.
-const std::shared_ptr<Inventory> Room::inv() const { return m_inventory; }
+const std::shared_ptr<Inventory> Room::inv() const { return inventory_; }
 
 // Checks if a key can unlock a door in the specified direction.
 bool Room::key_can_unlock(std::shared_ptr<Item> key, Direction dir)
@@ -244,7 +244,7 @@ bool Room::key_can_unlock(std::shared_ptr<Item> key, Direction dir)
     for (auto key : keys)   // Check any and all 'key' metadata on the key, see if it matches the source or destination room, or is a skeleton key.
     {
         const uint32_t key_hash = StrX::hash(key);
-        if (key == "SKELETON" || key_hash == link_id || key_hash == m_id) return true;
+        if (key == "SKELETON" || key_hash == link_id || key_hash == id_) return true;
     }
     return false;
 }
@@ -252,7 +252,7 @@ bool Room::key_can_unlock(std::shared_ptr<Item> key, Direction dir)
 // Gets the light level of this Room, adjusted by dynamic lights, and optionally including darkvision etc.
 int Room::light() const
 {
-    int dynamic_light = m_light;
+    int dynamic_light = light_;
     const auto player = core()->world()->player();
     const auto equ = player->equ();
 
@@ -267,9 +267,9 @@ int Room::light() const
     }
 
     // Check for anything glowing on the floor.
-    for (unsigned int i = 0; i < m_inventory->count(); i++)
+    for (unsigned int i = 0; i < inventory_->count(); i++)
     {
-        const auto item = m_inventory->get(i);
+        const auto item = inventory_->get(i);
         if (item->type() != ItemType::LIGHT) continue;
         if (item->power() > dynamic_light) dynamic_light = item->power();
     }
@@ -284,7 +284,7 @@ uint32_t Room::link(Direction dir) const { return link(static_cast<uint8_t>(dir)
 uint32_t Room::link(uint8_t dir) const
 {
     if (dir >= ROOM_LINKS_MAX) throw std::runtime_error("Invalid direction specified when checking room links.");
-    return m_links[dir];
+    return links_[dir];
 }
 
 // Checks if a tag is set on this Room's link.
@@ -293,21 +293,21 @@ bool Room::link_tag(uint8_t id, LinkTag the_tag) const
     if (id >= ROOM_LINKS_MAX) throw std::runtime_error("Invalid direction specified when checking room link tag.");
     if (the_tag == LinkTag::Lockable || the_tag == LinkTag::Openable || the_tag == LinkTag::Locked)
     {
-        if (m_tags_link[id].count(LinkTag::Permalock) > 0 || m_tags_link[id].count(LinkTag::TempPermalock) > 0) return true;    // If checking for Lockable, Openable or Locked, also check for Permalock.
-        if (m_links[id] == FALSE_ROOM) return true; // Links to FALSE_ROOM are always considered to be permalocked.
+        if (tags_link_[id].count(LinkTag::Permalock) > 0 || tags_link_[id].count(LinkTag::TempPermalock) > 0) return true;    // If checking for Lockable, Openable or Locked, also check for Permalock.
+        if (links_[id] == FALSE_ROOM) return true; // Links to FALSE_ROOM are always considered to be permalocked.
 
         // Special rules check here. Because exits are usually unlocked by default, but may have the LockedByDefault tag, they then require Unlocked to mark them as currently unlocked. To simplify things, we'll just check for the Locked tag externally, and handle this special case here.
         if (the_tag == LinkTag::Locked)
         {
-            if (m_tags_link[id].count(LinkTag::Locked) > 0) return true;    // If it's marked as Locked then it's locked, no question.
-            if (m_tags_link[id].count(LinkTag::LockedByDefault) > 0)        // And here's the tricky bit.
+            if (tags_link_[id].count(LinkTag::Locked) > 0) return true;    // If it's marked as Locked then it's locked, no question.
+            if (tags_link_[id].count(LinkTag::LockedByDefault) > 0)        // And here's the tricky bit.
             {
-                if (m_tags_link[id].count(LinkTag::Unlocked) > 0) return false; // If it's marked Unlocked, then we're good.
+                if (tags_link_[id].count(LinkTag::Unlocked) > 0) return false; // If it's marked Unlocked, then we're good.
                 else return true;   // If not, then yes, it's locked.
             }
         }
     }
-    return (m_tags_link[id].count(the_tag) > 0);
+    return (tags_link_[id].count(the_tag) > 0);
 }
 
 // As above, but with a Direction enum.
@@ -318,11 +318,11 @@ void Room::load(std::shared_ptr<SQLite::Database> save_db)
 {
     uint32_t inventory_id = 0;
     SQLite::Statement query(*save_db, "SELECT * FROM rooms WHERE id = :id");
-    query.bind(":id", m_id);
+    query.bind(":id", id_);
     if (query.executeStep())
     {
         inventory_id = query.getColumn("inventory").getUInt();
-        if (!query.isColumnNull("last_spawned_mobs")) m_last_spawned_mobs = query.getColumn("last_spawned_mobs").getUInt();
+        if (!query.isColumnNull("last_spawned_mobs")) last_spawned_mobs_ = query.getColumn("last_spawned_mobs").getUInt();
         if (!query.isColumnNull("link_tags"))
         {
             const std::string link_tags_str = query.getColumn("link_tags").getString();
@@ -333,10 +333,10 @@ void Room::load(std::shared_ptr<SQLite::Database> save_db)
                 if (!split_links.at(e).size()) continue;
                 std::vector<std::string> split_tags = StrX::string_explode(split_links.at(e), " ");
                 for (auto tag : split_tags)
-                    m_tags_link[e].insert(static_cast<LinkTag>(StrX::htoi(tag)));
+                    tags_link_[e].insert(static_cast<LinkTag>(StrX::htoi(tag)));
             }
         }
-        if (!query.getColumn("metadata").isNull()) StrX::string_to_metadata(query.getColumn("metadata").getString(), m_metadata);
+        if (!query.getColumn("metadata").isNull()) StrX::string_to_metadata(query.getColumn("metadata").getString(), metadata_);
         if (!query.isColumnNull("scars"))
         {
             std::string scar_str = query.getColumn("scars").getString();
@@ -345,57 +345,57 @@ void Room::load(std::shared_ptr<SQLite::Database> save_db)
             {
                 std::vector<std::string> pair_explode = StrX::string_explode(scar_pairs.at(i), ";");
                 if (pair_explode.size() != 2) throw std::runtime_error("Malformed room scars data.");
-                m_scar_type.push_back(static_cast<ScarType>(StrX::htoi(pair_explode.at(0))));
-                m_scar_intensity.push_back(StrX::htoi(pair_explode.at(1)));
+                scar_type_.push_back(static_cast<ScarType>(StrX::htoi(pair_explode.at(0))));
+                scar_intensity_.push_back(StrX::htoi(pair_explode.at(1)));
             }
         }
-        if (!query.isColumnNull("tags")) StrX::string_to_tags(query.getColumn("tags").getString(), m_tags);
+        if (!query.isColumnNull("tags")) StrX::string_to_tags(query.getColumn("tags").getString(), tags_);
 
         // Make sure this goes *after* loading tags.
         if (tag(RoomTag::MobSpawnListChanged))
         {
-            m_spawn_mobs.clear();
-            if (!query.isColumnNull("spawn_mobs")) m_spawn_mobs = StrX::string_explode(query.getColumn("spawn_mobs").getString(), " ");
+            spawn_mobs_.clear();
+            if (!query.isColumnNull("spawn_mobs")) spawn_mobs_ = StrX::string_explode(query.getColumn("spawn_mobs").getString(), " ");
         }
     }
-    if (inventory_id) m_inventory->load(save_db, inventory_id);
+    if (inventory_id) inventory_->load(save_db, inventory_id);
 }
 
 // Retrieves Room metadata.
 std::string Room::meta(const std::string &key, bool spaces) const
 {
-    if (m_metadata.find(key) == m_metadata.end()) return "";
-    std::string result = m_metadata.at(key);
+    if (metadata_.find(key) == metadata_.end()) return "";
+    std::string result = metadata_.at(key);
     if (spaces) StrX::find_and_replace(result, "_", " ");
     return result;
 }
 
 // Accesses the metadata map directly. Use with caution!
-std::map<std::string, std::string>* Room::meta_raw() { return &m_metadata; }
+std::map<std::string, std::string>* Room::meta_raw() { return &metadata_; }
 
 // Returns the Room's full or short name.
-std::string Room::name(bool short_name) const { return (short_name ? m_name_short : m_name); }
+std::string Room::name(bool short_name) const { return (short_name ? name_short_ : name_); }
 
 // Respawn Mobiles in this Room, if possible.
 void Room::respawn_mobs(bool ignore_timer)
 {
-    if (!m_spawn_mobs.size()) return;       // Do nothing if there's nothing to spawn.
-    if (m_id == core()->world()->player()->location()) return;  // Do nothing if the player is standing here.
+    if (!spawn_mobs_.size()) return;       // Do nothing if there's nothing to spawn.
+    if (id_ == core()->world()->player()->location()) return;  // Do nothing if the player is standing here.
     if (tag(RoomTag::MobSpawned)) return;   // Do nothing if a Mobile has already spawned here.
-    if (!ignore_timer && m_last_spawned_mobs && core()->world()->time_weather()->time_passed_since(m_last_spawned_mobs) < RESPAWN_INTERVAL) return;    // Do nothing if the respawn timer isn't up.
+    if (!ignore_timer && last_spawned_mobs_ && core()->world()->time_weather()->time_passed_since(last_spawned_mobs_) < RESPAWN_INTERVAL) return;    // Do nothing if the respawn timer isn't up.
 
     // Set the respawn timer!
-    m_last_spawned_mobs = core()->world()->time_weather()->time_passed();
+    last_spawned_mobs_ = core()->world()->time_weather()->time_passed();
 
     // Pick a Mobile to spawn here.
-    std::string spawn_str = m_spawn_mobs.at(core()->rng()->rnd(m_spawn_mobs.size()) - 1);
+    std::string spawn_str = spawn_mobs_.at(core()->rng()->rnd(spawn_mobs_.size()) - 1);
     if (spawn_str.size() && spawn_str[0] == '#') spawn_str = core()->world()->get_list(spawn_str.substr(1))->rnd().str; // If it's a list, pick an entry.
     if (!spawn_str.size() || spawn_str == "-") return;   // If for some reason we pick a blank entry, just do nothing. Yes, we updated the spawn timer, that's fine.
 
     // Spawn the Mobile!
     auto new_mob = core()->world()->get_mob(spawn_str);
-    new_mob->set_location(m_id);
-    new_mob->set_spawn_room(m_id);
+    new_mob->set_location(id_);
+    new_mob->set_spawn_room(id_);
     core()->world()->add_mobile(new_mob);
     set_tag(RoomTag::MobSpawned);
 }
@@ -403,35 +403,35 @@ void Room::respawn_mobs(bool ignore_timer)
 // Saves the Room and anything it contains.
 void Room::save(std::shared_ptr<SQLite::Database> save_db)
 {
-    const uint32_t inventory_id = m_inventory->save(save_db);
+    const uint32_t inventory_id = inventory_->save(save_db);
 
-    const std::string tags = StrX::tags_to_string(m_tags);
+    const std::string tags = StrX::tags_to_string(tags_);
     std::string link_tags;
     for (int e = 0; e < ROOM_LINKS_MAX; e++)
     {
-        link_tags += StrX::tags_to_string(m_tags_link[e]);
+        link_tags += StrX::tags_to_string(tags_link_[e]);
         if (e < ROOM_LINKS_MAX - 1) link_tags += ",";
     }
 
-    if (!tags.size() && link_tags == ",,,,,,,,," && !m_scar_type.size()) return;
+    if (!tags.size() && link_tags == ",,,,,,,,," && !scar_type_.size()) return;
 
     SQLite::Statement room_query(*save_db, "INSERT INTO rooms (id, inventory, last_spawned_mobs, link_tags, metadata, scars, spawn_mobs, sql_id, tags) VALUES ( :id, :inventory, :last_spawned_mobs, :link_tags, :metadata, :scars, :spawn_mobs, :sql_id, :tags )");
-    room_query.bind(":id", m_id);
+    room_query.bind(":id", id_);
     if (inventory_id) room_query.bind(":inventory", inventory_id);
-    if (m_last_spawned_mobs) room_query.bind(":last_spawned_mobs", m_last_spawned_mobs);
+    if (last_spawned_mobs_) room_query.bind(":last_spawned_mobs", last_spawned_mobs_);
     if (link_tags != ",,,,,,,,,") room_query.bind(":link_tags", link_tags);
-    if (tag(RoomTag::MetaChanged)) room_query.bind(":metadata", StrX::metadata_to_string(m_metadata));
-    if (m_scar_type.size())
+    if (tag(RoomTag::MetaChanged)) room_query.bind(":metadata", StrX::metadata_to_string(metadata_));
+    if (scar_type_.size())
     {
         std::string scar_str;
-        for (size_t i = 0; i < m_scar_type.size(); i++)
+        for (size_t i = 0; i < scar_type_.size(); i++)
         {
-            scar_str += StrX::itoh(static_cast<int>(m_scar_type.at(i)), 1) + ";" + StrX::itoh(m_scar_intensity.at(i), 1);
-            if (i < m_scar_type.size() - 1) scar_str += ",";
+            scar_str += StrX::itoh(static_cast<int>(scar_type_.at(i)), 1) + ";" + StrX::itoh(scar_intensity_.at(i), 1);
+            if (i < scar_type_.size() - 1) scar_str += ",";
         }
         room_query.bind(":scars", scar_str);
     }
-    if (tag(RoomTag::MobSpawnListChanged) && m_spawn_mobs.size()) room_query.bind(":spawn_mobs", StrX::collapse_vector(m_spawn_mobs));
+    if (tag(RoomTag::MobSpawnListChanged) && spawn_mobs_.size()) room_query.bind(":spawn_mobs", StrX::collapse_vector(spawn_mobs_));
     room_query.bind(":sql_id", core()->sql_unique_id());
     if (tags.size()) room_query.bind(":tags", tags);
     room_query.exec();
@@ -441,14 +441,14 @@ void Room::save(std::shared_ptr<SQLite::Database> save_db)
 std::string Room::scar_desc() const
 {
     std::string scars;
-    for (size_t i = 0; i < m_scar_type.size(); i++)
+    for (size_t i = 0; i < scar_type_.size(); i++)
     {
-        const int intensity = m_scar_intensity.at(i);
+        const int intensity = scar_intensity_.at(i);
         uint32_t vec_pos = 0;
         if (intensity >= 20) vec_pos =  3;
         else if (intensity >= 10) vec_pos = 2;
         else if (intensity >= 5) vec_pos = 1;
-        scars += std::string(ROOM_SCAR_DESCS[static_cast<uint32_t>(m_scar_type.at(i))][vec_pos]) + " ";
+        scars += std::string(ROOM_SCAR_DESCS[static_cast<uint32_t>(scar_type_.at(i))][vec_pos]) + " ";
     }
     if (tag(RoomTag::PermaCampfire) && !tag(RoomTag::HideCampfireScar)) scars += std::string(ROOM_SCAR_DESCS[static_cast<uint32_t>(ScarType::CAMPFIRE)][3]) + " ";
     if (scars.size()) scars.pop_back();
@@ -456,28 +456,28 @@ std::string Room::scar_desc() const
 }
 
 // Sets this Room's base light level.
-void Room::set_base_light(int new_light) { m_light = new_light; }
+void Room::set_base_light(int new_light) { light_ = new_light; }
 
 // Sets this Room's description.
-void Room::set_desc(const std::string &new_desc) { m_desc = new_desc; }
+void Room::set_desc(const std::string &new_desc) { desc_ = new_desc; }
 
 // Sets a link to another Room.
-void Room::set_link(Direction dir, const std::string &room_id) { set_link(dir, room_id.size() ? StrX::hash(room_id) : 0); }
+void Room::set_link(Direction dir, const std::string &rooid_) { set_link(dir, rooid_.size() ? StrX::hash(rooid_) : 0); }
 
 // As above, but with an already-hashed Room ID.
-void Room::set_link(Direction dir, uint32_t room_id)
+void Room::set_link(Direction dir, uint32_t rooid_)
 {
     const int dir_int = static_cast<int>(dir);
     if (dir_int < 0 || static_cast<int>(dir) >= ROOM_LINKS_MAX) throw std::runtime_error("Invalid direction specified when setting room link.");
-    m_links[dir_int] = room_id;
+    links_[dir_int] = rooid_;
 }
 
 // Sets a tag on this Room's link.
 void Room::set_link_tag(uint8_t id, LinkTag the_tag)
 {
     if (id >= ROOM_LINKS_MAX) throw std::runtime_error("Invalid direction specified when setting room link tag.");
-    if (m_tags_link[id].count(the_tag) > 0) return;
-    m_tags_link[id].insert(the_tag);
+    if (tags_link_[id].count(the_tag) > 0) return;
+    tags_link_[id].insert(the_tag);
 }
 
 // As above, but with a Direction enum.
@@ -487,30 +487,30 @@ void Room::set_link_tag(Direction dir, LinkTag the_tag) { set_link_tag(static_ca
 void Room::set_meta(const std::string &key, std::string value)
 {
     StrX::find_and_replace(value, " ", "_");
-    if (m_metadata.find(key) == m_metadata.end()) m_metadata.insert(std::pair<std::string, std::string>(key, value));
-    else m_metadata.at(key) = value;
+    if (metadata_.find(key) == metadata_.end()) metadata_.insert(std::pair<std::string, std::string>(key, value));
+    else metadata_.at(key) = value;
     set_tag(RoomTag::MetaChanged);
 }
 
 // Sets the long and short name of this room.
 void Room::set_name(const std::string &new_name, const std::string &new_short_name)
 {
-    m_name = new_name;
-    m_name_short = new_short_name;
+    name_ = new_name;
+    name_short_ = new_short_name;
 }
 
 // Sets the security level of this Room.
-void Room::set_security(Security sec) { m_security = sec; }
+void Room::set_security(Security sec) { security_ = sec; }
 
 // Sets a tag on this Room.
 void Room::set_tag(RoomTag the_tag)
 {
-    if (m_tags.count(the_tag) > 0) return;
-    m_tags.insert(the_tag);
+    if (tags_.count(the_tag) > 0) return;
+    tags_.insert(the_tag);
 }
 
 // Checks if a tag is set on this Room.
-bool Room::tag(RoomTag the_tag) const { return (m_tags.count(the_tag) > 0); }
+bool Room::tag(RoomTag the_tag) const { return (tags_.count(the_tag) > 0); }
 
 // Returns the room's current temperature level.
 int Room::temperature(uint32_t flags) const
@@ -578,7 +578,7 @@ int Room::temperature(uint32_t flags) const
     size_t campfire = has_campfire();
     if (campfire != NO_CAMPFIRE)
     {
-        const int intensity = m_scar_intensity.at(campfire);
+        const int intensity = scar_intensity_.at(campfire);
         if (intensity >= 20) temp += (temp >= 4 ? 2 : 3);
         else if (intensity >= 10) temp += (temp >= 4 ? 1 : 2);
         else if (intensity >= 5) temp += (temp >= 5 ? 0 : 1);

@@ -39,33 +39,33 @@ void Buff::save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id)
 
 
 // Constructor, sets default values.
-Mobile::Mobile() : m_action_timer(0), m_equipment(std::make_shared<Inventory>(Inventory::TagPrefix::EQUIPMENT)), m_gender(Gender::IT), m_id(0), m_inventory(std::make_shared<Inventory>(Inventory::TagPrefix::INVENTORY)), m_location(0), m_parser_id(0), m_score(0), m_spawn_room(0), m_stance(CombatStance::BALANCED)
+Mobile::Mobile() : action_timer_(0), equipment_(std::make_shared<Inventory>(Inventory::TagPrefix::EQUIPMENT)), gender_(Gender::IT), id_(0), inventory_(std::make_shared<Inventory>(Inventory::TagPrefix::INVENTORY)), location_(0), parser_id_(0), score_(0), spawn_room_(0), stance_(CombatStance::BALANCED)
 {
-    m_hp[0] = m_hp[1] = HP_DEFAULT;
+    hp_[0] = hp_[1] = HP_DEFAULT;
 }
 
 // Adds a Mobile (or the player, with ID 0) to this Mobile's hostility list.
 void Mobile::add_hostility(uint32_t mob_id)
 {
     // Check if this Mobile is already on the hostility vector.
-    for (auto h : m_hostility)
+    for (auto h : hostility_)
         if (h == mob_id) return;
 
     // If not, add 'em to the list!
-    m_hostility.push_back(mob_id);
+    hostility_.push_back(mob_id);
 }
 
 // Adds a second to this Mobile's action timer.
-void Mobile::add_second() { if (++m_action_timer > ACTION_TIMER_CAP_MAX) m_action_timer = ACTION_TIMER_CAP_MAX; }
+void Mobile::add_second() { if (++action_timer_ > ACTION_TIMER_CAP_MAX) action_timer_ = ACTION_TIMER_CAP_MAX; }
 
 // Adds to this Mobile's score.
-void Mobile::add_score(int score) { m_score += score; }
+void Mobile::add_score(int score) { score_ += score; }
 
 // Returns the number of seconds needed for this Mobile to make an attack.
 float Mobile::attack_speed() const
 {
-    auto main_hand = m_equipment->get(EquipSlot::HAND_MAIN);
-    auto off_hand = m_equipment->get(EquipSlot::HAND_OFF);
+    auto main_hand = equipment_->get(EquipSlot::HAND_MAIN);
+    auto off_hand = equipment_->get(EquipSlot::HAND_OFF);
     const bool main_can_attack = (main_hand && main_hand->type() == ItemType::WEAPON);
     const bool off_can_attack = (off_hand && off_hand->type() == ItemType::WEAPON);
 
@@ -88,15 +88,15 @@ float Mobile::attack_speed() const
 float Mobile::block_mod() const
 {
     float mod_perc = 100.0f;
-    for (size_t i = 0; i < m_equipment->count(); i++)
-        mod_perc += m_equipment->get(i)->block_mod();
+    for (size_t i = 0; i < equipment_->count(); i++)
+        mod_perc += equipment_->get(i)->block_mod();
     return mod_perc / 100.0f;
 }
 
 // Returns a pointer to a specified Buff.
 std::shared_ptr<Buff> Mobile::buff(Buff::Type type) const
 {
-    for (auto b : m_buffs)
+    for (auto b : buffs_)
         if (b->type == type) return b;
     return nullptr;
 }
@@ -118,61 +118,61 @@ uint16_t Mobile::buff_time(Buff::Type type) const
 }
 
 // Checks if this Mobile has enough action timer built up to perform an action.
-bool Mobile::can_perform_action(float time) const { return m_action_timer >= time; }
+bool Mobile::can_perform_action(float time) const { return action_timer_ >= time; }
 
 // Checks how much weight this Mobile is carrying.
 uint32_t Mobile::carry_weight() const
 {
     uint32_t total_weight = 0;
-    for (size_t i = 0; i < m_inventory->count(); i++)
-        total_weight += m_inventory->get(i)->weight();
-    for (size_t i = 0; i < m_equipment->count(); i++)
-        total_weight += m_equipment->get(i)->weight();
+    for (size_t i = 0; i < inventory_->count(); i++)
+        total_weight += inventory_->get(i)->weight();
+    for (size_t i = 0; i < equipment_->count(); i++)
+        total_weight += equipment_->get(i)->weight();
     return total_weight;
 }
 
 // Clears a specified buff/debuff from the Actor, if it exists.
 void Mobile::clear_buff(Buff::Type type)
 {
-    for (size_t i = 0; i < m_buffs.size(); i++)
+    for (size_t i = 0; i < buffs_.size(); i++)
     {
-        if (m_buffs.at(i)->type == type)
+        if (buffs_.at(i)->type == type)
         {
-            m_buffs.erase(m_buffs.begin() + i);
+            buffs_.erase(buffs_.begin() + i);
             return;
         }
     }
 }
 
 // Clears a metatag from an Mobile. Use with caution!
-void Mobile::clear_meta(const std::string &key) { m_metadata.erase(key); }
+void Mobile::clear_meta(const std::string &key) { metadata_.erase(key); }
 
 // Clears a MobileTag from this Mobile.
 void Mobile::clear_tag(MobileTag the_tag)
 {
-    if (!(m_tags.count(the_tag) > 0)) return;
-    m_tags.erase(the_tag);
+    if (!(tags_.count(the_tag) > 0)) return;
+    tags_.erase(the_tag);
 }
 
 // Returns the modified chance to dodge for this Mobile, based on equipped gear.
 float Mobile::dodge_mod() const
 {
     float mod_perc = 100.0f;
-    for (size_t i = 0; i < m_equipment->count(); i++)
-        mod_perc += m_equipment->get(i)->dodge_mod();
+    for (size_t i = 0; i < equipment_->count(); i++)
+        mod_perc += equipment_->get(i)->dodge_mod();
     return mod_perc / 100.0f;
 }
 
 // Returns a pointer to the Movile's equipment.
-const std::shared_ptr<Inventory> Mobile::equ() const { return m_equipment; }
+const std::shared_ptr<Inventory> Mobile::equ() const { return equipment_; }
 
 // Retrieves the anatomy vector for this Mobile.
-const std::vector<std::shared_ptr<BodyPart>>& Mobile::get_anatomy() const { return core()->world()->get_anatomy(m_species); }
+const std::vector<std::shared_ptr<BodyPart>>& Mobile::get_anatomy() const { return core()->world()->get_anatomy(species_); }
 
 // Checks if this Actor has the specified buff/debuff active.
 bool Mobile::has_buff(Buff::Type type) const
 {
-    for (auto b : m_buffs)
+    for (auto b : buffs_)
         if (b->type == type) return true;
     return false;
 }
@@ -180,7 +180,7 @@ bool Mobile::has_buff(Buff::Type type) const
 // Returns a gender string (he/she/it/they/etc.)
 std::string Mobile::he_she() const
 {
-    switch (m_gender)
+    switch (gender_)
     {
         case Gender::FEMALE: return "she";
         case Gender::MALE: return "he";
@@ -193,7 +193,7 @@ std::string Mobile::he_she() const
 // Returns a gender string (his/her/its/their/etc.)
 std::string Mobile::his_her() const
 {
-    switch (m_gender)
+    switch (gender_)
     {
         case Gender::FEMALE: return "her";
         case Gender::MALE: return "his";
@@ -204,25 +204,25 @@ std::string Mobile::his_her() const
 }
 
 // Returns the hostility vector.
-const std::vector<uint32_t>& Mobile::hostility_vector() const { return m_hostility; }
+const std::vector<uint32_t>& Mobile::hostility_vector() const { return hostility_; }
 
 // Retrieves the HP (or maximum HP) of this Mobile.
-int Mobile::hp(bool max) const { return m_hp[max ? 1 : 0]; }
+int Mobile::hp(bool max) const { return hp_[max ? 1 : 0]; }
 
 // Retrieves the unique ID of this Mobile.
-uint32_t Mobile::id() const { return m_id; }
+uint32_t Mobile::id() const { return id_; }
 
 // Returns a pointer to the Mobile's Inventory.
-const std::shared_ptr<Inventory> Mobile::inv() const { return m_inventory; }
+const std::shared_ptr<Inventory> Mobile::inv() const { return inventory_; }
 
 // Checks if this Mobile is dead.
-bool Mobile::is_dead() const { return m_hp[0] <= 0; }
+bool Mobile::is_dead() const { return hp_[0] <= 0; }
 
 // Is this Mobile hostile to the player?
 bool Mobile::is_hostile() const
 {
     if (tag(MobileTag::AggroOnSight)) return true;
-    for (auto h : m_hostility)
+    for (auto h : hostility_)
         if (h == 0) return true;
     return false;
 }
@@ -238,40 +238,40 @@ uint32_t Mobile::load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id
     query.bind(":sql_id", sql_id);
     if (query.executeStep())
     {
-        if (!query.isColumnNull("action_timer")) m_action_timer = query.getColumn("action_timer").getDouble();
+        if (!query.isColumnNull("action_timer")) action_timer_ = query.getColumn("action_timer").getDouble();
         if (!query.isColumnNull("equipment")) equipment_id = query.getColumn("equipment").getUInt();
-        if (!query.isColumnNull("gender")) m_gender = static_cast<Gender>(query.getColumn("gender").getInt());
-        if (!query.isColumnNull("hostility")) m_hostility = StrX::stoi_vec(StrX::string_explode(query.getColumn("hostility").getString(), " "));
-        m_hp[0] = query.getColumn("hp").getInt();
-        m_hp[1] = query.getColumn("hp_max").getInt();
-        m_id = query.getColumn("id").getUInt();
+        if (!query.isColumnNull("gender")) gender_ = static_cast<Gender>(query.getColumn("gender").getInt());
+        if (!query.isColumnNull("hostility")) hostility_ = StrX::stoi_vec(StrX::string_explode(query.getColumn("hostility").getString(), " "));
+        hp_[0] = query.getColumn("hp").getInt();
+        hp_[1] = query.getColumn("hp_max").getInt();
+        id_ = query.getColumn("id").getUInt();
         if (!query.isColumnNull("inventory")) inventory_id = query.getColumn("inventory").getUInt();
-        m_location = query.getColumn("location").getUInt();
-        if (!query.getColumn("metadata").isNull()) StrX::string_to_metadata(query.getColumn("metadata").getString(), m_metadata);
-        if (!query.isColumnNull("name")) m_name = query.getColumn("name").getString();
-        if (!query.isColumnNull("parser_id")) m_parser_id = query.getColumn("parser_id").getInt();
-        if (!query.isColumnNull("score")) m_score = query.getColumn("score").getUInt();
-        if (!query.isColumnNull("spawn_room")) m_spawn_room = query.getColumn("spawn_room").getUInt();
-        m_species = query.getColumn("species").getString();
-        if (!query.isColumnNull("stance")) m_stance = static_cast<CombatStance>(query.getColumn("stance").getInt());
-        if (!query.isColumnNull("tags")) StrX::string_to_tags(query.getColumn("tags").getString(), m_tags);
+        location_ = query.getColumn("location").getUInt();
+        if (!query.getColumn("metadata").isNull()) StrX::string_to_metadata(query.getColumn("metadata").getString(), metadata_);
+        if (!query.isColumnNull("name")) name_ = query.getColumn("name").getString();
+        if (!query.isColumnNull("parser_id")) parser_id_ = query.getColumn("parser_id").getInt();
+        if (!query.isColumnNull("score")) score_ = query.getColumn("score").getUInt();
+        if (!query.isColumnNull("spawn_room")) spawn_room_ = query.getColumn("spawn_room").getUInt();
+        species_ = query.getColumn("species").getString();
+        if (!query.isColumnNull("stance")) stance_ = static_cast<CombatStance>(query.getColumn("stance").getInt());
+        if (!query.isColumnNull("tags")) StrX::string_to_tags(query.getColumn("tags").getString(), tags_);
     }
     else throw std::runtime_error("Could not load mobile data!");
 
-    if (inventory_id) m_inventory->load(save_db, inventory_id);
-    if (equipment_id) m_equipment->load(save_db, equipment_id);
+    if (inventory_id) inventory_->load(save_db, inventory_id);
+    if (equipment_id) equipment_->load(save_db, equipment_id);
 
     // Load any and all buffs/debuffs.
     SQLite::Statement buff_query(*save_db, "SELECT * FROM buffs WHERE owner = :sql_id");
     buff_query.bind(":sql_id", sql_id);
     while (buff_query.executeStep())
-        m_buffs.push_back(Buff::load(buff_query));
+        buffs_.push_back(Buff::load(buff_query));
 
     return sql_id;
 }
 
 // Retrieves the location of this Mobile, in the form of a Room ID.
-uint32_t Mobile::location() const { return m_location; }
+uint32_t Mobile::location() const { return location_; }
 
 // The maximum weight this Mobile can carry.
 uint32_t Mobile::max_carry() const { return BASE_CARRY_WEIGHT; }
@@ -279,8 +279,8 @@ uint32_t Mobile::max_carry() const { return BASE_CARRY_WEIGHT; }
 // Retrieves Mobile metadata.
 std::string Mobile::meta(const std::string &key) const
 {
-    if (m_metadata.find(key) == m_metadata.end()) return "";
-    std::string result = m_metadata.at(key);
+    if (metadata_.find(key) == metadata_.end()) return "";
+    std::string result = metadata_.at(key);
     StrX::find_and_replace(result, "_", " ");
     return result;
 }
@@ -310,12 +310,12 @@ uint32_t Mobile::meta_uint(const std::string &key) const
 }
 
 // Accesses the metadata map directly. Use with caution!
-std::map<std::string, std::string>* Mobile::meta_raw() { return &m_metadata; }
+std::map<std::string, std::string>* Mobile::meta_raw() { return &metadata_; }
 
 // Retrieves the name of this Mobile.
 std::string Mobile::name(int flags) const
 {
-    if (!m_name.size()) return "";
+    if (!name_.size()) return "";
     const bool a = ((flags & Mobile::NAME_FLAG_A) == Mobile::NAME_FLAG_A);
     const bool the = ((flags & Mobile::NAME_FLAG_THE) == Mobile::NAME_FLAG_THE);
     const bool capitalize_first = ((flags & Mobile::NAME_FLAG_CAPITALIZE_FIRST) == Mobile::NAME_FLAG_CAPITALIZE_FIRST);
@@ -324,12 +324,12 @@ std::string Mobile::name(int flags) const
     const bool plural = ((flags & Mobile::NAME_FLAG_PLURAL) == Mobile::NAME_FLAG_PLURAL);
     const bool no_colour = ((flags & Mobile::NAME_FLAG_NO_COLOUR) == Mobile::NAME_FLAG_NO_COLOUR);
 
-    std::string ret = m_name;
-    if (the && !tag(MobileTag::ProperNoun)) ret = "the " + m_name;
+    std::string ret = name_;
+    if (the && !tag(MobileTag::ProperNoun)) ret = "the " + name_;
     else if (a && !tag(MobileTag::ProperNoun))
     {
-        if (StrX::is_vowel(m_name.at(0))) ret = "an " + m_name;
-        else ret = "a " + m_name;
+        if (StrX::is_vowel(name_.at(0))) ret = "an " + name_;
+        else ret = "a " + name_;
     }
     if (capitalize_first && ret[0] >= 'a' && ret[0] <= 'z') ret[0] -= 32;
     if (possessive)
@@ -380,19 +380,19 @@ std::string Mobile::name(int flags) const
 }
 
 // Generates a new parser ID for this Item.
-void Mobile::new_parser_id() { m_parser_id = core()->rng()->rnd(0, 999) + (1000 * Inventory::TagPrefix::MOBILE); }
+void Mobile::new_parser_id() { parser_id_ = core()->rng()->rnd(0, 999) + (1000 * Inventory::TagPrefix::MOBILE); }
 
 // Returns the modified chance to parry for this Mobile, based on equipped gear.
 float Mobile::parry_mod() const
 {
     float mod_perc = 100.0f;
-    for (size_t i = 0; i < m_equipment->count(); i++)
-        mod_perc += m_equipment->get(i)->parry_mod();
+    for (size_t i = 0; i < equipment_->count(); i++)
+        mod_perc += equipment_->get(i)->parry_mod();
     return mod_perc / 100.0f;
 }
 
 // Retrieves the current ID of this Item, for parser differentiation.
-uint16_t Mobile::parser_id() const { return m_parser_id; }
+uint16_t Mobile::parser_id() const { return parser_id_; }
 
 // Causes time to pass for this Mobile.
 bool Mobile::pass_time(float seconds, bool interruptable)
@@ -405,84 +405,84 @@ bool Mobile::pass_time(float seconds, bool interruptable)
     }
 
     // For NPCs, any action clears their action timer.
-    m_action_timer = 0;
+    action_timer_ = 0;
     return true;
 }
 
 // Reduces this Mobile's hit points.
 void Mobile::reduce_hp(int amount, bool death_message)
 {
-    m_hp[0] -= amount;
+    hp_[0] -= amount;
     set_buff(Buff::Type::RECENT_DAMAGE, DAMAGE_DEBUFF_TIME, 0, false, false);
     if (is_player()) return;                // The player character's death is handled elsewhere.
     clear_buff(Buff::Type::RECENTLY_FLED);  // Cowardly NPCs fleeing in fear should be able to flee again when taking damage.
-    if (m_hp[0] > 0) return;                // Everything below this point deals with the Mobile dying.
+    if (hp_[0] > 0) return;                // Everything below this point deals with the Mobile dying.
 
-    if (death_message && m_location == core()->world()->player()->location())
+    if (death_message && location_ == core()->world()->player()->location())
     {
         std::string death_message = "{U}" + name(NAME_FLAG_CAPITALIZE_FIRST | NAME_FLAG_THE);
         if (tag(MobileTag::Unliving)) death_message += " is destroyed!";
         else death_message += " is slain!";
         core()->message(death_message);
     }
-    core()->world()->player()->add_score(m_score);
-    if (m_spawn_room) core()->world()->get_room(m_spawn_room)->clear_tag(RoomTag::MobSpawned);
+    core()->world()->player()->add_score(score_);
+    if (spawn_room_) core()->world()->get_room(spawn_room_)->clear_tag(RoomTag::MobSpawned);
     if (tag(MobileTag::ArenaFighter)) Arena::combatant_died();
-    core()->world()->remove_mobile(m_id);
+    core()->world()->remove_mobile(id_);
 }
 
 // Restores a specified amount of hit points.
 int Mobile::restore_hp(int amount)
 {
-    int missing = m_hp[1] - m_hp[0];
+    int missing = hp_[1] - hp_[0];
     if (missing < amount) amount = missing;
-    m_hp[0] += missing;
+    hp_[0] += missing;
     return missing;
 }
 
 // Saves this Mobile.
 uint32_t Mobile::save(std::shared_ptr<SQLite::Database> save_db)
 {
-    const uint32_t inventory_id = m_inventory->save(save_db);
-    const uint32_t equipment_id = m_equipment->save(save_db);
+    const uint32_t inventory_id = inventory_->save(save_db);
+    const uint32_t equipment_id = equipment_->save(save_db);
 
     const uint32_t sql_id = core()->sql_unique_id();
     SQLite::Statement query(*save_db, "INSERT INTO mobiles ( action_timer, equipment, gender, hostility, hp, hp_max, id, inventory, location, metadata, name, parser_id, score, spawn_room, species, sql_id, stance, tags ) VALUES ( :action_timer, :equipment, :gender, :hostility, :hp, :hp_max, :id, :inventory, :location, :metadata, :name, :parser_id, :score, :spawn_room, :species, :sql_id, :stance, :tags )");
-    if (m_action_timer) query.bind(":action_timer", m_action_timer);
+    if (action_timer_) query.bind(":action_timer", action_timer_);
     if (equipment_id) query.bind(":equipment", equipment_id);
-    if (m_gender != Gender::IT) query.bind(":gender", static_cast<int>(m_gender));
-    if (m_hostility.size()) query.bind(":hostility", StrX::collapse_vector(m_hostility));
-    query.bind(":hp", m_hp[0]);
-    query.bind(":hp_max", m_hp[1]);
-    query.bind(":id", m_id);
+    if (gender_ != Gender::IT) query.bind(":gender", static_cast<int>(gender_));
+    if (hostility_.size()) query.bind(":hostility", StrX::collapse_vector(hostility_));
+    query.bind(":hp", hp_[0]);
+    query.bind(":hp_max", hp_[1]);
+    query.bind(":id", id_);
     if (inventory_id) query.bind(":inventory", inventory_id);
-    query.bind(":location", m_location);
-    if (m_metadata.size()) query.bind(":metadata", StrX::metadata_to_string(m_metadata));
-    if (m_name.size()) query.bind(":name", m_name);
-    if (m_parser_id) query.bind(":parser_id", m_parser_id);
-    if (m_score) query.bind(":score", m_score);
-    if (m_spawn_room) query.bind(":spawn_room", m_spawn_room);
-    query.bind(":species", m_species);
+    query.bind(":location", location_);
+    if (metadata_.size()) query.bind(":metadata", StrX::metadata_to_string(metadata_));
+    if (name_.size()) query.bind(":name", name_);
+    if (parser_id_) query.bind(":parser_id", parser_id_);
+    if (score_) query.bind(":score", score_);
+    if (spawn_room_) query.bind(":spawn_room", spawn_room_);
+    query.bind(":species", species_);
     query.bind(":sql_id", sql_id);
-    if (m_stance != CombatStance::BALANCED) query.bind(":stance", static_cast<int>(m_stance));
-    const std::string tags = StrX::tags_to_string(m_tags);
+    if (stance_ != CombatStance::BALANCED) query.bind(":stance", static_cast<int>(stance_));
+    const std::string tags = StrX::tags_to_string(tags_);
     if (tags.size()) query.bind(":tags", tags);
     query.exec();
 
     // Save any and all buffs/debuffs.
-    for (auto b : m_buffs)
+    for (auto b : buffs_)
         b->save(save_db, sql_id);
 
     return sql_id;
 }
 
 // Checks this Mobile's score.
-uint32_t Mobile::score() const { return m_score; }
+uint32_t Mobile::score() const { return score_; }
 
 // Sets a specified buff/debuff on the Actor, or extends an existing buff/debuff.
 void Mobile::set_buff(Buff::Type type, uint16_t time, uint32_t power, bool additive_power, bool additive_time)
 {
-    for (auto b : m_buffs)
+    for (auto b : buffs_)
     {
         if (b->type == type)
         {
@@ -500,42 +500,42 @@ void Mobile::set_buff(Buff::Type type, uint16_t time, uint32_t power, bool addit
     new_buff->type = type;
     new_buff->time = time;
     new_buff->power = power;
-    m_buffs.push_back(new_buff);
+    buffs_.push_back(new_buff);
 }
 
 // Sets the gender of this Mobile.
-void Mobile::set_gender(Gender gender) { m_gender = gender; }
+void Mobile::set_gender(Gender gender) { gender_ = gender; }
 
 // Sets the current (and, optionally, maximum) HP of this Mobile.
 void Mobile::set_hp(int hp, int hp_max)
 {
-    m_hp[0] = hp;
-    if (hp_max) m_hp[1] = hp_max;
+    hp_[0] = hp;
+    if (hp_max) hp_[1] = hp_max;
 }
 
 // Sets this Mobile's unique ID.
-void Mobile::set_id(uint32_t new_id) { m_id = new_id; }
+void Mobile::set_id(uint32_t new_id) { id_ = new_id; }
 
 // Sets the location of this Mobile with a Room ID.
-void Mobile::set_location(uint32_t room_id)
+void Mobile::set_location(uint32_t rooid_)
 {
-    m_location = room_id;
+    location_ = rooid_;
     if (is_player()) core()->world()->recalc_active_rooms();
 }
 
 // As above, but with a string Room ID.
-void Mobile::set_location(const std::string &room_id)
+void Mobile::set_location(const std::string &rooid_)
 {
-    if (!room_id.size()) set_location(0);
-    else set_location(StrX::hash(room_id));
+    if (!rooid_.size()) set_location(0);
+    else set_location(StrX::hash(rooid_));
 }
 
 // Adds Mobile metadata.
 void Mobile::set_meta(const std::string &key, std::string value)
 {
     StrX::find_and_replace(value, " ", "_");
-    if (m_metadata.find(key) == m_metadata.end()) m_metadata.insert(std::pair<std::string, std::string>(key, value));
-    else m_metadata.at(key) = value;
+    if (metadata_.find(key) == metadata_.end()) metadata_.insert(std::pair<std::string, std::string>(key, value));
+    else metadata_.at(key) = value;
 }
 
 // As above, but with an integer value.
@@ -548,39 +548,39 @@ void Mobile::set_meta(const std::string &key, float value) { set_meta(key, StrX:
 void Mobile::set_meta_uint(const std::string &key, uint32_t value) { set_meta(key, std::to_string(value)); }
 
 // Sets the name of this Mobile.
-void Mobile::set_name(const std::string &name) { m_name = name; }
+void Mobile::set_name(const std::string &name) { name_ = name; }
 
 // Sets this Mobile's spawn room.
-void Mobile::set_spawn_room(uint32_t id) { m_spawn_room = id; }
+void Mobile::set_spawn_room(uint32_t id) { spawn_room_ = id; }
 
 // Sets the species of this Mobile.
-void Mobile::set_species(const std::string &species) { m_species = species; }
+void Mobile::set_species(const std::string &species) { species_ = species; }
 
 // Sets this Mobile's combat stance.
-void Mobile::set_stance(CombatStance stance) { m_stance = stance; }
+void Mobile::set_stance(CombatStance stance) { stance_ = stance; }
 
 // Sets a MobileTag on this Mobile.
 void Mobile::set_tag(MobileTag the_tag)
 {
-    if (m_tags.count(the_tag) > 0) return;
-    m_tags.insert(the_tag);
+    if (tags_.count(the_tag) > 0) return;
+    tags_.insert(the_tag);
 }
 
 // Checks the species of this Mobile.
-std::string Mobile::species() const { return m_species; }
+std::string Mobile::species() const { return species_; }
 
 // Checks this Mobile's combat stance.
-CombatStance Mobile::stance() const { return m_stance; }
+CombatStance Mobile::stance() const { return stance_; }
 
 // Checks if a MobileTag is set on this Mobile.
-bool Mobile::tag(MobileTag the_tag) const { return (m_tags.count(the_tag) > 0); }
+bool Mobile::tag(MobileTag the_tag) const { return (tags_.count(the_tag) > 0); }
 
 // Triggers a single bleed tick.
 bool Mobile::tick_bleed(uint32_t power, uint16_t time)
 {
     if (!power || tag(MobileTag::ImmunityBleed)) return true;
-    const auto room = core()->world()->get_room(m_location);
-    const bool fatal = (static_cast<int>(power) >= m_hp[0]);
+    const auto room = core()->world()->get_room(location_);
+    const bool fatal = (static_cast<int>(power) >= hp_[0]);
 
     room->add_scar(ScarType::BLOOD, SCAR_BLEED_INTENSITY_FROM_BLEED_TICK);
     if (is_player())
@@ -595,7 +595,7 @@ bool Mobile::tick_bleed(uint32_t power, uint16_t time)
     else
     {
         const std::shared_ptr<Player> player = core()->world()->player();
-        if (player->location() == m_location && room->light() >= Room::LIGHT_VISIBLE) core()->message("{r}" + name(NAME_FLAG_CAPITALIZE_FIRST | NAME_FLAG_THE) + " {r}is {R}bleeding {r}rather badly. {w}[{R}-" + std::to_string(power) + "{w}]");
+        if (player->location() == location_ && room->light() >= Room::LIGHT_VISIBLE) core()->message("{r}" + name(NAME_FLAG_CAPITALIZE_FIRST | NAME_FLAG_THE) + " {r}is {R}bleeding {r}rather badly. {w}[{R}-" + std::to_string(power) + "{w}]");
     }
     reduce_hp(power);
     if (!fatal && is_player() && time == 1) core()->message("{r}Your wounds stop bleeding.");
@@ -605,23 +605,23 @@ bool Mobile::tick_bleed(uint32_t power, uint16_t time)
 // Reduce the timer on all buffs.
 void Mobile::tick_buffs()
 {
-    for (size_t i = 0; i < m_buffs.size(); i++)
+    for (size_t i = 0; i < buffs_.size(); i++)
     {
-        if (m_buffs.at(i)->time == USHRT_MAX) continue;
-        const auto type = m_buffs.at(i)->type;
+        if (buffs_.at(i)->time == USHRT_MAX) continue;
+        const auto type = buffs_.at(i)->type;
 
         switch (type)
         {
             case Buff::Type::BLEED:
-                if (!tick_bleed(m_buffs.at(i)->power, m_buffs.at(i)->time)) return;
+                if (!tick_bleed(buffs_.at(i)->power, buffs_.at(i)->time)) return;
                 break;
             case Buff::Type::POISON:
-                if (!tick_poison(m_buffs.at(i)->power, m_buffs.at(i)->time)) return;
+                if (!tick_poison(buffs_.at(i)->power, buffs_.at(i)->time)) return;
                 break;
             default: break;
         }
 
-        if (m_buffs.at(i)->time == 1)
+        if (buffs_.at(i)->time == 1)
         {
             switch (type)
             {
@@ -638,8 +638,8 @@ void Mobile::tick_buffs()
             }
         }
 
-        if (!--m_buffs.at(i)->time)
-            m_buffs.erase(m_buffs.begin() + i--);
+        if (!--buffs_.at(i)->time)
+            buffs_.erase(buffs_.begin() + i--);
     }
 }
 
@@ -647,16 +647,16 @@ void Mobile::tick_buffs()
 void Mobile::tick_hp_regen()
 {
     if (has_buff(Buff::Type::RECENT_DAMAGE)) return;
-    if (m_hp[0] > 0 && m_hp[0] < m_hp[1])
-        m_hp[0]++;
+    if (hp_[0] > 0 && hp_[0] < hp_[1])
+        hp_[0]++;
 }
 
 // Triggers a single poison tick.
 bool Mobile::tick_poison(uint32_t power, uint16_t time)
 {
     if (!power || tag(MobileTag::ImmunityPoison)) return true;
-    const auto room = core()->world()->get_room(m_location);
-    const bool fatal = (static_cast<int>(power) >= m_hp[0]);
+    const auto room = core()->world()->get_room(location_);
+    const bool fatal = (static_cast<int>(power) >= hp_[0]);
 
     if (is_player())
     {
@@ -670,7 +670,7 @@ bool Mobile::tick_poison(uint32_t power, uint16_t time)
     else
     {
         const std::shared_ptr<Player> player = core()->world()->player();
-        if (player->location() == m_location && room->light() >= Room::LIGHT_VISIBLE) core()->message("{g}" + name(NAME_FLAG_CAPITALIZE_FIRST | NAME_FLAG_THE) + " {g}takes damage from {G}poison{g}. {w}[{G}-" + std::to_string(power) + "{w}]");
+        if (player->location() == location_ && room->light() >= Room::LIGHT_VISIBLE) core()->message("{g}" + name(NAME_FLAG_CAPITALIZE_FIRST | NAME_FLAG_THE) + " {g}takes damage from {G}poison{g}. {w}[{G}-" + std::to_string(power) + "{w}]");
     }
     reduce_hp(power);
     if (!fatal && is_player() && time == 1) core()->message("{g}You feel much better as the poison fades from your system.");

@@ -55,7 +55,7 @@ const std::set<std::string> World::VALID_YAML_KEYS_MOBS = { "gear", "hp", "name"
 
 
 // Constructor, loads the room YAML data.
-World::World() : m_mob_unique_id(0), m_old_light_level(0), m_old_location(0), m_player(std::make_shared<Player>()), m_time_weather(std::make_shared<TimeWeather>())
+World::World() : mob_unique_id_(0), old_light_level_(0), old_location_(0), player_(std::make_shared<Player>()), time_weather_(std::make_shared<TimeWeather>())
 {
     load_room_pool();
     load_item_pool();
@@ -69,10 +69,10 @@ World::World() : m_mob_unique_id(0), m_old_light_level(0), m_old_location(0), m_
 // Attempts to scan a room for the active rooms list. Only for internal use with recalc_active_rooms().
 void World::active_room_scan(uint32_t target, uint32_t depth)
 {
-    if (m_active_rooms.count(target)) return;       // Ignore any room already on the active list.
+    if (active_rooms_.count(target)) return;       // Ignore any room already on the active list.
 
     const auto room = get_room(target);
-    m_active_rooms.insert(target);                  // Add this room to the active list.
+    active_rooms_.insert(target);                  // Add this room to the active list.
     if (depth + 1 >= ROOM_SCAN_DISTANCE) return;    // Just stop here if we're past the scan limit.
     for (unsigned int i = 0; i < Room::ROOM_LINKS_MAX; i++)
     {
@@ -83,7 +83,7 @@ void World::active_room_scan(uint32_t target, uint32_t depth)
 }
 
 // Retrieve a list of all active rooms.
-std::set<uint32_t> World::active_rooms() const { return m_active_rooms; }
+std::set<uint32_t> World::active_rooms() const { return active_rooms_; }
 
 // Adds a Mobile to the world.
 void World::add_mobile(std::shared_ptr<Mobile> mob)
@@ -96,20 +96,20 @@ void World::add_mobile(std::shared_ptr<Mobile> mob)
         if (!mob->parser_id()) parser_id_valid = false;
         else
         {
-            for (size_t i = 0; i < m_mobiles.size(); i++)
-                if (m_mobiles.at(i)->parser_id() == mob->parser_id()) parser_id_valid = false;
+            for (size_t i = 0; i < mobiles_.size(); i++)
+                if (mobiles_.at(i)->parser_id() == mob->parser_id()) parser_id_valid = false;
         }
         if (!parser_id_valid) mob->new_parser_id();
     } while (!parser_id_valid && ++tries < 100000);
-    if (!mob->id()) mob->set_id(++m_mob_unique_id);
-    m_mobiles.push_back(mob);
+    if (!mob->id()) mob->set_id(++mob_unique_id_);
+    mobiles_.push_back(mob);
 }
 
 // Retrieves a generic description string.
 std::string World::generic_desc(const std::string &id) const
 {
-    auto it = m_generic_descs.find(id);
-    if (it == m_generic_descs.end())
+    auto it = generic_descs_.find(id);
+    if (it == generic_descs_.end())
     {
         core()->guru()->nonfatal("Invalid generic description requested: " + id, Guru::GURU_ERROR);
         return "-";
@@ -120,16 +120,16 @@ std::string World::generic_desc(const std::string &id) const
 // Retrieves a copy of the anatomy data for a given species.
 const std::vector<std::shared_ptr<BodyPart>>& World::get_anatomy(const std::string &id) const
 {
-    if (m_anatomy_pool.count(id) == 0) throw std::runtime_error("Could not find species ID: " + id);
-    return m_anatomy_pool.at(id);
+    if (anatomy_pool_.count(id) == 0) throw std::runtime_error("Could not find species ID: " + id);
+    return anatomy_pool_.at(id);
 }
 
 // Retrieves a specified Item by ID.
 const std::shared_ptr<Item> World::get_item(const std::string &item_id, int stack_size) const
 {
     if (!item_id.size()) throw std::runtime_error("Blank item ID requested.");
-    const auto it = m_item_pool.find(StrX::hash(item_id));
-    if (it == m_item_pool.end()) throw std::runtime_error("Invalid item ID requested: " + item_id);
+    const auto it = item_pool_.find(StrX::hash(item_id));
+    if (it == item_pool_.end()) throw std::runtime_error("Invalid item ID requested: " + item_id);
     auto copy = std::make_shared<Item>(*it->second);
     if (stack_size > 0) copy->set_stack(stack_size);
     return copy;
@@ -138,8 +138,8 @@ const std::shared_ptr<Item> World::get_item(const std::string &item_id, int stac
 // Retrieves a specified List by ID.
 std::shared_ptr<List> World::get_list(const std::string &list_id) const
 {
-    if (m_list_pool.count(list_id) == 0) throw std::runtime_error("Could not find list ID: " + list_id);
-    return std::make_shared<List>(*m_list_pool.at(list_id));
+    if (list_pool_.count(list_id) == 0) throw std::runtime_error("Could not find list ID: " + list_id);
+    return std::make_shared<List>(*list_pool_.at(list_id));
 }
 
 // Retrieves a specified Mobile by ID.
@@ -147,8 +147,8 @@ const std::shared_ptr<Mobile> World::get_mob(const std::string &mob_id) const
 {
     if (!mob_id.size()) throw std::runtime_error("Blank mobile ID requested.");
     const uint32_t id_hash = StrX::hash(mob_id);
-    const auto it = m_mob_pool.find(id_hash);
-    if (it == m_mob_pool.end()) throw std::runtime_error("Invalid mobile ID requested: " + mob_id);
+    const auto it = mob_pool_.find(id_hash);
+    if (it == mob_pool_.end()) throw std::runtime_error("Invalid mobile ID requested: " + mob_id);
     auto new_mob = std::make_shared<Mobile>(*it->second);
 
     if (new_mob->tag(MobileTag::RandomGender))
@@ -158,7 +158,7 @@ const std::shared_ptr<Mobile> World::get_mob(const std::string &mob_id) const
     }
 
     // If this Mobile has a gear list, equip it now.
-    const std::string gear_list_str = m_mob_gear.at(id_hash);
+    const std::string gear_list_str = mob_gear_.at(id_hash);
     if (gear_list_str.size())
     {
         auto gear_list = get_list(gear_list_str);
@@ -193,8 +193,8 @@ const std::shared_ptr<Mobile> World::get_mob(const std::string &mob_id) const
 // Retrieves a specified Room by ID.
 const std::shared_ptr<Room> World::get_room(uint32_t room_id) const
 {
-    const auto it = m_room_pool.find(room_id);
-    if (it == m_room_pool.end()) throw std::runtime_error("Invalid room ID requested: " + std::to_string(room_id));
+    const auto it = room_pool_.find(room_id);
+    if (it == room_pool_.end()) throw std::runtime_error("Invalid room ID requested: " + std::to_string(room_id));
     return it->second;
 }
 
@@ -208,12 +208,12 @@ const std::shared_ptr<Room> World::get_room(const std::string &room_id) const
 // Returns a specified shop, or creates a new shop if this ID doesn't yet exist.
 const std::shared_ptr<Shop> World::get_shop(uint32_t id)
 {
-    const auto it = m_shops.find(id);
-    if (it == m_shops.end())
+    const auto it = shops_.find(id);
+    if (it == shops_.end())
     {
         auto new_shop = std::make_shared<Shop>(id);
         new_shop->restock();
-        m_shops.insert(std::make_pair(id, new_shop));
+        shops_.insert(std::make_pair(id, new_shop));
         return new_shop;
     }
     else return it->second;
@@ -222,8 +222,8 @@ const std::shared_ptr<Shop> World::get_shop(uint32_t id)
 // Retrieves the XP gain multiplier for a specified skill.
 float World::get_skill_multiplier(const std::string &skill)
 {
-    const auto it = m_skills.find(skill);
-    if (it == m_skills.end())
+    const auto it = skills_.find(skill);
+    if (it == skills_.end())
     {
         core()->guru()->nonfatal("Invalid skill requested: " + skill, Guru::GURU_ERROR);
         return 0;
@@ -234,8 +234,8 @@ float World::get_skill_multiplier(const std::string &skill)
 // Retrieves the name of a specified skill.
 std::string World::get_skill_name(const std::string &skill)
 {
-    const auto it = m_skills.find(skill);
-    if (it == m_skills.end())
+    const auto it = skills_.find(skill);
+    if (it == skills_.end())
     {
         core()->guru()->nonfatal("Invalid skill requested: " + skill, Guru::GURU_ERROR);
         return "[error]";
@@ -244,7 +244,7 @@ std::string World::get_skill_name(const std::string &skill)
 }
 
 // Checks if a specified item ID exists.
-bool World::item_exists(const std::string &str) const { return m_item_pool.count(StrX::hash(str)); }
+bool World::item_exists(const std::string &str) const { return item_pool_.count(StrX::hash(str)); }
 
 // Loads the World and all things within it.
 void World::load(std::shared_ptr<SQLite::Database> save_db)
@@ -253,20 +253,20 @@ void World::load(std::shared_ptr<SQLite::Database> save_db)
 
     SQLite::Statement world_query(*save_db, "SELECT * FROM world");
     if (!world_query.executeStep()) throw std::runtime_error("Unable to retrieve world data!");
-    m_mob_unique_id = world_query.getColumn("mob_unique_id").getUInt();
+    mob_unique_id_ = world_query.getColumn("mob_unique_id").getUInt();
 
-    for (auto room : m_room_pool)
+    for (auto room : room_pool_)
     {
         room.second->load(save_db);
         // Check if the Room has the SaveActive tag; if so, add it to the active rooms list, then remove the tag.
         if (room.second->tag(RoomTag::SaveActive))
         {
-            m_active_rooms.insert(room.first);
+            active_rooms_.insert(room.first);
             room.second->clear_tag(RoomTag::SaveActive);
         }
     }
-    const uint32_t player_sql_id = m_player->load(save_db, 0);
-    m_time_weather->load(save_db);
+    const uint32_t player_sql_id = player_->load(save_db, 0);
+    time_weather_->load(save_db);
 
     SQLite::Statement mob_query(*save_db, "SELECT sql_id FROM mobiles WHERE sql_id != :sql_id ORDER BY sql_id ASC");
     mob_query.bind(":sql_id", std::to_string(player_sql_id));
@@ -283,7 +283,7 @@ void World::load(std::shared_ptr<SQLite::Database> save_db)
         const uint32_t shop_id = shop_query.getColumn("id").getUInt();
         auto new_shop = std::make_shared<Shop>(shop_id);
         new_shop->load(save_db);
-        m_shops.insert(std::make_pair(shop_id, new_shop));
+        shops_.insert(std::make_pair(shop_id, new_shop));
     }
 }
 
@@ -291,12 +291,12 @@ void World::load(std::shared_ptr<SQLite::Database> save_db)
 void World::main_loop_events_post_input()
 {
     // Check to see if the light level has changed.
-    if (m_player->location() == m_old_location)
+    if (player_->location() == old_location_)
     {
-        const auto room = get_room(m_old_location);
+        const auto room = get_room(old_location_);
         int new_light = room->light();
-        if (m_old_light_level >= Room::LIGHT_VISIBLE && new_light < Room::LIGHT_VISIBLE) core()->message("{u}You are plunged into {B}darkness{u}!");
-        else if (m_old_light_level < Room::LIGHT_VISIBLE && new_light >= Room::LIGHT_VISIBLE)
+        if (old_light_level_ >= Room::LIGHT_VISIBLE && new_light < Room::LIGHT_VISIBLE) core()->message("{u}You are plunged into {B}darkness{u}!");
+        else if (old_light_level_ < Room::LIGHT_VISIBLE && new_light >= Room::LIGHT_VISIBLE)
         {
             core()->message("{U}You can now see {W}clearly{U}!");
             ActionLook::look();
@@ -308,30 +308,30 @@ void World::main_loop_events_post_input()
 void World::main_loop_events_pre_input()
 {
     // The Grit buff falls off as soon as it's the player's turn to act, if they took damage.
-    if (m_player->has_buff(Buff::Type::GRIT) && m_player->tag(MobileTag::Success_Grit))
+    if (player_->has_buff(Buff::Type::GRIT) && player_->tag(MobileTag::Success_Grit))
     {
-        m_player->clear_tag(MobileTag::Success_Grit);
-        m_player->clear_buff(Buff::Type::GRIT);
+        player_->clear_tag(MobileTag::Success_Grit);
+        player_->clear_buff(Buff::Type::GRIT);
     }
 
     // Similarly, QuickRoll falls off if it was used.
-    if (m_player->has_buff(Buff::Type::QUICK_ROLL) && m_player->tag(MobileTag::Success_QuickRoll))
+    if (player_->has_buff(Buff::Type::QUICK_ROLL) && player_->tag(MobileTag::Success_QuickRoll))
     {
-        m_player->clear_tag(MobileTag::Success_QuickRoll);
-        m_player->clear_buff(Buff::Type::QUICK_ROLL);
+        player_->clear_tag(MobileTag::Success_QuickRoll);
+        player_->clear_buff(Buff::Type::QUICK_ROLL);
     }
 
     // As does ShieldWall.
-    if (m_player->has_buff(Buff::Type::SHIELD_WALL) && m_player->tag(MobileTag::Success_ShieldWall))
+    if (player_->has_buff(Buff::Type::SHIELD_WALL) && player_->tag(MobileTag::Success_ShieldWall))
     {
-        m_player->clear_tag(MobileTag::Success_ShieldWall);
-        m_player->clear_buff(Buff::Type::SHIELD_WALL);
+        player_->clear_tag(MobileTag::Success_ShieldWall);
+        player_->clear_buff(Buff::Type::SHIELD_WALL);
     }
 
     // For checking if the light level has changed due to something that happened this turn.
-    m_old_location = m_player->location();
-    const auto room = get_room(m_old_location);
-    m_old_light_level = room->light();
+    old_location_ = player_->location();
+    const auto room = get_room(old_location_);
+    old_light_level_ = room->light();
 }
 
 // Loads the anatomy YAML data into memory.
@@ -371,7 +371,7 @@ void World::load_anatomy_pool()
                 anatomy_vec.push_back(new_bp);
             }
 
-            m_anatomy_pool.insert(std::pair<std::string, std::vector<std::shared_ptr<BodyPart>>>(species_id, anatomy_vec));
+            anatomy_pool_.insert(std::pair<std::string, std::vector<std::shared_ptr<BodyPart>>>(species_id, anatomy_vec));
         }
     } catch (std::exception& e)
     {
@@ -386,7 +386,7 @@ void World::load_generic_descs()
     {
         const YAML::Node yaml_descs = YAML::LoadFile("data/misc/generic-descriptions.yml");
         for (auto desc : yaml_descs)
-            m_generic_descs.insert(std::make_pair(desc.first.as<std::string>(), desc.second.as<std::string>()));
+            generic_descs_.insert(std::make_pair(desc.first.as<std::string>(), desc.second.as<std::string>()));
     }
     catch (std::exception& e)
     {
@@ -423,7 +423,7 @@ void World::load_item_pool()
                 }
 
                 // Check to make sure there are no hash collisions.
-                if (m_item_pool.find(item_id) != m_item_pool.end()) throw std::runtime_error("Item ID hash conflict: " + item_id_str);
+                if (item_pool_.find(item_id) != item_pool_.end()) throw std::runtime_error("Item ID hash conflict: " + item_id_str);
 
                 // The Item's type and subtype.
                 if (!item_data["type"]) throw std::runtime_error("Missing item type: " + item_id_str);
@@ -592,7 +592,7 @@ void World::load_item_pool()
                 }
 
                 // Add the new Item to the item pool.
-                m_item_pool.insert(std::make_pair(item_id, new_item));
+                item_pool_.insert(std::make_pair(item_id, new_item));
             }
         }
     }
@@ -647,7 +647,7 @@ void World::load_lists()
                     }
                 }
                 if (is_count) throw std::runtime_error("Invalid list length: " + list_id);
-                m_list_pool.insert(std::pair<std::string, std::shared_ptr<List>>(list_id, new_list));
+                list_pool_.insert(std::pair<std::string, std::shared_ptr<List>>(list_id, new_list));
             }
         }
     } catch (std::exception& e)
@@ -686,7 +686,7 @@ void World::load_mob_pool()
                 }
 
                 // Check to make sure there are no hash collisions.
-                if (m_mob_pool.find(mobile_id) != m_mob_pool.end()) throw std::runtime_error("Mobile ID hash conflict: " + mobile_id_str);
+                if (mob_pool_.find(mobile_id) != mob_pool_.end()) throw std::runtime_error("Mobile ID hash conflict: " + mobile_id_str);
 
                 // The Mobile's name.
                 if (!mobile_data["name"]) core()->guru()->nonfatal("Missing mobile name: " + mobile_id_str, Guru::GURU_ERROR);
@@ -721,8 +721,8 @@ void World::load_mob_pool()
                 if (mobile_data["gear"]) gear_list = mobile_data["gear"].as<std::string>();
 
                 // Add the Mobile to the mob pool.
-                m_mob_pool.insert(std::make_pair(mobile_id, new_mob));
-                m_mob_gear.insert(std::make_pair(mobile_id, gear_list));
+                mob_pool_.insert(std::make_pair(mobile_id, new_mob));
+                mob_gear_.insert(std::make_pair(mobile_id, gear_list));
             }
         }
     }
@@ -761,7 +761,7 @@ void World::load_room_pool()
                 }
 
                 // Check to make sure there are no hash collisions.
-                if (m_room_pool.find(new_room->id()) != m_room_pool.end()) throw std::runtime_error("Room ID hash conflict: " + room_id);
+                if (room_pool_.find(new_room->id()) != room_pool_.end()) throw std::runtime_error("Room ID hash conflict: " + room_id);
 
                 // The Room's long and short names.
                 if (!room_data["name"] || room_data["name"].size() < 2) core()->guru()->nonfatal("Missing or invalid room name(s): " + room_id, Guru::GURU_ERROR);
@@ -945,7 +945,7 @@ void World::load_room_pool()
                 new_room->clear_tag(RoomTag::MetaChanged);
 
                 // Add the new Room to the room pool.
-                m_room_pool.insert(std::make_pair(new_room->id(), new_room));
+                room_pool_.insert(std::make_pair(new_room->id(), new_room));
             }
         }
     }
@@ -969,7 +969,7 @@ void World::load_skills()
             if (!skill_data["name"]) throw std::runtime_error("Skill name not specified: " + skill_id);
             if (!skill_data["xp_multi"]) throw std::runtime_error("Skill XP multiplier not specified: " + skill_id);
             SkillData new_skill = { skill_data["name"].as<std::string>(), skill_data["xp_multi"].as<float>() };
-            m_skills.insert(std::make_pair(skill_id, new_skill));
+            skills_.insert(std::make_pair(skill_id, new_skill));
         }
     }
     catch (std::exception& e)
@@ -979,54 +979,54 @@ void World::load_skills()
 }
 
 // Returns the number of Mobiles currently active.
-size_t World::mob_count() const { return m_mobiles.size(); }
+size_t World::mob_count() const { return mobiles_.size(); }
 
 // Checks if a specified mobile ID exists.
-bool World::mob_exists(const std::string &str) const { return m_mob_pool.count(StrX::hash(str)); }
+bool World::mob_exists(const std::string &str) const { return mob_pool_.count(StrX::hash(str)); }
 
 // Retrieves a Mobile by vector position.
 const std::shared_ptr<Mobile> World::mob_vec(size_t vec_pos) const
 {
-    if (vec_pos >= m_mobiles.size()) throw std::runtime_error("Invalid mobile vector position.");
-    return m_mobiles.at(vec_pos);
+    if (vec_pos >= mobiles_.size()) throw std::runtime_error("Invalid mobile vector position.");
+    return mobiles_.at(vec_pos);
 }
 
 // Sets up for a new game.
 void World::new_game()
 {
-    m_player->set_meta_uint("bones_id", Bones::unique_id());
-    m_player->set_location("BRASS_DIRK");
+    player_->set_meta_uint("bones_id", Bones::unique_id());
+    player_->set_location("BRASS_DIRK");
     starter_equipment("STARTING_GEAR");
     ActionLook::look();
 }
 
 // Retrieves a pointer to the Player object.
-const std::shared_ptr<Player> World::player() const { return m_player; }
+const std::shared_ptr<Player> World::player() const { return player_; }
 
 // Recalculates the list of active rooms.
 void World::recalc_active_rooms()
 {
-    std::set<uint32_t> old_active_rooms = m_active_rooms;   // Make a copy of the currently active rooms, so we can see what changed.
-    m_active_rooms.clear();
+    std::set<uint32_t> old_active_rooms = active_rooms_;   // Make a copy of the currently active rooms, so we can see what changed.
+    active_rooms_.clear();
     active_room_scan(player()->location(), 0);
 
     // Ping any rooms that have become active.
-    for (auto room : m_active_rooms)
+    for (auto room : active_rooms_)
         if (!old_active_rooms.count(room)) get_room(room)->activate();
 
     // Ping any rooms that have become inactive.
     for (auto room : old_active_rooms)
-        if (!m_active_rooms.count(room)) get_room(room)->deactivate();
+        if (!active_rooms_.count(room)) get_room(room)->deactivate();
 }
 
 // Removes a Mobile from the world.
 void World::remove_mobile(size_t id)
 {
-    for (size_t i = 0; i < m_mobiles.size(); i++)
+    for (size_t i = 0; i < mobiles_.size(); i++)
     {
-        if (m_mobiles.at(i)->id() == id)
+        if (mobiles_.at(i)->id() == id)
         {
-            m_mobiles.erase(m_mobiles.begin() + i);
+            mobiles_.erase(mobiles_.begin() + i);
             return;
         }
     }
@@ -1034,10 +1034,10 @@ void World::remove_mobile(size_t id)
 }
 
 // Checks if a room is currently active.
-bool World::room_active(uint32_t id) const { return m_active_rooms.count(id); }
+bool World::room_active(uint32_t id) const { return active_rooms_.count(id); }
 
 // Checks if a specified room ID exists.
-bool World::room_exists(const std::string &str) const { return m_room_pool.count(StrX::hash(str)); }
+bool World::room_exists(const std::string &str) const { return room_pool_.count(StrX::hash(str)); }
 
 // Saves the World and all things within it.
 void World::save(std::shared_ptr<SQLite::Database> save_db)
@@ -1055,14 +1055,14 @@ void World::save(std::shared_ptr<SQLite::Database> save_db)
     save_db->exec(SQL_WORLD);
 
     SQLite::Statement query(*save_db, "INSERT INTO world ( mob_unique_id ) VALUES ( :mob_unique_id )");
-    query.bind(":mob_unique_id", m_mob_unique_id);
+    query.bind(":mob_unique_id", mob_unique_id_);
     query.exec();
 
-    m_player->save(save_db);
+    player_->save(save_db);
     core()->messagelog()->save(save_db);
-    m_time_weather->save(save_db);
+    time_weather_->save(save_db);
 
-    for (auto room : m_room_pool)
+    for (auto room : room_pool_)
     {
         // Temporarily tag the room with SaveActive, if it's in the active rooms list.
         const bool is_active = room_active(room.first);
@@ -1071,10 +1071,10 @@ void World::save(std::shared_ptr<SQLite::Database> save_db)
         if (is_active) room.second->clear_tag(RoomTag::SaveActive);
     }
 
-    for (auto mob : m_mobiles)
+    for (auto mob : mobiles_)
         mob->save(save_db);
 
-    for (auto shop : m_shops)
+    for (auto shop : shops_)
         shop.second->save(save_db);
 }
 
@@ -1095,4 +1095,4 @@ void World::starter_equipment(const std::string &list_name)
 }
 
 // Gets a pointer to the TimeWeather object.
-const std::shared_ptr<TimeWeather> World::time_weather() const { return m_time_weather; }
+const std::shared_ptr<TimeWeather> World::time_weather() const { return time_weather_; }

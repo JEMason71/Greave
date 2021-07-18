@@ -52,9 +52,9 @@ private:
     ParserSearchResult  parse_target(std::vector<std::string> input, ParserTarget target);  // Attempts to match a name to a given target.
     void                parse_pcd(const std::string &first_word, const std::vector<std::string> &words, ParserCommandData pcd, bool confirm);   // Parses a known command.
 
-    std::vector<ParserCommandData>  m_commands;         // The commands the parser can understand.
-    std::string                     m_last_input;       // The last raw input from the player.
-    SpecialState                    m_special_state;    // Special parser states, such as waiting for the player to confirm something.
+    std::vector<ParserCommandData>  commands_;      // The commands the parser can understand.
+    std::string                     last_input_;    // The last raw input from the player.
+    SpecialState                    special_state_; // Special parser states, such as waiting for the player to confirm something.
 };
 
 #endif  // GREAVE_CORE_PARSER_H_

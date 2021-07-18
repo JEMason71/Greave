@@ -31,9 +31,9 @@ const uint32_t TimeWeather::HEARTBEAT_TIMERS[TimeWeather::Heartbeat::_TOTAL] = {
 
 
 // Constructor, sets default values.
-TimeWeather::TimeWeather() : m_day(80), m_moon(1), m_time(39660), m_time_passed(0), m_subsecond(0), m_weather(Weather::FAIR)
+TimeWeather::TimeWeather() : day_(80), moon_(1), time_(39660), time_passed_(0), subsecond_(0), weather_(Weather::FAIR)
 {
-    m_weather_change_map.resize(9);
+    weather_change_map_.resize(9);
     try
     {
         const YAML::Node yaml_weather = YAML::LoadFile("data/misc/weather.yml");
@@ -45,9 +45,9 @@ TimeWeather::TimeWeather() : m_day(80), m_moon(1), m_time(39660), m_time_passed(
             {
                 const int map_id = id[4] - '0';
                 if (map_id < 0 || map_id > 8) throw std::runtime_error("Invalid weather map strings.");
-                m_weather_change_map.at(map_id) = StrX::decode_compressed_string(text);
+                weather_change_map_.at(map_id) = StrX::decode_compressed_string(text);
             }
-            else m_tw_string_map.insert(std::pair<std::string, std::string>(id, text));
+            else tw_string_map_.insert(std::pair<std::string, std::string>(id, text));
         }
     }
     catch (std::exception& e)
@@ -57,24 +57,24 @@ TimeWeather::TimeWeather() : m_day(80), m_moon(1), m_time(39660), m_time_passed(
 
     // Reset all the heartbeats.
     for (unsigned int h = 0; h < TimeWeather::Heartbeat::_TOTAL; h++)
-        m_heartbeats[h] = HEARTBEAT_TIMERS[h];
+        heartbeats_[h] = HEARTBEAT_TIMERS[h];
 }
 
 // Gets the current season.
 TimeWeather::Season TimeWeather::current_season() const
 {
-    if (m_day > 364) throw std::runtime_error("Impossible day specified!");
-    if (m_day < 79) return Season::WINTER;
-    else if (m_day < 172) return Season::SPRING;
-    else if (m_day <= 266) return Season::SUMMER;
-    else if (m_day <= 355) return Season::AUTUMN;
+    if (day_ > 364) throw std::runtime_error("Impossible day specified!");
+    if (day_ < 79) return Season::WINTER;
+    else if (day_ < 172) return Season::SPRING;
+    else if (day_ <= 266) return Season::SUMMER;
+    else if (day_ <= 355) return Season::AUTUMN;
     else return Season::WINTER;
 }
 
 // Returns the name of the current day of the week.
 std::string TimeWeather::day_name() const
 {
-    int temp_day = m_day;
+    int temp_day = day_;
     while (temp_day > 7) temp_day -= 7;
     switch (temp_day)
     {
@@ -92,8 +92,8 @@ std::string TimeWeather::day_name() const
 // Returns the current day of the month.
 int TimeWeather::day_of_month() const
 {
-    if (m_day <= 28) return m_day;
-    int temp_day = m_day;
+    if (day_ <= 28) return day_;
+    int temp_day = day_;
     while (temp_day > 28) temp_day -= 28;
     return temp_day;
 }
@@ -122,22 +122,22 @@ TimeWeather::Weather TimeWeather::fix_weather(TimeWeather::Weather weather, Time
 }
 
 // Gets the current weather, runs fix_weather() internally.
-TimeWeather::Weather TimeWeather::get_weather() const { return fix_weather(m_weather, current_season()); }
+TimeWeather::Weather TimeWeather::get_weather() const { return fix_weather(weather_, current_season()); }
 
 // Increases a specified heartbeat timer.
 void TimeWeather::increase_heartbeat(Heartbeat beat, int count)
 {
     if (beat >= Heartbeat::_TOTAL) throw std::runtime_error("Invalid heartbeat ID!");
-    m_heartbeats[static_cast<int>(beat)] += count;
+    heartbeats_[static_cast<int>(beat)] += count;
 }
 
 // Checks if a given heartbeat is ready to trigger, and resets its counter.
 bool TimeWeather::heartbeat_ready(Heartbeat beat)
 {
     if (beat >= Heartbeat::_TOTAL) throw std::runtime_error("Invalid heartbeat ID!");
-    if (m_heartbeats[beat] >= HEARTBEAT_TIMERS[beat])
+    if (heartbeats_[beat] >= HEARTBEAT_TIMERS[beat])
     {
-        m_heartbeats[beat] = 0;
+        heartbeats_[beat] = 0;
         return true;
     }
     return false;
@@ -146,10 +146,10 @@ bool TimeWeather::heartbeat_ready(Heartbeat beat)
 // Checks whether it's light or dark right now.
 TimeWeather::LightDark TimeWeather::light_dark() const
 {
-    if (m_time >= 1285 * Time::MINUTE) return LightDark::NIGHT;
-    else if (m_time >= 1140 * Time::MINUTE) return LightDark::DARK;
-    else if (m_time >= 420 * Time::MINUTE) return LightDark::LIGHT;
-    else if (m_time >= 277 * Time::MINUTE) return LightDark::DARK;
+    if (time_ >= 1285 * Time::MINUTE) return LightDark::NIGHT;
+    else if (time_ >= 1140 * Time::MINUTE) return LightDark::DARK;
+    else if (time_ >= 420 * Time::MINUTE) return LightDark::LIGHT;
+    else if (time_ >= 277 * Time::MINUTE) return LightDark::DARK;
     else return LightDark::NIGHT;
 }
 
@@ -159,12 +159,12 @@ void TimeWeather::load(std::shared_ptr<SQLite::Database> save_db)
     SQLite::Statement query(*save_db, "SELECT * FROM time_weather");
     if (query.executeStep())
     {
-        m_day = query.getColumn("day").getInt();
-        m_moon = query.getColumn("moon").getInt();
-        m_subsecond = query.getColumn("subsecond").getDouble();
-        m_time = query.getColumn("time").getInt();
-        m_time_passed = query.getColumn("time_total").getUInt();
-        m_weather = static_cast<Weather>(query.getColumn("weather").getInt());
+        day_ = query.getColumn("day").getInt();
+        moon_ = query.getColumn("moon").getInt();
+        subsecond_ = query.getColumn("subsecond").getDouble();
+        time_ = query.getColumn("time").getInt();
+        time_passed_ = query.getColumn("time_total").getUInt();
+        weather_ = static_cast<Weather>(query.getColumn("weather").getInt());
     }
     else throw std::runtime_error("Could not load time and weather data!");
 
@@ -173,32 +173,32 @@ void TimeWeather::load(std::shared_ptr<SQLite::Database> save_db)
     {
         uint32_t id = heartbeat_query.getColumn("id").getUInt();
         if (id >= Heartbeat::_TOTAL) throw std::runtime_error("Invalid heartbeat data!");
-        m_heartbeats[id] = heartbeat_query.getColumn("count").getUInt();
+        heartbeats_[id] = heartbeat_query.getColumn("count").getUInt();
     }
 }
 
 // Returns the name of the current month.
 std::string TimeWeather::month_name() const
 {
-    if (m_day <= 28) return "Harrowing";            // January
-    else if (m_day <= 56) return "Shadows";         // February
-    else if (m_day <= 84) return "the Lord";        // March
-    else if (m_day <= 112) return "the Lady";       // April
-    else if (m_day <= 140) return "the Fall";       // May
-    else if (m_day <= 168) return "Fortune";        // June
-    else if (m_day <= 196) return "Fire";           // Sol
-    else if (m_day <= 224) return "Gold";           // July
-    else if (m_day <= 252) return "Seeking";        // August
-    else if (m_day <= 280) return "the Serpent";    // September
-    else if (m_day <= 308) return "Crimson";        // October
-    else if (m_day <= 336) return "King's Night";   // November
+    if (day_ <= 28) return "Harrowing";            // January
+    else if (day_ <= 56) return "Shadows";         // February
+    else if (day_ <= 84) return "the Lord";        // March
+    else if (day_ <= 112) return "the Lady";       // April
+    else if (day_ <= 140) return "the Fall";       // May
+    else if (day_ <= 168) return "Fortune";        // June
+    else if (day_ <= 196) return "Fire";           // Sol
+    else if (day_ <= 224) return "Gold";           // July
+    else if (day_ <= 252) return "Seeking";        // August
+    else if (day_ <= 280) return "the Serpent";    // September
+    else if (day_ <= 308) return "Crimson";        // October
+    else if (day_ <= 336) return "King's Night";   // November
     else return "Frost";                            // December
 }
 
 // Gets the current lunar phase.
 TimeWeather::LunarPhase TimeWeather::moon_phase() const
 {
-    switch (m_moon)
+    switch (moon_)
     {
         case 0: return LunarPhase::NEW;
         case 1: case 2: case 3: case 4: case 5: case 6: return LunarPhase::WAXING_CRESCENT;
@@ -224,12 +224,12 @@ bool TimeWeather::pass_time(float seconds, bool interruptable)
     const bool player_is_resting = player->tag(MobileTag::Resting);
 
     // Determine how many seconds to pass.
-    m_subsecond += seconds;
+    subsecond_ += seconds;
     int seconds_to_add = 0;
-    if (m_subsecond >= 1.0f)
+    if (subsecond_ >= 1.0f)
     {
-        seconds_to_add = std::floor(m_subsecond);
-        m_subsecond -= seconds_to_add;
+        seconds_to_add = std::floor(subsecond_);
+        subsecond_ -= seconds_to_add;
     }
 
     int old_hp = player->hp();
@@ -251,26 +251,26 @@ bool TimeWeather::pass_time(float seconds, bool interruptable)
             old_thirst = thirst;
         }
 
-        m_time_passed++;    // The total time passed in the game. This will loop every 136 years, but that's not a problem; see time_passed().
+        time_passed_++;    // The total time passed in the game. This will loop every 136 years, but that's not a problem; see time_passed().
 
         // Increase all heartbeat timers.
         for (unsigned int h = 0; h < Heartbeat::_TOTAL; h++)
-            m_heartbeats[h]++;
+            heartbeats_[h]++;
 
         // Update the time of day and weather.
         const bool show_weather_messages = (!indoors || can_see_outside);
         TimeOfDay old_time_of_day = time_of_day(true);
-        int old_time = m_time;
+        int old_time = time_;
         bool change_happened = false;
         std::string weather_msg;
-        if (++m_time >= Time::DAY) m_time -= Time::DAY;
-        if (m_time >= 420 * Time::MINUTE && old_time < 420 * Time::MINUTE)   // Trigger moon-phase changing and day-of-year changing at dawn, not midnight.
+        if (++time_ >= Time::DAY) time_ -= Time::DAY;
+        if (time_ >= 420 * Time::MINUTE && old_time < 420 * Time::MINUTE)   // Trigger moon-phase changing and day-of-year changing at dawn, not midnight.
         {
-            if (++m_day > 364) m_day = 1;
-            if (++m_moon >= LUNAR_CYCLE_DAYS) m_moon = 0;
+            if (++day_ > 364) day_ = 1;
+            if (++moon_ >= LUNAR_CYCLE_DAYS) moon_ = 0;
             core()->message("{B}It is now " + day_name() + ", the " + day_of_month_string() + " day of " +  month_name() + ".");
         }
-        old_time = m_time;
+        old_time = time_;
         if (time_of_day(true) != old_time_of_day)
         {
             weather_msg = "";
@@ -363,19 +363,19 @@ bool TimeWeather::pass_time(float seconds, bool interruptable)
 void TimeWeather::save(std::shared_ptr<SQLite::Database> save_db) const
 {
     SQLite::Statement query(*save_db, "INSERT INTO time_weather ( day, moon, subsecond, time, time_total, weather ) VALUES ( :day, :moon, :subsecond, :time, :time_total, :weather )");
-    query.bind(":day", m_day);
-    query.bind(":moon", m_moon);
-    query.bind(":subsecond", m_subsecond);
-    query.bind(":time", m_time);
-    query.bind(":time_total", m_time_passed);
-    query.bind(":weather", static_cast<int>(m_weather));
+    query.bind(":day", day_);
+    query.bind(":moon", moon_);
+    query.bind(":subsecond", subsecond_);
+    query.bind(":time", time_);
+    query.bind(":time_total", time_passed_);
+    query.bind(":weather", static_cast<int>(weather_));
     query.exec();
 
     for (unsigned int h = 0; h < Heartbeat::_TOTAL; h++)
     {
         SQLite::Statement heartbeat_query(*save_db, "INSERT INTO heartbeats ( id, count ) VALUES ( :id, :count )");
         heartbeat_query.bind(":id", h);
-        heartbeat_query.bind(":count", m_heartbeats[h]);
+        heartbeat_query.bind(":count", heartbeats_[h]);
         heartbeat_query.exec();
     }
 }
@@ -398,67 +398,67 @@ TimeWeather::TimeOfDay TimeWeather::time_of_day(bool fine) const
 {
     if (fine)
     {
-        if (m_time >= 1380 * Time::MINUTE) return TimeOfDay::MIDNIGHT;
-        else if (m_time >= 1260 * Time::MINUTE) return TimeOfDay::NIGHT;
-        else if (m_time >= 1140 * Time::MINUTE) return TimeOfDay::DUSK;
-        else if (m_time >= 1020 * Time::MINUTE) return TimeOfDay::SUNSET;
-        else if (m_time >= 660 * Time::MINUTE) return TimeOfDay::NOON;
-        else if (m_time >= 540 * Time::MINUTE) return TimeOfDay::MORNING;
-        else if (m_time >= 420 * Time::MINUTE) return TimeOfDay::SUNRISE;
-        else if (m_time >= 300 * Time::MINUTE) return TimeOfDay::DAWN;
+        if (time_ >= 1380 * Time::MINUTE) return TimeOfDay::MIDNIGHT;
+        else if (time_ >= 1260 * Time::MINUTE) return TimeOfDay::NIGHT;
+        else if (time_ >= 1140 * Time::MINUTE) return TimeOfDay::DUSK;
+        else if (time_ >= 1020 * Time::MINUTE) return TimeOfDay::SUNSET;
+        else if (time_ >= 660 * Time::MINUTE) return TimeOfDay::NOON;
+        else if (time_ >= 540 * Time::MINUTE) return TimeOfDay::MORNING;
+        else if (time_ >= 420 * Time::MINUTE) return TimeOfDay::SUNRISE;
+        else if (time_ >= 300 * Time::MINUTE) return TimeOfDay::DAWN;
         return TimeOfDay::MIDNIGHT;
     } else
     {
-        if (m_time >= 1380 * Time::MINUTE) return TimeOfDay::NIGHT;
-        if (m_time >= 1140 * Time::MINUTE) return TimeOfDay::DUSK;
-        if (m_time >= 540 * Time::MINUTE) return TimeOfDay::DAY;
-        if (m_time >= 300 * Time::MINUTE) return TimeOfDay::DAWN;
+        if (time_ >= 1380 * Time::MINUTE) return TimeOfDay::NIGHT;
+        if (time_ >= 1140 * Time::MINUTE) return TimeOfDay::DUSK;
+        if (time_ >= 540 * Time::MINUTE) return TimeOfDay::DAY;
+        if (time_ >= 300 * Time::MINUTE) return TimeOfDay::DAWN;
         return TimeOfDay::NIGHT;
     }
 }
 
 // Returns the exact time of day.
-int TimeWeather::time_of_day_exact() const { return m_time; }
+int TimeWeather::time_of_day_exact() const { return time_; }
 
 // Returns the current time of day as a string.
 std::string TimeWeather::time_of_day_str(bool fine) const
 {
     if (fine)
     {
-        if (m_time >= 1380 * Time::MINUTE) return "MIDNIGHT";
-        else if (m_time >= 1260 * Time::MINUTE) return "NIGHT";
-        else if (m_time >= 1140 * Time::MINUTE) return "DUSK";
-        else if (m_time >= 1020 * Time::MINUTE) return "SUNSET";
-        else if (m_time >= 660 * Time::MINUTE) return "NOON";
-        else if (m_time >= 540 * Time::MINUTE) return "MORNING";
-        else if (m_time >= 420 * Time::MINUTE) return "SUNRISE";
-        else if (m_time >= 300 * Time::MINUTE) return "DAWN";
+        if (time_ >= 1380 * Time::MINUTE) return "MIDNIGHT";
+        else if (time_ >= 1260 * Time::MINUTE) return "NIGHT";
+        else if (time_ >= 1140 * Time::MINUTE) return "DUSK";
+        else if (time_ >= 1020 * Time::MINUTE) return "SUNSET";
+        else if (time_ >= 660 * Time::MINUTE) return "NOON";
+        else if (time_ >= 540 * Time::MINUTE) return "MORNING";
+        else if (time_ >= 420 * Time::MINUTE) return "SUNRISE";
+        else if (time_ >= 300 * Time::MINUTE) return "DAWN";
         return "NIGHT";
     } else
     {
-        if (m_time >= 1380 * Time::MINUTE) return "NIGHT";
-        if (m_time >= 1140 * Time::MINUTE) return "DUSK";
-        if (m_time >= 540 * Time::MINUTE) return "DAY";
-        if (m_time >= 300 * Time::MINUTE) return "DAWN";
+        if (time_ >= 1380 * Time::MINUTE) return "NIGHT";
+        if (time_ >= 1140 * Time::MINUTE) return "DUSK";
+        if (time_ >= 540 * Time::MINUTE) return "DAY";
+        if (time_ >= 300 * Time::MINUTE) return "DAWN";
         return "NIGHT";
     }
 }
 
 void TimeWeather::trigger_event(TimeWeather::Season season, std::string *message_to_append, bool silent)
 {
-    const std::string weather_map = m_weather_change_map.at(static_cast<int>(m_weather));
+    const std::string weather_map = weather_change_map_.at(static_cast<int>(weather_));
     const char new_weather = weather_map[core()->rng()->rnd(0, weather_map.size() - 1)];
     switch (new_weather)
     {
-        case 'c': m_weather = Weather::CLEAR; break;
-        case 'f': m_weather = Weather::FAIR; break;
-        case 'r': m_weather = Weather::RAIN; break;
-        case 'F': m_weather = Weather::FOG; break;
-        case 'S': m_weather = Weather::STORMY; break;
-        case 'o': m_weather = Weather::OVERCAST; break;
-        case 'b': m_weather = Weather::BLIZZARD; break;
-        case 'l': m_weather = Weather::LIGHTSNOW; break;
-        case 'L': m_weather = Weather::SLEET; break;
+        case 'c': weather_ = Weather::CLEAR; break;
+        case 'f': weather_ = Weather::FAIR; break;
+        case 'r': weather_ = Weather::RAIN; break;
+        case 'F': weather_ = Weather::FOG; break;
+        case 'S': weather_ = Weather::STORMY; break;
+        case 'o': weather_ = Weather::OVERCAST; break;
+        case 'b': weather_ = Weather::BLIZZARD; break;
+        case 'l': weather_ = Weather::LIGHTSNOW; break;
+        case 'L': weather_ = Weather::SLEET; break;
     }
     if (silent) return;
 
@@ -467,22 +467,22 @@ void TimeWeather::trigger_event(TimeWeather::Season season, std::string *message
     const bool indoors = room->tag(RoomTag::Indoors);
     const bool can_see_outside = room->tag(RoomTag::CanSeeOutside);
     if (indoors && !can_see_outside) return;
-    const std::string time_message = m_tw_string_map.at(time_of_day_str(true) + "_" + weather_str(fix_weather(m_weather, season)) + (indoors ? "_INDOORS" : ""));
+    const std::string time_message = tw_string_map_.at(time_of_day_str(true) + "_" + weather_str(fix_weather(weather_, season)) + (indoors ? "_INDOORS" : ""));
     if (message_to_append) *message_to_append += " " + time_message;
     else core()->message(weather_message_colour() + time_message);
 }
 
 // Returns the total amount of seconds that passed in the game.
-uint32_t TimeWeather::time_passed() const { return m_time_passed; }
+uint32_t TimeWeather::time_passed() const { return time_passed_; }
 
 // Checks how much time has passed since a given time integer. Handles integer overflow loops.
 uint32_t TimeWeather::time_passed_since(uint32_t since) const
 {
     // If the total time hasn't looped yet, no problem! This is easy!
-    if (since <= m_time_passed) return m_time_passed - since;
+    if (since <= time_passed_) return time_passed_ - since;
 
     // If not, we'll try to work around the overflow. This ain't great if we overflowed twice, but shouldn't cause too many problems.
-    return UINT32_MAX - since + m_time_passed;
+    return UINT32_MAX - since + time_passed_;
 }
 
 // Returns a weather description for the current time/weather, based on the current season.
@@ -494,13 +494,13 @@ std::string TimeWeather::weather_desc(TimeWeather::Season season) const
     const std::shared_ptr<Room> room = core()->world()->get_room(core()->world()->player()->location());
     const bool trees = room->tag(RoomTag::Trees);
     const bool indoors = room->tag(RoomTag::Indoors);
-    const Weather weather = fix_weather(m_weather, season);
-    std::string desc = m_tw_string_map.at(season_str(season) + "_" + time_of_day_str(false) + "_" + weather_str(weather)  + (indoors ? "_INDOORS" : ""));
+    const Weather weather = fix_weather(weather_, season);
+    std::string desc = tw_string_map_.at(season_str(season) + "_" + time_of_day_str(false) + "_" + weather_str(weather)  + (indoors ? "_INDOORS" : ""));
     if (trees)
     {
         std::string tree_time = "DAY";
         if (time_of_day(false) == TimeOfDay::DUSK || time_of_day(false) == TimeOfDay::NIGHT) tree_time = "NIGHT";
-        desc += " " + m_tw_string_map.at(season_str(season) + "_" + tree_time + "_" + weather_str(weather) + "_TREES");
+        desc += " " + tw_string_map_.at(season_str(season) + "_" + tree_time + "_" + weather_str(weather) + "_TREES");
     }
     return desc;
 }

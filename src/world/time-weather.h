@@ -52,28 +52,26 @@ public:
     std::string weather_str(Weather weather) const; // Converts a weather integer to a string.
 
 private:
-    static constexpr int    LUNAR_CYCLE_DAYS =      29; // How many days are in a lunar cycle?
-    static constexpr float  UNINTERRUPTABLE_TIME =  5;  // The maximum amount of time for an action that cannot be interrupted.
-    static constexpr int    XP_WHILE_ENCUMBERED =   1;  // How much XP to grant per carry tick for encumbered players.
-
-    // The heartbeat timers, for triggering various events at periodic intervals.
-    static const uint32_t   HEARTBEAT_TIMERS[Heartbeat::_TOTAL];
+    static constexpr int    LUNAR_CYCLE_DAYS =      29;             // How many days are in a lunar cycle?
+    static constexpr float  UNINTERRUPTABLE_TIME =  5;              // The maximum amount of time for an action that cannot be interrupted.
+    static constexpr int    XP_WHILE_ENCUMBERED =   1;              // How much XP to grant per carry tick for encumbered players.
+    static const uint32_t   HEARTBEAT_TIMERS[Heartbeat::_TOTAL];    // The heartbeat timers, for triggering various events at periodic intervals.
 
     Weather     fix_weather(Weather weather, Season season) const;  // Fixes weather for a specified season, to account for unavailable weather types.
     bool        heartbeat_ready(Heartbeat beat);                    // Checks if a given heartbeat is ready to trigger, and resets its counter.
     void        trigger_event(Season season, std::string *message_to_append, bool silent);  // Triggers a time-change event.
     std::string weather_desc(Season season) const;                  // Returns a weather description for the current time/weather, based on the specified season.
 
-    int         m_day;          // The current day of the year.
-    uint32_t    m_heartbeats[Heartbeat::_TOTAL];    // The heartbeat timers, for triggering various events at periodic intervals.
-    int         m_moon;         // The current moon phase.
-    int         m_time;         // The time of day.
-    uint32_t    m_time_passed;  // The total # of seconds that have passed since the game started. This will loop every ~136 years, see time_passed().
-    float       m_subsecond;    // For counting time passed in amounts of time less than a second.
-    Weather     m_weather;      // The current weather.
+    int         day_;                           // The current day of the year.
+    uint32_t    heartbeats_[Heartbeat::_TOTAL]; // The heartbeat timers, for triggering various events at periodic intervals.
+    int         moon_;                          // The current moon phase.
+    int         time_;                          // The time of day.
+    uint32_t    time_passed_;                   // The total # of seconds that have passed since the game started. This will loop every ~136 years, see time_passed().
+    float       subsecond_;                     // For counting time passed in amounts of time less than a second.
+    Weather     weather_;                       // The current weather.
 
-    std::map<std::string, std::string>  m_tw_string_map;        // The time and weather strings from data/misc/weather.yml
-    std::vector<std::string>            m_weather_change_map;   // Weather change maps, to determine odds of changing to different weather types.
+    std::map<std::string, std::string>  tw_string_map_;         // The time and weather strings from data/misc/weather.yml
+    std::vector<std::string>            weather_change_map_;    // Weather change maps, to determine odds of changing to different weather types.
 };
 
 #endif  // GREAVE_WORLD_TIME_WEATHER_H_

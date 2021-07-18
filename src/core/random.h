@@ -21,7 +21,7 @@ public:
     int         roll(int num_dice, int die_faces, int modifier = 0);    // 'Rolls' a number of dice with an optional modifier (e.g. 4d6+3).
     void        set_prand_seed(uint32_t new_seed = 0);      // Sets the PRNG seed for PCG.
 
-    pcg32   m_pcg_rng;  // The PCG pseudo-random number generator.
+    pcg32       pcg_rng_;   // The PCG pseudo-random number generator.
 };
 
 #endif  // GREAVE_CORE_RANDOM_H_

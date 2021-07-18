@@ -15,7 +15,7 @@ public:
     static void load_pages();               // Loads the help pages from data/misc/help.yml
 
 private:
-    static std::map<std::string, std::string>   m_help_pages;   // Help pages loaded from data/misc/help.yml
+    static std::map<std::string, std::string>   help_pages_;    // Help pages loaded from data/misc/help.yml
 };
 
 #endif  // GREAVE_ACTIONS_HELP_H_

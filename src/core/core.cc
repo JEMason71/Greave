@@ -60,7 +60,7 @@ int main(int argc, char* argv[])
 }
 
 // Constructor, doesn't do too much aside from setting default values for member variables. Use init() to set things up.
-Core::Core() : m_message_log(nullptr), m_parser(nullptr), m_rng(nullptr), m_save_slot(0), m_sql_unique_id(0), m_terminal(nullptr), m_prefs(nullptr), m_world(nullptr) { }
+Core::Core() : message_log_(nullptr), parser_(nullptr), rng_(nullptr), save_slot_(0), sql_unique_id_(0), terminal_(nullptr), prefs_(nullptr), world_(nullptr) { }
 
 // Cleans up after we're d one.
 void Core::cleanup()
@@ -70,17 +70,17 @@ void Core::cleanup()
 
 #ifdef GREAVE_TOLK
     // Clean up Tolk, if we're on Windows.
-    if (m_prefs->screen_reader_external || m_prefs->screen_reader_sapi) Tolk_Unload();
+    if (prefs_->screen_reader_external || prefs_->screen_reader_sapi) Tolk_Unload();
 #endif
 
-    m_terminal = nullptr;   // It's a smart pointer, so this'll run the destructor code.
+    terminal_ = nullptr;   // It's a smart pointer, so this'll run the destructor code.
 }
 
 // Returns a pointer to the Guru Meditation object.
 const std::shared_ptr<Guru> Core::guru() const
 {
-    if (!m_guru_meditation) exit(EXIT_FAILURE);
-    return m_guru_meditation;
+    if (!guru_meditation_) exit(EXIT_FAILURE);
+    return guru_meditation_;
 }
 
 // Sets up the core game classes and data.
@@ -90,18 +90,18 @@ void Core::init(bool dry_run)
     FileX::make_dir("userdata/save");
 
     // Sets up the error-handling subsystem.
-    m_guru_meditation = std::make_shared<Guru>("userdata/log.txt");
+    guru_meditation_ = std::make_shared<Guru>("userdata/log.txt");
 
     // Sets up the random number generator.
-    m_rng = std::make_shared<Random>();
+    rng_ = std::make_shared<Random>();
 
     // Set up the user preferences.
-    m_prefs = std::make_shared<Prefs>();
+    prefs_ = std::make_shared<Prefs>();
 
 #ifdef GREAVE_TOLK
     // Set up Tolk if we're on Windows.
-    if (m_prefs->screen_reader_sapi) Tolk_TrySAPI(true); // Enable SAPI.
-    if (m_prefs->screen_reader_external || m_prefs->screen_reader_sapi) Tolk_Load();
+    if (prefs_->screen_reader_sapi) Tolk_TrySAPI(true); // Enable SAPI.
+    if (prefs_->screen_reader_external || prefs_->screen_reader_sapi) Tolk_Load();
     if (Tolk_DetectScreenReader())
     {
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -109,7 +109,7 @@ void Core::init(bool dry_run)
     }
 #endif
 
-    std::string terminal_choice = StrX::str_tolower(m_prefs->terminal);
+    std::string terminal_choice = StrX::str_tolower(prefs_->terminal);
     if (!dry_run)
     {
 
@@ -130,7 +130,7 @@ void Core::init(bool dry_run)
         {
             try
             {
-                m_terminal = std::make_shared<TerminalSDL2>();
+                terminal_ = std::make_shared<TerminalSDL2>();
             }
             catch (std::exception &e)
             {
@@ -144,9 +144,9 @@ void Core::init(bool dry_run)
         }
 #endif
 #ifdef GREAVE_INCLUDE_CURSES
-        if (terminal_choice == "curses") m_terminal = std::make_shared<TerminalCurses>();
+        if (terminal_choice == "curses") terminal_ = std::make_shared<TerminalCurses>();
 #endif
-        if (!m_terminal) m_guru_meditation->halt("Invalid terminal specified in prefs.yml");
+        if (!terminal_) guru_meditation_->halt("Invalid terminal specified in prefs.yml");
 
 #ifdef GREAVE_TARGET_WINDOWS
 #ifdef GREAVE_INCLUDE_CURSES
@@ -155,14 +155,14 @@ void Core::init(bool dry_run)
 #endif
 
         // Sets up the main message log window.
-        m_message_log = std::make_shared<MessageLog>();
+        message_log_ = std::make_shared<MessageLog>();
 
         // Tell the Guru system we're finished setting up the terminal and message window.
         guru()->console_ready();
     }
 
     // Sets up the text parser.
-    m_parser = std::make_shared<Parser>();
+    parser_ = std::make_shared<Parser>();
 
     // Sets up the bones file.
     Bones::init_bones();
@@ -174,29 +174,29 @@ void Core::init(bool dry_run)
 // Loads a specified slot's saved game.
 void Core::load(int save_slot)
 {
-    m_save_slot = save_slot;
+    save_slot_ = save_slot;
     std::shared_ptr<SQLite::Database> save_db = std::make_shared<SQLite::Database>(save_filename(save_slot), SQLite::OPEN_READONLY);
-    m_world->load(save_db);
+    world_->load(save_db);
 }
 
 // The main game loop.
 void Core::main_loop()
 {
-    const auto player = m_world->player();
+    const auto player = world_->player();
     // bröther may I have some lööps
     do
     {
-        m_world->main_loop_events_pre_input();
-        const std::string input = m_message_log->render_message_log();
-        m_parser->parse(input);
-        m_world->main_loop_events_post_input();
+        world_->main_loop_events_pre_input();
+        const std::string input = message_log_->render_message_log();
+        parser_->parse(input);
+        world_->main_loop_events_post_input();
     } while (!player->is_dead());
 
     Bones::record_death();
     while (true)
     {
         message("{R}You are dead! Type {M}quit {R}when you are ready to end the game.");
-        const std::string input = StrX::str_tolower(m_message_log->render_message_log());
+        const std::string input = StrX::str_tolower(message_log_->render_message_log());
         if (input == "quit") return;
     }
 }
@@ -204,7 +204,7 @@ void Core::main_loop()
 // Prints a message in the message log.
 void Core::message(std::string msg, bool interrupt)
 {
-    m_message_log->msg(msg);
+    message_log_->msg(msg);
     screen_read(msg, interrupt);
 }
 
@@ -212,9 +212,9 @@ void Core::message(std::string msg, bool interrupt)
 #ifdef GREAVE_TOLK
 void Core::screen_read(std::string msg, bool interrupt)
 {
-    if (m_prefs->screen_reader_external || m_prefs->screen_reader_sapi)
+    if (prefs_->screen_reader_external || prefs_->screen_reader_sapi)
     {
-        if (m_prefs->screen_reader_process_square_brackets)
+        if (prefs_->screen_reader_process_square_brackets)
         {
             StrX::find_and_replace(msg, "[", "(");
             StrX::find_and_replace(msg, "]", ").");
@@ -224,8 +224,8 @@ void Core::screen_read(std::string msg, bool interrupt)
         if (msg_voice.size() >= 2 && msg_voice[0] == '>') msg_voice = msg_voice.substr(2);
         const std::wstring msg_wide(msg_voice.begin(), msg_voice.end());
         Tolk_Output(msg_wide.c_str(), interrupt);
-        if (interrupt) m_message_log->clear_latest_messages();
-        m_message_log->add_latest_message(msg_voice);
+        if (interrupt) message_log_->clear_latest_messages();
+        message_log_->add_latest_message(msg_voice);
     }
 }
 #else
@@ -233,22 +233,22 @@ void Core::screen_read(std::string, bool) { }
 #endif
 
 // Returns a pointer to the MessageLog object.
-const std::shared_ptr<MessageLog> Core::messagelog() const { return m_message_log; }
+const std::shared_ptr<MessageLog> Core::messagelog() const { return message_log_; }
 
 // Returns a pointer to the Parser object.
-const std::shared_ptr<Parser> Core::parser() const { return m_parser; }
+const std::shared_ptr<Parser> Core::parser() const { return parser_; }
 
 // Returns a pointer to the Prefs object.
-const std::shared_ptr<Prefs> Core::prefs() const { return m_prefs; }
+const std::shared_ptr<Prefs> Core::prefs() const { return prefs_; }
 
 // Returns a pointer to the Random object.
-const std::shared_ptr<Random> Core::rng() const { return m_rng; }
+const std::shared_ptr<Random> Core::rng() const { return rng_; }
 
 // Saves the game to disk.
 void Core::save()
 {
-    const std::string save_fn = save_filename(m_save_slot);
-    const std::string save_fn_old = save_filename(m_save_slot, true);
+    const std::string save_fn = save_filename(save_slot_);
+    const std::string save_fn_old = save_filename(save_slot_, true);
     if (FileX::is_read_only(save_fn) || (FileX::file_exists(save_fn_old) && FileX::is_read_only(save_fn_old)))
     {
         core()->guru()->nonfatal("Saved game file is read-only!", Guru::GURU_ERROR);
@@ -260,7 +260,7 @@ void Core::save()
         FileX::rename_file(save_fn, save_fn_old);
         if (FileX::file_exists(save_fn))
         {
-            m_guru_meditation->nonfatal("Could not rename saved game file. Is it read-only?", Guru::GURU_ERROR);
+            guru_meditation_->nonfatal("Could not rename saved game file. Is it read-only?", Guru::GURU_ERROR);
             return;
         }
     }
@@ -269,21 +269,21 @@ void Core::save()
     {
         std::shared_ptr<SQLite::Database> save_db = std::make_shared<SQLite::Database>(save_fn, SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
         save_db->exec("PRAGMA user_version = " + std::to_string(CoreConstants::SAVE_VERSION));
-        m_sql_unique_id = 0;    // We're making a new save file each time, so we can reset the unique ID counter.
+        sql_unique_id_ = 0; // We're making a new save file each time, so we can reset the unique ID counter.
 
         SQLite::Transaction transaction(*save_db);
-        m_world->save(save_db);
+        world_->save(save_db);
         transaction.commit();
 
-        message("{M}Game saved in slot {Y}" + std::to_string(m_save_slot) + "{M}.");
+        message("{M}Game saved in slot {Y}" + std::to_string(save_slot_) + "{M}.");
     } catch (std::exception &e)
     {
-        m_guru_meditation->nonfatal("SQL error while attempting to save the game: " + std::string(e.what()), Guru::GURU_CRITICAL);
+        guru_meditation_->nonfatal("SQL error while attempting to save the game: " + std::string(e.what()), Guru::GURU_CRITICAL);
         if (FileX::file_exists(save_fn_old))
         {
-            m_guru_meditation->nonfatal("Attempting to restore backup saved game file.", Guru::GURU_WARN);
+            guru_meditation_->nonfatal("Attempting to restore backup saved game file.", Guru::GURU_WARN);
             FileX::delete_file(save_fn);
-            if (FileX::file_exists(save_fn)) m_guru_meditation->nonfatal("Could not delete current saved game file! Is it read-only?", Guru::GURU_ERROR);
+            if (FileX::file_exists(save_fn)) guru_meditation_->nonfatal("Could not delete current saved game file! Is it read-only?", Guru::GURU_ERROR);
             else FileX::rename_file(save_fn_old, save_fn);
         }
     }
@@ -303,10 +303,10 @@ uint32_t Core::save_version(int slot)
 }
 
 // Retrieves a new unique SQL ID.
-uint32_t Core::sql_unique_id() { return ++m_sql_unique_id; }
+uint32_t Core::sql_unique_id() { return ++sql_unique_id_; }
 
 // Returns a pointer  to the terminal emulator object.
-const std::shared_ptr<Terminal> Core::terminal() const { return m_terminal; }
+const std::shared_ptr<Terminal> Core::terminal() const { return terminal_; }
 
 // The 'title screen' and saved game selection.
 void Core::title()
@@ -317,9 +317,9 @@ void Core::title()
 #endif
 
     std::vector<bool> save_exists;
-    save_exists.resize(m_prefs->save_file_slots);
+    save_exists.resize(prefs_->save_file_slots);
     bool deleting_file = false;
-    while (!m_save_slot)
+    while (!save_slot_)
     {
         if (deleting_file)
         {
@@ -333,7 +333,7 @@ void Core::title()
             message("{0}{U}[{C}Q{U}] {R}Quit game");
             message("{0}{U}[{C}L{U}] {W}Hall of Legends");
         }
-        for (int i = 1; i <= m_prefs->save_file_slots; i++)
+        for (int i = 1; i <= prefs_->save_file_slots; i++)
         {
             if (FileX::file_exists(save_filename(i)))
             {
@@ -385,7 +385,7 @@ void Core::title()
             else
             {
                 int input_num = input[0] - '0';
-                if (input_num < 1 || input_num > static_cast<int>(m_prefs->save_file_slots))
+                if (input_num < 1 || input_num > static_cast<int>(prefs_->save_file_slots))
                 {
                     if (++patience_counter > 5)
                     {
@@ -440,7 +440,7 @@ void Core::title()
                         if (file_exists) save_file_ver = save_version(input_num);
                         if (!file_exists || save_file_ver == CoreConstants::SAVE_VERSION)
                         {
-                            m_save_slot = input_num;
+                            save_slot_ = input_num;
                             inner_loop = false;
                         }
                         else message("{R}This saved game is {M}incompatible {R}with this version of the game. Greave " + std::string(CoreConstants::GAME_VERSION) + " uses save file {M}version " + std::to_string(CoreConstants::SAVE_VERSION) + "{R}, this save file is using {M}" + (save_file_ver ? "version " + std::to_string(save_file_ver) : "an unknown version") + "{R}.");
@@ -450,22 +450,22 @@ void Core::title()
         }
     }
 
-    if (save_exists.at(m_save_slot - 1))
+    if (save_exists.at(save_slot_ - 1))
     {
-        m_guru_meditation->cache_nonfatal();
-        m_world = std::make_shared<World>();
-        load(m_save_slot);
-        m_guru_meditation->dump_nonfatal();
+        guru_meditation_->cache_nonfatal();
+        world_ = std::make_shared<World>();
+        load(save_slot_);
+        guru_meditation_->dump_nonfatal();
     }
     else
     {
-        m_world = std::make_shared<World>();
-        m_world->new_game();
+        world_ = std::make_shared<World>();
+        world_->new_game();
     }
 }
 
 // Returns a pointer to the World object.
-const std::shared_ptr<World> Core::world() const { return m_world; }
+const std::shared_ptr<World> Core::world() const { return world_; }
 
 // Allows external access to the Core object.
 const std::shared_ptr<Core> core()

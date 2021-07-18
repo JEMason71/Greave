@@ -14,7 +14,7 @@ constexpr char Item::SQL_ITEMS[] = "CREATE TABLE items ( description TEXT, metad
 
 
 // Constructor, sets default values.
-Item::Item() : m_parser_id(0), m_rarity(1), m_stack(1), m_type(ItemType::NONE), m_type_sub(ItemSub::NONE), m_value(0) { }
+Item::Item() : parser_id_(0), rarity_(1), stack_(1), type_(ItemType::NONE), type_sub_(ItemSub::NONE), value_(0) { }
 
 // The damage multiplier for ammunition.
 float Item::ammo_power() const { return meta_float("ammo_power"); }
@@ -22,18 +22,18 @@ float Item::ammo_power() const { return meta_float("ammo_power"); }
 // Attempts to guess the value of an item.
 int Item::appraised_value()
 {
-    if (!m_value) return 0;
+    if (!value_) return 0;
     else if (meta_int("appraised_value")) return meta_int("appraised_value");
 
-    int required_skill = (m_rarity * APPRAISAL_RARITY_MULTIPLIER) + APPRAISAL_BASE_SKILL_REQUIRED;
+    int required_skill = (rarity_ * APPRAISAL_RARITY_MULTIPLIER) + APPRAISAL_BASE_SKILL_REQUIRED;
     if (required_skill < 0) required_skill = 0;
     const int appraisal_skill = core()->world()->player()->skill_level("APPRAISAL");
     if (appraisal_skill >= required_skill)
     {
-        int value_fuzzed = MathX::fuzz(m_value);
+        int value_fuzzed = MathX::fuzz(value_);
         set_meta("appraised_value", value_fuzzed);
         core()->world()->player()->gain_skill_xp("APPRAISAL", APPRAISAL_XP_EASY);
-        if (tag(ItemTag::Stackable)) value_fuzzed *= m_stack;
+        if (tag(ItemTag::Stackable)) value_fuzzed *= stack_;
         return value_fuzzed;
     }
 
@@ -46,18 +46,18 @@ int Item::appraised_value()
     else penalty = 1;
     const int rolled_penalty = core()->rng()->rnd(penalty);
     int value_appraised;
-    if (core()->rng()->rnd(3) == 1) value_appraised = MathX::fuzz(MathX::mixup(m_value / rolled_penalty, true));
-    else value_appraised = MathX::fuzz(MathX::mixup(m_value * rolled_penalty, true));
+    if (core()->rng()->rnd(3) == 1) value_appraised = MathX::fuzz(MathX::mixup(value_ / rolled_penalty, true));
+    else value_appraised = MathX::fuzz(MathX::mixup(value_ * rolled_penalty, true));
     set_meta("appraised_value", value_appraised);
     core()->world()->player()->gain_skill_xp("APPRAISAL", APPRAISAL_XP_HARD);
-    if (tag(ItemTag::Stackable)) value_appraised *= m_stack;
+    if (tag(ItemTag::Stackable)) value_appraised *= stack_;
     return value_appraised;
 }
 
 // Returns the armour damage reduction value of this Item, if any.
 float Item::armour(int bonus_power) const
 {
-    if ((m_type != ItemType::ARMOUR && m_type != ItemType::SHIELD) || !power()) return 0;
+    if ((type_ != ItemType::ARMOUR && type_ != ItemType::SHIELD) || !power()) return 0;
     return std::pow(power() + bonus_power + 4, 1.2) / 100.0f;
 }
 
@@ -74,13 +74,13 @@ int Item::capacity() const { return meta_int("capacity"); }
 int Item::charge() const { return meta_int("charge"); }
 
 // Clears a metatag from an Item. Use with caution!
-void Item::clear_meta(const std::string &key) { m_metadata.erase(key); }
+void Item::clear_meta(const std::string &key) { metadata_.erase(key); }
 
 // Clears a tag on this Item.
 void Item::clear_tag(ItemTag the_tag)
 {
-    if (!(m_tags.count(the_tag) > 0)) return;
-    m_tags.erase(the_tag);
+    if (!(tags_.count(the_tag) > 0)) return;
+    tags_.erase(the_tag);
 }
 
 // Retrieves this Item's critical power, if any.
@@ -112,7 +112,7 @@ std::string Item::damage_type_string() const
 }
 
 // Retrieves this Item's description.
-std::string Item::desc() const { return m_description; }
+std::string Item::desc() const { return description_; }
 
 // Returns the dodge modifier% for this Item, if any.
 int Item::dodge_mod() const { return meta_int("dodge_mod"); }
@@ -126,15 +126,15 @@ bool Item::is_identical(std::shared_ptr<Item> item) const
     // We'll go through the checks in order of computationally cheapest first, and leave the more expensive checks to the end.
 
     // Integer comparison.
-    if (m_rarity != item->m_rarity) return false;
-    if (m_type != item->m_type) return false;
-    if (m_type_sub != item->m_type_sub) return false;
-    if (m_value != item->m_value) return false;
-    if (m_weight != item->m_weight) return false;
+    if (rarity_ != item->rarity_) return false;
+    if (type_ != item->type_) return false;
+    if (type_sub_ != item->type_sub_) return false;
+    if (value_ != item->value_) return false;
+    if (weight_ != item->weight_) return false;
 
     // String comparison.
-    if (m_name != item->m_name) return false;
-    if (m_description != item->m_description) return false;
+    if (name_ != item->name_) return false;
+    if (description_ != item->description_) return false;
 
     // Way more complicated comparison stuff below here.
 
@@ -143,10 +143,10 @@ bool Item::is_identical(std::shared_ptr<Item> item) const
     auto copy_b = std::make_shared<Item>(*item);
     copy_a->clear_meta("appraised_value");
     copy_b->clear_meta("appraised_value");
-    if (StrX::metadata_to_string(copy_a->m_metadata) != StrX::metadata_to_string(copy_b->m_metadata)) return false;
+    if (StrX::metadata_to_string(copy_a->metadata_) != StrX::metadata_to_string(copy_b->metadata_)) return false;
 
     // Tag matches are easier.
-    if (StrX::tags_to_string(m_tags) != StrX::tags_to_string(item->m_tags)) return false;
+    if (StrX::tags_to_string(tags_) != StrX::tags_to_string(item->tags_)) return false;
 
     return true;
 }
@@ -167,16 +167,16 @@ std::shared_ptr<Item> Item::load(std::shared_ptr<SQLite::Database> save_db, uint
         ItemSub new_subtype = ItemSub::NONE;
 
         if (!query.getColumn("description").isNull()) new_item->set_description(query.getColumn("description").getString());
-        if (!query.getColumn("metadata").isNull()) StrX::string_to_metadata(query.getColumn("metadata").getString(), new_item->m_metadata);
+        if (!query.getColumn("metadata").isNull()) StrX::string_to_metadata(query.getColumn("metadata").getString(), new_item->metadata_);
         new_item->set_name(query.getColumn("name").getString());
-        new_item->m_parser_id = query.getColumn("parser_id").getUInt();
-        new_item->m_rarity = query.getColumn("rare").getInt();
-        if (!query.isColumnNull("stack")) new_item->m_stack = query.getColumn("stack").getUInt(); else new_item->m_stack = 1;
+        new_item->parser_id_ = query.getColumn("parser_id").getUInt();
+        new_item->rarity_ = query.getColumn("rare").getInt();
+        if (!query.isColumnNull("stack")) new_item->stack_ = query.getColumn("stack").getUInt(); else new_item->stack_ = 1;
         if (!query.isColumnNull("subtype")) new_subtype = static_cast<ItemSub>(query.getColumn("subtype").getInt());
-        if (!query.getColumn("tags").isNull()) StrX::string_to_tags(query.getColumn("tags").getString(), new_item->m_tags);
+        if (!query.getColumn("tags").isNull()) StrX::string_to_tags(query.getColumn("tags").getString(), new_item->tags_);
         if (!query.isColumnNull("type")) new_type = static_cast<ItemType>(query.getColumn("type").getInt());
-        if (!query.isColumnNull("value")) new_item->m_value = query.getColumn("value").getUInt();
-        new_item->m_weight = query.getColumn("weight").getUInt();
+        if (!query.isColumnNull("value")) new_item->value_ = query.getColumn("value").getUInt();
+        new_item->weight_ = query.getColumn("weight").getUInt();
 
         new_item->set_type(new_type, new_subtype);
     }
@@ -188,8 +188,8 @@ std::shared_ptr<Item> Item::load(std::shared_ptr<SQLite::Database> save_db, uint
 // Retrieves Item metadata.
 std::string Item::meta(const std::string &key) const
 {
-    if (m_metadata.find(key) == m_metadata.end()) return "";
-    std::string result = m_metadata.at(key);
+    if (metadata_.find(key) == metadata_.end()) return "";
+    std::string result = metadata_.at(key);
     StrX::find_and_replace(result, "_", " ");
     return result;
 }
@@ -211,31 +211,31 @@ int Item::meta_int(const std::string &key) const
 }
 
 // Accesses the metadata map directly. Use with caution!
-std::map<std::string, std::string>* Item::meta_raw() { return &m_metadata; }
+std::map<std::string, std::string>* Item::meta_raw() { return &metadata_; }
 
 // Retrieves the name of thie Item.
 std::string Item::name(int flags) const
 {
     const bool no_count = ((flags & Item::NAME_FLAG_NO_COUNT) == Item::NAME_FLAG_NO_COUNT);
-    const bool a = (((flags & Item::NAME_FLAG_A) == Item::NAME_FLAG_A) && no_count); //(m_stack == 1 || no_count));
+    const bool a = (((flags & Item::NAME_FLAG_A) == Item::NAME_FLAG_A) && no_count); //(stack_ == 1 || no_count));
     const bool capitalize_first = ((flags & Item::NAME_FLAG_CAPITALIZE_FIRST) == Item::NAME_FLAG_CAPITALIZE_FIRST);
     const bool no_colour = ((flags & Item::NAME_FLAG_NO_COLOUR) == Item::NAME_FLAG_NO_COLOUR);
     const bool full_stats = ((flags & Item::NAME_FLAG_FULL_STATS) == Item::NAME_FLAG_FULL_STATS);
     const bool core_stats = full_stats || ((flags & Item::NAME_FLAG_CORE_STATS) == Item::NAME_FLAG_CORE_STATS);
     const bool id = full_stats || ((flags & Item::NAME_FLAG_ID) == Item::NAME_FLAG_ID);
-    const bool plural = (((flags & Item::NAME_FLAG_PLURAL) == Item::NAME_FLAG_PLURAL)); //|| (m_stack > 1 && !no_count));
+    const bool plural = (((flags & Item::NAME_FLAG_PLURAL) == Item::NAME_FLAG_PLURAL)); //|| (stack_ > 1 && !no_count));
     const bool the = ((flags & Item::NAME_FLAG_THE) == Item::NAME_FLAG_THE);
     const bool rarity = ((flags & Item::NAME_FLAG_RARE) == Item::NAME_FLAG_RARE);
 
     bool using_plural_name = false;
-    std::string ret = m_name, plural_name = meta("plural_name");
+    std::string ret = name_, plural_name = meta("plural_name");
     if (plural && plural_name.size())
     {
         ret = plural_name;
         using_plural_name = true;
     }
 
-    if (m_stack > 1 && !no_count) ret = StrX::number_to_word(m_stack) + " " + name(NAME_FLAG_PLURAL | NAME_FLAG_NO_COUNT);
+    if (stack_ > 1 && !no_count) ret = StrX::number_to_word(stack_) + " " + name(NAME_FLAG_PLURAL | NAME_FLAG_NO_COUNT);
 
     if (the && !tag(ItemTag::ProperNoun)) ret = "the " + ret;
     else if (a && !tag(ItemTag::PluralName) && !tag(ItemTag::NoA) && !tag(ItemTag::ProperNoun))
@@ -249,7 +249,7 @@ std::string Item::name(int flags) const
     if (core_stats || full_stats)
     {
         std::string core_stats_str, full_stats_str;
-        switch (m_type)
+        switch (type_)
         {
             case ItemType::ARMOUR: case ItemType::SHIELD: full_stats_str += " {c}[{U}" + std::to_string(power()) + "{c}]"; break;
             case ItemType::DRINK:
@@ -267,7 +267,7 @@ std::string Item::name(int flags) const
     if (rarity)
     {
         std::string colour_a = "{w}", colour_b = "{w}";
-        switch (m_rarity)
+        switch (rarity_)
         {
             case 4: case 5: case 6: colour_a = "{U}"; colour_b = "{C}"; break;
             case 7: case 8: colour_a = "{g}"; colour_b = "{G}"; break;
@@ -275,22 +275,22 @@ std::string Item::name(int flags) const
             case 10: colour_a = "{y}"; colour_b = "{Y}"; break;
             case 11: colour_a = "{r}"; colour_b = "{R}"; break;
         }
-        if (m_rarity == 12) ret += " {M}[" + StrX::rainbow_text("RARE-12", "mB") + "{M}]";
-        else ret += " " + colour_a + "[" + colour_b + "RARE-" + std::to_string(m_rarity) + colour_a + "]";
+        if (rarity_ == 12) ret += " {M}[" + StrX::rainbow_text("RARE-12", "mB") + "{M}]";
+        else ret += " " + colour_a + "[" + colour_b + "RARE-" + std::to_string(rarity_) + colour_a + "]";
     }
-    if (id) ret += " {B}{" + StrX::itos(m_parser_id, 4) + "}";
+    if (id) ret += " {B}{" + StrX::itos(parser_id_, 4) + "}";
     if (no_colour) ret = StrX::strip_ansi(ret);
     return ret;
 }
 
 // Generates a new parser ID for this Item.
-void Item::new_parser_id(uint8_t prefix) { m_parser_id = core()->rng()->rnd(0, 999) + (prefix * 1000); }
+void Item::new_parser_id(uint8_t prefix) { parser_id_ = core()->rng()->rnd(0, 999) + (prefix * 1000); }
 
 // Returns the parry% modifier of this Item, if any.
 int Item::parry_mod() const { return meta_int("parry_mod"); }
 
 // Retrieves the current ID of this Item, for parser differentiation.
-uint16_t Item::parser_id() const { return m_parser_id; }
+uint16_t Item::parser_id() const { return parser_id_; }
 
 // Returns thie poison chance of this Item, if any.
 int Item::poison() const { return meta_int("poison"); }
@@ -299,25 +299,25 @@ int Item::poison() const { return meta_int("poison"); }
 int Item::power() const { return meta_int("power"); }
 
 // Retrieves this Item's rarity.
-int Item::rare() const { return m_rarity; }
+int Item::rare() const { return rarity_; }
 
 // Saves the Item.
 void Item::save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id)
 {
     SQLite::Statement query(*save_db, "INSERT INTO items ( description, metadata, name, owner_id, parser_id, rare, sql_id, stack, subtype, tags, type, value, weight ) VALUES ( :desc, :meta, :name, :owner_id, :parser_id, :rare, :sql_id, :stack, :subtype, :tags, :type, :value, :weight )");
-    if (m_description.size()) query.bind(":desc", m_description);
-    if (m_metadata.size()) query.bind(":meta", StrX::metadata_to_string(m_metadata));
-    query.bind(":name", m_name);
+    if (description_.size()) query.bind(":desc", description_);
+    if (metadata_.size()) query.bind(":meta", StrX::metadata_to_string(metadata_));
+    query.bind(":name", name_);
     query.bind(":owner_id", owner_id);
-    query.bind(":parser_id", m_parser_id);
-    query.bind(":rare", m_rarity);
+    query.bind(":parser_id", parser_id_);
+    query.bind(":rare", rarity_);
     query.bind(":sql_id", core()->sql_unique_id());
-    if (m_stack != 1) query.bind(":stack", m_stack);
-    if (m_type_sub != ItemSub::NONE) query.bind(":subtype", static_cast<int>(m_type_sub));
-    if (m_tags.size()) query.bind(":tags", StrX::tags_to_string(m_tags));
-    if (m_type != ItemType::NONE) query.bind(":type", static_cast<int>(m_type));
-    if (m_value) query.bind(":value", m_value);
-    query.bind(":weight", m_weight);
+    if (stack_ != 1) query.bind(":stack", stack_);
+    if (type_sub_ != ItemSub::NONE) query.bind(":subtype", static_cast<int>(type_sub_));
+    if (tags_.size()) query.bind(":tags", StrX::tags_to_string(tags_));
+    if (type_ != ItemType::NONE) query.bind(":type", static_cast<int>(type_));
+    if (value_) query.bind(":value", value_);
+    query.bind(":weight", weight_);
     query.exec();
 }
 
@@ -325,7 +325,7 @@ void Item::save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id)
 void Item::set_charge(int new_charge) { set_meta("charge", new_charge); }
 
 // Sets this Item's description.
-void Item::set_description(const std::string &desc) { m_description = desc; }
+void Item::set_description(const std::string &desc) { description_ = desc; }
 
 // Sets this Item's equipment slot.
 void Item::set_equip_slot(EquipSlot es) { set_meta("slot", static_cast<int>(es)); }
@@ -342,8 +342,8 @@ void Item::set_meta(const std::string &key, std::string value)
         return;
     }
     StrX::find_and_replace(value, " ", "_");
-    if (m_metadata.find(key) == m_metadata.end()) m_metadata.insert(std::pair<std::string, std::string>(key, value));
-    else m_metadata.at(key) = value;
+    if (metadata_.find(key) == metadata_.end()) metadata_.insert(std::pair<std::string, std::string>(key, value));
+    else metadata_.at(key) = value;
 }
 
 // As above, but with an integer value.
@@ -368,46 +368,46 @@ void Item::set_meta(const std::string &key, float value)
 }
 
 // Sets the name of this Item.
-void Item::set_name(const std::string &name) { m_name = name; }
+void Item::set_name(const std::string &name) { name_ = name; }
 
 // Sets this item's parser ID prefix.
 void Item::set_parser_id_prefix(uint8_t prefix)
 {
-    if (!m_parser_id)
+    if (!parser_id_)
     {
         new_parser_id(prefix);
         return;
     }
-    int old_prefix = m_parser_id / 1000;
-    m_parser_id -= (old_prefix * 1000);
-    m_parser_id += (prefix * 1000);
+    int old_prefix = parser_id_ / 1000;
+    parser_id_ -= (old_prefix * 1000);
+    parser_id_ += (prefix * 1000);
 }
 
 // Sets this Item's rarity.
-void Item::set_rare(int rarity) { m_rarity = rarity; }
+void Item::set_rare(int rarity) { rarity_ = rarity; }
 
 // Sets the stack size for this Item.
-void Item::set_stack(uint32_t size) { m_stack = size; }
+void Item::set_stack(uint32_t size) { stack_ = size; }
 
 // Sets a tag on this Item.
 void Item::set_tag(ItemTag the_tag)
 {
-    if (m_tags.count(the_tag) > 0) return;
-    m_tags.insert(the_tag);
+    if (tags_.count(the_tag) > 0) return;
+    tags_.insert(the_tag);
 }
 
 // Sets the type of this Item.
 void Item::set_type(ItemType type, ItemSub sub)
 {
-    m_type = type;
-    m_type_sub = sub;
+    type_ = type;
+    type_sub_ = sub;
 }
 
 // Sets this Item's value.
-void Item::set_value(uint32_t val) { m_value = val; }
+void Item::set_value(uint32_t val) { value_ = val; }
 
 // Sets this Item's weight.
-void Item::set_weight(uint32_t pacs) { m_weight = pacs; }
+void Item::set_weight(uint32_t pacs) { weight_ = pacs; }
 
 // Retrieves the speed of this Item.
 float Item::speed() const { return meta_float("speed"); }
@@ -416,23 +416,23 @@ float Item::speed() const { return meta_float("speed"); }
 std::shared_ptr<Item> Item::split(int split_count)
 {
     const bool stackable = tag(ItemTag::Stackable);
-    if (split_count < 0) throw std::runtime_error("Invalid item stack split: " + m_name);
-    if (!split_count || (split_count == 1 && !stackable) || static_cast<int64_t>(split_count) == m_stack) return nullptr;
-    if (!stackable) throw std::runtime_error("Attempt to split unstackable item: " + m_name);
-    if (static_cast<unsigned int>(split_count) > m_stack) throw std::runtime_error("Invalid stack split size: " + m_name);
+    if (split_count < 0) throw std::runtime_error("Invalid item stack split: " + name_);
+    if (!split_count || (split_count == 1 && !stackable) || static_cast<int64_t>(split_count) == stack_) return nullptr;
+    if (!stackable) throw std::runtime_error("Attempt to split unstackable item: " + name_);
+    if (static_cast<unsigned int>(split_count) > stack_) throw std::runtime_error("Invalid stack split size: " + name_);
     auto new_item = std::make_shared<Item>(*this);
-    new_item->m_stack = split_count;
-    m_stack -= split_count;
+    new_item->stack_ = split_count;
+    stack_ -= split_count;
     return new_item;
 }
 
 // Retrieves the stack size of this Item.
-uint32_t Item::stack() const { return m_stack; }
+uint32_t Item::stack() const { return stack_; }
 
 // Like name(), but provides an appropriate name for a given stack size. Works on non-stackable items too.
 std::string Item::stack_name(int stack_size, int flags)
 {
-    if (!tag(ItemTag::Stackable) || stack_size == -1 || stack_size == static_cast<int>(m_stack)) return name(flags);
+    if (!tag(ItemTag::Stackable) || stack_size == -1 || stack_size == static_cast<int>(stack_)) return name(flags);
     if (stack_size == 1) return name(NAME_FLAG_NO_COUNT | flags);
 
     std::string the_str;
@@ -454,19 +454,19 @@ std::string Item::stack_name(int stack_size, int flags)
 }
 
 // Returns the ItemSub (sub-type) of this Item.
-ItemSub Item::subtype() const { return m_type_sub; }
+ItemSub Item::subtype() const { return type_sub_; }
 
 // Checks if a tag is set on this Item.
-bool Item::tag(ItemTag the_tag) const { return (m_tags.count(the_tag) > 0); }
+bool Item::tag(ItemTag the_tag) const { return (tags_.count(the_tag) > 0); }
 
 // Returns the ItemType of this Item.
-ItemType Item::type() const { return m_type; }
+ItemType Item::type() const { return type_; }
 
 // The Item's value in money.
 uint32_t Item::value(bool individual) const
 {
-    if (individual || !tag(ItemTag::Stackable)) return m_value;
-    else return m_value * m_stack;
+    if (individual || !tag(ItemTag::Stackable)) return value_;
+    else return value_ * stack_;
 }
 
 // The Item's warmth rating, if any.
@@ -476,7 +476,7 @@ int Item::warmth() const { return meta_int("warmth"); }
 uint32_t Item::weight(bool individual) const
 {
     uint32_t water_weight = 0;
-    if (m_type == ItemType::DRINK) water_weight = std::round(charge() * WATER_WEIGHT);
-    if (individual || !tag(ItemTag::Stackable)) return m_weight + water_weight;
-    else return (m_weight + water_weight) * m_stack;
+    if (type_ == ItemType::DRINK) water_weight = std::round(charge() * WATER_WEIGHT);
+    if (individual || !tag(ItemTag::Stackable)) return weight_ + water_weight;
+    else return (weight_ + water_weight) * stack_;
 }

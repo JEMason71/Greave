@@ -37,8 +37,8 @@ public:
 private:
     bool        parser_id_exists(uint16_t id);          // Checks if a given parser ID already exists on an Item in this Inventory.
 
-    std::vector<std::shared_ptr<Item>>  m_items;        // The Items stored in this Inventory.
-    uint8_t     m_tag_prefix;                           // The prefix for all tag numbers in this Inventory.
+    std::vector<std::shared_ptr<Item>>  items_;         // The Items stored in this Inventory.
+    uint8_t                             tag_prefix_;    // The prefix for all tag numbers in this Inventory.
 };
 
 #endif  // GREAVE_WORLD_INVENTORY_H_

@@ -20,7 +20,7 @@
 
 
 // Constructor, sets up the parser.
-Parser::Parser() : m_special_state(SpecialState::NONE)
+Parser::Parser() : special_state_(SpecialState::NONE)
 {
     add_command("! <txt>", ParserCommand::EXCLAIM);
     add_command("[abilities|ability]", ParserCommand::ABILITIES);
@@ -120,24 +120,24 @@ void Parser::add_command(const std::string &text, ParserCommand cmd)
         }
         else if (word == "*") pcd.any_length = true;
     }
-    m_commands.push_back(pcd);
+    commands_.push_back(pcd);
 }
 
 // Tells the player how to confirm a command.
-void Parser::confirm_message() { core()->message("{0}{m}If you are sure you want to do this, repeat your command with a {M}! {m}at the beginning (for example, {M}!" + m_last_input + "{m})."); }
+void Parser::confirm_message() { core()->message("{0}{m}If you are sure you want to do this, repeat your command with a {M}! {m}at the beginning (for example, {M}!" + last_input_ + "{m})."); }
 
 // The player was interrupted trying to perform an action.
 void Parser::interrupted(const std::string &action)
 {
     core()->message("{R}You are interrupted while attempting to " + action + "!");
-    core()->message("{0}{m}If you wish to perform this action to completion regardless of interruptions (which could result in your death), repeat your command with an exclamation mark ({M}!{m}) at the beginning (for example, {M}!" + m_last_input + "{m}).");
+    core()->message("{0}{m}If you wish to perform this action to completion regardless of interruptions (which could result in your death), repeat your command with an exclamation mark ({M}!{m}) at the beginning (for example, {M}!" + last_input_ + "{m}).");
 }
 
 // Parses input from the player!
 void Parser::parse(std::string input)
 {
     if (!input.size()) return;
-    m_last_input = input;
+    last_input_ = input;
     input = StrX::str_tolower(input);
     std::vector<std::string> words = StrX::string_explode(input, " ");
     if (!words.size()) return;
@@ -151,7 +151,7 @@ void Parser::parse(std::string input)
         confirm_command = true;
     }
 
-    for (auto pcd : m_commands)
+    for (auto pcd : commands_)
     {
         if (pcd.first_word == first_word && (pcd.target_match || pcd.any_length || pcd.words.size() == words.size()))
         {
@@ -161,9 +161,9 @@ void Parser::parse(std::string input)
     }
 
     std::string msg = "{y}I'm sorry, I don't understand. Type {Y}HELP {y}for help.";
-    if (m_special_state == SpecialState::DISAMBIGUATION) msg += " If you wanted to {Y}clarify your choice{y}, please {Y}type the entire command{y}.";
+    if (special_state_ == SpecialState::DISAMBIGUATION) msg += " If you wanted to {Y}clarify your choice{y}, please {Y}type the entire command{y}.";
     core()->message(msg);
-    m_special_state = SpecialState::NONE;
+    special_state_ = SpecialState::NONE;
 }
 
 // Parses a string into a Direction enum.
@@ -358,7 +358,7 @@ Parser::ParserSearchResult Parser::parse_target(std::vector<std::string> input, 
         candidate_names.push_back("{C}" + c.name + " {B}{" + StrX::itos(c.parser_id, 4) + "}{c}");
     disambig += StrX::comma_list(candidate_names, StrX::CL_OR) + "?";
     core()->message(disambig);
-    m_special_state = SpecialState::DISAMBIGUATION;
+    special_state_ = SpecialState::DISAMBIGUATION;
     return { 0, "", "", 0, 0, ParserTarget::TARGET_UNCLEAR, 0 };
 }
 
@@ -578,7 +578,7 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
         case ParserCommand::QUICK_ROLL: Abilities::quick_roll(confirm); break;
         case ParserCommand::QUIT:
             core()->message("{R}Are you sure you want to quit? {M}Your game will not be saved. {R}Type {C}yes {R}to confirm.");
-            m_special_state = SpecialState::QUIT_CONFIRM;
+            special_state_ = SpecialState::QUIT_CONFIRM;
             return; // not break
         case ParserCommand::RAPID_STRIKE:
             if (parsed_target_type == ParserTarget::TARGET_MOBILE) Abilities::rapid_strike(parsed_target);
@@ -655,7 +655,7 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
         case ParserCommand::WEATHER: ActionStatus::weather(); break;
         case ParserCommand::XYZZY: core()->message("{u}A hollow voice says, {m}\"Fool.\""); break;
         case ParserCommand::YES: case ParserCommand::NO:
-            if (m_special_state == SpecialState::QUIT_CONFIRM)
+            if (special_state_ == SpecialState::QUIT_CONFIRM)
             {
                 if (pcd.command == ParserCommand::YES)
                 {
@@ -668,5 +668,5 @@ void Parser::parse_pcd(const std::string &first_word, const std::vector<std::str
             break;
     }
 
-    if (parsed_target_type != ParserTarget::TARGET_UNCLEAR) m_special_state = SpecialState::NONE;
+    if (parsed_target_type != ParserTarget::TARGET_UNCLEAR) special_state_ = SpecialState::NONE;
 }

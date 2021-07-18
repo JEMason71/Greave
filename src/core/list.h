@@ -31,7 +31,7 @@ private:
     static constexpr int    LIST_RARITY_RARE =      12;     // As above, but for rare list items.
     static constexpr int    LIST_RARITY_SPECIAL =   100;    // As above, for special list items.
 
-    std::vector<ListEntry>  m_data; // The list's data, a vector.
+    std::vector<ListEntry>  data_;  // The list's data, a vector.
 };
 
 #endif  // GREAVE_CORE_LIST_H_

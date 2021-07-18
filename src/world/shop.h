@@ -27,8 +27,8 @@ public:
     void    sell(uint32_t id, int quantity, bool confirm);          // Offers an item to the shop to sell.
 
 private:
-    std::shared_ptr<Inventory>  m_inventory;    // The contents of this shop.
-    uint32_t                    m_room_id;      // The room ID where this shop is located.
+    std::shared_ptr<Inventory>  inventory_; // The contents of this shop.
+    uint32_t                    room_id_;   // The room ID where this shop is located.
 };
 
 #endif  // GREAVE_WORLD_SHOP_H_

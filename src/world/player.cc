@@ -16,50 +16,50 @@ constexpr char Player::SQL_SKILLS[] = "CREATE TABLE skills ( id TEXT PRIMARY KEY
 
 
 // Constructor, sets default values.
-Player::Player() : m_blood_tox(0), m_death_reason("the will of the gods"), m_hunger(HUNGER_MAX), m_mob_target(0), m_money(0), m_thirst(THIRST_MAX)
+Player::Player() : blood_tox_(0), death_reason_("the will of the gods"), hunger_(HUNGER_MAX), mob_target_(0), money_(0), thirst_(THIRST_MAX)
 {
     set_species("humanoid");
     set_name("Player");
-    m_mp[0] = m_mp[1] = MP_DEFAULT;
-    m_sp[0] = m_sp[1] = SP_DEFAULT;
+    mp_[0] = mp_[1] = MP_DEFAULT;
+    sp_[0] = sp_[1] = SP_DEFAULT;
 }
 
 // Eats food, increasing the hunger counter.
-void Player::add_food(int power) { m_hunger += power; }
+void Player::add_food(int power) { hunger_ += power; }
 
 // Adds money to the player's wallet.
 void Player::add_money(uint32_t amount)
 {
     // Avoid integer overflow.
-    if (m_money + amount < m_money)
+    if (money_ + amount < money_)
     {
         core()->guru()->nonfatal("Intercepted money integer overflow!", Guru::GURU_WARN);
-        m_money = UINT32_MAX;
+        money_ = UINT32_MAX;
     }
-    else m_money += amount;
+    else money_ += amount;
 }
 
 // Drinks some water, increasing the thirst counter.
 void Player::add_water(int power)
 {
-    m_thirst += power;
-    if (m_thirst > THIRST_MAX) m_thirst = THIRST_MAX;
+    thirst_ += power;
+    if (thirst_ > THIRST_MAX) thirst_ = THIRST_MAX;
 }
 
 // Retrieves the player's blood toxicity level.
-int Player::blood_tox() const { return m_blood_tox; }
+int Player::blood_tox() const { return blood_tox_; }
 
 // Gets the clothing warmth level from the Player.
 int Player::clothes_warmth() const
 {
     int warmth = 0;
-    for (size_t i = 0; i < m_equipment->count(); i++)
-        warmth += m_equipment->get(i)->warmth();
+    for (size_t i = 0; i < equipment_->count(); i++)
+        warmth += equipment_->get(i)->warmth();
     return warmth;
 }
 
 // Retrieves the player's death reason.
-std::string Player::death_reason() const { return m_death_reason; }
+std::string Player::death_reason() const { return death_reason_; }
 
 // Gains experience in a skill.
 void Player::gain_skill_xp(const std::string& skill_id, float xp)
@@ -71,16 +71,16 @@ void Player::gain_skill_xp(const std::string& skill_id, float xp)
         if (xp < 0) core()->guru()->nonfatal("Attempt to give negative XP in " + skill_id, Guru::GURU_WARN);
         return;
     }
-    auto it = m_skill_xp.find(skill_id);
-    if (it == m_skill_xp.end())
+    auto it = skill_xp_.find(skill_id);
+    if (it == skill_xp_.end())
     {
-        m_skill_xp.insert(std::pair<std::string, float>(skill_id, xp));
-        it = m_skill_xp.find(skill_id); // We'll need to refer to this in the level-up code below.
+        skill_xp_.insert(std::pair<std::string, float>(skill_id, xp));
+        it = skill_xp_.find(skill_id); // We'll need to refer to this in the level-up code below.
     }
     else it->second += xp;
 
     int current_level = skill_level(skill_id);
-    if (!current_level) m_skill_levels.insert(std::pair<std::string, int>(skill_id, 0));
+    if (!current_level) skill_levels_.insert(std::pair<std::string, int>(skill_id, 0));
     bool level_increased = false;
     while (it->second > 0)
     {
@@ -90,7 +90,7 @@ void Player::gain_skill_xp(const std::string& skill_id, float xp)
             it->second -= xp_to_next_level;
             current_level++;
             level_increased = true;
-            m_skill_levels.find(skill_id)->second = current_level;
+            skill_levels_.find(skill_id)->second = current_level;
         }
         else break;
     }
@@ -106,12 +106,12 @@ void Player::gain_skill_xp(const std::string& skill_id, float xp)
 }
 
 // Checks the current hunger level.
-int Player::hunger() const { return m_hunger; }
+int Player::hunger() const { return hunger_; }
 
 // The player gets a little more hungry.
 void Player::hunger_tick()
 {
-    switch (--m_hunger)
+    switch (--hunger_)
     {
         case 0:
             core()->message("{y}You collapse from {Y}starvation{y}, too weak to keep going.");
@@ -131,26 +131,26 @@ void Player::hunger_tick()
 void Player::increase_tox(int power)
 {
     const auto rng = core()->rng();
-    int old_tox = m_blood_tox;
-    m_blood_tox += power;
-    if (m_blood_tox >= BLOOD_TOX_POISON_LEVEL && rng->rnd(BLOOD_TOX_POISON_CHANCE) == 1)
+    int old_tox = blood_tox_;
+    blood_tox_ += power;
+    if (blood_tox_ >= BLOOD_TOX_POISON_LEVEL && rng->rnd(BLOOD_TOX_POISON_CHANCE) == 1)
     {
         set_buff(Buff::Type::POISON, rng->rnd(BLOOD_TOX_POISON_TIME_RNG) + BLOOD_TOX_POISON_TIME_BASE, rng->rnd(BLOOD_TOX_POISON_POWER_RNG) + BLOOD_TOX_POISON_POWER_BASE, true, true);
         core()->message("{G}You feel deathly ill, your stomach churning violently!");
         return;
     }
-    if (m_blood_tox >= BLOOD_TOX_VOMIT_LEVEL && rng->rnd(BLOOD_TOX_VOMIT_CHANCE) == 1)
+    if (blood_tox_ >= BLOOD_TOX_VOMIT_LEVEL && rng->rnd(BLOOD_TOX_VOMIT_CHANCE) == 1)
     {
         ActionEatDrink::vomit(true);
         return;
     }
-    if (old_tox < BLOOD_TOX_WARNING && m_blood_tox >= BLOOD_TOX_WARNING) core()->message("{g}Your stomach churns and you feel horrible.");
+    if (old_tox < BLOOD_TOX_WARNING && blood_tox_ >= BLOOD_TOX_WARNING) core()->message("{g}Your stomach churns and you feel horrible.");
 }
 
 // Checks if this Player is dead.
 bool Player::is_dead() const
 {
-    if (m_hunger < 1 || m_thirst < 1) return true;
+    if (hunger_ < 1 || thirst_ < 1) return true;
     return Mobile::is_dead();
 }
 
@@ -163,16 +163,16 @@ uint32_t Player::load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id
     SQLite::Statement query(*save_db, "SELECT * FROM player");
     if (query.executeStep())
     {
-        if (!query.isColumnNull("blood_tox")) m_blood_tox = query.getColumn("blood_tox").getInt();
-        m_hunger = query.getColumn("hunger").getInt();
-        if (!query.isColumnNull("mob_target")) m_mob_target = query.getColumn("mob_target").getUInt();
-        m_money = query.getColumn("money").getUInt();
-        m_mp[0] = query.getColumn("mp").getInt();
-        m_mp[1] = query.getColumn("mp_max").getInt();
-        m_sp[0] = query.getColumn("sp").getInt();
-        m_sp[1] = query.getColumn("sp_max").getInt();
+        if (!query.isColumnNull("blood_tox")) blood_tox_ = query.getColumn("blood_tox").getInt();
+        hunger_ = query.getColumn("hunger").getInt();
+        if (!query.isColumnNull("mob_target")) mob_target_ = query.getColumn("mob_target").getUInt();
+        money_ = query.getColumn("money").getUInt();
+        mp_[0] = query.getColumn("mp").getInt();
+        mp_[1] = query.getColumn("mp_max").getInt();
+        sp_[0] = query.getColumn("sp").getInt();
+        sp_[1] = query.getColumn("sp_max").getInt();
         sql_id = query.getColumn("sql_id").getUInt();
-        m_thirst = query.getColumn("thirst").getInt();
+        thirst_ = query.getColumn("thirst").getInt();
     }
     else throw std::runtime_error("Could not load player data!");
 
@@ -180,8 +180,8 @@ uint32_t Player::load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id
     while (skill_query.executeStep())
     {
         const std::string skill_id = skill_query.getColumn("id").getString();
-        m_skill_levels.insert(std::make_pair(skill_id, skill_query.getColumn("level").getInt()));
-        if (!skill_query.isColumnNull("xp")) m_skill_xp.insert(std::make_pair(skill_id, skill_query.getColumn("xp").getDouble()));
+        skill_levels_.insert(std::make_pair(skill_id, skill_query.getColumn("level").getInt()));
+        if (!skill_query.isColumnNull("xp")) skill_xp_.insert(std::make_pair(skill_id, skill_query.getColumn("xp").getDouble()));
     }
 
     return Mobile::load(save_db, sql_id);
@@ -197,49 +197,49 @@ uint32_t Player::max_carry() const
 // Retrieves the Mobile target if it's still valid, or sets it to 0 if not.
 uint32_t Player::mob_target()
 {
-    if (m_mob_target)
+    if (mob_target_)
     {
         for (size_t i = 0; i < core()->world()->mob_count(); i++)
         {
             const auto mob = core()->world()->mob_vec(i);
-            if (mob->id() == m_mob_target)
+            if (mob->id() == mob_target_)
             {
-                if (mob->location() == m_location) return m_mob_target;
+                if (mob->location() == location_) return mob_target_;
                 else break;
             }
         }
-        m_mob_target = 0;   // If we couldn't make a match, or the matched Mobile is no longer here, just clear the target.
+        mob_target_ = 0;   // If we couldn't make a match, or the matched Mobile is no longer here, just clear the target.
     }
-    return m_mob_target;
+    return mob_target_;
 }
 
 // Check how much money we're carrying.
-uint32_t Player::money() const { return m_money; }
+uint32_t Player::money() const { return money_; }
 
 // Retrieves the MP (or maximum MP) of the player.
-int Player::mp(bool max) const { return m_mp[max ? 1 : 0]; }
+int Player::mp(bool max) const { return mp_[max ? 1 : 0]; }
 
 // Recalculates maximum HP, after toughness skill gains.
 void Player::recalc_max_hp()
 {
-    const float old_hpm = m_hp[1];
+    const float old_hpm = hp_[1];
 
     // Recalculate the new maximum HP value.
-    m_hp[1] = (HP_PER_TOUGHNESS * skill_level("TOUGHNESS")) + HP_DEFAULT;
+    hp_[1] = (HP_PER_TOUGHNESS * skill_level("TOUGHNESS")) + HP_DEFAULT;
 
     // If max HP has been gained, increase current HP by the difference.
-    const float diff = m_hp[1] - old_hpm;
-    m_hp[0] += diff;
+    const float diff = hp_[1] - old_hpm;
+    hp_[0] += diff;
 }
 
 // Reduces the player's hit points.
 void Player::reduce_hp(int amount, bool death_message)
 {
-    if (amount >= m_hp[0] && tag(MobileTag::ArenaFighter)) core()->message("{m}The last thing you hear as your lifeless body hits the ground is the sadistic cheering of the crowd and the victorious yell of your opponent.");
+    if (amount >= hp_[0] && tag(MobileTag::ArenaFighter)) core()->message("{m}The last thing you hear as your lifeless body hits the ground is the sadistic cheering of the crowd and the victorious yell of your opponent.");
     Mobile::reduce_hp(amount, death_message);
-    if (m_hp[0] > 0)
+    if (hp_[0] > 0)
     {
-        const float damage_perc = static_cast<float>(amount) / static_cast<float>(m_hp[1]);
+        const float damage_perc = static_cast<float>(amount) / static_cast<float>(hp_[1]);
         gain_skill_xp("TOUGHNESS", damage_perc * TOUGHNESS_GAIN_MODIFIER);
     }
 }
@@ -248,43 +248,43 @@ void Player::reduce_hp(int amount, bool death_message)
 void Player::reduce_mp(int amount)
 {
     if (amount <= 0) return;
-    if (amount > m_mp[0]) m_mp[0] = 0;
-    else m_mp[0] -= amount;
+    if (amount > mp_[0]) mp_[0] = 0;
+    else mp_[0] -= amount;
 }
 
 // Reduces the player's stamina points.
 void Player::reduce_sp(int amount)
 {
     if (amount <= 0) return;
-    if (amount > m_sp[0]) m_sp[0] = 0;
-    else m_sp[0] -= amount;
+    if (amount > sp_[0]) sp_[0] = 0;
+    else sp_[0] -= amount;
 }
 
 // Removes money from the player.
 void Player::remove_money(uint32_t amount)
 {
-    if (amount > m_money)
+    if (amount > money_)
     {
-        m_money = 0;
+        money_ = 0;
         core()->guru()->nonfatal("Attempt to remove more money than the player owns!", Guru::GURU_ERROR);
     }
-    else m_money -= amount;
+    else money_ -= amount;
 }
 
 // Restores the player's mana points.
 void Player::restore_mp(int amount)
 {
     if (amount <= 0) return;
-    if (amount + m_mp[0] >= m_mp[1]) m_mp[0] = m_mp[1];
-    else m_mp[0] += amount;
+    if (amount + mp_[0] >= mp_[1]) mp_[0] = mp_[1];
+    else mp_[0] += amount;
 }
 
 // Restores the player's stamina points.
 void Player::restore_sp(int amount)
 {
     if (amount <= 0) return;
-    if (amount + m_sp[0] >= m_sp[1]) m_sp[0] = m_sp[1];
-    else m_sp[0] += amount;
+    if (amount + sp_[0] >= sp_[1]) sp_[0] = sp_[1];
+    else sp_[0] += amount;
 }
 
 // Saves this Player.
@@ -292,25 +292,25 @@ uint32_t Player::save(std::shared_ptr<SQLite::Database> save_db)
 {
     const uint32_t sql_id = Mobile::save(save_db);
     SQLite::Statement query(*save_db, "INSERT INTO player ( blood_tox, hunger, mob_target, money, mp, mp_max, sp, sp_max, sql_id, thirst ) VALUES ( :blood_tox, :hunger, :mob_target, :money, :mp, :mp_max, :sp, :sp_max, :sql_id, :thirst )");
-    if (m_blood_tox) query.bind(":blood_tox", m_blood_tox);
-    query.bind(":hunger", m_hunger);
-    if (m_mob_target) query.bind(":mob_target", m_mob_target);
-    query.bind(":money", m_money);
-    query.bind(":mp", m_mp[0]);
-    query.bind(":mp_max", m_mp[1]);
-    query.bind(":sp", m_sp[0]);
-    query.bind(":sp_max", m_sp[1]);
+    if (blood_tox_) query.bind(":blood_tox", blood_tox_);
+    query.bind(":hunger", hunger_);
+    if (mob_target_) query.bind(":mob_target", mob_target_);
+    query.bind(":money", money_);
+    query.bind(":mp", mp_[0]);
+    query.bind(":mp_max", mp_[1]);
+    query.bind(":sp", sp_[0]);
+    query.bind(":sp_max", sp_[1]);
     query.bind(":sql_id", sql_id);
-    query.bind(":thirst", m_thirst);
+    query.bind(":thirst", thirst_);
     query.exec();
 
-    for (const auto &kv : m_skill_levels)
+    for (const auto &kv : skill_levels_)
     {
         SQLite::Statement skill_query(*save_db, "INSERT INTO skills ( id, level, xp ) VALUES ( :id, :level, :xp )");
         skill_query.bind(":id", kv.first);
         skill_query.bind(":level", kv.second);
-        const auto it = m_skill_xp.find(kv.first);
-        if (it != m_skill_xp.end()) skill_query.bind(":xp", it->second);
+        const auto it = skill_xp_.find(kv.first);
+        if (it != skill_xp_.end()) skill_query.bind(":xp", it->second);
         skill_query.exec();
     }
 
@@ -318,32 +318,32 @@ uint32_t Player::save(std::shared_ptr<SQLite::Database> save_db)
 }
 
 // Sets the reason for this Player dying.
-void Player::set_death_reason(const std::string &reason) { m_death_reason = reason; }
+void Player::set_death_reason(const std::string &reason) { death_reason_ = reason; }
 
 // Sets a new Mobile target.
-void Player::set_mob_target(uint32_t target) { m_mob_target = target; }
+void Player::set_mob_target(uint32_t target) { mob_target_ = target; }
 
 // Returns the skill level of a specified skill of this Player.
 int Player::skill_level(const std::string &skill_id) const
 {
-    const auto it = m_skill_levels.find(skill_id);
-    if (it == m_skill_levels.end()) return 0;
+    const auto it = skill_levels_.find(skill_id);
+    if (it == skill_levels_.end()) return 0;
     else return it->second;
 }
 
 // Returns read-only access to the player's skill levels.
-const std::map<std::string, int>& Player::skill_map() const { return m_skill_levels; }
+const std::map<std::string, int>& Player::skill_map() const { return skill_levels_; }
 
 // Retrieves the SP (or maximum SP) of the player.
-int Player::sp(bool max) const { return m_sp[max ? 1 : 0]; }
+int Player::sp(bool max) const { return sp_[max ? 1 : 0]; }
 
 // Checks the current thirst level.
-int Player::thirst() const { return m_thirst; }
+int Player::thirst() const { return thirst_; }
 
 // The player gets a little more thirsty.
 void Player::thirst_tick()
 {
-    switch (--m_thirst)
+    switch (--thirst_)
     {
         case 0:
             core()->message("{u}You collapse from {U}severe dehydration{u}.");
@@ -360,12 +360,12 @@ void Player::thirst_tick()
 }
 
 // Reduces blood toxicity.
-void Player::tick_blood_tox() { if (m_blood_tox > 0) m_blood_tox--; }
+void Player::tick_blood_tox() { if (blood_tox_ > 0) blood_tox_--; }
 
 // Regenerates HP over time.
 void Player::tick_hp_regen()
 {
-    if (m_hp[0] < m_hp[1])
+    if (hp_[0] < hp_[1])
     {
         core()->world()->time_weather()->increase_heartbeat(TimeWeather::Heartbeat::HUNGER, REGEN_TIME_COST_HUNGER);
         core()->world()->time_weather()->increase_heartbeat(TimeWeather::Heartbeat::THIRST, REGEN_TIME_COST_THIRST);

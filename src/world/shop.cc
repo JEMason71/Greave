@@ -12,28 +12,28 @@ constexpr char Shop::SQL_SHOPS[] = "CREATE TABLE shops ( id INTEGER PRIMARY KEY 
 
 
 // Constructor, sets up a blank shop by default.
-Shop::Shop(uint32_t room_id) : m_inventory(std::make_shared<Inventory>(Inventory::TagPrefix::SHOP)), m_room_id(room_id) { }
+Shop::Shop(uint32_t room_id) : inventory_(std::make_shared<Inventory>(Inventory::TagPrefix::SHOP)), room_id_(room_id) { }
 
 // Adds an item to this shop's inventory.
 void Shop::add_item(std::shared_ptr<Item> item, bool sort)
 {
     item->set_meta("appraised_value", item->value(true));
-    m_inventory->add_item(item, true);
-    if (sort) m_inventory->sort();
+    inventory_->add_item(item, true);
+    if (sort) inventory_->sort();
 }
 
 // Browses the wares on sale.
 void Shop::browse() const
 {
-    if (!m_inventory->count())
+    if (!inventory_->count())
     {
         core()->message("{u}There doesn't seem to be anything for sale here.");
         return;
     }
     core()->message("{c}The following is available to purchase:");
-    for (size_t i = 0; i < m_inventory->count(); i++)
+    for (size_t i = 0; i < inventory_->count(); i++)
     {
-        const auto item = m_inventory->get(i);
+        const auto item = inventory_->get(i);
         std::string item_name = "{W}" + item->name(Item::NAME_FLAG_A | Item::NAME_FLAG_FULL_STATS) + " {W}(";
         item_name += StrX::mgsc_string(item->value(true), StrX::MGSC::SHORT);
         if (item->stack() > 1) item_name += " {W}each)";
@@ -53,7 +53,7 @@ void Shop::buy(uint32_t id, int quantity)
         return;
     }
 
-    const auto item = m_inventory->get(id);
+    const auto item = inventory_->get(id);
     const bool stackable = item->tag(ItemTag::Stackable);
     const uint32_t stack_size = item->stack();
 
@@ -76,7 +76,7 @@ void Shop::buy(uint32_t id, int quantity)
     if ((quantity == 1 && !stackable && stack_size == 1) || (stackable && static_cast<uint32_t>(quantity) == stack_size))
     {
         player->inv()->add_item(item);
-        m_inventory->remove_item(id);
+        inventory_->remove_item(id);
     }
 
     // We'll handle stackable and normally-unstackable items separately here. First, stackable items.
@@ -98,7 +98,7 @@ void Shop::buy(uint32_t id, int quantity)
             split_item->set_stack(1);
             player->inv()->add_item(split_item);
         }
-        if (!item->stack()) m_inventory->erase(id);
+        if (!item->stack()) inventory_->erase(id);
     }
 
     core()->message("{g}You buy " + StrX::number_to_word(quantity) + " {G}" + item->name(Item::NAME_FLAG_NO_COLOUR | Item::NAME_FLAG_NO_COUNT | (quantity > 1 ? Item::NAME_FLAG_PLURAL : 0)) + " {g}for {G}" + StrX::strip_ansi(StrX::mgsc_string(cost, StrX::MGSC::LONG_COINS)) + "{g}.");
@@ -106,26 +106,26 @@ void Shop::buy(uint32_t id, int quantity)
 }
 
 // Returns a pointer to the shop's inventory.
-const std::shared_ptr<Inventory> Shop::inv() const { return m_inventory; }
+const std::shared_ptr<Inventory> Shop::inv() const { return inventory_; }
 
 // Loads a shop from the save file.
 void Shop::load(std::shared_ptr<SQLite::Database> save_db)
 {
     SQLite::Statement query(*save_db, "SELECT * FROM shops WHERE id = :id");
-    query.bind(":id", m_room_id);
+    query.bind(":id", room_id_);
     if (query.executeStep())
     {
-        m_inventory->load(save_db, query.getColumn("inventory_id").getUInt());
+        inventory_->load(save_db, query.getColumn("inventory_id").getUInt());
     }
-    else throw std::runtime_error("Could not load shop data (ID: " + std::to_string(m_room_id) + ")");
+    else throw std::runtime_error("Could not load shop data (ID: " + std::to_string(room_id_) + ")");
 }
 
 // Restocks the contents of this shop.
 void Shop::restock()
 {
     const auto world = core()->world();
-    m_inventory->clear();
-    const std::string shop_list = "SHOP_" + StrX::str_toupper(world->get_room(m_room_id)->meta("shop_type"));
+    inventory_->clear();
+    const std::string shop_list = "SHOP_" + StrX::str_toupper(world->get_room(room_id_)->meta("shop_type"));
     auto list = world->get_list(shop_list);
     auto always_stock_list = world->get_list(shop_list + "_ALWAYS_STOCK");
     auto size_list = world->get_list(shop_list + "_SIZE");
@@ -142,15 +142,15 @@ void Shop::restock()
         const auto new_item = world->get_item(random_item.str, random_item.count);
         add_item(new_item, false);
     }
-    m_inventory->sort();
+    inventory_->sort();
 }
 
 // Saves this Shop to the save file.
 void Shop::save(std::shared_ptr<SQLite::Database> save_db) const
 {
-    const uint32_t inv_id = m_inventory->save(save_db);
+    const uint32_t inv_id = inventory_->save(save_db);
     SQLite::Statement query(*save_db, "INSERT INTO shops ( id, inventory_id ) VALUES ( :id, :inventory_id )");
-    query.bind(":id", m_room_id);
+    query.bind(":id", room_id_);
     query.bind(":inventory_id", inv_id);
     query.exec();
 }

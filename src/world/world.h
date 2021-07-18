@@ -76,22 +76,22 @@ private:
     static const std::set<std::string>              VALID_YAML_KEYS_ITEMS;  // A list of all valid keys in item YAML files.
     static const std::set<std::string>              VALID_YAML_KEYS_MOBS;   // A list of all valid keys in mobile YAML files.
 
-    std::set<uint32_t>                              m_active_rooms;     // Rooms relatively close to the player, where AI/respawning/etc. will be active.
-    std::map<std::string, std::vector<std::shared_ptr<BodyPart>>>   m_anatomy_pool; // The anatomy pool, containing body part data for Mobiles.
-    std::map<std::string, std::string>              m_generic_descs;    // Generic descriptions for items and rooms, where multiple share a description.
-    std::map<uint32_t, std::shared_ptr<Item>>       m_item_pool;        // All the Item templates in the game.
-    std::map<std::string, std::shared_ptr<List>>    m_list_pool;        // List data from lists.yml
-    std::map<uint32_t, std::string>                 m_mob_gear;         // Equipment lists for gearing up Mobiles.
-    std::map<uint32_t, std::shared_ptr<Mobile>>     m_mob_pool;         // All the Mobile templates in the game.
-    uint32_t                                        m_mob_unique_id;    // The unique ID counter for Mobiles.
-    std::vector<std::shared_ptr<Mobile>>            m_mobiles;          // All the Mobiles currently active in the game.
-    int                                             m_old_light_level;  // Used to check when the light level changes in the player's room.
-    uint32_t                                        m_old_location;     // Also used for light level change checks.
-    std::shared_ptr<Player>                         m_player;           // The player character.
-    std::map<uint32_t, std::shared_ptr<Room>>       m_room_pool;        // All the Room templates in the game.
-    std::map<uint32_t, std::shared_ptr<Shop>>       m_shops;            // Any and all shops in the game.
-    std::map<std::string, SkillData>                m_skills;           // The skills the player can use.
-    std::shared_ptr<TimeWeather>                    m_time_weather;     // The World's TimeWeather object, for tracking... well, the time and weather.
+    std::set<uint32_t>                              active_rooms_;      // Rooms relatively close to the player, where AI/respawning/etc. will be active.
+    std::map<std::string, std::vector<std::shared_ptr<BodyPart>>>   anatomy_pool_;  // The anatomy pool, containing body part data for Mobiles.
+    std::map<std::string, std::string>              generic_descs_;     // Generic descriptions for items and rooms, where multiple share a description.
+    std::map<uint32_t, std::shared_ptr<Item>>       item_pool_;         // All the Item templates in the game.
+    std::map<std::string, std::shared_ptr<List>>    list_pool_;         // List data from lists.yml
+    std::map<uint32_t, std::string>                 mob_gear_;          // Equipment lists for gearing up Mobiles.
+    std::map<uint32_t, std::shared_ptr<Mobile>>     mob_pool_;          // All the Mobile templates in the game.
+    uint32_t                                        mob_unique_id_;     // The unique ID counter for Mobiles.
+    std::vector<std::shared_ptr<Mobile>>            mobiles_;           // All the Mobiles currently active in the game.
+    int                                             old_light_level_;   // Used to check when the light level changes in the player's room.
+    uint32_t                                        old_location_;      // Also used for light level change checks.
+    std::shared_ptr<Player>                         player_;            // The player character.
+    std::map<uint32_t, std::shared_ptr<Room>>       room_pool_;         // All the Room templates in the game.
+    std::map<uint32_t, std::shared_ptr<Shop>>       shops_;             // Any and all shops in the game.
+    std::map<std::string, SkillData>                skills_;            // The skills the player can use.
+    std::shared_ptr<TimeWeather>                    time_weather_;      // The World's TimeWeather object, for tracking... well, the time and weather.
 
     void    active_room_scan(uint32_t target, uint32_t depth);  // Attempts to scan a room for the active rooms list. Only for internal use with recalc_active_rooms().
     void    load_anatomy_pool();    // Loads the anatomy YAML data into memory.

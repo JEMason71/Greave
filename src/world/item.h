@@ -136,17 +136,17 @@ private:
     static constexpr int    APPRAISAL_XP_EASY =             1;      // The amount of appraisal XP gained for an easy item appraisal.
     static constexpr int    APPRAISAL_XP_HARD =             5;      // The amount of appraisal XP gained for a difficult item appraisal.
 
-    std::string m_description;      // The description of this Item.
-    std::map<std::string, std::string>  m_metadata; // The Item's metadata, if any.
-    std::string m_name;             // The name of this Item!
-    uint16_t    m_parser_id;        // The semi-unique ID of this Item, for parser differentiation.
-    uint8_t     m_rarity;           // The rarity of this Item.
-    uint32_t    m_stack;            // If this Item can be stacked, this is how many is in the stack.
-    std::set<ItemTag>   m_tags;     // Any and all ItemTags on this Item.
-    ItemType    m_type;             // The primary type of this Item.
-    ItemSub     m_type_sub;         // The subtype of this Item, if any.
-    uint32_t    m_value;            // The value of this Item, if any.
-    uint32_t    m_weight;           // The weight of this Item.
+    std::string                         description_;   // The description of this Item.
+    std::map<std::string, std::string>  metadata_;      // The Item's metadata, if any.
+    std::string                         name_;          // The name of this Item!
+    uint16_t                            parser_id_;     // The semi-unique ID of this Item, for parser differentiation.
+    uint8_t                             rarity_;        // The rarity of this Item.
+    uint32_t                            stack_;         // If this Item can be stacked, this is how many is in the stack.
+    std::set<ItemTag>                   tags_;          // Any and all ItemTags on this Item.
+    ItemType                            type_;          // The primary type of this Item.
+    ItemSub                             type_sub_;      // The subtype of this Item, if any.
+    uint32_t                            value_;         // The value of this Item, if any.
+    uint32_t                            weight_;        // The weight of this Item.
 };
 
 #endif  // GREAVE_WORLD_ITEM_H_

@@ -18,24 +18,24 @@ constexpr char MessageLog::SQL_MSGLOG[] = "CREATE TABLE 'msglog' ( line INTEGER 
 
 
 // Constructor, sets some default values.
-MessageLog::MessageLog() : m_dragging_scrollbar(false), m_dragging_scrollbar_offset(0), m_offset(0) { recalc_window_sizes(); }
+MessageLog::MessageLog() : dragging_scrollbar_(false), dragging_scrollbar_offset_(0), offset_(0) { recalc_window_sizes(); }
 
 #ifdef GREAVE_TOLK
 // Adds a message to the latest messages vector.
-void MessageLog::add_latest_message(const std::string &msg) { m_latest_messages.push_back(msg); }
+void MessageLog::add_latest_message(const std::string &msg) { latest_messages_.push_back(msg); }
 
 // Clears the latest messages vector.
-void MessageLog::clear_latest_messages() { m_latest_messages.clear(); }
+void MessageLog::clear_latest_messages() { latest_messages_.clear(); }
 #endif
 
 // Clears the message log.
 void MessageLog::clear_messages()
 {
-    m_output_raw.clear();
-    m_output_processed.clear();
-    m_input_buffer.clear();
+    output_raw_.clear();
+    output_processed_.clear();
+    input_buffer_.clear();
 #ifdef GREAVE_TOLK
-    m_latest_messages.clear();
+    latest_messages_.clear();
 #endif
 }
 
@@ -43,24 +43,24 @@ void MessageLog::clear_messages()
 void MessageLog::load(std::shared_ptr<SQLite::Database> save_db)
 {
     clear_messages();
-    m_last_input.clear();
+    last_input_.clear();
     SQLite::Statement query(*save_db, "SELECT text FROM msglog ORDER BY line ASC");
     while (query.executeStep())
-        m_output_raw.push_back(query.getColumn("text").getString());
+        output_raw_.push_back(query.getColumn("text").getString());
 
     reprocess_output();
-    m_offset = static_cast<int>(m_output_processed.size() - m_output_window_height);    // Move the offset back to the bottom of the message log.
-    m_dragging_scrollbar = false;
-    m_dragging_scrollbar_offset = 0;
+    offset_ = static_cast<int>(output_processed_.size() - output_window_height_);    // Move the offset back to the bottom of the message log.
+    dragging_scrollbar_ = false;
+    dragging_scrollbar_offset_ = 0;
 }
 
 // Adds a message to the log.
 void MessageLog::msg(std::string str)
 {
-    m_output_raw.push_back(str);
+    output_raw_.push_back(str);
     reprocess_output();
-    m_offset = m_output_processed.size() - m_output_window_height;
-    m_dragging_scrollbar = false;
+    offset_ = output_processed_.size() - output_window_height_;
+    dragging_scrollbar_ = false;
 }
 
 // Recalculates the size and coordinates of the windows.
@@ -70,12 +70,12 @@ void MessageLog::recalc_window_sizes()
     const int padding_top = prefs->log_padding_top, padding_bottom = prefs->log_padding_bottom, padding_left = prefs->log_padding_left, padding_right = prefs->log_padding_right;
     int screen_width, screen_height;
     core()->terminal()->get_size(&screen_width, &screen_height);
-    m_output_window_width = screen_width - padding_left - padding_right;
-    m_output_window_height = screen_height - padding_top - padding_bottom;
-    m_input_window_width = screen_width - padding_left - padding_right;
-    m_output_window_x = m_input_window_x = padding_left;
-    m_output_window_y = padding_top;
-    m_input_window_y = screen_height - padding_bottom + 1;
+    output_window_width_ = screen_width - padding_left - padding_right;
+    output_window_height_ = screen_height - padding_top - padding_bottom;
+    input_window_width_ = screen_width - padding_left - padding_right;
+    output_window_x_ = input_window_x_ = padding_left;
+    output_window_y_ = padding_top;
+    input_window_y_ = screen_height - padding_bottom + 1;
 }
 
 // Renders the message log, returns user input.
@@ -115,41 +115,41 @@ std::string MessageLog::render_message_log(bool accept_blank_input)
     {
         // Clear the screen, fill in dark gray areas for the input and output areas.
         core()->terminal()->cls();
-        core()->terminal()->fill(m_output_window_x, m_output_window_y, m_output_window_width, m_output_window_height, Terminal::Colour::DARKEST_GREY);
-        core()->terminal()->fill(m_input_window_x, m_input_window_y, m_input_window_width, 1, Terminal::Colour::DARKEST_GREY);
+        core()->terminal()->fill(output_window_x_, output_window_y_, output_window_width_, output_window_height_, Terminal::Colour::DARKEST_GREY);
+        core()->terminal()->fill(input_window_x_, input_window_y_, input_window_width_, 1, Terminal::Colour::DARKEST_GREY);
 
         // Render the visible part of the output window.
-        int start = m_offset, end = m_output_processed.size();
-        if (end - start > static_cast<int>(m_output_window_height)) end = m_output_window_height + start;
+        int start = offset_, end = output_processed_.size();
+        if (end - start > static_cast<int>(output_window_height_)) end = output_window_height_ + start;
         for (int i = start; i < end; i++)
         {
-            if (i < 0 || i >= static_cast<int>(m_output_processed.size())) continue;
-            core()->terminal()->print(m_output_processed.at(i), m_output_window_x, m_output_window_y + i - start);
+            if (i < 0 || i >= static_cast<int>(output_processed_.size())) continue;
+            core()->terminal()->print(output_processed_.at(i), output_window_x_, output_window_y_ + i - start);
         }
 
         // Render the input buffer.
-        std::string input_buf = "{W}" + m_input_buffer;
+        std::string input_buf = "{W}" + input_buffer_;
         if (core()->world()) input_buf = status_str + " " + input_buf;
         const unsigned int input_buf_len = StrX::strlen_colour(input_buf);
-        if (input_buf_len > m_input_window_width) input_buf = input_buf.substr(0, m_input_window_width);
-        core()->terminal()->print(input_buf, m_input_window_x, m_input_window_y);
+        if (input_buf_len > input_window_width_) input_buf = input_buf.substr(0, input_window_width_);
+        core()->terminal()->print(input_buf, input_window_x_, input_window_y_);
 
         // Render the scroll bar.
-        const int scrollbar_x = prefs->log_padding_left + m_output_window_width;
-        const int scrollbar_height = std::min<int>(std::ceil(m_output_window_height * (m_output_window_height / static_cast<float>(m_output_processed.size()))), m_output_window_height);
+        const int scrollbar_x = prefs->log_padding_left + output_window_width_;
+        const int scrollbar_height = std::min<int>(std::ceil(output_window_height_ * (output_window_height_ / static_cast<float>(output_processed_.size()))), output_window_height_);
         int scrollbar_offset;
-        if (!(m_output_processed.size() - m_output_window_height)) scrollbar_offset = (prefs->log_padding_top + (m_output_window_height - scrollbar_height));
-        else scrollbar_offset = (prefs->log_padding_top + (m_output_window_height - scrollbar_height) * (static_cast<float>(m_offset) / static_cast<float>(m_output_processed.size() - m_output_window_height)));
-        for (unsigned int i = 0; i < m_output_window_height; i++)
+        if (!(output_processed_.size() - output_window_height_)) scrollbar_offset = (prefs->log_padding_top + (output_window_height_ - scrollbar_height));
+        else scrollbar_offset = (prefs->log_padding_top + (output_window_height_ - scrollbar_height) * (static_cast<float>(offset_) / static_cast<float>(output_processed_.size() - output_window_height_)));
+        for (unsigned int i = 0; i < output_window_height_; i++)
             core()->terminal()->put('|', scrollbar_x, prefs->log_padding_top + i, Terminal::Colour::WHITE);
         for (int i = 0; i < scrollbar_height; i++)
             core()->terminal()->put(' ', scrollbar_x, i + scrollbar_offset, Terminal::Colour::WHITE_BG);
 
         // Render the cursor on the input buffer.
-        if (input_buf_len < m_input_window_width)
+        if (input_buf_len < input_window_width_)
         {
             core()->terminal()->cursor(true);
-            core()->terminal()->move_cursor(m_input_window_x + input_buf_len, m_input_window_y);
+            core()->terminal()->move_cursor(input_window_x_ + input_buf_len, input_window_y_);
         }
         else core()->terminal()->cursor(false);
 
@@ -157,7 +157,7 @@ std::string MessageLog::render_message_log(bool accept_blank_input)
 
         const int key = core()->terminal()->get_key();
         const bool is_dead = core()->guru()->is_dead();
-        const int scroll_bottom = static_cast<int>(m_output_processed.size() - m_output_window_height);
+        const int scroll_bottom = static_cast<int>(output_processed_.size() - output_window_height_);
         if (key == Terminal::Key::CLOSE)
         {
             core()->cleanup();
@@ -167,70 +167,70 @@ std::string MessageLog::render_message_log(bool accept_blank_input)
         else if (key == Terminal::Key::RESIZED)
         {
             reprocess_output();
-            m_offset = m_output_processed.size() - m_output_window_height;
+            offset_ = output_processed_.size() - output_window_height_;
         }
-        else if (key >= ' ' && key <= '~' && key != '{' && key != '}') m_input_buffer += static_cast<char>(key);
-        else if (key == Terminal::Key::BACKSPACE && m_input_buffer.size()) m_input_buffer.pop_back();
-        else if ((key == Terminal::Key::CR || key == Terminal::Key::LF) && (m_input_buffer.size() || accept_blank_input))
+        else if (key >= ' ' && key <= '~' && key != '{' && key != '}') input_buffer_ += static_cast<char>(key);
+        else if (key == Terminal::Key::BACKSPACE && input_buffer_.size()) input_buffer_.pop_back();
+        else if ((key == Terminal::Key::CR || key == Terminal::Key::LF) && (input_buffer_.size() || accept_blank_input))
         {
-            std::string result = std::regex_replace(m_input_buffer, std::regex("^ +| +$|( ) +"), "$1");
+            std::string result = std::regex_replace(input_buffer_, std::regex("^ +| +$|( ) +"), "$1");
             if (result.size())
             {
                 core()->message("{c}> " + result, true);
-                m_input_buffer = "";
-                m_last_input = result;
+                input_buffer_ = "";
+                last_input_ = result;
                 return result;
             }
             else
             {
-                m_input_buffer = "";
+                input_buffer_ = "";
                 if (accept_blank_input)
                 {
-                    m_last_input = "";
+                    last_input_ = "";
                     return "";
                 }
             }
         }
-        else if ((key == Terminal::Key::ARROW_UP || key == Terminal::Key::MOUSE_SCROLL_UP) && m_offset > 1)
+        else if ((key == Terminal::Key::ARROW_UP || key == Terminal::Key::MOUSE_SCROLL_UP) && offset_ > 1)
         {
-            m_offset -= (key == Terminal::Key::MOUSE_SCROLL_UP ? prefs->log_mouse_scroll_step : 1);
-            if (m_offset < 1) m_offset = 1;
+            offset_ -= (key == Terminal::Key::MOUSE_SCROLL_UP ? prefs->log_mouse_scroll_step : 1);
+            if (offset_ < 1) offset_ = 1;
         }
-        else if ((key == Terminal::Key::ARROW_DOWN || key == Terminal::Key::MOUSE_SCROLL_DOWN) && m_offset < scroll_bottom)
+        else if ((key == Terminal::Key::ARROW_DOWN || key == Terminal::Key::MOUSE_SCROLL_DOWN) && offset_ < scroll_bottom)
         {
-            m_offset += (key == Terminal::Key::MOUSE_SCROLL_DOWN ? prefs->log_mouse_scroll_step : 1);
-            if (m_offset > scroll_bottom) m_offset = scroll_bottom;
+            offset_ += (key == Terminal::Key::MOUSE_SCROLL_DOWN ? prefs->log_mouse_scroll_step : 1);
+            if (offset_ > scroll_bottom) offset_ = scroll_bottom;
         }
-        else if (key == Terminal::Key::HOME && m_output_processed.size() > m_output_window_height) m_offset = 1;
-        else if (key == Terminal::Key::END) m_offset = scroll_bottom;
-        else if (key == Terminal::Key::PAGE_UP && m_output_processed.size() > m_output_window_height)
+        else if (key == Terminal::Key::HOME && output_processed_.size() > output_window_height_) offset_ = 1;
+        else if (key == Terminal::Key::END) offset_ = scroll_bottom;
+        else if (key == Terminal::Key::PAGE_UP && output_processed_.size() > output_window_height_)
         {
-            m_offset -= m_output_window_height;
-            if (m_offset < 1) m_offset = 1;
+            offset_ -= output_window_height_;
+            if (offset_ < 1) offset_ = 1;
         }
         else if (key == Terminal::Key::PAGE_DOWN)
         {
-            m_offset += m_output_window_height;
-            if (m_offset > scroll_bottom) m_offset = scroll_bottom;
+            offset_ += output_window_height_;
+            if (offset_ > scroll_bottom) offset_ = scroll_bottom;
         }
-        else if (key == Terminal::Key::MOUSE_LEFT && core()->terminal()->get_mouse_x() == scrollbar_x && m_output_processed.size() > m_output_window_height)
+        else if (key == Terminal::Key::MOUSE_LEFT && core()->terminal()->get_mouse_x() == scrollbar_x && output_processed_.size() > output_window_height_)
         {
             const int pixel_y = core()->terminal()->get_mouse_y_pixel();
             if (pixel_y >= scrollbar_offset * core()->terminal()->cell_height() && pixel_y <= (scrollbar_offset + scrollbar_height) * core()->terminal()->cell_height())
             {
                 // Clicked on the scrollbar handle: start dragging.
-                m_dragging_scrollbar = true;
-                m_dragging_scrollbar_offset = pixel_y - (scrollbar_offset * core()->terminal()->cell_height());
+                dragging_scrollbar_ = true;
+                dragging_scrollbar_offset_ = pixel_y - (scrollbar_offset * core()->terminal()->cell_height());
             }
             else scroll_to_pixel(core()->terminal()->get_mouse_y_pixel() - scrollbar_height * core()->terminal()->cell_height() / 2);
         }
-        else if (key == Terminal::Key::MOUSE_LEFT_RELEASED) m_dragging_scrollbar = false;
-        else if (key == Terminal::Key::MOUSE_HAS_MOVED && m_dragging_scrollbar) scroll_to_pixel(core()->terminal()->get_mouse_y_pixel() - m_dragging_scrollbar_offset);
+        else if (key == Terminal::Key::MOUSE_LEFT_RELEASED) dragging_scrollbar_ = false;
+        else if (key == Terminal::Key::MOUSE_HAS_MOVED && dragging_scrollbar_) scroll_to_pixel(core()->terminal()->get_mouse_y_pixel() - dragging_scrollbar_offset_);
 #ifdef GREAVE_TOLK
-        else if (key == Terminal::Key::TAB && m_latest_messages.size() && (prefs->screen_reader_external || prefs->screen_reader_sapi))
+        else if (key == Terminal::Key::TAB && latest_messages_.size() && (prefs->screen_reader_external || prefs->screen_reader_sapi))
         {
             Tolk_Silence();
-            for (auto line : m_latest_messages)
+            for (auto line : latest_messages_)
             {
                 const std::wstring wide_line(line.begin(), line.end());
                 Tolk_Output(wide_line.c_str());
@@ -245,11 +245,11 @@ std::string MessageLog::render_message_log(bool accept_blank_input)
 void MessageLog::reprocess_output()
 {
     recalc_window_sizes();
-    while (m_output_raw.size() > static_cast<unsigned int>(core()->prefs()->log_max_size))
-        m_output_raw.erase(m_output_raw.begin());
+    while (output_raw_.size() > static_cast<unsigned int>(core()->prefs()->log_max_size))
+        output_raw_.erase(output_raw_.begin());
 
-    m_output_processed.clear();
-    for (auto line : m_output_raw)
+    output_processed_.clear();
+    for (auto line : output_raw_)
     {
         bool same_line = false;
         if (line.size() >= 3 && line.substr(0, 3) == "{0}")
@@ -257,20 +257,20 @@ void MessageLog::reprocess_output()
             line = line.substr(3);
             same_line = true;
         }
-        std::vector<std::string> split_line = StrX::string_explode_colour(line, m_output_window_width);
-        if (!same_line) m_output_processed.push_back("");
-        m_output_processed.insert(m_output_processed.end(), split_line.begin(), split_line.end());
+        std::vector<std::string> split_line = StrX::string_explode_colour(line, output_window_width_);
+        if (!same_line) output_processed_.push_back("");
+        output_processed_.insert(output_processed_.end(), split_line.begin(), split_line.end());
     }
 }
 
 // Saves the message log to disk.
 void MessageLog::save(std::shared_ptr<SQLite::Database> save_db)
 {
-    for (unsigned int i = 0; i < m_output_raw.size(); i++)
+    for (unsigned int i = 0; i < output_raw_.size(); i++)
     {
         SQLite::Statement query(*save_db, "INSERT INTO msglog ( line, text ) VALUES ( :line, :text )");
         query.bind(":line", i);
-        query.bind(":text", m_output_raw.at(i));
+        query.bind(":text", output_raw_.at(i));
         query.exec();
     }
 }
@@ -279,6 +279,6 @@ void MessageLog::save(std::shared_ptr<SQLite::Database> save_db)
 void MessageLog::scroll_to_pixel(int pixel_y)
 {
     pixel_y -= core()->prefs()->log_padding_top * core()->terminal()->cell_height();
-    const float factor = pixel_y / (static_cast<float>(m_output_window_height) * core()->terminal()->cell_height());
-    m_offset = std::max<int>(1, std::min<int>(m_output_processed.size() - m_output_window_height, m_output_processed.size() * factor));
+    const float factor = pixel_y / (static_cast<float>(output_window_height_) * core()->terminal()->cell_height());
+    offset_ = std::max<int>(1, std::min<int>(output_processed_.size() - output_window_height_, output_processed_.size() * factor));
 }

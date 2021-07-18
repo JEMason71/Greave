@@ -17,39 +17,39 @@
 
 
 // Constructor, sets up SDL2.
-TerminalSDL2::TerminalSDL2() : m_cursor_visible(false), m_cursor_x(0), m_cursor_y(0), m_font(nullptr), m_init_sdl(false), m_init_sdl_ttf(false), m_mouse_x(0), m_mouse_y(0), m_renderer(nullptr), m_screenshot_msg_time(0), m_screenshot_taken(0), m_window(nullptr)
+TerminalSDL2::TerminalSDL2() : cursor_visible_(false), cursor_x_(0), cursor_y_(0), font_(nullptr), init_sdl_(false), init_sdl_ttf_(false), mouse_x_(0), mouse_y_(0), renderer_(nullptr), screenshot_msg_time_(0), screenshot_taken_(0), window_(nullptr)
 {
     const std::shared_ptr<Prefs> prefs = core()->prefs();
     if (SDL_Init(SDL_INIT_VIDEO) < 0) throw std::runtime_error("Could not initialize SDL: " + std::string(SDL_GetError()));
-    else m_init_sdl = true;
+    else init_sdl_ = true;
     if (TTF_Init() < 0) throw std::runtime_error("Could not initialize SDL_ttf: " + std::string(TTF_GetError()));
-    else m_init_sdl_ttf = true;
+    else init_sdl_ttf_ = true;
     SDL_StartTextInput();
 
     // Load the font!
-    m_font = TTF_OpenFont(("data/fonts/" + prefs->sdl_font).c_str(), prefs->sdl_font_size);
-    if (!m_font) throw std::runtime_error("Could not load TTF font!");
+    font_ = TTF_OpenFont(("data/fonts/" + prefs->sdl_font).c_str(), prefs->sdl_font_size);
+    if (!font_) throw std::runtime_error("Could not load TTF font!");
 
     // Determine the size, in pixels, of the chosen font. I very much hope this is fixed-width, or weird shit is gonna happen here.
-    SDL_Surface *temp_surf = TTF_RenderText_Solid(m_font, "#", {255, 255, 255, 255});
-    m_font_width = temp_surf->w;
-    m_font_height = temp_surf->h;
+    SDL_Surface *temp_surf = TTF_RenderText_Solid(font_, "#", {255, 255, 255, 255});
+    font_width_ = temp_surf->w;
+    font_height_ = temp_surf->h;
     SDL_FreeSurface(temp_surf);
 
     // Determine the size of the main window.
     const std::vector<std::string> size_exp = StrX::string_explode(prefs->sdl_console_size, "x");
     if (size_exp.size() != 2) throw std::runtime_error("Invalid SDL console size specified in prefs.yml!");
-    m_window_w = std::stol(size_exp.at(0)) * m_font_width;
-    m_window_h = std::stol(size_exp.at(1)) * m_font_height;
+    window_w_ = std::stol(size_exp.at(0)) * font_width_;
+    window_h_ = std::stol(size_exp.at(1)) * font_height_;
 
     // Create the main window!
-    m_window = SDL_CreateWindow(("Greave " + std::string(CoreConstants::GAME_VERSION)).c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, m_window_w, m_window_h,
+    window_ = SDL_CreateWindow(("Greave " + std::string(CoreConstants::GAME_VERSION)).c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, window_w_, window_h_,
         SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
-    if (!m_window) throw std::runtime_error("Could not create SDL window: " + std::string(SDL_GetError()));
+    if (!window_) throw std::runtime_error("Could not create SDL window: " + std::string(SDL_GetError()));
 
     // Create the renderer for the window.
-    m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED | (prefs->sdl_vsync ? SDL_RENDERER_PRESENTVSYNC : 0));
-    if (!m_renderer) throw std::runtime_error("Could not create SDL renderer: " + std::string(SDL_GetError()));
+    renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_ACCELERATED | (prefs->sdl_vsync ? SDL_RENDERER_PRESENTVSYNC : 0));
+    if (!renderer_) throw std::runtime_error("Could not create SDL renderer: " + std::string(SDL_GetError()));
 
     // Set the colours up.
     init_colours();
@@ -58,56 +58,56 @@ TerminalSDL2::TerminalSDL2() : m_cursor_visible(false), m_cursor_x(0), m_cursor_
 // Destructor, cleans up SDL2.
 TerminalSDL2::~TerminalSDL2()
 {
-    if (m_font)
+    if (font_)
     {
-        TTF_CloseFont(m_font);
-        m_font = nullptr;
+        TTF_CloseFont(font_);
+        font_ = nullptr;
     }
-    if (m_renderer)
+    if (renderer_)
     {
-        SDL_DestroyRenderer(m_renderer);
-        m_renderer = nullptr;
+        SDL_DestroyRenderer(renderer_);
+        renderer_ = nullptr;
     }
-    if (m_window)
+    if (window_)
     {
-        SDL_DestroyWindow(m_window);
-        m_window = nullptr;
+        SDL_DestroyWindow(window_);
+        window_ = nullptr;
     }
-    if (m_init_sdl_ttf) TTF_Quit();
-    if (m_init_sdl) SDL_Quit();
+    if (init_sdl_ttf_) TTF_Quit();
+    if (init_sdl_) SDL_Quit();
 }
 
 // Returns the height of a single cell, in pixels.
-int TerminalSDL2::cell_height() const { return m_font_height; }
+int TerminalSDL2::cell_height() const { return font_height_; }
 
 // Clears the screen.
 void TerminalSDL2::cls()
 {
-    SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 0xFF);
-    SDL_RenderClear(m_renderer);
+    SDL_SetRenderDrawColor(renderer_, 0, 0, 0, 0xFF);
+    SDL_RenderClear(renderer_);
 }
 
 // Converts a colour code into a more useful form.
 void TerminalSDL2::colour_to_rgb(Colour col, uint8_t *r, uint8_t *g, uint8_t *b) const
 {
-    const auto it = m_colour_map.find(col);
-    if (it == m_colour_map.end()) throw std::runtime_error("Invalid colour!");
+    const auto it = colour_map_.find(col);
+    if (it == colour_map_.end()) throw std::runtime_error("Invalid colour!");
     *r = it->second.r;
     *g = it->second.g;
     *b = it->second.b;
 }
 
 // Makes the cursor visible or invisible.
-void TerminalSDL2::cursor(bool visible) { m_cursor_visible = visible; }
+void TerminalSDL2::cursor(bool visible) { cursor_visible_ = visible; }
 
 // Fills a given area in with the specified colour.
 void TerminalSDL2::fill(int x, int y, int w, int h, Colour col)
 {
     uint8_t r, g, b;
     colour_to_rgb(col, &r, &g, &b);
-    SDL_SetRenderDrawColor(m_renderer, r, g, b, 0xFF);
-    SDL_Rect rect = { x * m_font_width, y * m_font_height, w * m_font_width, h * m_font_height };
-    SDL_RenderFillRect(m_renderer, &rect);
+    SDL_SetRenderDrawColor(renderer_, r, g, b, 0xFF);
+    SDL_Rect rect = { x * font_width_, y * font_height_, w * font_width_, h * font_height_ };
+    SDL_RenderFillRect(renderer_, &rect);
 }
 
 // Gets keyboard input from the terminal.
@@ -125,8 +125,8 @@ int TerminalSDL2::get_key()
                 {
                     case SDL_WINDOWEVENT_CLOSE: return Key::CLOSE;
                     case SDL_WINDOWEVENT_SIZE_CHANGED:
-                        m_window_w = event.window.data1;
-                        m_window_h = event.window.data2;
+                        window_w_ = event.window.data1;
+                        window_h_ = event.window.data2;
                         refresh();
                         return Key::RESIZED;
                     case SDL_WINDOWEVENT_EXPOSED: refresh(); break;
@@ -165,30 +165,30 @@ int TerminalSDL2::get_key()
                 if (event.button.button == SDL_BUTTON_LEFT) return Key::MOUSE_LEFT_RELEASED;
                 break;
             case SDL_MOUSEMOTION:
-                m_mouse_x = event.motion.x;
-                m_mouse_y = event.motion.y;
+                mouse_x_ = event.motion.x;
+                mouse_y_ = event.motion.y;
                 return Key::MOUSE_HAS_MOVED;
         }
     }
 }
 
 // Gets the X coordinate for the cell the mouse is pointing at.
-int TerminalSDL2::get_mouse_x() const { return m_mouse_x / m_font_width; }
+int TerminalSDL2::get_mouse_x() const { return mouse_x_ / font_width_; }
 
 // Gets the X coordinate for the pixel the mouse is pointing at.
-int TerminalSDL2::get_mouse_x_pixel() const { return m_mouse_x; }
+int TerminalSDL2::get_mouse_x_pixel() const { return mouse_x_; }
 
 // Gets the Y coordinate for the cell the mouse is pointing at.
-int TerminalSDL2::get_mouse_y() const { return m_mouse_y / m_font_height; }
+int TerminalSDL2::get_mouse_y() const { return mouse_y_ / font_height_; }
 
 // Gets the Y coordinate for the pixel the mouse is pointing at.
-int TerminalSDL2::get_mouse_y_pixel() const { return m_mouse_y; }
+int TerminalSDL2::get_mouse_y_pixel() const { return mouse_y_; }
 
 // Retrieves the size of the terminal (in cells, not pixels).
 void TerminalSDL2::get_size(int *w, int *h) const
 {
-    *w = m_window_w / m_font_width;
-    *h = m_window_h / m_font_height;
+    *w = window_w_ / font_width_;
+    *h = window_h_ / font_height_;
 }
 
 // Loads the colours from prefs.yml into RGB values.
@@ -203,7 +203,7 @@ void TerminalSDL2::init_colours()
         uint8_t r = StrX::htoi(colour_str.substr(0, 2));
         uint8_t g = StrX::htoi(colour_str.substr(2, 2));
         uint8_t b = StrX::htoi(colour_str.substr(4, 2));
-        m_colour_map.insert(std::pair<Colour, RGB>(colour_enum, {r,g,b}));
+        colour_map_.insert(std::pair<Colour, RGB>(colour_enum, {r,g,b}));
     };
 
     populate_colour_map(prefs->colour_black, Colour::BLACK);
@@ -229,8 +229,8 @@ void TerminalSDL2::init_colours()
 // Moves the cursor to the specified position.
 void TerminalSDL2::move_cursor(int x, int y)
 {
-    m_cursor_x = x;
-    m_cursor_y = y;
+    cursor_x_ = x;
+    cursor_y_ = y;
 }
 
 // Internal rendering code, after print() has parsed the colour tags.
@@ -244,10 +244,10 @@ void TerminalSDL2::print_internal(std::string str, int x, int y, Colour col)
 
     uint8_t r, g, b;
     colour_to_rgb(col, &r, &g, &b);
-    SDL_Surface* font_surf = TTF_RenderText_Blended(m_font, str.c_str(), {r, g, b, 255});
-    SDL_Texture* font_tex = SDL_CreateTextureFromSurface(m_renderer, font_surf);
-    SDL_Rect rect = { x * m_font_width, y * m_font_height, static_cast<int>(str.size() * m_font_width), m_font_height };
-    SDL_RenderCopy(m_renderer, font_tex, nullptr, &rect);
+    SDL_Surface* font_surf = TTF_RenderText_Blended(font_, str.c_str(), {r, g, b, 255});
+    SDL_Texture* font_tex = SDL_CreateTextureFromSurface(renderer_, font_surf);
+    SDL_Rect rect = { x * font_width_, y * font_height_, static_cast<int>(str.size() * font_width_), font_height_ };
+    SDL_RenderCopy(renderer_, font_tex, nullptr, &rect);
     SDL_DestroyTexture(font_tex);
     SDL_FreeSurface(font_surf);
 }
@@ -258,24 +258,24 @@ void TerminalSDL2::put(uint16_t letter, int x, int y, Colour col) { print(std::s
 // Refreshes the screen with changes made.
 void TerminalSDL2::refresh()
 {
-    if (m_cursor_visible)
+    if (cursor_visible_)
     {
-        fill(m_cursor_x, m_cursor_y, 1, 1, Colour::DARKEST_GREY);
-        put('_', m_cursor_x, m_cursor_y, Colour::WHITE_BOLD);
+        fill(cursor_x_, cursor_y_, 1, 1, Colour::DARKEST_GREY);
+        put('_', cursor_x_, cursor_y_, Colour::WHITE_BOLD);
     }
 
-    if (m_screenshot_taken)
+    if (screenshot_taken_)
     {
-        if (m_screenshot_msg_time > std::time(nullptr))
+        if (screenshot_msg_time_ > std::time(nullptr))
         {
-            const std::string sshot_text = "Screenshot taken: greave" + std::to_string(m_screenshot_taken) + ".png";
+            const std::string sshot_text = "Screenshot taken: greave" + std::to_string(screenshot_taken_) + ".png";
             fill(0, 0, sshot_text.size(), 1, Colour::BLACK);
             print(sshot_text, 0, 0, Colour::GREEN_BOLD);
         }
-        else m_screenshot_taken = 0;
+        else screenshot_taken_ = 0;
     }
 
-    SDL_RenderPresent(m_renderer);
+    SDL_RenderPresent(renderer_);
 }
 
 // Takes a screenshot!
@@ -294,8 +294,8 @@ void TerminalSDL2::screenshot()
     }
 
     // Take a screenshot in BMP format (SDL_image can do PNG exports directly, but that's a lot of extra overhead). Using LodePNG is way more lightweight.
-    SDL_Surface* temp_surf = SDL_CreateRGBSurface(0, m_window_w, m_window_h, 32, 0, 0, 0, 0);
-    SDL_RenderReadPixels(m_renderer, nullptr, temp_surf->format->format, temp_surf->pixels, temp_surf->pitch);
+    SDL_Surface* temp_surf = SDL_CreateRGBSurface(0, window_w_, window_h_, 32, 0, 0, 0, 0);
+    SDL_RenderReadPixels(renderer_, nullptr, temp_surf->format->format, temp_surf->pixels, temp_surf->pitch);
     SDL_SaveBMP(temp_surf, (filename + ".tmp").c_str());
     SDL_FreeSurface(temp_surf);
 
@@ -303,8 +303,8 @@ void TerminalSDL2::screenshot()
     std::thread(convert_png, filename).detach();
 
     // Display the screenshot taken message.
-    m_screenshot_taken = sshot;
-    m_screenshot_msg_time = std::time(nullptr) + 2;
+    screenshot_taken_ = sshot;
+    screenshot_msg_time_ = std::time(nullptr) + 2;
     refresh();
 }
 

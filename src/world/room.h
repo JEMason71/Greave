@@ -223,21 +223,21 @@ private:
     static constexpr int    WEATHER_TIME_MOD_SUNSET =           0;      // The temperature modification for sunset.
     static const char*      ROOM_SCAR_DESCS[][4];                       // The descriptions for different types of room scars.
 
-    std::string                 m_desc;                         // The Room's description.
-    uint32_t                    m_id;                           // The Room's unique ID, hashed from its YAML name.
-    std::shared_ptr<Inventory>  m_inventory;                    // The Room's inventory, for storing dropped items.
-    uint32_t                    m_last_spawned_mobs;            // The timer for when this Room last spawned Mobiles.
-    uint8_t                     m_light;                        // The default light level of this Room.
-    uint32_t                    m_links[ROOM_LINKS_MAX];        // Links to other Rooms.
-    std::map<std::string, std::string>  m_metadata;             // The Room's metadata, if any.
-    std::string                 m_name;                         // The Room's title.
-    std::string                 m_name_short;                   // The Room's short name, for exit listings.
-    std::vector<uint8_t>        m_scar_intensity;               // The intensity of the room scars, if any.
-    std::vector<ScarType>       m_scar_type;                    // The type of room scars, if any.
-    Security                    m_security;                     // The security rating for this Room.
-    std::vector<std::string>    m_spawn_mobs;                   // The list of Mobiles to spawn here.
-    std::set<RoomTag>           m_tags;                         // Any and all RoomTags on this Room.
-    std::set<LinkTag>           m_tags_link[ROOM_LINKS_MAX];    // Any and all LinkTags on this Room's links.
+    std::string                         desc_;                          // The Room's description.
+    uint32_t                            id_;                            // The Room's unique ID, hashed from its YAML name.
+    std::shared_ptr<Inventory>          inventory_;                     // The Room's inventory, for storing dropped items.
+    uint32_t                            last_spawned_mobs_;             // The timer for when this Room last spawned Mobiles.
+    uint8_t                             light_;                         // The default light level of this Room.
+    uint32_t                            links_[ROOM_LINKS_MAX];         // Links to other Rooms.
+    std::map<std::string, std::string>  metadata_;                      // The Room's metadata, if any.
+    std::string                         name_;                          // The Room's title.
+    std::string                         name_short_;                    // The Room's short name, for exit listings.
+    std::vector<uint8_t>                scar_intensity_;                // The intensity of the room scars, if any.
+    std::vector<ScarType>               scar_type_;                     // The type of room scars, if any.
+    Security                            security_;                      // The security rating for this Room.
+    std::vector<std::string>            spawn_mobs_;                    // The list of Mobiles to spawn here.
+    std::set<RoomTag>                   tags_;                          // Any and all RoomTags on this Room.
+    std::set<LinkTag>                   tags_link_[ROOM_LINKS_MAX];     // Any and all LinkTags on this Room's links.
 };
 
 #endif  // GREAVE_WORLD_ROOM_H_

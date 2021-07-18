@@ -8,7 +8,7 @@
 
 
 // Creates a new, blank inventory.
-Inventory::Inventory(uint8_t tag_prefix) : m_tag_prefix(tag_prefix) { }
+Inventory::Inventory(uint8_t tag_prefix) : tag_prefix_(tag_prefix) { }
 
 // Adds an Item to this Inventory (this will later handle auto-stacking, etc.)
 void Inventory::add_item(std::shared_ptr<Item> item, bool force_stack)
@@ -16,24 +16,24 @@ void Inventory::add_item(std::shared_ptr<Item> item, bool force_stack)
     // Checks if there's anything else here that can be stacked.
     if (force_stack || item->tag(ItemTag::Stackable))
     {
-        for (size_t i = 0; i < m_items.size(); i++)
+        for (size_t i = 0; i < items_.size(); i++)
         {
-            if (!force_stack && !m_items.at(i)->tag(ItemTag::Stackable)) continue;
-            if (item->is_identical(m_items.at(i)))
+            if (!force_stack && !items_.at(i)->tag(ItemTag::Stackable)) continue;
+            if (item->is_identical(items_.at(i)))
             {
-                m_items.at(i)->set_stack(item->stack() + m_items.at(i)->stack());
+                items_.at(i)->set_stack(item->stack() + items_.at(i)->stack());
 
                 // Compare appraised values, and pick the most accurate of the two.
-                const int appraised_value_a = m_items.at(i)->meta_int("appraised_value");
+                const int appraised_value_a = items_.at(i)->meta_int("appraised_value");
                 const int appraised_value_b = item->meta_int("appraised_value");
                 if (appraised_value_a != appraised_value_b)
                 {
-                    if (!appraised_value_a) m_items.at(i)->set_meta("appraised_value", appraised_value_b);
+                    if (!appraised_value_a) items_.at(i)->set_meta("appraised_value", appraised_value_b);
                     else
                     {
-                        const int diff_a = std::abs(appraised_value_a - static_cast<int>(m_items.at(i)->value(true)));
-                        const int diff_b = std::abs(appraised_value_b - static_cast<int>(m_items.at(i)->value(true)));
-                        if (diff_a > diff_b) m_items.at(i)->set_meta("appraised_value", appraised_value_b);
+                        const int diff_a = std::abs(appraised_value_a - static_cast<int>(items_.at(i)->value(true)));
+                        const int diff_b = std::abs(appraised_value_b - static_cast<int>(items_.at(i)->value(true)));
+                        if (diff_a > diff_b) items_.at(i)->set_meta("appraised_value", appraised_value_b);
                     }
                 }
                 return;
@@ -43,10 +43,10 @@ void Inventory::add_item(std::shared_ptr<Item> item, bool force_stack)
 
     // Check the Item's hex ID. If it's unset, or if another Item in the Inventory shares its ID, we'll need a new one. Infinite loops relying on RNG to break out are VERY BAD so let's put a threshold on this bad boy.
     int tries = 0;
-    item->set_parser_id_prefix(m_tag_prefix);
+    item->set_parser_id_prefix(tag_prefix_);
     while (parser_id_exists(item->parser_id()) && ++tries < 10000)
-        item->new_parser_id(m_tag_prefix);
-    m_items.push_back(item);
+        item->new_parser_id(tag_prefix_);
+    items_.push_back(item);
 }
 
 // As above, but generates a new Item from a template with a specified ID.
@@ -60,38 +60,38 @@ size_t Inventory::ammo_pos(std::shared_ptr<Item> item)
     if (item->tag(ItemTag::AmmoArrow)) ammo_type = ItemSub::ARROW;
     else if (item->tag(ItemTag::AmmoBolt)) ammo_type = ItemSub::BOLT;
     else throw std::runtime_error("Could not determine ammo type for " + item->name());
-    for (size_t i = 0; i < m_items.size(); i++)
+    for (size_t i = 0; i < items_.size(); i++)
     {
-        const auto inv_item = m_items.at(i);
+        const auto inv_item = items_.at(i);
         if (inv_item->type() == ItemType::AMMO && inv_item->subtype() == ammo_type) return i;
     }
     return SIZE_MAX;
 }
 
 // Erases everything from this inventory.
-void Inventory::clear() { m_items.clear(); }
+void Inventory::clear() { items_.clear(); }
 
 // Returns the number of Items in this Inventory.
-size_t Inventory::count() const { return m_items.size(); }
+size_t Inventory::count() const { return items_.size(); }
 
 // Deletes an Item from this Inventory.
 void Inventory::erase(size_t pos)
 {
-    if (pos >= m_items.size()) throw std::runtime_error("Invalid inventory position requested.");
-    m_items.erase(m_items.begin() + pos);
+    if (pos >= items_.size()) throw std::runtime_error("Invalid inventory position requested.");
+    items_.erase(items_.begin() + pos);
 }
 
 // Retrieves an Item from this Inventory.
 std::shared_ptr<Item> Inventory::get(size_t pos) const
 {
-    if (pos >= m_items.size()) throw std::runtime_error("Invalid inventory position requested.");
-    return m_items.at(pos);
+    if (pos >= items_.size()) throw std::runtime_error("Invalid inventory position requested.");
+    return items_.at(pos);
 }
 
 // As above, but retrieves an item based on a given equipment slot.
 std::shared_ptr<Item> Inventory::get(EquipSlot es) const
 {
-    for (auto item : m_items)
+    for (auto item : items_)
         if (item->equip_slot() == es) return item;
     return nullptr;
 }
@@ -99,14 +99,14 @@ std::shared_ptr<Item> Inventory::get(EquipSlot es) const
 // Loads an Inventory from the save file.
 void Inventory::load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id)
 {
-    m_items.clear();
+    items_.clear();
     SQLite::Statement query(*save_db, "SELECT sql_id FROM items WHERE owner_id = :owner_id ORDER BY sql_id ASC");
     query.bind(":owner_id", sql_id);
     bool loaded_items = false;
     while (query.executeStep())
     {
         auto new_item = Item::load(save_db, query.getColumn("sql_id").getUInt());
-        m_items.push_back(new_item);
+        items_.push_back(new_item);
         loaded_items = true;
     }
     if (!loaded_items) throw std::runtime_error("Could not load inventory data " + std::to_string(sql_id));
@@ -115,7 +115,7 @@ void Inventory::load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id)
 // Checks if a given parser ID already exists on an Item in this Inventory.
 bool Inventory::parser_id_exists(uint16_t id)
 {
-    for (auto item : m_items)
+    for (auto item : items_)
         if (item->parser_id() == id) return true;
     return false;
 }
@@ -123,16 +123,16 @@ bool Inventory::parser_id_exists(uint16_t id)
 // Removes an Item from this Inventory.
 void Inventory::remove_item(size_t pos)
 {
-    if (pos >= m_items.size()) throw std::runtime_error("Attempt to remove item with invalid inventory position.");
-    m_items.erase(m_items.begin() + pos);
+    if (pos >= items_.size()) throw std::runtime_error("Attempt to remove item with invalid inventory position.");
+    items_.erase(items_.begin() + pos);
 }
 
 // As above, but with a specified equipment slot.
 void Inventory::remove_item(EquipSlot es)
 {
-    for (size_t i = 0; i < m_items.size(); i++)
+    for (size_t i = 0; i < items_.size(); i++)
     {
-        if (m_items.at(i)->equip_slot() == es)
+        if (items_.at(i)->equip_slot() == es)
         {
             remove_item(i);
             return;
@@ -144,10 +144,10 @@ void Inventory::remove_item(EquipSlot es)
 // Saves this Inventory, returns its SQL ID.
 uint32_t Inventory::save(std::shared_ptr<SQLite::Database> save_db)
 {
-    if (!m_items.size()) return 0;
+    if (!items_.size()) return 0;
     const uint32_t sql_id = core()->sql_unique_id();
-    for (size_t i = 0; i < m_items.size(); i++)
-        m_items.at(i)->save(save_db, sql_id);
+    for (size_t i = 0; i < items_.size(); i++)
+        items_.at(i)->save(save_db, sql_id);
     return sql_id;
 }
 
@@ -159,12 +159,12 @@ void Inventory::sort()
     do
     {
         sorted = false;
-        for (size_t i = 0; i < m_items.size() - 1; i++)
+        for (size_t i = 0; i < items_.size() - 1; i++)
         {
             const size_t j = i + 1;
-            if (m_items.at(i)->name(Item::NAME_FLAG_NO_COLOUR | Item::NAME_FLAG_NO_COUNT) > m_items.at(j)->name(Item::NAME_FLAG_NO_COLOUR | Item::NAME_FLAG_NO_COUNT))
+            if (items_.at(i)->name(Item::NAME_FLAG_NO_COLOUR | Item::NAME_FLAG_NO_COUNT) > items_.at(j)->name(Item::NAME_FLAG_NO_COLOUR | Item::NAME_FLAG_NO_COUNT))
             {
-                std::iter_swap(m_items.begin() + i, m_items.begin() + j);
+                std::iter_swap(items_.begin() + i, items_.begin() + j);
                 sorted = true;
             }
         }

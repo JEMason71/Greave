@@ -82,16 +82,16 @@ private:
 
     void        recalc_max_hp();    // Recalculates maximum HP, after toughness skill gains.
 
-    int         m_blood_tox;    // Blood toxicity level.
-    std::string m_death_reason; // The cause of death, when it happens.
-    uint8_t     m_hunger;       // The hunger counter. 20 = completely full, 0 = starved to death.
-    uint32_t    m_mob_target;   // The last Mobile to have been attacked.
-    uint32_t    m_money;        // The amount of coin the player is carrying.
-    int         m_mp[2];        // The current and maximum mana points.
-    std::map<std::string, int>      m_skill_levels; // The skill levels learned by this Player, if any.
-    std::map<std::string, float>    m_skill_xp;     // The experience levels of skills on this Player, if any.
-    int         m_sp[2];        // The current and maximum stamina points.
-    uint8_t     m_thirst;       // The thirst counter. 20 = compmpletely hydrated, 0 = died of dehydration.
+    int                             blood_tox_;     // Blood toxicity level.
+    std::string                     death_reason_;  // The cause of death, when it happens.
+    uint8_t                         hunger_;        // The hunger counter. 20 = completely full, 0 = starved to death.
+    uint32_t                        mob_target_;    // The last Mobile to have been attacked.
+    uint32_t                        money_;         // The amount of coin the player is carrying.
+    int                             mp_[2];         // The current and maximum mana points.
+    std::map<std::string, int>      skill_levels_;  // The skill levels learned by this Player, if any.
+    std::map<std::string, float>    skill_xp_;      // The experience levels of skills on this Player, if any.
+    int                             sp_[2];         // The current and maximum stamina points.
+    uint8_t                         thirst_;        // The thirst counter. 20 = compmpletely hydrated, 0 = died of dehydration.
 };
 
 #endif  // GREAVE_WORLD_PLAYER_H_

@@ -16,7 +16,7 @@ Random::Random() { set_prand_seed(); }
 float Random::frnd(float min_float, float max_float)
 {
     std::uniform_real_distribution<float> generator(min_float, max_float);
-    return generator(m_pcg_rng);
+    return generator(pcg_rng_);
 }
 
 // As above, but implicitly uses 1 as the minimum value.
@@ -29,7 +29,7 @@ bool Random::percent_check(unsigned int percent) { return rnd(1, 100) <= percent
 uint32_t Random::rnd(uint32_t min_int, uint32_t max_int)
 {
     std::uniform_int_distribution<uint32_t> generator(min_int, max_int);
-    return generator(m_pcg_rng);
+    return generator(pcg_rng_);
 }
 
 // As above, but implicitly uses 1 as the minimum value.
@@ -48,6 +48,6 @@ int Random::roll(int num_dice, int die_faces, int modifier)
 // Sets the PRNG seed for PCG.
 void Random::set_prand_seed(uint32_t new_seed)
 {
-    if (new_seed) m_pcg_rng.seed(new_seed);
-    else m_pcg_rng.seed(randutils::auto_seed_256{});
+    if (new_seed) pcg_rng_.seed(new_seed);
+    else pcg_rng_.seed(randutils::auto_seed_256{});
 }

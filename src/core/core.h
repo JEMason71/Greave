@@ -42,15 +42,15 @@ private:
     const std::string           save_filename(int slot, bool old_save = false) const;   // Returns a filename for a saved game file.
     uint32_t                    save_version(int slot); // Checks the saved game version of a save file.
 
-    std::shared_ptr<Guru>       m_guru_meditation;  // The Guru Meditation error-handling system.
-    std::shared_ptr<MessageLog> m_message_log;      // The MessageLog object, which handles the scrolling message-log input/output window.
-    std::shared_ptr<Parser>     m_parser;           // The Parser object, which processes the player's input.
-    std::shared_ptr<Random>     m_rng;              // The random number generator.
-    int                         m_save_slot;        // The currently-active saved game slot, or 0 if no game is in progress.
-    uint32_t                    m_sql_unique_id;    // The last unique SQL ID to have been used.
-    std::shared_ptr<Terminal>   m_terminal;         // The Terminal class, which handles low-level interaction with terminal emulation libraries.
-    std::shared_ptr<Prefs>      m_prefs;            // The Prefs object, containing various user settings in prefs.yml
-    std::shared_ptr<World>      m_world;            // The World object, which manages the current overall state of the game.
+    std::shared_ptr<Guru>       guru_meditation_;   // The Guru Meditation error-handling system.
+    std::shared_ptr<MessageLog> message_log_;       // The MessageLog object, which handles the scrolling message-log input/output window.
+    std::shared_ptr<Parser>     parser_;            // The Parser object, which processes the player's input.
+    std::shared_ptr<Random>     rng_;               // The random number generator.
+    int                         save_slot_;         // The currently-active saved game slot, or 0 if no game is in progress.
+    uint32_t                    sql_unique_id_;     // The last unique SQL ID to have been used.
+    std::shared_ptr<Terminal>   terminal_;          // The Terminal class, which handles low-level interaction with terminal emulation libraries.
+    std::shared_ptr<Prefs>      prefs_;             // The Prefs object, containing various user settings in prefs.yml
+    std::shared_ptr<World>      world_;             // The World object, which manages the current overall state of the game.
 };
 
 

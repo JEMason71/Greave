@@ -7,7 +7,7 @@
 #include "core/strx.h"
 
 
-std::map<std::string, std::string> ActionHelp::m_help_pages;    // Help pages loaded from data/misc/help.yml
+std::map<std::string, std::string> ActionHelp::help_pages_; // Help pages loaded from data/misc/help.yml
 
 
 // Asks for help on a specific topic.
@@ -17,8 +17,8 @@ void ActionHelp::help(std::string topic)
     else topic = StrX::str_toupper(topic);
     StrX::find_and_replace(topic, " ", "_");
 
-    const auto it = m_help_pages.find(topic);
-    if (it == m_help_pages.end())
+    const auto it = help_pages_.find(topic);
+    if (it == help_pages_.end())
     {
         core()->message("{y}That help page does not exist. Type {Y}HELP {y}for an index.");
         return;
@@ -45,7 +45,7 @@ void ActionHelp::load_pages()
                 }
             }
             else help_text = help_entry.second.as<std::string>();
-            m_help_pages.insert(std::make_pair(help_word, help_text));
+            help_pages_.insert(std::make_pair(help_word, help_text));
         }
     }
     catch (std::exception &e)

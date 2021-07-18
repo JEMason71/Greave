@@ -43,22 +43,23 @@ private:
     void    print_internal(std::string str, int x, int y, Colour col) override;     // Internal rendering code, after print() has parsed the colour tags.
     void    screenshot();       // Takes a screenshot!
 
-    std::map<Colour, RGB>   m_colour_map;           // Maps hex colours (e.g. FF2060) into individual RGB values.
-    bool                    m_cursor_visible;       // Is the fake cursor visible?
-    int                     m_cursor_x, m_cursor_y; // Coordinates for the fake cursor.
-    TTF_Font*               m_font;                 // The font chosen by the user.
-    int                     m_font_height;          // The height of the loaded font, in pixels.
-    int                     m_font_width;           // The width of the loaded font, in pixels.
-    bool                    m_init_sdl;             // SDL system successfully initialized.
-    bool                    m_init_sdl_ttf;         // SDL_ttf system successfully initialized.
-    int                     m_mouse_x;              // The X pixel coordinate of the mouse cursor's last location.
-    int                     m_mouse_y;              // The Y pixel coordinate of the mouse cursor's last location.
-    SDL_Renderer*           m_renderer;             // The SDL2 hardware renderer.
-    time_t                  m_screenshot_msg_time;  // The timer for the screenshot message.
-    int                     m_screenshot_taken;     // The last screenshot number taken.
-    SDL_Window*             m_window;               // The one and only window the game uses.
-    int                     m_window_h;             // The height of the window, in pixels.
-    int                     m_window_w;             // The width of the window, in pixels.
+    std::map<Colour, RGB>   colour_map_;            // Maps hex colours (e.g. FF2060) into individual RGB values.
+    bool                    cursor_visible_;        // Is the fake cursor visible?
+    int                     cursor_x_;              // X coordinate for the fake cursor.
+    int                     cursor_y_;              // Y coordinate for the fake cursor.
+    TTF_Font*               font_;                  // The font chosen by the user.
+    int                     font_height_;           // The height of the loaded font, in pixels.
+    int                     font_width_;            // The width of the loaded font, in pixels.
+    bool                    init_sdl_;              // SDL system successfully initialized.
+    bool                    init_sdl_ttf_;          // SDL_ttf system successfully initialized.
+    int                     mouse_x_;               // The X pixel coordinate of the mouse cursor's last location.
+    int                     mouse_y_;               // The Y pixel coordinate of the mouse cursor's last location.
+    SDL_Renderer*           renderer_;              // The SDL2 hardware renderer.
+    time_t                  screenshot_msg_time_;   // The timer for the screenshot message.
+    int                     screenshot_taken_;      // The last screenshot number taken.
+    SDL_Window*             window_;                // The one and only window the game uses.
+    int                     window_h_;              // The height of the window, in pixels.
+    int                     window_w_;              // The width of the window, in pixels.
 };
 
 #endif  // GREAVE_INCLUDE_SDL
