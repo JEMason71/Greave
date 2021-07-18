@@ -1,11 +1,10 @@
 // world/inventory.cc -- The Inventory class stores a collection of Items, and handles stacking, organizing, saving/loading, etc.
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
+#include "core/core.h"
 #include "world/inventory.h"
 
 #include <algorithm>
-
-#include "core/core.h"
 
 
 // Creates a new, blank inventory.

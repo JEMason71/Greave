@@ -5,7 +5,6 @@
 #define GREAVE_CORE_LIST_H_
 
 #include <cstddef>
-
 #include <memory>
 #include <string>
 #include <vector>

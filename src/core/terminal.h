@@ -6,8 +6,7 @@
 #ifndef GREAVE_CORE_TERMINAL_H_
 #define GREAVE_CORE_TERMINAL_H_
 
-#include <cstddef>
-
+#include <cstdint>
 #include <string>
 
 

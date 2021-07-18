@@ -4,7 +4,7 @@
 #ifndef GREAVE_CORE_BONES_H_
 #define GREAVE_CORE_BONES_H_
 
-#include <cstddef>
+#include <cstdint>
 
 
 class Bones

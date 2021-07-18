@@ -1,15 +1,12 @@
 // core/guru.cc -- Guru Meditation error-handling and reporting system.
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
+#include "core/core.h"
+#include "core/filex.h"
 #include "core/guru.h"
 
 #include <csignal>
-#include <ctime>
-
 #include <sstream>
-
-#include "core/core.h"
-#include "core/filex.h"
 
 
 constexpr char  Guru::FILENAME_LOG[] = "log.txt";   // The default name of the log file. Another filename can be specified with open_syslog().

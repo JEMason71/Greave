@@ -4,20 +4,20 @@
 #ifndef GREAVE_WORLD_WORLD_H_
 #define GREAVE_WORLD_WORLD_H_
 
-#include <cstddef>
-
-#include <map>
-#include <memory>
-#include <set>
-#include <string>
-#include <vector>
-
 #include "3rdparty/SQLiteCpp/Database.h"
 #include "core/list.h"
 #include "world/player.h"
 #include "world/room.h"
 #include "world/shop.h"
 #include "world/time-weather.h"
+
+#include <cstddef>
+#include <cstdint>
+#include <map>
+#include <memory>
+#include <set>
+#include <string>
+#include <vector>
 
 
 class World

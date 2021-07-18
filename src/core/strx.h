@@ -7,6 +7,7 @@
 #include "core/core-constants.h"
 
 #include <cstddef>
+#include <cstdint>
 #include <map>
 #include <set>
 #include <string>

@@ -4,13 +4,12 @@
 #ifndef GREAVE_WORLD_PLAYER_H_
 #define GREAVE_WORLD_PLAYER_H_
 
-#include <cstddef>
+#include "world/mobile.h"
 
+#include <cstdint>
 #include <map>
 #include <memory>
 #include <string>
-
-#include "world/mobile.h"
 
 
 class Player : public Mobile

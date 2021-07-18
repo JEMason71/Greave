@@ -4,9 +4,9 @@
 #ifndef GREAVE_CORE_RANDOM_H_
 #define GREAVE_CORE_RANDOM_H_
 
-#include <cstddef>
-
 #include "3rdparty/pcg/pcg_random.hpp"
+
+#include <cstdint>
 
 
 class Random

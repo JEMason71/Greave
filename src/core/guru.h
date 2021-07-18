@@ -4,6 +4,7 @@
 #ifndef GREAVE_CORE_GURU_H_
 #define GREAVE_CORE_GURU_H_
 
+#include <ctime>
 #include <exception>
 #include <fstream>
 #include <string>

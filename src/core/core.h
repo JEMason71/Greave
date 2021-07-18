@@ -4,11 +4,6 @@
 #ifndef GREAVE_CORE_CORE_H_
 #define GREAVE_CORE_CORE_H_
 
-#include <cstddef>
-
-#include <memory>
-#include <string>
-
 #include "core/guru.h"
 #include "core/message.h"
 #include "core/parser.h"
@@ -16,6 +11,10 @@
 #include "core/random.h"
 #include "core/terminal.h"
 #include "world/world.h"
+
+#include <cstdint>
+#include <memory>
+#include <string>
 
 
 class Core

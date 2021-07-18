@@ -1,12 +1,11 @@
 // world/player.cc -- The Player class is derived from Mobile, and defines the player character in the game world.
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#include "world/player.h"
-
 #include <cmath>
 
 #include "actions/eat-drink.h"
 #include "core/core.h"
+#include "world/player.h"
 
 
 // The SQL table construction string for the player data.

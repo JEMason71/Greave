@@ -4,9 +4,10 @@
 #ifndef GREAVE_ACTIONS_AI_H_
 #define GREAVE_ACTIONS_AI_H_
 
-#include <memory>
-
 #include "world/mobile.h"
+
+#include <cstdint>
+#include <memory>
 
 
 class AI

@@ -4,12 +4,12 @@
 #ifndef GREAVE_CORE_PARSER_H_
 #define GREAVE_CORE_PARSER_H_
 
-#include <cstddef>
+#include "world/room.h"
 
+#include <cstddef>
+#include <cstdint>
 #include <string>
 #include <vector>
-
-#include "world/room.h"
 
 
 enum ParserTarget : uint8_t { TARGET_NONE = 0, TARGET_EQUIPMENT = 1, TARGET_INVENTORY = 2, TARGET_MOBILE = 4, TARGET_ROOM = 8, TARGET_SHOP = 16, TARGET_UNCLEAR = 32 };

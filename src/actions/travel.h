@@ -4,10 +4,10 @@
 #ifndef GREAVE_ACTIONS_TRAVEL_H_
 #define GREAVE_ACTIONS_TRAVEL_H_
 
-#include <memory>
-
 #include "world/mobile.h"
 #include "world/room.h"
+
+#include <memory>
 
 
 class ActionTravel

@@ -4,12 +4,11 @@
 #ifndef GREAVE_ACTIONS_LOOK_H_
 #define GREAVE_ACTIONS_LOOK_H_
 
-#include <cstddef>
-
-#include <memory>
-
 #include "core/parser.h"
 #include "world/mobile.h"
+
+#include <cstddef>
+#include <memory>
 
 
 class ActionLook

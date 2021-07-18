@@ -4,11 +4,10 @@
 #ifndef GREAVE_ACTIONS_INVENTORY_H_
 #define GREAVE_ACTIONS_INVENTORY_H_
 
-#include <cstddef>
-
-#include <memory>
-
 #include "world/mobile.h"
+
+#include <cstddef>
+#include <memory>
 
 
 class ActionInventory

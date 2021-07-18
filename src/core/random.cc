@@ -1,13 +1,12 @@
 // core/random.cc -- The random number generator. Multiple instances of this class can be spawned if needed.
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#include "core/random.h"
-
-#include <random>
-
 #pragma GCC diagnostic ignored "-Wunused-variable"
 #include "3rdparty/pcg/randutils.hpp"
 #pragma GCC diagnostic pop
+#include "core/random.h"
+
+#include <random>
 
 
 // Constructor, sets up the PRNG.

@@ -4,14 +4,14 @@
 #ifndef GREAVE_WORLD_INVENTORY_H_
 #define GREAVE_WORLD_INVENTORY_H_
 
-#include <cstddef>
+#include "3rdparty/SQLiteCpp/Database.h"
+#include "world/item.h"
 
+#include <cstddef>
+#include <cstdint>
 #include <memory>
 #include <string>
 #include <vector>
-
-#include "3rdparty/SQLiteCpp/Database.h"
-#include "world/item.h"
 
 
 class Inventory

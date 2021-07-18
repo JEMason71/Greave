@@ -4,12 +4,11 @@
 #ifndef GREAVE_WORLD_SHOP_H_
 #define GREAVE_WORLD_SHOP_H_
 
-#include <cstddef>
+#include "world/inventory.h"
 
+#include <cstdint>
 #include <memory>
 #include <string>
-
-#include "world/inventory.h"
 
 
 class Shop

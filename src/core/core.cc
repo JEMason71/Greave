@@ -1,14 +1,6 @@
 // core/core.cc -- Main program entry, initialization and cleanup routines, and the core game loop.
 // Copyright (c) 2020-2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#ifdef GREAVE_TOLK
-#include <regex>
-#endif
-#include <thread>
-#ifdef GREAVE_TARGET_WINDOWS
-#include <windows.h>
-#endif
-
 #include "3rdparty/SQLiteCpp/SQLiteCpp.h"
 #ifdef GREAVE_TOLK
 #include "3rdparty/Tolk/Tolk.h"
@@ -21,6 +13,14 @@
 #include "core/strx.h"
 #include "core/terminal-curses.h"
 #include "core/terminal-sdl2.h"
+
+#ifdef GREAVE_TOLK
+#include <regex>
+#endif
+#include <thread>
+#ifdef GREAVE_TARGET_WINDOWS
+#include <windows.h>
+#endif
 
 
 std::shared_ptr<Core> greave = nullptr;   // The main Core object.

@@ -4,16 +4,16 @@
 #ifndef GREAVE_WORLD_ROOM_H_
 #define GREAVE_WORLD_ROOM_H_
 
-#include <cstddef>
+#include "core/core-constants.h"
+#include "world/inventory.h"
 
+#include <cstddef>
+#include <cstdint>
 #include <map>
 #include <memory>
 #include <set>
 #include <string>
 #include <vector>
-
-#include "core/core-constants.h"
-#include "world/inventory.h"
 
 
 enum class Direction : uint8_t { NORTH, SOUTH, EAST, WEST, NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHWEST, UP, DOWN, NONE };

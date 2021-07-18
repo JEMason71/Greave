@@ -5,14 +5,13 @@
 #define GREAVE_CORE_TERMINAL_SDL2_H_
 #ifdef GREAVE_INCLUDE_SDL
 
-#include <cstddef>
-
-#include <map>
-#include <string>
-
 #include "3rdparty/SDL2/SDL.h"
 #include "3rdparty/SDL2/SDL_ttf.h"
 #include "core/terminal.h"
+
+#include <cstdint>
+#include <map>
+#include <string>
 
 
 class TerminalSDL2 : public Terminal

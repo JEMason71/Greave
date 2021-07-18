@@ -4,12 +4,11 @@
 #ifndef GREAVE_ACTIONS_COMBAT_H_
 #define GREAVE_ACTIONS_COMBAT_H_
 
-#include <cstddef>
+#include "world/mobile.h"
 
+#include <cstdint>
 #include <memory>
 #include <string>
-
-#include "world/mobile.h"
 
 
 class Combat

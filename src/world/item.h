@@ -4,14 +4,13 @@
 #ifndef GREAVE_WORLD_ITEM_H_
 #define GREAVE_WORLD_ITEM_H_
 
-#include <cstddef>
+#include "3rdparty/SQLiteCpp/Database.h"
 
+#include <cstdint>
 #include <map>
 #include <memory>
 #include <set>
 #include <string>
-
-#include "3rdparty/SQLiteCpp/Database.h"
 
 
 // Weapon damage types.

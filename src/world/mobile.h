@@ -4,15 +4,14 @@
 #ifndef GREAVE_WORLD_MOBILE_H_
 #define GREAVE_WORLD_MOBILE_H_
 
-#include <cstddef>
+#include "world/inventory.h"
 
+#include <cstdint>
 #include <map>
 #include <memory>
 #include <set>
 #include <string>
 #include <vector>
-
-#include "world/inventory.h"
 
 
 enum class Gender : uint8_t { FEMALE, MALE, IT, THEY };

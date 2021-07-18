@@ -5,14 +5,13 @@
 #ifndef GREAVE_WORLD_TIME_WEATHER_H_
 #define GREAVE_WORLD_TIME_WEATHER_H_
 
-#include <cstddef>
+#include "3rdparty/SQLiteCpp/Database.h"
 
+#include <cstdint>
 #include <map>
 #include <memory>
 #include <string>
 #include <vector>
-
-#include "3rdparty/SQLiteCpp/Database.h"
 
 
 class TimeWeather

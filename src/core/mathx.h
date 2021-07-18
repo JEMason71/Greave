@@ -4,9 +4,9 @@
 #ifndef GREAVE_CORE_MATHX_H_
 #define GREAVE_CORE_MATHX_H_
 
-#include <cstddef>
-
 #include "world/room.h"
+
+#include <cstdint>
 
 
 class MathX

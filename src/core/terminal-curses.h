@@ -5,8 +5,7 @@
 #define GREAVE_CORE_TERMINAL_CURSES_H_
 #ifdef GREAVE_INCLUDE_CURSES
 
-#include <cstddef>
-
+#include <cstdint>
 #include <string>
 
 #include "core/terminal.h"
