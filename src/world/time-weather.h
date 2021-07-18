@@ -26,8 +26,8 @@ public:
     enum class Weather : uint8_t { BLIZZARD, STORMY, RAIN, CLEAR, FAIR, OVERCAST, FOG, LIGHTSNOW, SLEET };
     enum Time { SECOND = 1, MINUTE = 60, HOUR = 3600, DAY = 86400 };
 
-    static const std::string    SQL_HEARTBEATS;     // SQL table construction string for the heartbeat timers.
-    static const std::string    SQL_TIME_WEATHER;   // SQL table construction string for time and weather data.
+    static const char   SQL_HEARTBEATS[];   // SQL table construction string for the heartbeat timers.
+    static const char   SQL_TIME_WEATHER[]; // SQL table construction string for time and weather data.
 
                 TimeWeather();                      // Constructor, sets default values.
     Season      current_season() const;             // Gets the current season.
@@ -53,9 +53,9 @@ public:
     std::string weather_str(Weather weather) const; // Converts a weather integer to a string.
 
 private:
-    static const int    LUNAR_CYCLE_DAYS;       // How many days are in a lunar cycle?
-    static const float  UNINTERRUPTABLE_TIME;   // The maximum amount of time for an action that cannot be interrupted.
-    static const int    XP_WHILE_ENCUMBERED;    // How much XP to grant per carry tick for encumbered players.
+    static constexpr int    LUNAR_CYCLE_DAYS =      29; // How many days are in a lunar cycle?
+    static constexpr float  UNINTERRUPTABLE_TIME =  5;  // The maximum amount of time for an action that cannot be interrupted.
+    static constexpr int    XP_WHILE_ENCUMBERED =   1;  // How much XP to grant per carry tick for encumbered players.
 
     // The heartbeat timers, for triggering various events at periodic intervals.
     static const uint32_t   HEARTBEAT_TIMERS[Heartbeat::_TOTAL];

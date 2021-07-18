@@ -11,11 +11,6 @@
 #include "core/mathx.h"
 
 
-const int StrX::CL_AND =            1;  // comma_list() flag: Include "and" before the last entry in the list.
-const int StrX::CL_OR =             2;  // comma_list() flag: Include "or" before the last entry in the list.
-const int StrX::CL_OXFORD_COMMA =   4;  // comma_list() flag: Insert an Oxford comma before the last entry in the list.
-
-
 // Capitalizes the first letter of a string.
 std::string StrX::capitalize_first_letter(std::string str)
 {

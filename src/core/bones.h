@@ -6,8 +6,6 @@
 
 #include <cstddef>
 
-#include <string>
-
 
 class Bones
 {
@@ -18,10 +16,10 @@ public:
     static uint32_t unique_id();        // Returns a random player ID which isn't already present in the bones file.
 
 private:
-    static const std::string    BONES_FILENAME; // The filename for the bones file.
-    static const uint32_t       BONES_VERSION;  // The expected version format for the bones file.
-    static const int            MAX_HIGHSCORES; // The maximum amount of highscores to store.
-    static const std::string    SQL_BONES;      // SQL table construction string.
+    static constexpr uint32_t   BONES_VERSION =     1;  // The expected version format for the bones file.
+    static constexpr int        MAX_HIGHSCORES =    10; // The maximum amount of highscores to store.
+    static const char           BONES_FILENAME[];       // The filename for the bones file.
+    static const char           SQL_BONES[];            // SQL table construction string.
 
     static uint32_t bones_version();    // Checks the version of the bones file, 0 if the file doesn't exist or version cannot be determined.
 };

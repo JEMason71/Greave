@@ -17,10 +17,10 @@ public:
     static bool open_or_close(std::shared_ptr<Mobile> mob, Direction dir, bool open, bool confirm); // Attempts to open or close a door, window, or other openable portal.
 
 private:
-    static const float  TIME_CLOSE_DOOR;    // The time taken (in seconds) to close a door.
-    static const float  TIME_LOCK_DOOR;     // The time taken (in seconds) to lock a door.
-    static const float  TIME_OPEN_DOOR;     // The time taken (in seconds) to open a door.
-    static const float  TIME_UNLOCK_DOOR;   // The time taken (in seconds) to unlock a door.
+    static constexpr float  TIME_CLOSE_DOOR =   2;  // The time taken (in seconds) to close a door.
+    static constexpr float  TIME_LOCK_DOOR =    10; // The time taken (in seconds) to lock a door.
+    static constexpr float  TIME_OPEN_DOOR =    3;  // The time taken (in seconds) to open a door.
+    static constexpr float  TIME_UNLOCK_DOOR =  10; // The time taken (in seconds) to unlock a door.
 };
 
 #endif  // GREAVE_ACTIONS_DOORS_H_

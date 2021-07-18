@@ -9,25 +9,8 @@
 #include "core/strx.h"
 
 
-const int Item::NAME_FLAG_A =                   1;      // Much like NAME_FLAG_THE, but using 'a' or 'an' instead of 'the'.
-const int Item::NAME_FLAG_CAPITALIZE_FIRST =    2;      // Capitalize the first letter of the Item's name (including the "The") if set.
-const int Item::NAME_FLAG_CORE_STATS =          4;      // Displays core stats on Item names, such as if an Item is glowing.
-const int Item::NAME_FLAG_ID =                  8;      // Displays an item's ID number, such as {1234}.
-const int Item::NAME_FLAG_FULL_STATS =          16;     // Displays some basic stats next to an item's name.
-const int Item::NAME_FLAG_NO_COLOUR =           32;     // Strips colour out of an Item's name.
-const int Item::NAME_FLAG_NO_COUNT =            64;     // Ignore the stack size on this item.
-const int Item::NAME_FLAG_PLURAL =              128;    // Return a plural of the Item's name (e.g. apple -> apples).
-const int Item::NAME_FLAG_RARE =                256;    // Include the Item's rarity value in its name.
-const int Item::NAME_FLAG_THE =                 512;    // Precede the Item's name with 'the', unless the name is a proper noun.
-
 // The SQL table construction string for saving items.
-const std::string Item::SQL_ITEMS = "CREATE TABLE items ( description TEXT, metadata TEXT, name TEXT NOT NULL, owner_id INTEGER NOT NULL, parser_id INTEGER NOT NULL, rare INTEGER NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, stack INTEGER, subtype INTEGER, tags TEXT, type INTEGER, value INTEGER, weight INTEGER NOT NULL )";
-
-const int   Item::APPRAISAL_XP_EASY =               1;      // The amount of appraisal XP gained for an easy item appraisal.
-const int   Item::APPRAISAL_XP_HARD =               5;      // The amount of appraisal XP gained for a difficult item appraisal.
-const int   Item::APPRAISAL_BASE_SKILL_REQUIRED =   -11;    // The base modifier to appraisal skill required for an item, after taking rarity into account.
-const int   Item::APPRAISAL_RARITY_MULTIPLIER =     9;      // The multiplier to the appraisal skill required for an item, per rarity level.
-const float Item::WATER_WEIGHT =                    58.68f; // The weight of 1 unit of water.
+constexpr char Item::SQL_ITEMS[] = "CREATE TABLE items ( description TEXT, metadata TEXT, name TEXT NOT NULL, owner_id INTEGER NOT NULL, parser_id INTEGER NOT NULL, rare INTEGER NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, stack INTEGER, subtype INTEGER, tags TEXT, type INTEGER, value INTEGER, weight INTEGER NOT NULL )";
 
 
 // Constructor, sets default values.

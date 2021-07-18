@@ -6,17 +6,6 @@
 #include "core/core.h"
 
 
-const int ActionEatDrink::TIME_EMPTY_CONTAINER =            5;  // The time taken to empty a water container.
-const int ActionEatDrink::TIME_FILL_CONTAINER =             20; // The time taken to fill a water container.
-const int ActionEatDrink::VOMIT_CHANCE_BLOAT_MAJOR =        2;  // 1 in X chance of vomiting from severely over-eating.
-const int ActionEatDrink::VOMIT_CHANCE_BLOAT_MINOR =        8;  // 1 in X chance of vomiting from just over-eating a little.
-const int ActionEatDrink::VOMIT_FOOD_LOSS_MAX =             5;  // 1 to X food lost when vomiting.
-const int ActionEatDrink::VOMIT_MINIMUM_FOOD_REMAINING =    3;  // How much food to allow to remain after vomiting?
-const int ActionEatDrink::VOMIT_MINIMUM_WATER_REMAINING =   3;  // How much water to allow to remain after vomiting?
-const int ActionEatDrink::VOMIT_SCAR_INTENSITY =            5;  // Vomit type scar intensity for vomiting once.
-const int ActionEatDrink::VOMIT_WATER_LOSS_MAX =            2;  // 1 to X water lost when vomiting.
-
-
 // Drinks a specified inventory item.
 void ActionEatDrink::drink(size_t inv_pos, bool confirm)
 {

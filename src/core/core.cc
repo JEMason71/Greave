@@ -23,11 +23,9 @@
 #include "core/terminal-sdl2.h"
 
 
-std::shared_ptr<Core> greave = nullptr;   // The main Core object.
+constexpr char Core::GAME_VERSION[] = "pre-alpha";  // The game's version number.
 
-const std::string   Core::GAME_VERSION =    "pre-alpha";    // The game's version number.
-const uint32_t      Core::SAVE_VERSION =    81;             // The version number for saved game files. This should increment when old saves can no longer be loaded.
-const uint16_t      Core::TAGS_PERMANENT =  10000;          // The tag number at which tags are considered permanent.
+std::shared_ptr<Core> greave = nullptr;   // The main Core object.
 
 
 // Main program entry point.
@@ -315,7 +313,7 @@ const std::shared_ptr<Terminal> Core::terminal() const { return m_terminal; }
 // The 'title screen' and saved game selection.
 void Core::title()
 {
-    message("{U}Welcome to {G}Greave {U}" + GAME_VERSION + ", copyright (c) 2021 Raine \"Gravecat\" Simmons and the Greave contributors. This game is free and open-source, released under the Gnu AGPL 3.0 license.");
+    message("{U}Welcome to {G}Greave {U}" + std::string(GAME_VERSION) + ", copyright (c) 2021 Raine \"Gravecat\" Simmons and the Greave contributors. This game is free and open-source, released under the Gnu AGPL 3.0 license.");
 #ifdef GREAVE_TOLK
     if (Tolk_DetectScreenReader()) message("{U}If you are using a screen reader, pressing the {C}tab key {U}will repeat the text after your last input, and pressing {C}escape {U}at any time will stop reading.");
 #endif
@@ -447,7 +445,7 @@ void Core::title()
                             m_save_slot = input_num;
                             inner_loop = false;
                         }
-                        else message("{R}This saved game is {M}incompatible {R}with this version of the game. Greave " + GAME_VERSION + " uses save file {M}version " + std::to_string(SAVE_VERSION) + "{R}, this save file is using {M}" + (save_file_ver ? "version " + std::to_string(save_file_ver) : "an unknown version") + "{R}.");
+                        else message("{R}This saved game is {M}incompatible {R}with this version of the game. Greave " + std::string(GAME_VERSION) + " uses save file {M}version " + std::to_string(SAVE_VERSION) + "{R}, this save file is using {M}" + (save_file_ver ? "version " + std::to_string(save_file_ver) : "an unknown version") + "{R}.");
                     }
                 }
             }

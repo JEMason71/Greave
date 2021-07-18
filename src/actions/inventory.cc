@@ -6,24 +6,6 @@
 #include "core/strx.h"
 
 
-const float ActionInventory::TIME_DROP_ITEM =       1.0f;   // The time taken (in seconds) to drop an item on the ground.
-const float ActionInventory::TIME_EQUIP_ABOUT =     20.0f;  // The time taken (in seconds) to equip something about the body, like a cloak.
-const float ActionInventory::TIME_EQUIP_ARMOUR =    180.0f; // The time taken (in seconds) to equip armour worn over the body, like a breastplate.
-const float ActionInventory::TIME_EQUIP_BODY =      300.0f; // The time taken (in seconds) to equip armour worn against the body, like a hauberk.
-const float ActionInventory::TIME_EQUIP_FEET =      30.0f;  // The time taken (in seconds) to equip boots or other things worn on the feet.
-const float ActionInventory::TIME_EQUIP_HANDS =     6.0f;   // The time taken (in seconds) to equip gloves or something else worn on the hands.
-const float ActionInventory::TIME_EQUIP_HEAD =      2.0f;   // The time taken (in seconds) to equip a helmet or so mething else worn on the head.
-const float ActionInventory::TIME_EQUIP_WEAPON =    0.6f;   // The time taken (in seconds) to equip a weapon or something else held in the hand.
-const float ActionInventory::TIME_GET_ITEM =        5.0f;   // The time taken (in seconds) to pick up an item from the ground.
-const float ActionInventory::TIME_UNEQUIP_ABOUT =   10.0f;  // The time taken (in seconds) to unequip something about the body, like a cloak.
-const float ActionInventory::TIME_UNEQUIP_ARMOUR =  120.0f; // The time taken (in seconds) to unequip armour worn over the body, like a breastplate.
-const float ActionInventory::TIME_UNEQUIP_BODY =    180.0f; // The time taken (in seconds) to unequip armour worn against the body, like a hauberk.
-const float ActionInventory::TIME_UNEQUIP_FEET =    15.0f;  // The time taken (in seconds) to unequip boots or other things worn on the feet.
-const float ActionInventory::TIME_UNEQUIP_HANDS =   4.0f;   // The time taken (in seconds) to unequip gloves or something else worn on the hands.
-const float ActionInventory::TIME_UNEQUIP_HEAD =    2.0f;   // The time taken (in seconds) to unequip a helmet or so mething else worn on the head.
-const float ActionInventory::TIME_UNEQUIP_WEAPON =  0.5f;   // The time taken (in seconds) to unequip a weapon or something else held in the hand.
-
-
 // Checks to see what's being carried.
 void ActionInventory::check_inventory()
 {

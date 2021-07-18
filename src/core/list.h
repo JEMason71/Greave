@@ -28,9 +28,11 @@ public:
     size_t      size() const;                                   // Returns the size of the List.
 
 private:
-    static const int    LIST_RARITY_UNCOMMON, LIST_RARITY_RARE, LIST_RARITY_SPECIAL;
+    static constexpr int    LIST_RARITY_UNCOMMON =  5;      // Rarity value (1 in X chance) of an uncommon item being chosen from a weighted list.
+    static constexpr int    LIST_RARITY_RARE =      12;     // As above, but for rare list items.
+    static constexpr int    LIST_RARITY_SPECIAL =   100;    // As above, for special list items.
 
-    std::vector<ListEntry>  m_data;                             // The list's data, a vector.
+    std::vector<ListEntry>  m_data; // The list's data, a vector.
 };
 
 #endif  // GREAVE_CORE_LIST_H_

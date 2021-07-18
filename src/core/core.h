@@ -39,9 +39,9 @@ public:
     const std::shared_ptr<Prefs>        prefs() const;          // Returns a pointer to the Prefs object.
     const std::shared_ptr<World>        world() const;          // Returns a pointer to the World object.
 
-    static const std::string    GAME_VERSION;       // The game's version number.
-    static const uint32_t       SAVE_VERSION;       // The version number for saved game files. This should increment when old saves can no longer be loaded.
-    static const uint16_t       TAGS_PERMANENT;     // The tag number at which tags are considered permanent.
+    static constexpr uint32_t   SAVE_VERSION =      81;         // The version number for saved game files. This should increment when old saves can no longer be loaded.
+    static constexpr uint16_t   TAGS_PERMANENT =    10000;      // The tag number at which tags are considered permanent.
+    static const char           GAME_VERSION[];                 // The game's version number.
 
 private:
     const std::string           save_filename(int slot, bool old_save = false) const;   // Returns a filename for a saved game file.

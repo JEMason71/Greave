@@ -8,26 +8,11 @@
 #include "core/strx.h"
 
 
-const float Mobile::ACTION_TIMER_CAP_MAX =                  3600.0f;    // The maximum value the action timer can ever reach.
-const int   Mobile::BASE_CARRY_WEIGHT =                     30000;      // The maximum amount of weight a Mobile can carry, before modifiers.
-const int   Mobile::DAMAGE_DEBUFF_TIME =                    60;         // How long the damage debuff that prevents HP regeneration lasts.
-const int   Mobile::HP_DEFAULT =                            100;        // The default HP value for mobiles.
-const int   Mobile::SCAR_BLEED_INTENSITY_FROM_BLEED_TICK =  1;          // Blood type scar intensity caused by each tick of the player or an NPC bleeding.
+// The SQL table construction string for the buffs table.
+constexpr char Buff::SQL_BUFFS[] = "CREATE TABLE buffs ( owner INTEGER, power INTEGER, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, time INTEGER, type INTEGER NOT NULL )";
 
-// Flags for the name() function.
-const int Mobile::NAME_FLAG_A =                 1;  // Precede the mobile's name with 'a' or 'an', unless the name is a proper noun.
-const int Mobile::NAME_FLAG_CAPITALIZE_FIRST =  2;  // Capitalize the first letter of the mobile's name (including the "The") if set.
-const int Mobile::NAME_FLAG_HEALTH =            4;  // Display the mobile's health in brackets after its name.
-const int Mobile::NAME_FLAG_NO_COLOUR =         8;  // Strip colour codes from the name.
-const int Mobile::NAME_FLAG_PLURAL =            16; // Return a plural of the mobile's name (e.g. apple -> apples).
-const int Mobile::NAME_FLAG_POSSESSIVE =        32; // Change the mobile's name to a possessive noun (e.g. goblin -> goblin's).
-const int Mobile::NAME_FLAG_THE =               64; // Precede the mobile's name with 'the', unless the name is a proper noun.
-
-// The SQL table construction string for Buffs.
-const std::string   Buff::SQL_BUFFS =       "CREATE TABLE buffs ( owner INTEGER, power INTEGER, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, time INTEGER, type INTEGER NOT NULL )";
-
-// The SQL table construction string for Mobiles.
-const std::string   Mobile::SQL_MOBILES =   "CREATE TABLE mobiles ( action_timer REAL, equipment INTEGER UNIQUE, gender INTEGER, hostility TEXT, hp INTEGER NOT NULL, hp_max INTEGER NOT NULL, id INTEGER UNIQUE NOT NULL, inventory INTEGER UNIQUE, location INTEGER NOT NULL, metadata TEXT, name TEXT, parser_id INTEGER, score INTEGER, spawn_room INTEGER, species TEXT NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, stance INTEGER, tags TEXT )";
+// The SQL table construction string for the mobiles table.
+constexpr char Mobile::SQL_MOBILES[] = "CREATE TABLE mobiles ( action_timer REAL, equipment INTEGER UNIQUE, gender INTEGER, hostility TEXT, hp INTEGER NOT NULL, hp_max INTEGER NOT NULL, id INTEGER UNIQUE NOT NULL, inventory INTEGER UNIQUE, location INTEGER NOT NULL, metadata TEXT, name TEXT, parser_id INTEGER, score INTEGER, spawn_room INTEGER, species TEXT NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, stance INTEGER, tags TEXT )";
 
 
 // Loads this Buff from a save file.

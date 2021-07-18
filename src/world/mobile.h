@@ -77,7 +77,7 @@ struct Buff
 {
     enum class Type : uint8_t { NONE, BLEED, CAREFUL_AIM, CD_CAREFUL_AIM, CD_EYE_FOR_AN_EYE, CD_GRIT, CD_HEADLONG_STRIKE, CD_LADY_LUCK, CD_QUICK_ROLL, CD_RAPID_STRIKE, CD_SHIELD_WALL, CD_SNAP_SHOT, EYE_FOR_AN_EYE, GRIT, POISON, QUICK_ROLL, RECENT_DAMAGE, RECENTLY_FLED, SHIELD_WALL };
 
-    static const std::string    SQL_BUFFS;  // The SQL table construction string for Buffs.
+    static const char SQL_BUFFS[];  // The SQL table construction string for the buffs table.
 
     static std::shared_ptr<Buff>    load(SQLite::Statement &query); // Loads this Buff from a save file.
     void    save(std::shared_ptr<SQLite::Database> save_db, uint32_t owner_id); // Saves this Buff to a save file.
@@ -91,9 +91,15 @@ struct Buff
 class Mobile
 {
 public:
-                                // Flags for the name() function.
-    static const int            NAME_FLAG_A, NAME_FLAG_CAPITALIZE_FIRST, NAME_FLAG_NO_COLOUR, NAME_FLAG_HEALTH, NAME_FLAG_PLURAL, NAME_FLAG_POSSESSIVE, NAME_FLAG_THE;
-    static const std::string    SQL_MOBILES;    // The SQL table construction string for Mobiles.
+    // Flags for the name() function.
+    static constexpr int    NAME_FLAG_A =                   (1 << 0);   // Precede the mobile's name with 'a' or 'an', unless the name is a proper noun.
+    static constexpr int    NAME_FLAG_CAPITALIZE_FIRST =    (1 << 1);   // Capitalize the first letter of the mobile's name (including the "The") if set.
+    static constexpr int    NAME_FLAG_HEALTH =              (1 << 2);   // Display the mobile's health in brackets after its name.
+    static constexpr int    NAME_FLAG_NO_COLOUR =           (1 << 3);   // Strip colour codes from the name.
+    static constexpr int    NAME_FLAG_PLURAL =              (1 << 4);   // Return a plural of the mobile's name (e.g. apple -> apples).
+    static constexpr int    NAME_FLAG_POSSESSIVE =          (1 << 5);   // Change the mobile's name to a possessive noun (e.g. goblin -> goblin's).
+    static constexpr int    NAME_FLAG_THE =                 (1 << 6);   // Precede the mobile's name with 'the', unless the name is a proper noun.
+    static const char       SQL_MOBILES[];                              // The SQL table construction string for the mobiles table.
 
                         Mobile();                                   // Constructor, sets default values.
     void                add_hostility(uint32_t mob_id);             // Adds a Mobile (or the player, with ID 0) to this Mobile's hostility list.
@@ -166,11 +172,11 @@ public:
     bool                using_shield() const;                       // Checks if a mobile is using a shield.
 
 protected:
-    static const float  ACTION_TIMER_CAP_MAX;                   // The maximum value the action timer can ever reach.
-    static const int    BASE_CARRY_WEIGHT;                      // The maximum amount of weight a Mobile can carry, before modifiers.
-    static const int    DAMAGE_DEBUFF_TIME;                     // How long the damage debuff that prevents HP regeneration lasts.
-    static const int    HP_DEFAULT;                             // The default HP value for mobiles.
-    static const int    SCAR_BLEED_INTENSITY_FROM_BLEED_TICK;   // Blood type scar intensity caused by each tick of the player or an NPC bleeding.
+    static constexpr float  ACTION_TIMER_CAP_MAX =                  3600;   // The maximum value the action timer can ever reach.
+    static constexpr int    BASE_CARRY_WEIGHT =                     30000;  // The maximum amount of weight a Mobile can carry, before modifiers.
+    static constexpr int    DAMAGE_DEBUFF_TIME =                    60;     // How long the damage debuff that prevents HP regeneration lasts.
+    static constexpr int    HP_DEFAULT =                            100;    // The default HP value for mobiles.
+    static constexpr int    SCAR_BLEED_INTENSITY_FROM_BLEED_TICK =  1;      // Blood type scar intensity caused by each tick of the player or an NPC bleeding.
 
     std::shared_ptr<Buff>   buff(Buff::Type type) const;    // Returns a pointer to a specified Buff.
 

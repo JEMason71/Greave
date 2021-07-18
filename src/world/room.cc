@@ -8,40 +8,8 @@
 #include "core/strx.h"
 
 
-const uint32_t  Room::BLOCKED =                             538012167;  // Hashed value for BLOCKED, which is used to mark exits as impassible.
-const uint32_t  Room::FALSE_ROOM =                          3399618268; // Hashed value for FALSE_ROOM, which is used to make 'fake' impassible room exits.
-const uint8_t   Room::LIGHT_VISIBLE =                       3;          // Any light level below this is considered too dark to see.
-const size_t    Room::NO_CAMPFIRE =                         -1;         // Special variable to indicate there is no campfire present here.
-const int       Room::RESPAWN_INTERVAL =                    300;        // The minimum respawn time, in seconds, for Mobiles.
-const int       Room::SEASON_BASE_TEMPERATURE_AUTUMN =      5;          // The base temperature for the autumn season.
-const int       Room::SEASON_BASE_TEMPERATURE_SPRING =      4;          // The base temperature for the spring season.
-const int       Room::SEASON_BASE_TEMPERATURE_SUMMER =      6;          // The base temperature for the summer season.
-const int       Room::SEASON_BASE_TEMPERATURE_WINTER =      3;          // The base temperature for the winter season.
-const uint32_t  Room::UNFINISHED =                          1909878064; // Hashed value for UNFINISHED, which is used to mark room exits as unfinished and to be completed later.
-const int       Room::WEATHER_TEMPERATURE_MOD_BLIZZARD =    -3;         // The temperature modification for blizzard weather.
-const int       Room::WEATHER_TEMPERATURE_MOD_CLEAR =       1;          // The temperature modification for clear weather.
-const int       Room::WEATHER_TEMPERATURE_MOD_FAIR =        0;          // The temperature modification for fair weather.
-const int       Room::WEATHER_TEMPERATURE_MOD_FOG =         -1;         // The temperature modification for fog weather.
-const int       Room::WEATHER_TEMPERATURE_MOD_LIGHTSNOW =   -2;         // The temperature modification for light snow weather.
-const int       Room::WEATHER_TEMPERATURE_MOD_OVERCAST =    -1;         // The temperature modification for overcast weather.
-const int       Room::WEATHER_TEMPERATURE_MOD_RAIN =        -1;         // The temperature modification for rain weather.
-const int       Room::WEATHER_TEMPERATURE_MOD_SLEET =       -2;         // The temperature modification for sleet weather.
-const int       Room::WEATHER_TEMPERATURE_MOD_STORMY =      -2;         // The temperature modification for stormy weather.
-const int       Room::WEATHER_TIME_MOD_DAWN =               -1;         // The temperature modification for dawn.
-const int       Room::WEATHER_TIME_MOD_DUSK =               -1;         // The temperature modification for dusk.
-const int       Room::WEATHER_TIME_MOD_MIDNIGHT =           -2;         // The temperature modification for midnight.
-const int       Room::WEATHER_TIME_MOD_MORNING =            0;          // The temperature modification for morning.
-const int       Room::WEATHER_TIME_MOD_NIGHT =              -2;         // The temperature modification for night.
-const int       Room::WEATHER_TIME_MOD_NOON =               1;          // The temperature modification for noon.
-const int       Room::WEATHER_TIME_MOD_SUNRISE =            0;          // The temperature modification for sunrise.
-const int       Room::WEATHER_TIME_MOD_SUNSET =             0;          // The temperature modification for sunset.
-
-const uint32_t  Room::TEMPERATURE_FLAG_WITH_PLAYER_BUFFS =      1;  // Apply the Player's buffs to the result of the room's temperature() calculations.
-const uint32_t  Room::TEMPERATURE_FLAG_IGNORE_LINKED_ROOMS =    2;  // Calculate a room's temperature() without taking adjacent rooms into account.
-const uint32_t  Room::TEMPERATURE_FLAG_IGNORE_PLAYER_CLOTHES =  4;  // Ignore the Player's clothing when calculating temperature.
-
 // The descriptions for different types of room scars.
-const std::vector<std::vector<std::string>> Room::ROOM_SCAR_DESCS = {
+const char* Room::ROOM_SCAR_DESCS[][4] = {
     // Room scar type 0: blood.
     { "There are a few drops of {R}b{r}l{R}o{r}o{R}d {w}on the ground nearby.",
       "There is a large splash of {R}b{r}l{R}o{r}o{R}d {w}on the ground nearby.",
@@ -86,7 +54,7 @@ const std::vector<std::vector<std::string>> Room::ROOM_SCAR_DESCS = {
 };
 
 // The SQL table construction string for the saved rooms.
-const std::string   Room::SQL_ROOMS =   "CREATE TABLE rooms ( sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, id INTEGER UNIQUE NOT NULL, last_spawned_mobs INTEGER, metadata TEXT, scars TEXT, spawn_mobs TEXT, tags TEXT, link_tags TEXT, inventory INTEGER UNIQUE )";
+const char Room::SQL_ROOMS[] = "CREATE TABLE rooms ( sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, id INTEGER UNIQUE NOT NULL, last_spawned_mobs INTEGER, metadata TEXT, scars TEXT, spawn_mobs TEXT, tags TEXT, link_tags TEXT, inventory INTEGER UNIQUE )";
 
 
 Room::Room(std::string new_id) : m_inventory(std::make_shared<Inventory>(Inventory::TagPrefix::ROOM)), m_last_spawned_mobs(0), m_light(0), m_security(Security::ANARCHY)
@@ -480,9 +448,9 @@ std::string Room::scar_desc() const
         if (intensity >= 20) vec_pos =  3;
         else if (intensity >= 10) vec_pos = 2;
         else if (intensity >= 5) vec_pos = 1;
-        scars += ROOM_SCAR_DESCS.at(static_cast<uint32_t>(m_scar_type.at(i))).at(vec_pos) + " ";
+        scars += std::string(ROOM_SCAR_DESCS[static_cast<uint32_t>(m_scar_type.at(i))][vec_pos]) + " ";
     }
-    if (tag(RoomTag::PermaCampfire) && !tag(RoomTag::HideCampfireScar)) scars += ROOM_SCAR_DESCS.at(static_cast<uint32_t>(ScarType::CAMPFIRE)).at(3) + " ";
+    if (tag(RoomTag::PermaCampfire) && !tag(RoomTag::HideCampfireScar)) scars += std::string(ROOM_SCAR_DESCS[static_cast<uint32_t>(ScarType::CAMPFIRE)][3]) + " ";
     if (scars.size()) scars.pop_back();
     return scars;
 }

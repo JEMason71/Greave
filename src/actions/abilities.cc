@@ -7,47 +7,6 @@
 #include "core/strx.h"
 
 
-float   Abilities::CAREFUL_AIM_BONUS_HIT =          25; // The bonus hit% chance from using the Careful Aim ability.
-int     Abilities::CAREFUL_AIM_COOLDOWN =           8;  // The length of the Careful Aim cooldown.
-int     Abilities::CAREFUL_AIM_LENGTH =             2;  // How many buff ticks the Careful Aim ability lasts for.
-int     Abilities::CAREFUL_AIM_MP_COST =            20; // The mana point cost for the Careful Aim ability.
-float   Abilities::CAREFUL_AIM_TIME =               2;  // The time taken by the Careful Aim ability.
-int     Abilities::EYE_FOR_AN_EYE_COOLDOWN =        30; // The cooldown for the Eye For An Eye ability.
-int     Abilities::EYE_FOR_AN_EYE_HP_COST =         30; // The hit points cost for using Eye for an Eye.
-int     Abilities::EYE_FOR_AN_EYE_LENGTH =          10; // The length of time the Eye For An Eye buff remains when activated but unused.
-float   Abilities::EYE_FOR_AN_EYE_MULTI =           5;  // The damage multiplier for the Eye For An Eye ability.
-int     Abilities::GRIT_COOLDOWN =                  5;  // The cooldown for the Grit ability.
-float   Abilities::GRIT_DAMAGE_REDUCTION =          30; // The % of damage reduced by using the Grit ability.
-int     Abilities::GRIT_LENGTH =                    30; // The Grit ability lasts this long, or until the player is hit by an attack.
-int     Abilities::GRIT_SP_COST =                   30; // The stamina point cost for the Grit ability.
-float   Abilities::GRIT_TIME =                      2;  // The time taken by using the Grit ability.
-int     Abilities::HEADLONG_STRIKE_ATTACK_SPEED =   20; // The % of an attack's normal speed that it takes to do a Headlong Strike attack.
-int     Abilities::HEADLONG_STRIKE_COOLDOWN =       6;  // The cooldown for the Headlong Strike ability.
-int     Abilities::HEADLONG_STRIKE_HP_COST =        10; // The hit points cost to use the Headlong Strike abiliy.
-int     Abilities::LADY_LUCK_COOLDOWN =             20; // The cooldown for the Lady Luck ability.
-int     Abilities::LADY_LUCK_LENGTH =               60; // The buff/debuff time for the Lady Luck ability.
-int     Abilities::LADY_LUCK_MP_COST =              50; // The mana cost for using the Lady Luck ability.
-float   Abilities::LADY_LUCK_TIME =                 2;  // The time taken by using the Lady Luck ability.
-int     Abilities::QUICK_ROLL_BONUS_DODGE =         40; // The bonus dodge% chance from using the Quick Roll ability.
-int     Abilities::QUICK_ROLL_COOLDOWN =            8;  // The cooldown for the Quick Roll ability.
-int     Abilities::QUICK_ROLL_LENGTH =              5;  // The length of time the Quick Roll buff remains when activated, but before an enemy attack is made.
-int     Abilities::QUICK_ROLL_SP_COST =             25; // The stamina point cost for the Quick Roll ability.
-int     Abilities::QUICK_ROLL_TIME =                4;  // The time it takes to do a Quick Roll.
-float   Abilities::RAPID_STRIKE_ACCURACY_PENALTY =  20; // The % accuracy penalty for a Rapid Strike.
-float   Abilities::RAPID_STRIKE_ATTACK_SPEED =      20; // The % of an attack's normal speed that it takes to do a Rapid Strike attack.
-int     Abilities::RAPID_STRIKE_COOLDOWN =          6;  // The cooldown for the Rapid Strike ability.
-int     Abilities::RAPID_STRIKE_SP_COST =           50; // The stamina points cost for the Rapid Strike ability.
-int     Abilities::SHIELD_WALL_BLOCK_BONUS  =       70; // The % bonus to blocking an attack with Shield Wall.
-int     Abilities::SHIELD_WALL_COOLDOWN =           6;  // The cooldwon for the Shield Wall ability.
-int     Abilities::SHIELD_WALL_LENGTH =             20; // The length of time the Shield Wall buff remains while activated, but before an enemy attack is made.
-int     Abilities::SHIELD_WALL_SP_COST =            20; // The stamina points cost for the Shield Wall ability.
-int     Abilities::SHIELD_WALL_TIME =               2;  // The time taken to use the Shield Wall ability.
-float   Abilities::SNAP_SHOT_ACCURACY_PENALTY =     20; // The % accuracy penalty for a Snap Shot.
-float   Abilities::SNAP_SHOT_ATTACK_SPEED =         20; // The % of an attack's normal speed that it takes to do a Snap Shot attack.
-int     Abilities::SNAP_SHOT_COOLDOWN =             6;  // The cooldown for the Snap Shot ability.
-int     Abilities::SNAP_SHOT_SP_COST =              50; // The stamina points cost for the Snap Shot ability.
-
-
 // Check cooldowns and availability of abilities.
 void Abilities::abilities()
 {

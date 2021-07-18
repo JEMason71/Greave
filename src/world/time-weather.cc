@@ -10,14 +10,10 @@
 
 
 // SQL table construction string for the heartbeat timers.
-const std::string TimeWeather::SQL_HEARTBEATS = "CREATE TABLE heartbeats ( id INTEGER PRIMARY KEY UNIQUE NOT NULL, count INTEGER NOT NULL )";
+constexpr char TimeWeather::SQL_HEARTBEATS[] = "CREATE TABLE heartbeats ( id INTEGER PRIMARY KEY UNIQUE NOT NULL, count INTEGER NOT NULL )";
 
 // SQL table construction string for time and weather data.
-const std::string TimeWeather::SQL_TIME_WEATHER = "CREATE TABLE time_weather ( day INTEGER NOT NULL, moon INTEGER NOT NULL, subsecond REAL NOT NULL, time INTEGER PRIMARY KEY UNIQUE NOT NULL, time_total INTEGER NOT NULL, weather INTEGER NOT NULL )";
-
-const int   TimeWeather::LUNAR_CYCLE_DAYS =     29;     // How many days are in a lunar cycle?
-const float TimeWeather::UNINTERRUPTABLE_TIME = 5.0f;   // The maximum amount of time for an action that cannot be interrupted.
-const int   TimeWeather::XP_WHILE_ENCUMBERED =  1;      // How much XP to grant per carry tick for encumbered players.
+const char TimeWeather::SQL_TIME_WEATHER[] = "CREATE TABLE time_weather ( day INTEGER NOT NULL, moon INTEGER NOT NULL, subsecond REAL NOT NULL, time INTEGER PRIMARY KEY UNIQUE NOT NULL, time_total INTEGER NOT NULL, weather INTEGER NOT NULL )";
 
 // The heartbeat timers, for triggering various events at periodic intervals.
 const uint32_t TimeWeather::HEARTBEAT_TIMERS[TimeWeather::Heartbeat::_TOTAL] = {

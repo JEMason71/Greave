@@ -12,17 +12,7 @@
 #include "core/filex.h"
 
 
-const int   Guru::GURU_INFO =       0;  // General logging information.
-const int   Guru::GURU_WARN =       1;  // Warnings, non-fatal stuff.
-const int   Guru::GURU_ERROR =      2;  // Serious errors. Shit is going down.
-const int   Guru::GURU_CRITICAL =   3;  // Critical system failure.
-
-const int   Guru::CASCADE_THRESHOLD =       20; // The amount m_cascade_count can reach within CASCADE_TIMEOUT seconds before it triggers an abort screen.
-const int   Guru::CASCADE_TIMEOUT =         30; // The number of seconds without an error to reset the cascade timer.
-const int   Guru::CASCADE_WEIGHT_CRITICAL = 4;  // The amount a critical type log entry will add to the cascade timer.
-const int   Guru::CASCADE_WEIGHT_ERROR =    2;  // The amount an error type log entry will add to the cascade timer.
-const int   Guru::CASCADE_WEIGHT_WARNING =  1;  // The amount a warning type log entry will add to the cascade timer.
-const std::string   Guru::FILENAME_LOG =    "log.txt";  // The default name of the log file. Another filename can be specified with open_syslog().
+constexpr char  Guru::FILENAME_LOG[] = "log.txt";   // The default name of the log file. Another filename can be specified with open_syslog().
 
 
 // This has to be a non-class function because C.

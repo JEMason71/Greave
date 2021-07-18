@@ -8,7 +8,7 @@
 
 
 // SQL table construction string.
-const std::string Shop::SQL_SHOPS = "CREATE TABLE shops ( id INTEGER PRIMARY KEY UNIQUE NOT NULL, inventory_id INTEGER UNIQUE NOT NULL )";
+constexpr char Shop::SQL_SHOPS[] = "CREATE TABLE shops ( id INTEGER PRIMARY KEY UNIQUE NOT NULL, inventory_id INTEGER UNIQUE NOT NULL )";
 
 
 // Constructor, sets up a blank shop by default.

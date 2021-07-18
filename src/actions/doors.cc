@@ -7,12 +7,6 @@
 #include "core/strx.h"
 
 
-const float ActionDoors::TIME_CLOSE_DOOR =  2.0f;   // The time taken (in seconds) to close a door.
-const float ActionDoors::TIME_LOCK_DOOR =   10.0f;  // The time taken (in seconds) to lock a door.
-const float ActionDoors::TIME_OPEN_DOOR =   3.0f;   // The time taken (in seconds) to open a door.
-const float ActionDoors::TIME_UNLOCK_DOOR = 10.0f;  // The time taken (in seconds) to unlock a door.
-
-
 // Attempts to lock or unlock a door, with optional messages.
 bool ActionDoors::lock_or_unlock(std::shared_ptr<Mobile> mob, Direction dir, bool unlock, bool confirm, bool silent_fail)
 {

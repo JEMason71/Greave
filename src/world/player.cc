@@ -9,34 +9,11 @@
 #include "core/core.h"
 
 
-const int   Player::BASE_SKILL_COST_LEVEL_OFFSET =  0;      // The skill XP cost formula is offset by this many levels.
-const float Player::BASE_SKILL_COST_MULTIPLIER =    2.0f;   // The higher this number, the slower player skill levels increase.
-const int   Player::BLOOD_TOX_POISON_CHANCE =       3;      // 1 in X chance of being poisoned by the below level of toxicity.
-const int   Player::BLOOD_TOX_POISON_LEVEL =        10;     // The level at which the player can be poisoned by blood toxicity.
-const int   Player::BLOOD_TOX_POISON_POWER_BASE =   5;      // The base amount of power for the blood toxicity poison debuff.
-const int   Player::BLOOD_TOX_POISON_POWER_RNG =    10;     // The RNG variance additional power for the blood toxicity poison debuff.
-const int   Player::BLOOD_TOX_POISON_TIME_BASE =    5;      // The base amount of time for the blood toxicity poison debuff.
-const int   Player::BLOOD_TOX_POISON_TIME_RNG =     5;      // The RNG variance additional time for the blood toxicity poison debuff.
-const int   Player::BLOOD_TOX_VOMIT_LEVEL =         6;      // The level at which the player can vomit from blood toxicity.
-const int   Player::BLOOD_TOX_VOMIT_CHANCE =        4;      // 1 in X chance of vomiting past the above level of toxicity.
-const int   Player::BLOOD_TOX_WARNING =             4;      // The level at which the player is warned of increasing blood toxicity.
-const int   Player::HP_PER_TOUGHNESS =              2;      // How many extra hit points to gain per point of toughness.
-const int   Player::HUNGER_MAX =                    20;     // The maximum hunger value (when this is maxed, the player is fully satiated.)
-const int   Player::MP_DEFAULT =                    100;    // THe default mana points maximum for the player.
-const int   Player::MP_REGEN_PER_TICK =             1;      // How much mana is regenerated each mana heartbeat tick?
-const int   Player::REGEN_TIME_COST_HUNGER =        60;     // How many hunger ticks it costs to regenerate a unit of health.
-const int   Player::REGEN_TIME_COST_THIRST =        30;     // How many thirst ticks it costs to regenerate a unit of health.
-const float Player::SKILL_HAULING_DIVISOR =         50;     // This number affects how effective the Hauling skill is at increasing maximum carry weight. LOWER number = skill allows more carry weight.
-const int   Player::SP_DEFAULT =                    100;    // The default stamina points maximum for the player.
-const int   Player::SP_REGEN_PER_TICK =             1;      // How much stamina is regenerated each stamina heartbeat tick?
-const int   Player::THIRST_MAX =                    20;     // The maximum thirst value (when this is maxed, the player is fully quenched.)
-const float Player::TOUGHNESS_GAIN_MODIFIER =       10;     // The higher this value, the faster toughness will increase in combat.
-
 // The SQL table construction string for the player data.
-const std::string Player::SQL_PLAYER = "CREATE TABLE player ( blood_tox INTEGER, hunger INTEGER NOT NULL, mob_target INTEGER, money INTEGER NOT NULL, mp INTEGER NOT NULL, mp_max INTEGER NOT NULL, sp INTEGER NOT NULL, sp_max INTEGER NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, thirst INTEGET NOT NULL )";
+constexpr char Player::SQL_PLAYER[] = "CREATE TABLE player ( blood_tox INTEGER, hunger INTEGER NOT NULL, mob_target INTEGER, money INTEGER NOT NULL, mp INTEGER NOT NULL, mp_max INTEGER NOT NULL, sp INTEGER NOT NULL, sp_max INTEGER NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, thirst INTEGET NOT NULL )";
 
 // The SQL table construction string for the player skills data.
-const std::string Player::SQL_SKILLS = "CREATE TABLE skills ( id TEXT PRIMARY KEY UNIQUE NOT NULL, level INTEGER NOT NULL, xp REAL )";
+constexpr char Player::SQL_SKILLS[] = "CREATE TABLE skills ( id TEXT PRIMARY KEY UNIQUE NOT NULL, level INTEGER NOT NULL, xp REAL )";
 
 
 // Constructor, sets default values.

@@ -15,7 +15,7 @@
 class Shop
 {
 public:
-    static const std::string    SQL_SHOPS;  // SQL table construction string.
+    static const char   SQL_SHOPS[];    // SQL table construction string.
 
             Shop(uint32_t room_id);                                 // Constructor, sets up a blank shop by default.
     void    add_item(std::shared_ptr<Item> item, bool sort = true); // Adds an item to this shop's inventory.

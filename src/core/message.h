@@ -14,7 +14,7 @@
 class MessageLog
 {
 public:
-    static const std::string    SQL_MSGLOG; // SQL strings to construct database tables.
+    static const char   SQL_MSGLOG[];   // SQL string to construct database table.
 
                 MessageLog();                                           // Constructor, sets some default values.
     void        load(std::shared_ptr<SQLite::Database> save_db);        // Loads the message log from disk.

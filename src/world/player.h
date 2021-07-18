@@ -16,9 +16,9 @@
 class Player : public Mobile
 {
 public:
-    static const int            BLOOD_TOX_WARNING;  // The level at which the player is warned of increasing blood toxicity.
-    static const std::string    SQL_PLAYER;         // The SQL table construction string for the player data.
-    static const std::string    SQL_SKILLS;         // The SQL table construction string for the player skills data.
+    static constexpr int    BLOOD_TOX_WARNING = 4;  // The level at which the player is warned of increasing blood toxicity.
+    static const char       SQL_PLAYER[];           // The SQL table construction string for the player data.
+    static const char       SQL_SKILLS[];           // The SQL table construction string for the player skills data.
 
                 Player();                           // Constructor, sets default values.
     void        add_food(int power);                // Eats food, increasing the hunger counter.
@@ -59,27 +59,27 @@ public:
     bool        wearing_armour(ItemSub type);       // Checks if the player is wearing a certain type of armour (light/medium/heavy).
 
 private:
-    static const float  BASE_SKILL_COST_MULTIPLIER;     // The higher this number, the slower player skill levels increase.
-    static const int    BASE_SKILL_COST_LEVEL_OFFSET;   // The skill XP cost formula is offset by this many levels.
-    static const int    BLOOD_TOX_POISON_CHANCE;        // 1 in X chance of being poisoned by the below level of toxicity.
-    static const int    BLOOD_TOX_POISON_LEVEL;         // The level at which the player can be poisoned by blood toxicity.
-    static const int    BLOOD_TOX_POISON_POWER_BASE;    // The base amount of power for the blood toxicity poison debuff.
-    static const int    BLOOD_TOX_POISON_POWER_RNG;     // The RNG variance additional power for the blood toxicity poison debuff.
-    static const int    BLOOD_TOX_POISON_TIME_BASE;     // The base amount of time for the blood toxicity poison debuff.
-    static const int    BLOOD_TOX_POISON_TIME_RNG;      // The RNG variance additional time for the blood toxicity poison debuff.
-    static const int    BLOOD_TOX_VOMIT_LEVEL;          // The level at which the player can vomit from blood toxicity.
-    static const int    BLOOD_TOX_VOMIT_CHANCE;         // 1 in X chance of vomiting past the above level of toxicity.
-    static const int    HP_PER_TOUGHNESS;               // How many extra hit points to gain per point of toughness.
-    static const int    HUNGER_MAX;                     // The maximum hunger value (when this is maxed, the player is fully satiated.)
-    static const int    MP_DEFAULT;                     // THe default mana points maximum for the player.
-    static const int    MP_REGEN_PER_TICK;              // How much mana is regenerated each mana heartbeat tick?
-    static const int    REGEN_TIME_COST_HUNGER;         // How many hunger ticks it costs to regenerate a unit of health.
-    static const int    REGEN_TIME_COST_THIRST;         // How many thirst ticks it costs to regenerate a unit of health.
-    static const float  SKILL_HAULING_DIVISOR;          // This number affects how effective the Hauling skill is at increasing maximum carry weight. LOWER number = skill allows more carry weight.
-    static const int    SP_DEFAULT;                     // The default stamina points maximum for the player.
-    static const int    SP_REGEN_PER_TICK;              // How much stamina is regenerated each stamina heartbeat tick?
-    static const int    THIRST_MAX;                     // The maximum thirst value (when this is maxed, the player is fully quenched.)
-    static const float  TOUGHNESS_GAIN_MODIFIER;        // The higher this value, the faster toughness will increase in combat.
+    static constexpr float  BASE_SKILL_COST_MULTIPLIER =    2;      // The higher this number, the slower player skill levels increase.
+    static constexpr int    BASE_SKILL_COST_LEVEL_OFFSET =  0;      // The skill XP cost formula is offset by this many levels.
+    static constexpr int    BLOOD_TOX_POISON_CHANCE =       3;      // 1 in X chance of being poisoned by the below level of toxicity.
+    static constexpr int    BLOOD_TOX_POISON_LEVEL =        10;     // The level at which the player can be poisoned by blood toxicity.
+    static constexpr int    BLOOD_TOX_POISON_POWER_BASE =   5;      // The base amount of power for the blood toxicity poison debuff.
+    static constexpr int    BLOOD_TOX_POISON_POWER_RNG =    10;     // The RNG variance additional power for the blood toxicity poison debuff.
+    static constexpr int    BLOOD_TOX_POISON_TIME_BASE =    5;      // The base amount of time for the blood toxicity poison debuff.
+    static constexpr int    BLOOD_TOX_POISON_TIME_RNG  =    5;      // The RNG variance additional time for the blood toxicity poison debuff.
+    static constexpr int    BLOOD_TOX_VOMIT_LEVEL =         6;      // The level at which the player can vomit from blood toxicity.
+    static constexpr int    BLOOD_TOX_VOMIT_CHANCE =        4;      // 1 in X chance of vomiting past the above level of toxicity.
+    static constexpr int    HP_PER_TOUGHNESS =              2;      // How many extra hit points to gain per point of toughness.
+    static constexpr int    HUNGER_MAX =                    20;     // The maximum hunger value (when this is maxed, the player is fully satiated.)
+    static constexpr int    MP_DEFAULT =                    100;    // THe default mana points maximum for the player.
+    static constexpr int    MP_REGEN_PER_TICK =             1;      // How much mana is regenerated each mana heartbeat tick?
+    static constexpr int    REGEN_TIME_COST_HUNGER =        60;     // How many hunger ticks it costs to regenerate a unit of health.
+    static constexpr int    REGEN_TIME_COST_THIRST =        30;     // How many thirst ticks it costs to regenerate a unit of health.
+    static constexpr float  SKILL_HAULING_DIVISOR =         50;     // This number affects how effective the Hauling skill is at increasing maximum carry weight. LOWER number = skill allows more carry weight.
+    static constexpr int    SP_DEFAULT =                    100;    // The default stamina points maximum for the player.
+    static constexpr int    SP_REGEN_PER_TICK =             1;      // How much stamina is regenerated each stamina heartbeat tick?
+    static constexpr int    THIRST_MAX =                    20;     // The maximum thirst value (when this is maxed, the player is fully quenched.)
+    static constexpr float  TOUGHNESS_GAIN_MODIFIER =       10;     // The higher this value, the faster toughness will increase in combat.
 
     void        recalc_max_hp();    // Recalculates maximum HP, after toughness skill gains.
 

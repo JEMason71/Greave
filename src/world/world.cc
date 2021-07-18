@@ -11,10 +11,8 @@
 #include "core/strx.h"
 
 
-const int World::ROOM_SCAN_DISTANCE = 10; // The distance to scan for active rooms.
-
-// The SQL construction table for the World data.
-const std::string World::SQL_WORLD = "CREATE TABLE world ( mob_unique_id INTEGER PRIMARY KEY UNIQUE NOT NULL )";
+// The SQL construction table for the world data.
+constexpr char World::SQL_WORLD[] = "CREATE TABLE world ( mob_unique_id INTEGER PRIMARY KEY UNIQUE NOT NULL )";
 
 // Lookup table for converting DamageType text names into enums.
 const std::map<std::string, DamageType> World::DAMAGE_TYPE_MAP = { { "acid", DamageType::ACID }, { "ballistic", DamageType::BALLISTIC }, { "crushing", DamageType::CRUSHING }, { "edged", DamageType::EDGED }, { "explosive", DamageType::EXPLOSIVE }, { "energy", DamageType::ENERGY }, { "kinetic", DamageType::KINETIC }, { "piercing", DamageType::PIERCING }, { "plasma", DamageType::PLASMA }, { "poison", DamageType::POISON }, { "rending", DamageType::RENDING } };

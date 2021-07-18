@@ -58,9 +58,20 @@ enum class ItemTag : uint16_t { _None = 0,  // Do not use this tag, it's just a 
 class Item
 {
 public:
-    static const int            NAME_FLAG_A, NAME_FLAG_CAPITALIZE_FIRST, NAME_FLAG_CORE_STATS, NAME_FLAG_ID, NAME_FLAG_FULL_STATS, NAME_FLAG_NO_COLOUR, NAME_FLAG_NO_COUNT, NAME_FLAG_PLURAL, NAME_FLAG_RARE, NAME_FLAG_THE;    // Flags for the name() function.
-    static const std::string    SQL_ITEMS;      // The SQL table construction string for saving items.
-    static const float          WATER_WEIGHT;   // The weight of 1 unit of water.
+    // Flags for the name() function.
+    static constexpr int    NAME_FLAG_A =                   (1 << 0);   // Much like NAME_FLAG_THE, but using 'a' or 'an' instead of 'the'.
+    static constexpr int    NAME_FLAG_CAPITALIZE_FIRST =    (1 << 1);   // Capitalize the first letter of the Item's name (including the "The") if set.
+    static constexpr int    NAME_FLAG_CORE_STATS =          (1 << 2);   // Displays core stats on Item names, such as if an Item is glowing.
+    static constexpr int    NAME_FLAG_ID =                  (1 << 3);   // Displays an item's ID number, such as {1234}.
+    static constexpr int    NAME_FLAG_FULL_STATS =          (1 << 4);   // Displays some basic stats next to an item's name.
+    static constexpr int    NAME_FLAG_NO_COLOUR =           (1 << 5);   // Strips colour out of an Item's name.
+    static constexpr int    NAME_FLAG_NO_COUNT =            (1 << 6);   // Ignore the stack size on this item.
+    static constexpr int    NAME_FLAG_PLURAL =              (1 << 7);   // Return a plural of the Item's name (e.g. apple -> apples).
+    static constexpr int    NAME_FLAG_RARE =                (1 << 8);   // Include the Item's rarity value in its name.
+    static constexpr int    NAME_FLAG_THE =                 (1 << 9);   // Precede the Item's name with 'the', unless the name is a proper noun.
+
+    static constexpr float  WATER_WEIGHT =                  58.68f;     // The weight of 1 unit of water.
+    static const char       SQL_ITEMS[];                                // The SQL table construction string for saving items.
 
                 Item();                                     // Constructor, sets default values.
     float       ammo_power() const;                         // The damage multiplier for ammunition.
@@ -121,10 +132,10 @@ public:
     uint32_t    weight(bool individual = false) const;      // The Item's weight, in pacs.
 
 private:
-    static const int    APPRAISAL_BASE_SKILL_REQUIRED;      // The base modifier to appraisal skill required for an item, after taking rarity into account.
-    static const int    APPRAISAL_RARITY_MULTIPLIER;        // The multiplier to the appraisal skill required for an item, per rarity level.
-    static const int    APPRAISAL_XP_EASY;                  // The amount of appraisal XP gained for an easy item appraisal.
-    static const int    APPRAISAL_XP_HARD;                  // The amount of appraisal XP gained for a difficult item appraisal.
+    static constexpr int    APPRAISAL_BASE_SKILL_REQUIRED = -11;    // The base modifier to appraisal skill required for an item, after taking rarity into account.
+    static constexpr int    APPRAISAL_RARITY_MULTIPLIER =   9;      // The multiplier to the appraisal skill required for an item, per rarity level.
+    static constexpr int    APPRAISAL_XP_EASY =             1;      // The amount of appraisal XP gained for an easy item appraisal.
+    static constexpr int    APPRAISAL_XP_HARD =             5;      // The amount of appraisal XP gained for a difficult item appraisal.
 
     std::string m_description;      // The description of this Item.
     std::map<std::string, std::string>  m_metadata; // The Item's metadata, if any.

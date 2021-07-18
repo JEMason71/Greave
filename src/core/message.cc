@@ -14,8 +14,8 @@
 #include "core/strx.h"
 
 
-// SQL table construction strings.
-const std::string MessageLog::SQL_MSGLOG =  "CREATE TABLE 'msglog' ( line INTEGER PRIMARY KEY, text TEXT NOT NULL )";
+// SQL string to construct database table.
+constexpr char MessageLog::SQL_MSGLOG[] = "CREATE TABLE 'msglog' ( line INTEGER PRIMARY KEY, text TEXT NOT NULL )";
 
 
 // Constructor, sets some default values.

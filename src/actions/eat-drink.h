@@ -17,15 +17,15 @@ public:
     static void vomit(bool confirm);                    // Loses the contents of your stomach.
 
 private:
-    static const int    TIME_EMPTY_CONTAINER;           // The time taken to empty a water container.
-    static const int    TIME_FILL_CONTAINER;            // The time taken to fill a water container.
-    static const int    VOMIT_CHANCE_BLOAT_MAJOR;       // 1 in X chance of vomiting from severely over-eating.
-    static const int    VOMIT_CHANCE_BLOAT_MINOR;       // 1 in X chance of vomiting from just over-eating a little.
-    static const int    VOMIT_FOOD_LOSS_MAX;            // 1 to X food lost when vomiting.
-    static const int    VOMIT_MINIMUM_FOOD_REMAINING;   // How much food to allow to remain after vomiting?
-    static const int    VOMIT_MINIMUM_WATER_REMAINING;  // How much water to allow to remain after vomiting?
-    static const int    VOMIT_SCAR_INTENSITY;           // Vomit type scar intensity for vomiting once.
-    static const int    VOMIT_WATER_LOSS_MAX;           // 1 to X water lost when vomiting.
+    static constexpr float  TIME_EMPTY_CONTAINER =          5;  // The time taken to empty a water container.
+    static constexpr float  TIME_FILL_CONTAINER =           20; // The time taken to fill a water container.
+    static constexpr int    VOMIT_CHANCE_BLOAT_MAJOR =      2;  // 1 in X chance of vomiting from severely over-eating.
+    static constexpr int    VOMIT_CHANCE_BLOAT_MINOR =      8;  // 1 in X chance of vomiting from just over-eating a little.
+    static constexpr int    VOMIT_FOOD_LOSS_MAX =           5;  // 1 to X food lost when vomiting.
+    static constexpr int    VOMIT_MINIMUM_FOOD_REMAINING =  3;  // How much food to allow to remain after vomiting?
+    static constexpr int    VOMIT_MINIMUM_WATER_REMAINING = 3;  // How much water to allow to remain after vomiting?
+    static constexpr int    VOMIT_SCAR_INTENSITY =          5;  // Vomit type scar intensity for vomiting once.
+    static constexpr int    VOMIT_WATER_LOSS_MAX =          2;  // 1 to X water lost when vomiting.
 };
 
 #endif  // GREAVE_ACTIONS_EAT_DRINK_H_

@@ -1,19 +1,19 @@
 // core/bones.cc -- Systems related to the player character's death, the highscore table, and recording data about the dead character that may be used in future games.
 // Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
 
-#include "core/bones.h"
-
 #include "3rdparty/SQLiteCpp/SQLiteCpp.h"
+#include "core/bones.h"
 #include "core/filex.h"
 #include "core/strx.h"
 
+#include <string>
 
-const std::string   Bones::BONES_FILENAME = "userdata/bones.sqlite";    // The filename for the bones file.
-const uint32_t      Bones::BONES_VERSION =  1;  // The expected version format for the bones file.
-const int           Bones::MAX_HIGHSCORES = 10; // The maximum amount of highscores to store.
+
+// The filename for the bones file.
+constexpr char Bones::BONES_FILENAME[] = "userdata/bones.sqlite";
 
 // SQL table construction string.
-const std::string   Bones::SQL_BONES =  "CREATE TABLE highscores ( death_reason TEXT NOT NULL, id INTEGER PRIMARY KEY UNIQUE NOT NULL, name TEXT NOT NULL, score INTEGER NOT NULL )";
+constexpr char Bones::SQL_BONES[] = "CREATE TABLE highscores ( death_reason TEXT NOT NULL, id INTEGER PRIMARY KEY UNIQUE NOT NULL, name TEXT NOT NULL, score INTEGER NOT NULL )";
 
 
 // Checks the version of the bones file, 0 if the file doesn't exist or version cannot be determined.

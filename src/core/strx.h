@@ -17,7 +17,10 @@
 class StrX
 {
 public:
-    static const int    CL_AND, CL_OR, CL_OXFORD_COMMA; // comma_list() flags
+    // Flags for the comma_list() function.
+    static constexpr int    CL_AND =            (1 << 0);   // Include "and" before the last entry in the list.
+    static constexpr int    CL_OR =             (1 << 1);   // Include "or" before the last entry in the list.
+    static constexpr int    CL_OXFORD_COMMA =   (1 << 2);   // Insert an Oxford comma before the last entry in the list.
 
     enum class DirNameType : uint8_t { NORMAL, TO_THE, TO_THE_ALT, FROM_THE, FROM_THE_ALT };
     enum class MGSC : uint8_t { SHORT, SHORT_ROUND, LONG, LONG_COINS }; // mgsc_string() modes.

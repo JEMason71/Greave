@@ -6,12 +6,6 @@
 #include "core/core.h"
 
 
-// Rarities for randomized lists.
-const int List::LIST_RARITY_UNCOMMON =  5;
-const int List::LIST_RARITY_RARE =      12;
-const int List::LIST_RARITY_SPECIAL =   100;
-
-
 // Returns the element at the given position of the List.
 ListEntry List::at(size_t pos, bool nofollow) const
 {

@@ -10,56 +10,6 @@
 #include "core/strx.h"
 
 
-const float Combat::ATTACKER_DAMAGE_MODIFIER_ANEMIC =           0.5f;   // The damage multiplier when a Mobile with the Anemic tag attacks in melee combat.
-const float Combat::ATTACKER_DAMAGE_MODIFIER_BRAWNY =           1.25f;  // The damage multiplier when a Mobile with the Brawny tag attacks in melee combat.
-const float Combat::ATTACKER_DAMAGE_MODIFIER_FEEBLE =           0.75f;  // The damage multiplier when a Mobile with the Feeble tag attacks in melee combat.
-const float Combat::ATTACKER_DAMAGE_MODIFIER_MIGHTY =           2.0f;   // The damage multiplier when a Mobile with the Mighty tag attacks in melee combat.
-const float Combat::ATTACKER_DAMAGE_MODIFIER_PUNY =             0.9f;   // The damage multiplier when a Mobile with the Puny tag attacks in melee combat.
-const float Combat::ATTACKER_DAMAGE_MODIFIER_STRONG =           1.1f;   // The damage multiplier when a Mobile with the Strong tag attacks in melee combat.
-const float Combat::ATTACKER_DAMAGE_MODIFIER_VIGOROUS =         1.5f;   // The damage multiplier when a Mobile with the Vigorous tag attacks in melee combat.
-const float Combat::BASE_ABSORPTION_VARIANCE =                  4;      // The variance in weapon damage soaked by armour (lower number = more variance).
-const float Combat::BASE_ATTACK_SPEED_MULTIPLIER =              10.0f;  // The base speed multiplier for all attacks.
-const float Combat::BASE_BLOCK_CHANCE_MELEE =                   40.0f;  // The base block chance in melee combat.
-const float Combat::BASE_DAMAGE_VARIANCE =                      3;      // The variance in weapon damage (lower number = more variance).
-const float Combat::BASE_HIT_CHANCE_MELEE =                     75.0f;  // The base hit chance in melee combat.
-const float Combat::BASE_MELEE_DAMAGE_MULTIPLIER =              1.2f;   // The base damage multiplier for melee weapons.
-const float Combat::BASE_PARRY_CHANCE =                         10.0f;  // The base parry chance in melee combat.
-const int   Combat::BLEED_SEVERITY_BASE =                       6;      // The base value of bleed severity, used in the bleed calculations.
-const int   Combat::BLEED_SEVERITY_RANGE=                       4;      // The range of variation on the bleed severity.
-const int   Combat::BLEED_TIME_RANGE =                          10;     // The range of time (1 - X) that a weapon bleed effect can cause.
-const float Combat::BLOCK_SKILL_BONUS_PER_LEVEL =               0.3f;   // The bonus % chance to block per level of block skill.
-const float Combat::CRIT_CHANCE_MULTIPLIER_SINGLE_WIELD =       1.1f;   // The multiplier to crit% for single-wielding.
-const float Combat::DEFENDER_PARRY_MODIFIER_AGILE =             1.5f;   // The multiplier to the parry chance of a Mobile with the Agile tag.
-const float Combat::DEFENDER_PARRY_MODIFIER_CLUMSY =            0.5f;   // The multiplier to the parry chance of a Mobile with the Clumsy tag.
-const float Combat::DEFENDER_TO_HIT_MODIFIER_AGILE =            0.8f;   // The to-hit multiplier when attempting to hit a Mobile with the Agile tag.
-const float Combat::DEFENDER_TO_HIT_MODIFIER_CLUMSY =           1.25f;  // The to-hit multiplier when attempting to hit a Mobile with the Clumsy tag.
-const float Combat::EVASION_SKILL_BONUS_PER_LEVEL =             0.5f;   // The bonus % chance to dodge attacks per level of evasion skill.
-const float Combat::HIT_CHANCE_MULTIPLIER_DUAL_WIELD =          0.9f;   // The multiplier to accuracy% for dual-wielding.
-const float Combat::HIT_CHANCE_MULTIPLIER_SINGLE_WIELD =        1.8f;   // The multiplier to accuracy% for single-wielding.
-const float Combat::HIT_CHANCE_MULTIPLIER_SWORD_AND_BOARD =     1.5f;   // The multiplier to accuracy% for wielding 1h+shield or 1h+extra.
-const float Combat::PARRY_PENALTY_TWO_HANDED =                  0.6f;   // The penalty % chance to parry when using a two-handed weapon.
-const float Combat::PARRY_SKILL_BONUS_PER_LEVEL =               0.5f;   // The bonus % chance to parry per level of parry skill.
-const int   Combat::POISON_SEVERITY_BASE =                      4;      // The base value of poison severity, used in the poison calculations.
-const int   Combat::POISON_SEVERITY_RANGE =                     6;      // The range of variation on the poison severity.
-const int   Combat::POISON_TIME_RANGE =                         5;      // The range of time (1 - X) that a weapon poison effect can cause.
-const int   Combat::SCAR_BLEED_INTENSITY_FROM_BLEED_ATTACK =    2;      // Blood type scar intensity for attacks that cause bleeding.
-const int   Combat::SCAR_BLEED_INTENSITY_FROM_DEATH =           5;      // As above, but for NPCs (which bleed) dying here.
-const float Combat::STANCE_CHANGE_TIME =                        1.0f;   // The time it takes to change combat stances.
-const float Combat::STANCE_DAMAGE_MULTIPLIER_AGGRESSIVE =       1.2f;   // The multiplier to melee damage when in an aggressive stance.
-const float Combat::STANCE_DAMAGE_MULTIPLIER_DEFENSIVE =        0.8f;   // The multiplier to melee damage when in a defensive stance.
-const float Combat::STANCE_DAMAGE_TAKEN_MULTIPLIER_AGGRESSIVE = 1.2f;   // The multiplier to melee damage *taken* when in an aggressive stance.
-const float Combat::STANCE_DAMAGE_TAKEN_MULTIPLIER_DEFENSIVE =  0.8f;   // The multiplier to melee damage *taken* when in an defensive stance.
-const float Combat::STANCE_TO_HIT_MODIFIER_FAVOURABLE =         20;     // The to-hit % bonus when the attacker's stance is favourable vs the defender's.
-const float Combat::STANCE_TO_HIT_MODIFIER_UNFAVOURABLE =       -10;    // The to-hit % penalty when the attacker's stance is unfavourable vs the defender's.
-const float Combat::WEAPON_DAMAGE_MODIFIER_HAAH_2H =            1.4f;   // The damage modifier for wielding a hand-and-a-half weapon in two hands.
-const float Combat::WEAPON_SKILL_DAMAGE_MODIFIER =              0.05f;  // The damage modifier, based on weapon skill level.
-const float Combat::WEAPON_SKILL_TO_HIT_PER_LEVEL =             1.0f;   // The bonus % chance to hit per point of weapon skill.
-const float Combat::XP_PER_BLOCK =                              1.0f;   // Experience gained for a successful shield block in combat.
-const float Combat::XP_PER_CRITICAL_HIT =                       3.0f;   // Weapon experience gainer per critical hit in combat.
-const float Combat::XP_PER_EVADE =                              1.0f;   // Experience gained for evading an attack in combat.
-const float Combat::XP_PER_PARRY =                              1.0f;   // Experience gained for a successful parry in combat.
-const float Combat::XP_PER_SUCCESSFUL_HIT =                     0.7f;   // Weapon experience gained per successful weapon attack in combat.
-
 // Weapon type damage modifiers to unarmoured, light, medium and heavy armour targets.
 const float Combat::DAMAGE_MODIFIER_ACID[4] =       { 1.8f, 1.3f, 1.2f, 1.0f };
 const float Combat::DAMAGE_MODIFIER_BALLISTIC[4] =  { 1.3f, 1.3f, 1.2f, 1.0f };
@@ -536,13 +486,13 @@ void Combat::perform_attack(std::shared_ptr<Mobile> attacker, std::shared_ptr<Mo
         if (poison_chance >= 100.0f || rng->frnd(100) <= poison_chance) poison = true;
         if (bleed_chance >= 100.0f || rng->frnd(100) <= bleed_chance) bleed = true;
 
-        if (attacker->tag(MobileTag::Anemic)) damage *= ATTACKER_DAMAGE_MODIFIER_ANEMIC;
-        else if (attacker->tag(MobileTag::Feeble)) damage *= ATTACKER_DAMAGE_MODIFIER_FEEBLE;
-        else if (attacker->tag(MobileTag::Puny)) damage *= ATTACKER_DAMAGE_MODIFIER_PUNY;
-        else if (attacker->tag(MobileTag::Strong)) damage *= ATTACKER_DAMAGE_MODIFIER_STRONG;
-        else if (attacker->tag(MobileTag::Brawny)) damage *= ATTACKER_DAMAGE_MODIFIER_BRAWNY;
-        else if (attacker->tag(MobileTag::Vigorous)) damage *= ATTACKER_DAMAGE_MODIFIER_VIGOROUS;
-        else if (attacker->tag(MobileTag::Mighty)) damage *= ATTACKER_DAMAGE_MODIFIER_MIGHTY;
+        if (attacker->tag(MobileTag::Anemic)) damage *= ATTACKER_DAMAGE_MULTIPLIER_ANEMIC;
+        else if (attacker->tag(MobileTag::Feeble)) damage *= ATTACKER_DAMAGE_MULTIPLIER_FEEBLE;
+        else if (attacker->tag(MobileTag::Puny)) damage *= ATTACKER_DAMAGE_MULTIPLIER_PUNY;
+        else if (attacker->tag(MobileTag::Strong)) damage *= ATTACKER_DAMAGE_MULTIPLIER_STRONG;
+        else if (attacker->tag(MobileTag::Brawny)) damage *= ATTACKER_DAMAGE_MULTIPLIER_BRAWNY;
+        else if (attacker->tag(MobileTag::Vigorous)) damage *= ATTACKER_DAMAGE_MULTIPLIER_VIGOROUS;
+        else if (attacker->tag(MobileTag::Mighty)) damage *= ATTACKER_DAMAGE_MULTIPLIER_MIGHTY;
 
         // Bonus damage for Eye for an Eye.
         if (eye_for_an_eye)
