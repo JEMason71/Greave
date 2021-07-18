@@ -98,7 +98,7 @@ BLUE_LINE:
   tags: [ EastAutoClose, EastDoorMetal, EastOpenable, Indoors ]
 
 BRASS_DIRK:
-  desc: Dim light shining in through grubby, cracked windows glitters through the thick smoke hanging heavy in the air. What was once a warehouse is now a disreputable-looking tavern, a set of creaking wooden stairs curving up from the entrance to an old wooden floor bearing sinister stains and a strong scent of stale ale. Simple wooden stools sit around a number of round tables, while a stained bar is poorly-lit by flickering aether-lanterhs. {lb} ```Another flight of stairs leads northward, up from the tavern area, past which you can see a large metal cage.
+  desc: Dim light shining in through grubby, cracked windows glitters through the thick smoke hanging heavy in the air. What was once a warehouse is now a disreputable-looking tavern, a set of creaking wooden stairs curving up from the entrance to an old wooden floor bearing sinister stains and a strong scent of stale ale. Simple wooden stools sit around a number of round tables, while a stained bar is poorly-lit by flickering aether-lanterns. {lb} ```Another flight of stairs leads northward, up from the tavern area, past which you can see a large metal cage.
   exits:
     east: CUTPURSE_ALLEY
     north: BRASS_DIRK_ARENA
