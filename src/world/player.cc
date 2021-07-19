@@ -22,6 +22,7 @@ Player::Player() : blood_tox_(0), death_reason_("the will of the gods"), hunger_
     set_name("Player");
     mp_[0] = mp_[1] = MP_DEFAULT;
     sp_[0] = sp_[1] = SP_DEFAULT;
+    sp_[2] = 0;
 }
 
 // Eats food, increasing the hunger counter.
@@ -376,7 +377,14 @@ void Player::tick_hp_regen()
 void Player::tick_mp_regen() { restore_mp(MP_REGEN_PER_TICK); }
 
 // Regenerates SP over time.
-void Player::tick_sp_regen() { restore_sp(SP_REGEN_PER_TICK); }
+void Player::tick_sp_regen() {
+    if(hunger()>HUNGER_MAX){
+        //Integer division means we have to track remainder
+        sp_[2] += SP_REGEN_PER_TICK;
+        restore_sp(sp_[2]/SP_REGEN_BLOAT_DIVISOR);
+        sp_[2] %= SP_REGEN_BLOAT_DIVISOR;
+    } else{restore_sp(SP_REGEN_PER_TICK);}
+}
 
 // Checks if the player is wearing a certain type of armour (light/medium/heavy).
 bool Player::wearing_armour(ItemSub type)
