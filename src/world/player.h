@@ -1,5 +1,5 @@
 // world/player.h -- The Player class is derived from Mobile, and defines the player character in the game world.
-// Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+// Copyright (c) 2021 Raine "Gravecat" Simmons and the Greave contributors. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #ifndef GREAVE_WORLD_PLAYER_H_
 #define GREAVE_WORLD_PLAYER_H_

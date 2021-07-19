@@ -1,5 +1,5 @@
 // world/player.cc -- The Player class is derived from Mobile, and defines the player character in the game world.
-// Copyright (c) 2021 Raine "Gravecat" Simmons. Licensed under the GNU Affero General Public License v3 or any later version.
+// Copyright (c) 2021 Raine "Gravecat" Simmons and the Greave contributors. Licensed under the GNU Affero General Public License v3 or any later version.
 
 #include <cmath>
 
@@ -9,7 +9,7 @@
 
 
 // The SQL table construction string for the player data.
-constexpr char Player::SQL_PLAYER[] = "CREATE TABLE player ( blood_tox INTEGER, hunger INTEGER NOT NULL, mob_target INTEGER, money INTEGER NOT NULL, mp INTEGER NOT NULL, mp_max INTEGER NOT NULL, sp INTEGER NOT NULL, sp_max INTEGER NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, thirst INTEGET NOT NULL )";
+constexpr char Player::SQL_PLAYER[] = "CREATE TABLE player ( blood_tox INTEGER, hunger INTEGER NOT NULL, mob_target INTEGER, money INTEGER NOT NULL, mp INTEGER NOT NULL, mp_max INTEGER NOT NULL, sp INTEGER NOT NULL, sp_delay INTEGER, sp_max INTEGER NOT NULL, sql_id INTEGER PRIMARY KEY UNIQUE NOT NULL, thirst INTEGET NOT NULL )";
 
 // The SQL table construction string for the player skills data.
 constexpr char Player::SQL_SKILLS[] = "CREATE TABLE skills ( id TEXT PRIMARY KEY UNIQUE NOT NULL, level INTEGER NOT NULL, xp REAL )";
@@ -171,6 +171,7 @@ uint32_t Player::load(std::shared_ptr<SQLite::Database> save_db, uint32_t sql_id
         mp_[0] = query.getColumn("mp").getInt();
         mp_[1] = query.getColumn("mp_max").getInt();
         sp_[0] = query.getColumn("sp").getInt();
+        if (!query.isColumnNull("sp_delay")) sp_[2] = query.getColumn("sp_delay").getInt();
         sp_[1] = query.getColumn("sp_max").getInt();
         sql_id = query.getColumn("sql_id").getUInt();
         thirst_ = query.getColumn("thirst").getInt();
@@ -292,7 +293,7 @@ void Player::restore_sp(int amount)
 uint32_t Player::save(std::shared_ptr<SQLite::Database> save_db)
 {
     const uint32_t sql_id = Mobile::save(save_db);
-    SQLite::Statement query(*save_db, "INSERT INTO player ( blood_tox, hunger, mob_target, money, mp, mp_max, sp, sp_max, sql_id, thirst ) VALUES ( :blood_tox, :hunger, :mob_target, :money, :mp, :mp_max, :sp, :sp_max, :sql_id, :thirst )");
+    SQLite::Statement query(*save_db, "INSERT INTO player ( blood_tox, hunger, mob_target, money, mp, mp_max, sp, sp_delay, sp_max, sql_id, thirst ) VALUES ( :blood_tox, :hunger, :mob_target, :money, :mp, :mp_max, :sp, :sp_delay, :sp_max, :sql_id, :thirst )");
     if (blood_tox_) query.bind(":blood_tox", blood_tox_);
     query.bind(":hunger", hunger_);
     if (mob_target_) query.bind(":mob_target", mob_target_);
@@ -300,6 +301,7 @@ uint32_t Player::save(std::shared_ptr<SQLite::Database> save_db)
     query.bind(":mp", mp_[0]);
     query.bind(":mp_max", mp_[1]);
     query.bind(":sp", sp_[0]);
+    if (sp_[2]) query.bind(":sp_delay", sp_[2]);
     query.bind(":sp_max", sp_[1]);
     query.bind(":sql_id", sql_id);
     query.bind(":thirst", thirst_);
